@@ -1,0 +1,22 @@
+{
+    "implicitDependencies": {
+        "angular.json": "*",
+        "package.json": "*",
+        "tslint.json": "*",
+        ".eslintrc.json": "*",
+        "nx.json": "*",
+        "tsconfig.json": "*"
+    },
+    "affected": {
+        "defaultBase": "master"
+    },
+    "npmScope": "solucrea",
+    "projects": {
+        "solucrea": {
+            "tags": []
+        },
+        "api": {
+            "tags": []
+        }
+    }
+}

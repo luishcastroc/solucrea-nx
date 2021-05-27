@@ -1,0 +1,188 @@
+{
+    "version": 1,
+    "cli": {
+        "defaultCollection": "@angular-eslint/schematics"
+    },
+    "defaultProject": "solucrea",
+    "projects": {
+        "solucrea": {
+            "projectType": "application",
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "scss"
+                }
+            },
+            "root": "apps/solucrea",
+            "sourceRoot": "apps/solucrea/src",
+            "prefix": "app",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/apps/solucrea",
+                        "index": "apps/solucrea/src/index.html",
+                        "main": "apps/solucrea/src/main.ts",
+                        "polyfills": "apps/solucrea/src/polyfills.ts",
+                        "tsConfig": "apps/solucrea/tsconfig.app.json",
+                        "inlineStyleLanguage": "scss",
+                        "allowedCommonJsDependencies": [
+                            "apexcharts",
+                            "highlight.js",
+                            "crypto-js/enc-utf8",
+                            "crypto-js/hmac-sha256",
+                            "crypto-js/enc-base64"
+                        ],
+                        "assets": [
+                            "apps/solucrea/src/assets",
+                            "apps/solucrea/src/assets/favicon",
+                            {
+                                "glob": "_redirects",
+                                "input": "apps/solucrea/src",
+                                "output": "/"
+                            }
+                        ],
+                        "stylePreprocessorOptions": {
+                            "includePaths": ["src/@fuse/styles"]
+                        },
+                        "styles": [
+                            "apps/solucrea/src/@fuse/styles/tailwind.scss",
+                            "apps/solucrea/src/@fuse/styles/themes.scss",
+                            "apps/solucrea/src/styles/vendors.scss",
+                            "apps/solucrea/src/@fuse/styles/main.scss",
+                            "apps/solucrea/src/styles/styles.scss",
+                            "apps/solucrea/src/styles/tailwind.scss"
+                        ],
+                        "scripts": []
+                    },
+                    "configurations": {
+                        "production": {
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "5mb",
+                                    "maximumError": "8mb"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "100kb",
+                                    "maximumError": "150kb"
+                                }
+                            ],
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/solucrea/src/environments/environment.ts",
+                                    "with": "apps/solucrea/src/environments/environment.prod.ts"
+                                }
+                            ],
+                            "outputHashing": "all"
+                        },
+                        "development": {
+                            "buildOptimizer": false,
+                            "optimization": false,
+                            "vendorChunk": true,
+                            "extractLicenses": false,
+                            "sourceMap": true,
+                            "namedChunks": true
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "configurations": {
+                        "production": {
+                            "browserTarget": "solucrea:build:production"
+                        },
+                        "development": {
+                            "browserTarget": "solucrea:build:development"
+                        }
+                    },
+                    "defaultConfiguration": "development"
+                },
+                "extract-i18n": {
+                    "builder": "@angular-devkit/build-angular:extract-i18n",
+                    "options": {
+                        "browserTarget": "solucrea:build"
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "main": "apps/solucrea/src/test.ts",
+                        "polyfills": "apps/solucrea/src/polyfills.ts",
+                        "tsConfig": "apps/solucrea/tsconfig.spec.json",
+                        "karmaConfig": "apps/solucrea/karma.conf.js",
+                        "inlineStyleLanguage": "scss",
+                        "assets": [
+                            "apps/solucrea/src/assets",
+                            "apps/solucrea/src/assets/favicon"
+                        ],
+                        "styles": ["apps/solucrea/src/styles.scss"],
+                        "scripts": []
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"],
+                        "tsConfig": [
+                            "apps/solucrea/tsconfig.app.json",
+                            "apps/solucrea/tsconfig.spec.json"
+                        ]
+                    }
+                }
+            }
+        },
+        "api": {
+            "root": "apps/api",
+            "sourceRoot": "apps/api/src",
+            "projectType": "application",
+            "architect": {
+                "build": {
+                    "builder": "@nrwl/node:build",
+                    "outputs": ["{options.outputPath}"],
+                    "options": {
+                        "outputPath": "dist/apps/api",
+                        "main": "apps/api/src/main.ts",
+                        "tsConfig": "apps/api/tsconfig.app.json",
+                        "assets": ["apps/api/src/assets"]
+                    },
+                    "configurations": {
+                        "production": {
+                            "optimization": true,
+                            "extractLicenses": true,
+                            "inspect": false,
+                            "generatePackageJson": true,
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/api/src/environments/environment.ts",
+                                    "with": "apps/api/src/environments/environment.prod.ts"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "serve": {
+                    "builder": "@nrwl/node:execute",
+                    "options": {
+                        "buildTarget": "api:build"
+                    }
+                },
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": ["apps/api/**/*.ts"]
+                    }
+                },
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/apps/api"],
+                    "options": {
+                        "jestConfig": "apps/api/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                }
+            }
+        }
+    }
+}
