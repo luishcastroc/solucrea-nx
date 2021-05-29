@@ -40,6 +40,7 @@ yarn-error.log
 testem.log
 /typings
 /.env
+/prisma/migrations/*
 
 # System Files
 .DS_Store
