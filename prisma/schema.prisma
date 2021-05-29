@@ -151,7 +151,7 @@ model Fraccionamiento {
 
 model CodigoPostal {
   id                 Int               @id @default(autoincrement())
-  codigoPostal       Int               @unique
+  codigoPostal       String            @unique @db.VarChar(10)
   ciudades           Ciudad[]
   Fraccionamiento    Fraccionamiento[]
   estado             Estado            @relation(fields: [estadoId], references: [id])
@@ -161,6 +161,7 @@ model CodigoPostal {
   fechaActualizacion DateTime          @default(now()) @updatedAt
   estadoId           Int
 
+  Direccion Direccion[]
   @@map(name: "CodigosPostales")
 }
 
@@ -306,18 +307,17 @@ enum TiposMovimiento {
 // Modelos Funcionales
 
 model Usuario {
-  id                 Int       @id @default(autoincrement())
-  nombreUsuario      String    @unique
+  id                 Int        @id @default(autoincrement())
+  nombreUsuario      String     @unique
   password           String
   nombre             String
   apellido           String
-  role               Role      @default(USUARIO)
-  sucursal           Sucursal? @relation(fields: [sucursalId], references: [id])
-  creadoPor          String    @default("ADMIN")
-  fechaCreacion      DateTime  @default(now())
-  actualizadoPor     String    @default("ADMIN")
-  fechaActualizacion DateTime  @default(now()) @updatedAt
-  sucursalId         Int?
+  role               Role       @default(USUARIO)
+  sucursales         Sucursal[] @relation("SucursalesDeUsuario")
+  creadoPor          String     @default("ADMIN")
+  fechaCreacion      DateTime   @default(now())
+  actualizadoPor     String     @default("ADMIN")
+  fechaActualizacion DateTime   @default(now()) @updatedAt
 
   @@map(name: "Usuarios")
 }
@@ -327,7 +327,7 @@ model Sucursal {
   nombre             String         @unique
   direccion          Direccion      @relation(fields: [direccionId], references: [id])
   telefono           String
-  usuarios           Usuario[]
+  usuarios           Usuario[]      @relation("SucursalesDeUsuario")
   comisionistas      Comisionista[]
   creditos           Credito[]
   comisiones         Comision[]
@@ -348,7 +348,7 @@ model Direccion {
   numero             String
   cruzamientos       String?
   colonia            String
-  codigoPostal       Int
+  codigoPostal       CodigoPostal  @relation(fields: [codigoPostalId], references: [id])
   ciudad             Ciudad        @relation(fields: [ciudadId], references: [id])
   estado             Estado        @relation(fields: [estadoId], references: [id])
   sucursales         Sucursal[]
@@ -360,6 +360,7 @@ model Direccion {
   ciudadId           Int
   estadoId           Int
   clienteId          Int?
+  codigoPostalId     Int
 }
 
 model MovimientoDeCaja {

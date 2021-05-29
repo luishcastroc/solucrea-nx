@@ -5,7 +5,7 @@ import { EstadosCivilesController } from './estados-civiles.controller';
 import { EstadosCivilesService } from './estados-civiles.service';
 
 @Module({
-  controllers: [EstadosCivilesController],
-  providers: [EstadosCivilesService, PrismaService],
+    controllers: [EstadosCivilesController],
+    providers: [EstadosCivilesService, PrismaService],
 })
 export class EstadosCivilesModule {}

@@ -5,7 +5,7 @@ import { ClientesController } from './clientes.controller';
 import { ClientesService } from './clientes.service';
 
 @Module({
-  controllers: [ClientesController],
-  providers: [ClientesService, PrismaService],
+    controllers: [ClientesController],
+    providers: [ClientesService, PrismaService],
 })
 export class ClientesModule {}

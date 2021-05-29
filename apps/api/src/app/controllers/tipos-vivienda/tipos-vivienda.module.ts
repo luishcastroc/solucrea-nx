@@ -5,7 +5,7 @@ import { TiposViviendaController } from './tipos-vivienda.controller';
 import { TiposViviendaService } from './tipos-vivienda.service';
 
 @Module({
-  controllers: [TiposViviendaController],
-  providers: [TiposViviendaService, PrismaService],
+    controllers: [TiposViviendaController],
+    providers: [TiposViviendaService, PrismaService],
 })
 export class TiposViviendaModule {}

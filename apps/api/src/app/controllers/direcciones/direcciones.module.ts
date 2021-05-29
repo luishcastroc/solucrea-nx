@@ -5,7 +5,7 @@ import { DireccionesController } from './direcciones.controller';
 import { DireccionesService } from './direcciones.service';
 
 @Module({
-  controllers: [DireccionesController],
-  providers: [DireccionesService, PrismaService],
+    controllers: [DireccionesController],
+    providers: [DireccionesService, PrismaService],
 })
 export class DireccionesModule {}

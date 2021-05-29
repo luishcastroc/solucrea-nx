@@ -9,7 +9,7 @@ import {
     Request,
     UseGuards,
 } from '@nestjs/common';
-import { Role, Usuario as UsersModel } from '@prisma/client';
+import { Prisma, Role, Usuario as UsersModel } from '@prisma/client';
 
 import { UsuariosService } from './usuarios.service';
 import { Public } from '../../decorators/public.decorator';
@@ -49,22 +49,19 @@ export class UsuariosController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Post('usuario')
-    async createUsuario(@Body() userData: UsersModel): Promise<UsersModel> {
-        const {
-            nombreUsuario,
-            password,
-            nombre,
-            apellido,
-            role,
-            sucursalId,
-        } = userData;
+    async createUsuario(
+        @Body() user: Prisma.UsuarioCreateInput
+    ): Promise<UsersModel> {
+        const { nombreUsuario, password, nombre, apellido, sucursales } = user;
+        const role = user.role ? user.role : 'USUARIO';
+
         return this.usuariosService.createUsuario({
             nombreUsuario,
             password,
             nombre,
             apellido,
             role,
-            sucursal: { connect: { id: sucursalId } },
+            sucursales,
         });
     }
 
@@ -73,26 +70,11 @@ export class UsuariosController {
     @Put('usuario/:id')
     async editUsuario(
         @Param('id') id: string,
-        @Body() userData: UsersModel
+        @Body() data: Prisma.UsuarioUpdateInput
     ): Promise<UsersModel> {
-        const {
-            nombreUsuario,
-            password,
-            nombre,
-            apellido,
-            role,
-            sucursalId,
-        } = userData;
         return this.usuariosService.updateUsuario({
             where: { id: Number(id) },
-            data: {
-                nombreUsuario,
-                password,
-                nombre,
-                apellido,
-                role,
-                sucursal: { connect: { id: sucursalId } },
-            },
+            data,
         });
     }
 

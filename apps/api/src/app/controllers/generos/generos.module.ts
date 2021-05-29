@@ -5,7 +5,7 @@ import { GenerosController } from './generos.controller';
 import { GenerosService } from './generos.service';
 
 @Module({
-  controllers: [GenerosController],
-  providers: [GenerosService, PrismaService],
+    controllers: [GenerosController],
+    providers: [GenerosService, PrismaService],
 })
 export class GenerosModule {}

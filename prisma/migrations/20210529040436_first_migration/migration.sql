@@ -137,7 +137,7 @@ CREATE TABLE `Fraccionamientos` (
 -- CreateTable
 CREATE TABLE `CodigosPostales` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `codigoPostal` INTEGER NOT NULL,
+    `codigoPostal` VARCHAR(10) NOT NULL,
     `creadoPor` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
     `fechaCreacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `actualizadoPor` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
@@ -271,7 +271,6 @@ CREATE TABLE `Usuarios` (
     `fechaCreacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `actualizadoPor` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
     `fechaActualizacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `sucursalId` INTEGER,
 
     UNIQUE INDEX `Usuarios.nombreUsuario_unique`(`nombreUsuario`),
     PRIMARY KEY (`id`)
@@ -300,7 +299,6 @@ CREATE TABLE `Direccion` (
     `numero` VARCHAR(191) NOT NULL,
     `cruzamientos` VARCHAR(191),
     `colonia` VARCHAR(191) NOT NULL,
-    `codigoPostal` INTEGER NOT NULL,
     `creadoPor` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
     `fechaCreacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `actualizadoPor` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
@@ -308,6 +306,7 @@ CREATE TABLE `Direccion` (
     `ciudadId` INTEGER NOT NULL,
     `estadoId` INTEGER NOT NULL,
     `clienteId` INTEGER,
+    `codigoPostalId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -461,17 +460,20 @@ CREATE TABLE `_CiudadToCodigoPostal` (
     INDEX `_CiudadToCodigoPostal_B_index`(`B`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `_SucursalesDeUsuario` (
+    `A` INTEGER NOT NULL,
+    `B` INTEGER NOT NULL,
+
+    UNIQUE INDEX `_SucursalesDeUsuario_AB_unique`(`A`, `B`),
+    INDEX `_SucursalesDeUsuario_B_index`(`B`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `Avales` ADD FOREIGN KEY (`parentescoId`) REFERENCES `Parentescos`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Avales` ADD FOREIGN KEY (`ocupacionId`) REFERENCES `Ocupaciones`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Ciudades` ADD FOREIGN KEY (`estadoId`) REFERENCES `Estados`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Productos` ADD FOREIGN KEY (`frecuenciaDePagoId`) REFERENCES `FrecuenciasDePago`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Cajas` ADD FOREIGN KEY (`sucursalId`) REFERENCES `Sucursales`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -489,6 +491,21 @@ ALTER TABLE `Clientes` ADD FOREIGN KEY (`escolaridadId`) REFERENCES `Escolaridad
 ALTER TABLE `Clientes` ADD FOREIGN KEY (`generoId`) REFERENCES `Generos`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `MovimientosDeCaja` ADD FOREIGN KEY (`cajaId`) REFERENCES `Cajas`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Fraccionamientos` ADD FOREIGN KEY (`codigoPostalId`) REFERENCES `CodigosPostales`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Productos` ADD FOREIGN KEY (`frecuenciaDePagoId`) REFERENCES `FrecuenciasDePago`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Comisionistas` ADD FOREIGN KEY (`sucursalId`) REFERENCES `Sucursales`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Comisionistas` ADD FOREIGN KEY (`creditoId`) REFERENCES `Creditos`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `Comisiones` ADD FOREIGN KEY (`creditoId`) REFERENCES `Creditos`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -498,22 +515,22 @@ ALTER TABLE `Comisiones` ADD FOREIGN KEY (`sucursalId`) REFERENCES `Sucursales`(
 ALTER TABLE `Comisiones` ADD FOREIGN KEY (`comisionistaId`) REFERENCES `Comisionistas`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Fraccionamientos` ADD FOREIGN KEY (`codigoPostalId`) REFERENCES `CodigosPostales`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `Ciudades` ADD FOREIGN KEY (`estadoId`) REFERENCES `Estados`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Direccion` ADD FOREIGN KEY (`ciudadId`) REFERENCES `Ciudades`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `Sucursales` ADD FOREIGN KEY (`direccionId`) REFERENCES `Direccion`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Direccion` ADD FOREIGN KEY (`estadoId`) REFERENCES `Estados`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `_CiudadToCodigoPostal` ADD FOREIGN KEY (`A`) REFERENCES `Ciudades`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Direccion` ADD FOREIGN KEY (`clienteId`) REFERENCES `Clientes`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `_CiudadToCodigoPostal` ADD FOREIGN KEY (`B`) REFERENCES `CodigosPostales`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `TiposDeInteres` ADD FOREIGN KEY (`productoId`) REFERENCES `Productos`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `_SucursalesDeUsuario` ADD FOREIGN KEY (`A`) REFERENCES `Sucursales`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `CodigosPostales` ADD FOREIGN KEY (`estadoId`) REFERENCES `Estados`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `_SucursalesDeUsuario` ADD FOREIGN KEY (`B`) REFERENCES `Usuarios`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Creditos` ADD FOREIGN KEY (`clienteId`) REFERENCES `Clientes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -537,28 +554,25 @@ ALTER TABLE `Creditos` ADD FOREIGN KEY (`modalidadDeSeguroId`) REFERENCES `Modal
 ALTER TABLE `Creditos` ADD FOREIGN KEY (`avalId`) REFERENCES `Avales`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `_CiudadToCodigoPostal` ADD FOREIGN KEY (`A`) REFERENCES `Ciudades`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `Direccion` ADD FOREIGN KEY (`codigoPostalId`) REFERENCES `CodigosPostales`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `_CiudadToCodigoPostal` ADD FOREIGN KEY (`B`) REFERENCES `CodigosPostales`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `Direccion` ADD FOREIGN KEY (`ciudadId`) REFERENCES `Ciudades`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Direccion` ADD FOREIGN KEY (`estadoId`) REFERENCES `Estados`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Direccion` ADD FOREIGN KEY (`clienteId`) REFERENCES `Clientes`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `CodigosPostales` ADD FOREIGN KEY (`estadoId`) REFERENCES `Estados`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Tarifas` ADD FOREIGN KEY (`productoId`) REFERENCES `Productos`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Usuarios` ADD FOREIGN KEY (`sucursalId`) REFERENCES `Sucursales`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Sucursales` ADD FOREIGN KEY (`direccionId`) REFERENCES `Direccion`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Comisionistas` ADD FOREIGN KEY (`sucursalId`) REFERENCES `Sucursales`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Comisionistas` ADD FOREIGN KEY (`creditoId`) REFERENCES `Creditos`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `MovimientosDeCaja` ADD FOREIGN KEY (`cajaId`) REFERENCES `Cajas`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `TiposDeInteres` ADD FOREIGN KEY (`productoId`) REFERENCES `Productos`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- Insert User
 INSERT INTO `solucrea-db`.Usuarios

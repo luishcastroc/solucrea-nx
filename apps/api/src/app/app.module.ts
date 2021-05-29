@@ -3,14 +3,14 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 
 import { AuthModule } from './auth/auth.module';
-import { ClientesModule } from './controllers/clientes/clientes.module';
-import { DireccionesModule } from './controllers/direcciones/direcciones.module';
-import { EscolaridadesModule } from './controllers/escolaridades/escolaridades.module';
-import { EstadosCivilesModule } from './controllers/estados-civiles/estados-civiles.module';
-import { GenerosModule } from './controllers/generos/generos.module';
-import { SucursalesModule } from './controllers/sucursales/sucursales.module';
-import { TiposViviendaModule } from './controllers/tipos-vivienda/tipos-vivienda.module';
-import { UsuariosModule } from './controllers/usuarios/usuarios.module';
+import { ClientesModule } from './controllers/clientes/';
+import { DireccionesModule } from './controllers/direcciones';
+import { EscolaridadesModule } from './controllers/escolaridades';
+import { EstadosCivilesModule } from './controllers/estados-civiles';
+import { GenerosModule } from './controllers/generos';
+import { SucursalesModule } from './controllers/sucursales';
+import { TiposViviendaModule } from './controllers/tipos-vivienda';
+import { UsuariosModule } from './controllers/usuarios';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Module({
