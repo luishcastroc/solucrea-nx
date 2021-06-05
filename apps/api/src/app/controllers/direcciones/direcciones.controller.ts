@@ -1,3 +1,4 @@
+import { Public } from './../../decorators/public.decorator';
 import {
     Body,
     Controller,
@@ -7,59 +8,42 @@ import {
     Post,
     Put,
     UseGuards,
+    UsePipes,
+    ValidationPipe,
 } from '@nestjs/common';
-import { Direccion, Role } from '@prisma/client';
+import { Direccion, Prisma, Role } from '@prisma/client';
 
 import { Roles } from '../../decorators/roles.decorator';
+import { CreateDireccionDto } from '../../dtos/create-direccion.dto';
 import { RolesGuard } from '../../guards/roles.guard';
 import { DireccionesService } from './direcciones.service';
 
-@Controller('direcciones')
+@Controller()
 export class DireccionesController {
     constructor(private readonly direccionesService: DireccionesService) {}
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN)
+    @Public()
     @Get('direcciones')
     async getDirecciones(): Promise<Direccion[]> {
         return this.direccionesService.direcciones();
     }
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN)
+    @Public()
     @Get('direcciones/:id')
-    async getDireccion(@Param('id') id: number): Promise<Direccion> {
-        return this.direccionesService.direccion({ id: Number(id) });
+    async getDireccion(@Param('id') id: string): Promise<Direccion> {
+        return this.direccionesService.direccion({ id });
     }
 
     @UseGuards(RolesGuard)
+    @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN)
     @Post('direcciones')
     async createDireccion(
-        @Body() direccionData: Direccion
+        @Body() data: CreateDireccionDto
     ): Promise<Direccion> {
-        const {
-            tipo,
-            calle,
-            numero,
-            cruzamientos,
-            colonia,
-            codigoPostalId,
-            ciudadId,
-            estadoId,
-            clienteId,
-        } = direccionData;
-        return this.direccionesService.createDireccion({
-            tipo,
-            calle,
-            numero,
-            cruzamientos,
-            colonia,
-            codigoPostal: { connect: { id: codigoPostalId } },
-            ciudad: { connect: { id: ciudadId } },
-            estado: { connect: { id: estadoId } },
-            cliente: { connect: { id: clienteId } },
-        });
+        return this.direccionesService.createDireccion(data);
     }
 
     @UseGuards(RolesGuard)
@@ -67,32 +51,11 @@ export class DireccionesController {
     @Put('direcciones/:id')
     async editDireccion(
         @Param('id') id: string,
-        @Body() direccionData: Direccion
+        @Body() data: Prisma.DireccionUpdateInput
     ): Promise<Direccion> {
-        const {
-            tipo,
-            calle,
-            numero,
-            cruzamientos,
-            colonia,
-            codigoPostalId,
-            ciudadId,
-            estadoId,
-            clienteId,
-        } = direccionData;
         return this.direccionesService.updateDireccion({
-            where: { id: Number(id) },
-            data: {
-                tipo,
-                calle,
-                numero,
-                cruzamientos,
-                colonia,
-                codigoPostal: { connect: { id: codigoPostalId } },
-                ciudad: { connect: { id: ciudadId } },
-                estado: { connect: { id: estadoId } },
-                cliente: { connect: { id: clienteId } },
-            },
+            where: { id },
+            data,
         });
     }
 
@@ -100,6 +63,6 @@ export class DireccionesController {
     @Roles(Role.ADMIN)
     @Delete('direcciones/:id')
     async deleteDireccion(@Param('id') id: string): Promise<Direccion> {
-        return this.direccionesService.deleteDireccion({ id: Number(id) });
+        return this.direccionesService.deleteDireccion({ id });
     }
 }

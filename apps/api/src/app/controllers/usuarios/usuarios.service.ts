@@ -13,16 +13,13 @@ export class UsuariosService {
     ): Promise<Usuario | null> {
         const usuarioReturn = await this.prisma.usuario.findUnique({
             where,
-            include: { sucursales: true },
         });
         delete usuarioReturn.password;
         return usuarioReturn;
     }
 
     async usuarios(): Promise<Usuario[]> {
-        const users = await this.prisma.usuario.findMany({
-            include: { sucursales: true },
-        });
+        const users = await this.prisma.usuario.findMany();
         const usuarioReturn = users.map((usuario) => {
             delete usuario.password;
             return usuario;
@@ -31,6 +28,7 @@ export class UsuariosService {
     }
 
     async createUsuario(data: Prisma.UsuarioCreateInput): Promise<Usuario> {
+        console.log(data);
         const saltOrRounds = 10;
         const hash = await bcrypt.hash(data.password, saltOrRounds);
         data = { ...data, password: hash };
@@ -67,7 +65,6 @@ export class UsuariosService {
     ): Promise<Usuario> {
         return this.prisma.usuario.findFirst({
             where,
-            include: { sucursales: true },
         });
     }
 }

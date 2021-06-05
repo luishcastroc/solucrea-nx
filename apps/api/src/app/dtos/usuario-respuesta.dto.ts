@@ -1,6 +1,6 @@
 import { Role, Sucursal } from '@prisma/client';
 export interface IUsuarioRespuestaDto {
-    id: number;
+    id: string;
     nombreUsuario: string;
     nombre: string;
     apellido: string;

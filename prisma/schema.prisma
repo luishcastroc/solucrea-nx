@@ -13,7 +13,7 @@ generator client {
 // Catálogos Inicio
 
 model TipoDePago {
-  id                 Int      @id @default(autoincrement())
+  id                 String   @id @default(uuid())
   descripcion        String
   creadoPor          String   @default("ADMIN")
   fechaCreacion      DateTime @default(now())
@@ -24,7 +24,7 @@ model TipoDePago {
 }
 
 model TipoDeInteres {
-  id                 Int       @id @default(autoincrement())
+  id                 String    @id @default(uuid())
   descripcion        String
   valor              Int
   creadoPor          String    @default("ADMIN")
@@ -32,13 +32,13 @@ model TipoDeInteres {
   actualizadoPor     String    @default("ADMIN")
   fechaActualizacion DateTime  @default(now()) @updatedAt
   productos          Producto? @relation(fields: [productoId], references: [id])
-  productoId         Int?
+  productoId         String?
 
   @@map(name: "TiposDeInteres")
 }
 
 model PeriodoDePago {
-  id                 Int      @id @default(autoincrement())
+  id                 String   @id @default(uuid())
   descripcion        String
   periodo            Int
   vencimiento        Int
@@ -51,7 +51,7 @@ model PeriodoDePago {
 }
 
 model FrecuenciaDePago {
-  id                 Int        @id @default(autoincrement())
+  id                 String     @id @default(uuid())
   descripcion        String
   diaInicio          Int
   diaFin             Int
@@ -67,7 +67,7 @@ model FrecuenciaDePago {
 }
 
 model Tarifa {
-  id                 Int       @id @default(autoincrement())
+  id                 String    @id @default(uuid())
   descripcion        String
   tipo               String    @db.TinyText
   valor              Decimal   @db.Decimal(15, 2)
@@ -76,13 +76,13 @@ model Tarifa {
   actualizadoPor     String    @default("ADMIN")
   fechaActualizacion DateTime  @default(now()) @updatedAt
   productos          Producto? @relation(fields: [productoId], references: [id])
-  productoId         Int?
+  productoId         String?
 
   @@map(name: "Tarifas")
 }
 
 model ActividadEconomica {
-  id                 Int      @id @default(autoincrement())
+  id                 String   @id @default(uuid())
   descripcion        String
   montoMin           Decimal  @db.Decimal(15, 2)
   montoMax           Decimal  @db.Decimal(15, 2)
@@ -96,7 +96,7 @@ model ActividadEconomica {
 }
 
 model EstadoCivil {
-  id                 Int       @id @default(autoincrement())
+  id                 String    @id @default(uuid())
   descripcion        String
   clientes           Cliente[]
   creadoPor          String    @default("ADMIN")
@@ -108,7 +108,7 @@ model EstadoCivil {
 }
 
 model Estado {
-  id                 Int            @id @default(autoincrement())
+  id                 String         @id @default(uuid())
   descripcion        String
   direcciones        Direccion[]
   creadoPor          String         @default("ADMIN")
@@ -122,7 +122,7 @@ model Estado {
 }
 
 model Ciudad {
-  id                 Int            @id @default(autoincrement())
+  id                 String         @id @default(uuid())
   descripcion        String
   estado             Estado         @relation(fields: [estadoId], references: [id])
   direcciones        Direccion[]
@@ -131,26 +131,26 @@ model Ciudad {
   actualizadoPor     String         @default("ADMIN")
   fechaActualizacion DateTime       @default(now()) @updatedAt
   codigosPostales    CodigoPostal[]
+  estadoId           String
 
-  estadoId Int
   @@map(name: "Ciudades")
 }
 
 model Fraccionamiento {
-  id                 Int          @id @default(autoincrement())
+  id                 String       @id @default(uuid())
   descripcion        String
   codigoPostal       CodigoPostal @relation(fields: [codigoPostalId], references: [id])
   creadoPor          String       @default("ADMIN")
   fechaCreacion      DateTime     @default(now())
   actualizadoPor     String       @default("ADMIN")
   fechaActualizacion DateTime     @default(now()) @updatedAt
-  codigoPostalId     Int
+  codigoPostalId     String
 
   @@map(name: "Fraccionamientos")
 }
 
 model CodigoPostal {
-  id                 Int               @id @default(autoincrement())
+  id                 String            @id @default(uuid())
   codigoPostal       String            @unique @db.VarChar(10)
   ciudades           Ciudad[]
   Fraccionamiento    Fraccionamiento[]
@@ -159,14 +159,14 @@ model CodigoPostal {
   fechaCreacion      DateTime          @default(now())
   actualizadoPor     String            @default("ADMIN")
   fechaActualizacion DateTime          @default(now()) @updatedAt
-  estadoId           Int
+  estadoId           String
 
   Direccion Direccion[]
   @@map(name: "CodigosPostales")
 }
 
 model TipoDeVivieda {
-  id                 Int       @id @default(autoincrement())
+  id                 String    @id @default(uuid())
   descripcion        String
   clientes           Cliente[]
   creadoPor          String    @default("ADMIN")
@@ -178,7 +178,7 @@ model TipoDeVivieda {
 }
 
 model Escolaridad {
-  id                 Int       @id @default(autoincrement())
+  id                 String    @id @default(uuid())
   descripcion        String
   clientes           Cliente[]
   creadoPor          String    @default("ADMIN")
@@ -190,7 +190,7 @@ model Escolaridad {
 }
 
 model Genero {
-  id                 Int       @id @default(autoincrement())
+  id                 String    @id @default(uuid())
   descripcion        String
   clientes           Cliente[]
   creadoPor          String    @default("ADMIN")
@@ -202,7 +202,7 @@ model Genero {
 }
 
 model Parentesco {
-  id                 Int      @id @default(autoincrement())
+  id                 String   @id @default(uuid())
   descripcion        String
   avales             Aval[]
   creadoPor          String   @default("ADMIN")
@@ -214,7 +214,7 @@ model Parentesco {
 }
 
 model Ocupacion {
-  id                 Int      @id @default(autoincrement())
+  id                 String   @id @default(uuid())
   descripcion        String
   avales             Aval[]
   creadoPor          String   @default("ADMIN")
@@ -226,7 +226,7 @@ model Ocupacion {
 }
 
 model EstadoDeCredito {
-  id                 Int       @id @default(autoincrement())
+  id                 String    @id @default(uuid())
   nombre             String
   descripcion        String
   creadoPor          String    @default("ADMIN")
@@ -239,7 +239,7 @@ model EstadoDeCredito {
 }
 
 model Seguro {
-  id                 Int       @id @default(autoincrement())
+  id                 String    @id @default(uuid())
   nombre             String
   monto              Decimal   @db.Decimal(15, 2)
   creadoPor          String    @default("ADMIN")
@@ -252,7 +252,7 @@ model Seguro {
 }
 
 model ModalidadDeSeguro {
-  id                 Int       @id @default(autoincrement())
+  id                 String    @id @default(uuid())
   nombre             String
   descripcion        String
   creadoPor          String    @default("ADMIN")
@@ -265,7 +265,7 @@ model ModalidadDeSeguro {
 }
 
 model Concepto {
-  id                 Int      @id @default(autoincrement())
+  id                 String   @id @default(uuid())
   descripcion        String
   creadoPor          String   @default("ADMIN")
   fechaCreacion      DateTime @default(now())
@@ -307,7 +307,7 @@ enum TiposMovimiento {
 // Modelos Funcionales
 
 model Usuario {
-  id                 Int      @id @default(autoincrement())
+  id                 String   @id @default(uuid())
   nombreUsuario      String   @unique
   password           String
   nombre             String
@@ -322,7 +322,7 @@ model Usuario {
 }
 
 model Sucursal {
-  id                 Int            @id @default(autoincrement())
+  id                 String         @id @default(uuid())
   nombre             String         @unique
   direccion          Direccion      @relation(fields: [direccionId], references: [id])
   telefono           String
@@ -334,13 +334,13 @@ model Sucursal {
   fechaCreacion      DateTime       @default(now())
   actualizadoPor     String         @default("ADMIN")
   fechaActualizacion DateTime       @default(now()) @updatedAt
-  direccionId        Int
+  direccionId        String
 
   @@map(name: "Sucursales")
 }
 
 model Direccion {
-  id                 Int           @id @default(autoincrement())
+  id                 String        @id @default(uuid())
   tipo               TipoDireccion
   calle              String
   numero             String
@@ -355,27 +355,27 @@ model Direccion {
   fechaCreacion      DateTime      @default(now())
   actualizadoPor     String        @default("ADMIN")
   fechaActualizacion DateTime      @default(now()) @updatedAt
-  ciudadId           Int
-  estadoId           Int
-  clienteId          Int?
-  codigoPostalId     Int
+  ciudadId           String
+  estadoId           String
+  clienteId          String?
+  codigoPostalId     String
 }
 
 model MovimientoDeCaja {
-  id            Int             @id @default(autoincrement())
+  id            String          @id @default(uuid())
   monto         Decimal         @db.Decimal(15, 2)
   tipo          TiposMovimiento
   observaciones String
   creadoPor     String
   fechaCreacion DateTime        @default(now())
   caja          Caja?           @relation(fields: [cajaId], references: [id])
-  cajaId        Int?
+  cajaId        String?
 
   @@map(name: "MovimientosDeCaja")
 }
 
 model Caja {
-  id                 Int                @id @default(autoincrement())
+  id                 String             @id @default(uuid())
   sucursal           Sucursal           @relation(fields: [sucursalId], references: [id])
   saldoInicial       Decimal            @db.Decimal(15, 2)
   observaciones      String
@@ -384,13 +384,13 @@ model Caja {
   actualizadoPor     String             @default("ADMIN")
   fechaActualizacion DateTime           @default(now()) @updatedAt
   movimientos        MovimientoDeCaja[]
-  sucursalId         Int
+  sucursalId         String
 
   @@map(name: "Cajas")
 }
 
 model Cliente {
-  id                   Int           @id @default(autoincrement())
+  id                   String        @id @default(uuid())
   nombre               String
   apellidos            String
   fechaDeNacimiento    DateTime
@@ -407,10 +407,10 @@ model Cliente {
   montoMinimo          Decimal       @db.Decimal(15, 2)
   montoMaximo          Decimal       @db.Decimal(15, 2)
   numeroCreditosCrecer Int           @default(3)
-  estadoCivilId        Int
-  tipoDeViviedaId      Int
-  escolaridadId        Int
-  generoId             Int
+  estadoCivilId        String
+  tipoDeViviedaId      String
+  escolaridadId        String
+  generoId             String
   creadoPor            String
   fechaCreacion        DateTime      @default(now())
   actualizadoPor       String        @default("ADMIN")
@@ -420,7 +420,7 @@ model Cliente {
 }
 
 model Aval {
-  id                 Int        @id @default(autoincrement())
+  id                 String     @id @default(uuid())
   nombre             String
   apellidos          String
   telefono           String
@@ -432,14 +432,14 @@ model Aval {
   fechaCreacion      DateTime   @default(now())
   actualizadoPor     String     @default("ADMIN")
   fechaActualizacion DateTime   @default(now()) @updatedAt
-  parentescoId       Int
-  ocupacionId        Int
+  parentescoId       String
+  ocupacionId        String
 
   @@map(name: "Avales")
 }
 
 model Comisionista {
-  id                 Int        @id @default(autoincrement())
+  id                 String     @id @default(uuid())
   nombre             String
   apellidoPaterno    String
   apellidoMaterno    String
@@ -452,14 +452,14 @@ model Comisionista {
   fechaCreacion      DateTime   @default(now())
   actualizadoPor     String     @default("ADMIN")
   fechaActualizacion DateTime   @default(now()) @updatedAt
-  creditoId          Int?
-  sucursalId         Int?
+  creditoId          String?
+  sucursalId         String?
 
   @@map(name: "Comisionistas")
 }
 
 model Producto {
-  id                 Int              @id @default(autoincrement())
+  id                 String           @id @default(uuid())
   nombre             String
   descripcion        String
   montoMinimo        Decimal          @db.Decimal(15, 2)
@@ -468,7 +468,7 @@ model Producto {
   duracion           Int
   pagos              Int
   frecuencia         FrecuenciaDePago @relation(fields: [frecuenciaDePagoId], references: [id])
-  frecuenciaDePagoId Int
+  frecuenciaDePagoId String
   intereses          TipoDeInteres[]
   tarifas            Tarifa[]
   creditos           Credito[]
@@ -481,7 +481,7 @@ model Producto {
 }
 
 model Credito {
-  id                  Int               @id @default(autoincrement())
+  id                  String            @id @default(uuid())
   cliente             Cliente           @relation(fields: [clienteId], references: [id])
   sucursal            Sucursal          @relation(fields: [sucursalId], references: [id])
   comisionistas       Comisionista[]
@@ -499,25 +499,25 @@ model Credito {
   fechaCreacion       DateTime          @default(now())
   actualizadoPor      String
   fechaActualizacion  DateTime
-  clienteId           Int
-  sucursalId          Int
-  estadoDeCreditoId   Int
-  productosId         Int
-  segurosId           Int
-  modalidadDeSeguroId Int
-  avalId              Int
+  clienteId           String
+  sucursalId          String
+  estadoDeCreditoId   String
+  productosId         String
+  segurosId           String
+  modalidadDeSeguroId String
+  avalId              String
 
   @@map(name: "Creditos")
 }
 
 model Comision {
-  id             Int          @id @default(autoincrement())
+  id             String       @id @default(uuid())
   credito        Credito      @relation(fields: [creditoId], references: [id])
   sucursal       Sucursal     @relation(fields: [sucursalId], references: [id])
   comisionista   Comisionista @relation(fields: [comisionistaId], references: [id])
-  creditoId      Int
-  sucursalId     Int
-  comisionistaId Int
+  creditoId      String
+  sucursalId     String
+  comisionistaId String
 
   @@map(name: "Comisiones")
 }

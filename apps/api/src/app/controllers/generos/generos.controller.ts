@@ -27,16 +27,16 @@ export class GenerosController {
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
-    @Get('generos/:id')
-    async getGenero(@Param('id') id: number): Promise<Genero> {
-        return this.generosService.genero({ id: Number(id) });
+    @Get('genero/:id')
+    async getGenero(@Param('id') id: string): Promise<Genero> {
+        return this.generosService.genero({ id });
     }
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Post('generos')
-    async createGenero(@Body() generosData: Genero): Promise<Genero> {
-        return this.generosService.createGenero(generosData);
+    async createGenero(@Body() data: Genero): Promise<Genero> {
+        return this.generosService.createGenero(data);
     }
 
     @UseGuards(RolesGuard)
@@ -44,11 +44,11 @@ export class GenerosController {
     @Put('generos/:id')
     async editGenero(
         @Param('id') id: string,
-        @Body() tiposDeViviendaData: Genero
+        @Body() data: Genero
     ): Promise<Genero> {
         return this.generosService.updateGenero({
-            where: { id: Number(id) },
-            data: tiposDeViviendaData,
+            where: { id },
+            data,
         });
     }
 
@@ -56,6 +56,6 @@ export class GenerosController {
     @Roles(Role.ADMIN)
     @Delete('generos/:id')
     async deleteGenero(@Param('id') id: string): Promise<Genero> {
-        return this.generosService.deleteGenero({ id: Number(id) });
+        return this.generosService.deleteGenero({ id });
     }
 }

@@ -1,3 +1,4 @@
+import { Public } from './../../decorators/public.decorator';
 import {
     Body,
     Controller,
@@ -21,17 +22,17 @@ export class EstadosCivilesController {
     ) {}
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN)
+    @Public()
     @Get('estados-civiles')
     async getEstadosCiviles(): Promise<EstadoCivil[]> {
         return this.estadosCivilesService.estadosCiviles();
     }
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN)
+    @Public()
     @Get('estados-civiles/:id')
-    async getEstadoCivil(@Param('id') id: number): Promise<EstadoCivil> {
-        return this.estadosCivilesService.estadoCivil({ id: Number(id) });
+    async getEstadoCivil(@Param('id') id: string): Promise<EstadoCivil> {
+        return this.estadosCivilesService.estadoCivil({ id });
     }
 
     @UseGuards(RolesGuard)
@@ -48,11 +49,11 @@ export class EstadosCivilesController {
     @Put('estados-civiles/:id')
     async editEstadoCivil(
         @Param('id') id: string,
-        @Body() tiposDeViviendaData: EstadoCivil
+        @Body() data: EstadoCivil
     ): Promise<EstadoCivil> {
         return this.estadosCivilesService.updateEstadoCivil({
-            where: { id: Number(id) },
-            data: tiposDeViviendaData,
+            where: { id },
+            data,
         });
     }
 
@@ -60,6 +61,6 @@ export class EstadosCivilesController {
     @Roles(Role.ADMIN)
     @Delete('estados-civiles/:id')
     async deleteEstadoCivil(@Param('id') id: string): Promise<EstadoCivil> {
-        return this.estadosCivilesService.deleteEstadoCivil({ id: Number(id) });
+        return this.estadosCivilesService.deleteEstadoCivil({ id });
     }
 }

@@ -8,15 +8,18 @@ import {
     Put,
     Request,
     UseGuards,
+    UsePipes,
+    ValidationPipe,
 } from '@nestjs/common';
 import { Prisma, Role, Usuario as UsersModel } from '@prisma/client';
 
-import { UsuariosService } from './usuarios.service';
+import { AuthService } from '../../auth/auth.service';
 import { Public } from '../../decorators/public.decorator';
+import { Roles } from '../../decorators/roles.decorator';
 import { LocalAuthGuard } from '../../guards/local.auth.guard';
 import { RolesGuard } from '../../guards/roles.guard';
-import { Roles } from '../../decorators/roles.decorator';
-import { AuthService } from '../../auth/auth.service';
+import { CreateUsuarioDto } from './../../dtos/create-usuario.dto';
+import { UsuariosService } from './usuarios.service';
 
 @Controller()
 export class UsuariosController {
@@ -42,27 +45,16 @@ export class UsuariosController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Get('usuario/:id')
-    async getUsuario(@Param('id') id: number): Promise<UsersModel> {
-        return this.usuariosService.usuario({ id: Number(id) });
+    async getUsuario(@Param('id') id: string): Promise<UsersModel> {
+        return this.usuariosService.usuario({ id });
     }
 
+    @UsePipes(new ValidationPipe())
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Post('usuario')
-    async createUsuario(
-        @Body() user: Prisma.UsuarioCreateInput
-    ): Promise<UsersModel> {
-        const { nombreUsuario, password, nombre, apellido, sucursales } = user;
-        const role = user.role ? user.role : 'USUARIO';
-
-        return this.usuariosService.createUsuario({
-            nombreUsuario,
-            password,
-            nombre,
-            apellido,
-            role,
-            sucursales,
-        });
+    async createUsuario(@Body() data: CreateUsuarioDto): Promise<UsersModel> {
+        return this.usuariosService.createUsuario(data);
     }
 
     @UseGuards(RolesGuard)
@@ -73,7 +65,7 @@ export class UsuariosController {
         @Body() data: Prisma.UsuarioUpdateInput
     ): Promise<UsersModel> {
         return this.usuariosService.updateUsuario({
-            where: { id: Number(id) },
+            where: { id },
             data,
         });
     }
@@ -82,6 +74,6 @@ export class UsuariosController {
     @Roles(Role.ADMIN)
     @Delete('usuario/:id')
     async deleteUsuario(@Param('id') id: string): Promise<UsersModel> {
-        return this.usuariosService.deleteUsuario({ id: Number(id) });
+        return this.usuariosService.deleteUsuario({ id });
     }
 }

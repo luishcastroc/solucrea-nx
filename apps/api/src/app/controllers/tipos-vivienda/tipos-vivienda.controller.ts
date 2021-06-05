@@ -1,3 +1,4 @@
+import { Public } from './../../decorators/public.decorator';
 import {
     Body,
     Controller,
@@ -19,28 +20,26 @@ export class TiposViviendaController {
     constructor(private readonly tiposViviendaService: TiposViviendaService) {}
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN)
+    @Public()
     @Get('tipos-de-vivienda')
     async getTiposDeVivienda(): Promise<TipoDeVivieda[]> {
         return this.tiposViviendaService.tiposDeVivienda();
     }
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN)
+    @Public()
     @Get('tipos-de-vivienda/:id')
-    async getTipoDeVivienda(@Param('id') id: number): Promise<TipoDeVivieda> {
-        return this.tiposViviendaService.tipoDeVivienda({ id: Number(id) });
+    async getTipoDeVivienda(@Param('id') id: string): Promise<TipoDeVivieda> {
+        return this.tiposViviendaService.tipoDeVivienda({ id });
     }
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Post('tipos-de-vivienda')
     async createTipoDeVivienda(
-        @Body() tipoDeViviendaData: TipoDeVivieda
+        @Body() data: TipoDeVivieda
     ): Promise<TipoDeVivieda> {
-        return this.tiposViviendaService.createTipoDeVivienda(
-            tipoDeViviendaData
-        );
+        return this.tiposViviendaService.createTipoDeVivienda(data);
     }
 
     @UseGuards(RolesGuard)
@@ -48,11 +47,11 @@ export class TiposViviendaController {
     @Put('tipos-de-vivienda/:id')
     async editTipoDeVivienda(
         @Param('id') id: string,
-        @Body() tiposDeViviendaData: TipoDeVivieda
+        @Body() data: TipoDeVivieda
     ): Promise<TipoDeVivieda> {
         return this.tiposViviendaService.updateTipoDeVivienda({
-            where: { id: Number(id) },
-            data: tiposDeViviendaData,
+            where: { id },
+            data,
         });
     }
 
@@ -63,7 +62,7 @@ export class TiposViviendaController {
         @Param('id') id: string
     ): Promise<TipoDeVivieda> {
         return this.tiposViviendaService.deleteTipoDeVivienda({
-            id: Number(id),
+            id,
         });
     }
 }

@@ -13,15 +13,18 @@ export class HttpExceptionFilter implements ExceptionFilter {
         const response = ctx.getResponse<Response>();
         const request = ctx.getRequest<Request>();
         const status = exception.getStatus();
+        let message = response.statusMessage;
 
         if (request.url === '/auth/login' && status === 401) {
-            const message = 'Usuario o contraseña erroneos, verificar.';
+            message = 'Usuario o contraseña erroneos, verificar.';
             response.status(status).json({
                 statusCode: status,
                 message,
             });
         } else {
-            let message = response.statusMessage;
+            if (!message) {
+                message = exception.getResponse()['message'];
+            }
             switch (status) {
                 case 401:
                 case 403:

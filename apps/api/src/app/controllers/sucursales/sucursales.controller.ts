@@ -1,3 +1,4 @@
+import { CreateSucursalDto } from './../../dtos/create-sucursal.dto';
 import {
     Body,
     Controller,
@@ -13,30 +14,31 @@ import { Prisma, Role, Sucursal as SucursalModel } from '@prisma/client';
 import { Roles } from '../../decorators/roles.decorator';
 import { RolesGuard } from '../../guards/roles.guard';
 import { SucursalesService } from './sucursales.service';
+import { Public } from '../../decorators/public.decorator';
 
 @Controller()
 export class SucursalesController {
     constructor(private readonly sucursalesService: SucursalesService) {}
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN, Role.USUARIO)
+    @Public()
     @Get('sucursales')
     async obtenerSucursales(): Promise<SucursalModel[]> {
         return this.sucursalesService.sucursales();
     }
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN, Role.USUARIO)
+    @Public()
     @Get('sucursal/:id')
-    async obtenerSucursal(@Param('id') id: number): Promise<SucursalModel> {
-        return this.sucursalesService.sucursal({ id: Number(id) });
+    async obtenerSucursal(@Param('id') id: string): Promise<SucursalModel> {
+        return this.sucursalesService.sucursal({ id });
     }
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Post('sucursal')
     async createSucursal(
-        @Body() data: Prisma.SucursalCreateInput
+        @Body() data: CreateSucursalDto
     ): Promise<SucursalModel> {
         return this.sucursalesService.createSucursal(data);
     }
@@ -49,7 +51,7 @@ export class SucursalesController {
         @Body() data: Prisma.SucursalUpdateInput
     ): Promise<SucursalModel> {
         return this.sucursalesService.updateSucursal({
-            where: { id: Number(id) },
+            where: { id },
             data,
         });
     }
@@ -58,6 +60,6 @@ export class SucursalesController {
     @Roles(Role.ADMIN)
     @Delete('sucursal/:id')
     async deleteSucursal(@Param('id') id: string): Promise<SucursalModel> {
-        return this.sucursalesService.deleteSucursal({ id: Number(id) });
+        return this.sucursalesService.deleteSucursal({ id });
     }
 }

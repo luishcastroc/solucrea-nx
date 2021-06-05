@@ -1,3 +1,4 @@
+import { Public } from './../../decorators/public.decorator';
 import {
     Body,
     Controller,
@@ -19,26 +20,24 @@ export class EscolaridadesController {
     constructor(private readonly escolaridadesService: EscolaridadesService) {}
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN)
+    @Public()
     @Get('escolaridades')
     async getEscolaridades(): Promise<Escolaridad[]> {
         return this.escolaridadesService.escolaridades();
     }
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN)
+    @Public()
     @Get('escolaridades/:id')
-    async getEscolaridad(@Param('id') id: number): Promise<Escolaridad> {
-        return this.escolaridadesService.escolaridad({ id: Number(id) });
+    async getEscolaridad(@Param('id') id: string): Promise<Escolaridad> {
+        return this.escolaridadesService.escolaridad({ id });
     }
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Post('escolaridades')
-    async createEscolaridad(
-        @Body() escolaridadData: Escolaridad
-    ): Promise<Escolaridad> {
-        return this.escolaridadesService.createEscolaridad(escolaridadData);
+    async createEscolaridad(@Body() data: Escolaridad): Promise<Escolaridad> {
+        return this.escolaridadesService.createEscolaridad(data);
     }
 
     @UseGuards(RolesGuard)
@@ -46,11 +45,11 @@ export class EscolaridadesController {
     @Put('escolaridades/:id')
     async editEscolaridad(
         @Param('id') id: string,
-        @Body() tiposDeViviendaData: Escolaridad
+        @Body() data: Escolaridad
     ): Promise<Escolaridad> {
         return this.escolaridadesService.updateEscolaridad({
-            where: { id: Number(id) },
-            data: tiposDeViviendaData,
+            where: { id },
+            data,
         });
     }
 
@@ -58,6 +57,6 @@ export class EscolaridadesController {
     @Roles(Role.ADMIN)
     @Delete('escolaridades/:id')
     async deleteEscolaridad(@Param('id') id: string): Promise<Escolaridad> {
-        return this.escolaridadesService.deleteEscolaridad({ id: Number(id) });
+        return this.escolaridadesService.deleteEscolaridad({ id });
     }
 }
