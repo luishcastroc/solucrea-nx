@@ -1,4 +1,3 @@
-import { Public } from './../../decorators/public.decorator';
 import {
     Body,
     Controller,
@@ -8,12 +7,15 @@ import {
     Post,
     Put,
     UseGuards,
+    UsePipes,
+    ValidationPipe,
 } from '@nestjs/common';
 import { Cliente, Prisma, Role } from '@prisma/client';
 
 import { CreateClienteDto } from '../../dtos/create-cliente.dto';
-import { Roles } from './../../decorators/roles.decorator';
-import { RolesGuard } from './../../guards/roles.guard';
+import { Public } from '../../decorators/public.decorator';
+import { Roles } from '../../decorators/roles.decorator';
+import { RolesGuard } from '../../guards/roles.guard';
 import { ClientesService } from './clientes.service';
 
 @Controller('')
@@ -29,14 +31,15 @@ export class ClientesController {
 
     @UseGuards(RolesGuard)
     @Public()
-    @Get('clientes/:id')
+    @Get('cliente/:id')
     async getTipoDeVivienda(@Param('id') id: string): Promise<Cliente> {
         return this.clientesService.cliente({ id });
     }
 
     @UseGuards(RolesGuard)
+    @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN)
-    @Post('clientes')
+    @Post('cliente')
     async createTipoDeVivienda(
         @Body() data: CreateClienteDto
     ): Promise<Cliente> {
@@ -45,7 +48,7 @@ export class ClientesController {
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
-    @Put('clientes/:id')
+    @Put('cliente/:id')
     async editTipoDeVivienda(
         @Param('id') id: string,
         @Body() data: Prisma.ClienteUpdateInput
@@ -58,7 +61,7 @@ export class ClientesController {
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
-    @Delete('clientes/:id')
+    @Delete('cliente/:id')
     async deleteTipoDeVivienda(@Param('id') id: string): Promise<Cliente> {
         return this.clientesService.deleteClientes({ id });
     }

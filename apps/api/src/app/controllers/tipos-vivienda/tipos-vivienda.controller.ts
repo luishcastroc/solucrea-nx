@@ -1,4 +1,3 @@
-import { Public } from './../../decorators/public.decorator';
 import {
     Body,
     Controller,
@@ -9,8 +8,9 @@ import {
     Put,
     UseGuards,
 } from '@nestjs/common';
-import { Role, TipoDeVivieda } from '@prisma/client';
+import { Role, TipoDeVivienda } from '@prisma/client';
 
+import { Public } from '../../decorators/public.decorator';
 import { Roles } from '../../decorators/roles.decorator';
 import { RolesGuard } from '../../guards/roles.guard';
 import { TiposViviendaService } from './tipos-vivienda.service';
@@ -22,33 +22,33 @@ export class TiposViviendaController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('tipos-de-vivienda')
-    async getTiposDeVivienda(): Promise<TipoDeVivieda[]> {
+    async getTiposDeVivienda(): Promise<TipoDeVivienda[]> {
         return this.tiposViviendaService.tiposDeVivienda();
     }
 
     @UseGuards(RolesGuard)
     @Public()
-    @Get('tipos-de-vivienda/:id')
-    async getTipoDeVivienda(@Param('id') id: string): Promise<TipoDeVivieda> {
+    @Get('tipo-de-vivienda/:id')
+    async getTipoDeVivienda(@Param('id') id: string): Promise<TipoDeVivienda> {
         return this.tiposViviendaService.tipoDeVivienda({ id });
     }
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
-    @Post('tipos-de-vivienda')
+    @Post('tipo-de-vivienda')
     async createTipoDeVivienda(
-        @Body() data: TipoDeVivieda
-    ): Promise<TipoDeVivieda> {
+        @Body() data: TipoDeVivienda
+    ): Promise<TipoDeVivienda> {
         return this.tiposViviendaService.createTipoDeVivienda(data);
     }
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
-    @Put('tipos-de-vivienda/:id')
+    @Put('tipo-de-vivienda/:id')
     async editTipoDeVivienda(
         @Param('id') id: string,
-        @Body() data: TipoDeVivieda
-    ): Promise<TipoDeVivieda> {
+        @Body() data: TipoDeVivienda
+    ): Promise<TipoDeVivienda> {
         return this.tiposViviendaService.updateTipoDeVivienda({
             where: { id },
             data,
@@ -57,10 +57,10 @@ export class TiposViviendaController {
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
-    @Delete('tipos-de-vivienda/:id')
+    @Delete('tipo-de-vivienda/:id')
     async deleteTipoDeVivienda(
         @Param('id') id: string
-    ): Promise<TipoDeVivieda> {
+    ): Promise<TipoDeVivienda> {
         return this.tiposViviendaService.deleteTipoDeVivienda({
             id,
         });

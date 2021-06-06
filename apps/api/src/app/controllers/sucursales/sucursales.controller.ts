@@ -1,4 +1,4 @@
-import { CreateSucursalDto } from './../../dtos/create-sucursal.dto';
+import { CreateSucursalDto } from '../../dtos/create-sucursal.dto';
 import {
     Body,
     Controller,
@@ -8,6 +8,8 @@ import {
     Post,
     Put,
     UseGuards,
+    UsePipes,
+    ValidationPipe,
 } from '@nestjs/common';
 import { Prisma, Role, Sucursal as SucursalModel } from '@prisma/client';
 
@@ -35,6 +37,7 @@ export class SucursalesController {
     }
 
     @UseGuards(RolesGuard)
+    @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN)
     @Post('sucursal')
     async createSucursal(

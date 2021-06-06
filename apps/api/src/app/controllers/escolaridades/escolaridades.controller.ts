@@ -1,4 +1,3 @@
-import { Public } from './../../decorators/public.decorator';
 import {
     Body,
     Controller,
@@ -8,11 +7,14 @@ import {
     Post,
     Put,
     UseGuards,
+    UsePipes,
+    ValidationPipe,
 } from '@nestjs/common';
 import { Escolaridad, Role } from '@prisma/client';
 
 import { Roles } from '../../decorators/roles.decorator';
 import { RolesGuard } from '../../guards/roles.guard';
+import { Public } from '../../decorators/public.decorator';
 import { EscolaridadesService } from './escolaridades.service';
 
 @Controller()
@@ -28,21 +30,22 @@ export class EscolaridadesController {
 
     @UseGuards(RolesGuard)
     @Public()
-    @Get('escolaridades/:id')
+    @Get('escolaridad/:id')
     async getEscolaridad(@Param('id') id: string): Promise<Escolaridad> {
         return this.escolaridadesService.escolaridad({ id });
     }
 
     @UseGuards(RolesGuard)
+    @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN)
-    @Post('escolaridades')
+    @Post('escolaridad')
     async createEscolaridad(@Body() data: Escolaridad): Promise<Escolaridad> {
         return this.escolaridadesService.createEscolaridad(data);
     }
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
-    @Put('escolaridades/:id')
+    @Put('escolaridad/:id')
     async editEscolaridad(
         @Param('id') id: string,
         @Body() data: Escolaridad
@@ -55,7 +58,7 @@ export class EscolaridadesController {
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
-    @Delete('escolaridades/:id')
+    @Delete('escolaridad/:id')
     async deleteEscolaridad(@Param('id') id: string): Promise<Escolaridad> {
         return this.escolaridadesService.deleteEscolaridad({ id });
     }

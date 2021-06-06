@@ -1,6 +1,3 @@
-import { Public } from './../../decorators/public.decorator';
-import { RolesGuard } from './../../guards/roles.guard';
-import { Roles } from './../../decorators/roles.decorator';
 import {
     Body,
     Controller,
@@ -10,9 +7,15 @@ import {
     Post,
     Put,
     UseGuards,
+    UsePipes,
+    ValidationPipe,
 } from '@nestjs/common';
-import { Estado, Role } from '.prisma/client';
+
+import { Public } from '../../decorators/public.decorator';
+import { Roles } from '../../decorators/roles.decorator';
+import { RolesGuard } from '../../guards/roles.guard';
 import { EstadoService } from './estado.service';
+import { Estado, Role } from '.prisma/client';
 
 @Controller()
 export class EstadoController {
@@ -33,6 +36,7 @@ export class EstadoController {
     }
 
     @UseGuards(RolesGuard)
+    @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN)
     @Post('estado')
     async createEstado(@Body() estadoData: Estado): Promise<Estado> {

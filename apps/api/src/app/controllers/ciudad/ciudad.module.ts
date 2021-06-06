@@ -4,7 +4,7 @@ import { CiudadController } from './ciudad.controller';
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Module({
-    providers: [CiudadService],
-    controllers: [CiudadController, PrismaService],
+    controllers: [CiudadController],
+    providers: [CiudadService, PrismaService],
 })
 export class CiudadModule {}

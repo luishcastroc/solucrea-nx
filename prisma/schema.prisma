@@ -165,7 +165,7 @@ model CodigoPostal {
   @@map(name: "CodigosPostales")
 }
 
-model TipoDeVivieda {
+model TipoDeVivienda {
   id                 String    @id @default(uuid())
   descripcion        String
   clientes           Cliente[]
@@ -390,31 +390,31 @@ model Caja {
 }
 
 model Cliente {
-  id                   String        @id @default(uuid())
+  id                   String         @id @default(uuid())
   nombre               String
   apellidos            String
   fechaDeNacimiento    DateTime
-  rfc                  String        @unique
-  curp                 String        @unique
+  rfc                  String         @unique
+  curp                 String         @unique
   telefono1            String
   telefono2            String?
-  estadoCivil          EstadoCivil   @relation(fields: [estadoCivilId], references: [id])
-  tipoDeVivienda       TipoDeVivieda @relation(fields: [tipoDeViviedaId], references: [id])
-  escolaridad          Escolaridad   @relation(fields: [escolaridadId], references: [id])
-  genero               Genero        @relation(fields: [generoId], references: [id])
+  estadoCivil          EstadoCivil    @relation(fields: [estadoCivilId], references: [id])
+  tipoDeVivienda       TipoDeVivienda @relation(fields: [tipoDeViviendaId], references: [id])
+  escolaridad          Escolaridad    @relation(fields: [escolaridadId], references: [id])
+  genero               Genero         @relation(fields: [generoId], references: [id])
   direcciones          Direccion[]
   creditos             Credito[]
-  montoMinimo          Decimal       @db.Decimal(15, 2)
-  montoMaximo          Decimal       @db.Decimal(15, 2)
-  numeroCreditosCrecer Int           @default(3)
+  montoMinimo          Decimal        @db.Decimal(15, 2)
+  montoMaximo          Decimal        @db.Decimal(15, 2)
+  numeroCreditosCrecer Int            @default(3)
   estadoCivilId        String
-  tipoDeViviedaId      String
+  tipoDeViviendaId     String
   escolaridadId        String
   generoId             String
   creadoPor            String
-  fechaCreacion        DateTime      @default(now())
-  actualizadoPor       String        @default("ADMIN")
-  fechaActualizacion   DateTime      @default(now()) @updatedAt
+  fechaCreacion        DateTime       @default(now())
+  actualizadoPor       String         @default("ADMIN")
+  fechaActualizacion   DateTime       @default(now()) @updatedAt
 
   @@map(name: "Clientes")
 }

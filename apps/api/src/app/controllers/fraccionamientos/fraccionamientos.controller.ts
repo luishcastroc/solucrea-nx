@@ -1,4 +1,3 @@
-import { Public } from './../../decorators/public.decorator';
 import {
     Body,
     Controller,
@@ -8,15 +7,18 @@ import {
     Post,
     Put,
     UseGuards,
+    UsePipes,
+    ValidationPipe,
 } from '@nestjs/common';
 
 import { Roles } from '../../decorators/roles.decorator';
 import { CreateFraccionamientoDto } from '../../dtos/create-fraccionamiento.dto';
 import { RolesGuard } from '../../guards/roles.guard';
+import { Public } from '../../decorators/public.decorator';
 import { FraccionamientosService } from './fraccionamientos.service';
 import { Fraccionamiento, Role } from '.prisma/client';
 
-@Controller('fraccionamientos')
+@Controller()
 export class FraccionamientosController {
     constructor(
         private readonly fraccionamientosService: FraccionamientosService
@@ -39,6 +41,7 @@ export class FraccionamientosController {
     }
 
     @UseGuards(RolesGuard)
+    @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN)
     @Post('fraccionamiento')
     async createFraccionamiento(

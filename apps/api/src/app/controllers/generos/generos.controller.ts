@@ -7,11 +7,15 @@ import {
     Post,
     Put,
     UseGuards,
+    UsePipes,
+    ValidationPipe,
 } from '@nestjs/common';
 import { Genero, Role } from '@prisma/client';
 
+import { Public } from '../../decorators/public.decorator';
 import { Roles } from '../../decorators/roles.decorator';
 import { RolesGuard } from '../../guards/roles.guard';
+import { CreateGeneroDto } from './../../dtos/create-genero.dto';
 import { GenerosService } from './generos.service';
 
 @Controller()
@@ -19,23 +23,24 @@ export class GenerosController {
     constructor(private readonly generosService: GenerosService) {}
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN)
+    @Public()
     @Get('generos')
     async getGeneros(): Promise<Genero[]> {
         return this.generosService.generos();
     }
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN)
+    @Public()
     @Get('genero/:id')
     async getGenero(@Param('id') id: string): Promise<Genero> {
         return this.generosService.genero({ id });
     }
 
     @UseGuards(RolesGuard)
+    @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN)
-    @Post('generos')
-    async createGenero(@Body() data: Genero): Promise<Genero> {
+    @Post('genero')
+    async createGenero(@Body() data: CreateGeneroDto): Promise<Genero> {
         return this.generosService.createGenero(data);
     }
 

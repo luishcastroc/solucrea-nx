@@ -20,7 +20,7 @@ export class CreateClienteDto implements Prisma.ClienteCreateInput {
     @IsNotEmpty({ message: 'Estado civil es requerido' })
     estadoCivil: Prisma.EstadoCivilCreateNestedOneWithoutClientesInput;
     @IsNotEmpty({ message: 'Típo de vivienda es requerido' })
-    tipoDeVivienda: Prisma.TipoDeViviedaCreateNestedOneWithoutClientesInput;
+    tipoDeVivienda: Prisma.TipoDeViviendaCreateNestedOneWithoutClientesInput;
     @IsNotEmpty({ message: 'Escolaridad es requerida' })
     escolaridad: Prisma.EscolaridadCreateNestedOneWithoutClientesInput;
     @IsNotEmpty({ message: 'Género es requerido' })

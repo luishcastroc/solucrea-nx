@@ -1,4 +1,3 @@
-import { Public } from './../../decorators/public.decorator';
 import {
     Body,
     Controller,
@@ -13,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { Direccion, Prisma, Role } from '@prisma/client';
 
+import { Public } from '../../decorators/public.decorator';
 import { Roles } from '../../decorators/roles.decorator';
 import { CreateDireccionDto } from '../../dtos/create-direccion.dto';
 import { RolesGuard } from '../../guards/roles.guard';
@@ -31,7 +31,7 @@ export class DireccionesController {
 
     @UseGuards(RolesGuard)
     @Public()
-    @Get('direcciones/:id')
+    @Get('direccion/:id')
     async getDireccion(@Param('id') id: string): Promise<Direccion> {
         return this.direccionesService.direccion({ id });
     }
@@ -39,7 +39,7 @@ export class DireccionesController {
     @UseGuards(RolesGuard)
     @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN)
-    @Post('direcciones')
+    @Post('direccion')
     async createDireccion(
         @Body() data: CreateDireccionDto
     ): Promise<Direccion> {
@@ -48,7 +48,7 @@ export class DireccionesController {
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
-    @Put('direcciones/:id')
+    @Put('direccion/:id')
     async editDireccion(
         @Param('id') id: string,
         @Body() data: Prisma.DireccionUpdateInput
@@ -61,7 +61,7 @@ export class DireccionesController {
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
-    @Delete('direcciones/:id')
+    @Delete('direccion/:id')
     async deleteDireccion(@Param('id') id: string): Promise<Direccion> {
         return this.direccionesService.deleteDireccion({ id });
     }

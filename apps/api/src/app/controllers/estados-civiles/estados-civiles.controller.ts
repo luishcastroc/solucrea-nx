@@ -1,4 +1,3 @@
-import { Public } from './../../decorators/public.decorator';
 import {
     Body,
     Controller,
@@ -11,7 +10,9 @@ import {
 } from '@nestjs/common';
 import { EstadoCivil, Role } from '@prisma/client';
 
+import { Public } from '../../decorators/public.decorator';
 import { Roles } from '../../decorators/roles.decorator';
+import { CreateEstadoCivilDto } from '../../dtos/create-estado-civil.dto';
 import { RolesGuard } from '../../guards/roles.guard';
 import { EstadosCivilesService } from './estados-civiles.service';
 
@@ -30,23 +31,23 @@ export class EstadosCivilesController {
 
     @UseGuards(RolesGuard)
     @Public()
-    @Get('estados-civiles/:id')
+    @Get('estado-civil/:id')
     async getEstadoCivil(@Param('id') id: string): Promise<EstadoCivil> {
         return this.estadosCivilesService.estadoCivil({ id });
     }
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
-    @Post('estados-civiles')
+    @Post('estado-civil')
     async createEstadoCivil(
-        @Body() estadoCivilData: EstadoCivil
+        @Body() data: CreateEstadoCivilDto
     ): Promise<EstadoCivil> {
-        return this.estadosCivilesService.createEstadoCivil(estadoCivilData);
+        return this.estadosCivilesService.createEstadoCivil(data);
     }
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
-    @Put('estados-civiles/:id')
+    @Put('estado-civil/:id')
     async editEstadoCivil(
         @Param('id') id: string,
         @Body() data: EstadoCivil
@@ -59,7 +60,7 @@ export class EstadosCivilesController {
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
-    @Delete('estados-civiles/:id')
+    @Delete('estado-civil/:id')
     async deleteEstadoCivil(@Param('id') id: string): Promise<EstadoCivil> {
         return this.estadosCivilesService.deleteEstadoCivil({ id });
     }

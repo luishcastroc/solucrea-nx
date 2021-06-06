@@ -1,9 +1,3 @@
-import { Public } from './../../decorators/public.decorator';
-import { CreateCodigoPostalDto } from './../../dtos/create-codigo-postal.dto';
-import { Roles } from './../../decorators/roles.decorator';
-import { RolesGuard } from './../../guards/roles.guard';
-import { CodigoPostalService } from './codigo-postal.service';
-import { CodigoPostal, Role } from '@prisma/client';
 import {
     Body,
     Controller,
@@ -16,6 +10,13 @@ import {
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
+import { CodigoPostal, Role } from '@prisma/client';
+
+import { Public } from '../../decorators/public.decorator';
+import { Roles } from '../../decorators/roles.decorator';
+import { CreateCodigoPostalDto } from './../../dtos/create-codigo-postal.dto';
+import { RolesGuard } from './../../guards/roles.guard';
+import { CodigoPostalService } from './codigo-postal.service';
 
 @Controller()
 export class CodigoPostalController {
@@ -38,7 +39,7 @@ export class CodigoPostalController {
     @UseGuards(RolesGuard)
     @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN)
-    @Post('CodigoPostal')
+    @Post('codigo-postal')
     async createCodigoPostal(
         @Body() data: CreateCodigoPostalDto
     ): Promise<CodigoPostal> {
