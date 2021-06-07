@@ -1,0 +1,11 @@
+{
+  "migrations": [
+    {
+      "version": "12.0.1",
+      "factory": "./update-12/schematic-options",
+      "description": "Remove invalid 'skipTests' option in '@schematics/angular:module' Angular schematic options.",
+      "package": "@angular/cli",
+      "name": "schematic-options-12"
+    }
+  ]
+}
