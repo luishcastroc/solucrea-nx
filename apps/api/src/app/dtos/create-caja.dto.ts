@@ -5,8 +5,8 @@ export class CreateCajaDto implements Prisma.CajaCreateInput {
     saldoInicial: string | number | Prisma.Decimal;
     @IsNotEmpty({ message: 'Sucursal es requerida.' })
     sucursal: Prisma.SucursalCreateNestedOneWithoutCajasInput;
-    observaciones: string;
-    creadoPor?: string;
+    observaciones?: string;
+    creadoPor: string;
     fechaCreacion?: string | Date;
     actualizadoPor?: string;
     fechaActualizacion?: string | Date;

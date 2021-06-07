@@ -1,3 +1,4 @@
+import { CreateAvalDto } from './../../dtos/create-aval.dto';
 import { Aval, Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -18,7 +19,7 @@ export class AvalesService {
         return this.prisma.aval.findMany();
     }
 
-    async createAval(data: Prisma.AvalCreateInput): Promise<Aval> {
+    async createAval(data: CreateAvalDto): Promise<Aval> {
         return this.prisma.aval.create({
             data,
         });

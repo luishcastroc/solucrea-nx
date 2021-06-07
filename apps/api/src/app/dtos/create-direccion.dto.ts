@@ -20,7 +20,7 @@ export class CreateDireccionDto implements Prisma.DireccionCreateInput {
     cruzamientos?: string;
     sucursales?: Prisma.SucursalCreateNestedManyWithoutDireccionInput;
     cliente?: Prisma.ClienteCreateNestedOneWithoutDireccionesInput;
-    creadoPor?: string;
+    creadoPor: string;
     fechaCreacion?: string | Date;
     actualizadoPor?: string;
     fechaActualizacion?: string | Date;

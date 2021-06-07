@@ -28,7 +28,6 @@ export class UsuariosService {
     }
 
     async createUsuario(data: Prisma.UsuarioCreateInput): Promise<Usuario> {
-        console.log(data);
         const saltOrRounds = 10;
         const hash = await bcrypt.hash(data.password, saltOrRounds);
         data = { ...data, password: hash };

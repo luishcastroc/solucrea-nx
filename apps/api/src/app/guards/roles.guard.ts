@@ -1,3 +1,4 @@
+import { UnauthorizedException } from '@nestjs/common';
 /* eslint-disable arrow-parens */
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
@@ -17,7 +18,25 @@ export class RolesGuard implements CanActivate {
         if (!requiredRoles) {
             return true;
         }
-        const { user } = context.switchToHttp().getRequest();
-        return requiredRoles.some((role) => user.role === role);
+        const { user, params } = context.switchToHttp().getRequest();
+        return requiredRoles.some((role) => {
+            let result = false;
+            if (user.role === role) {
+                switch (user.role) {
+                    case Role.CAJERO:
+                    case Role.SECRE:
+                    case Role.USUARIO:
+                        if (user.userId !== params.id) {
+                            throw new UnauthorizedException();
+                        } else {
+                            result = true;
+                        }
+                        break;
+                    default:
+                        result = true;
+                }
+                return result;
+            }
+        });
     }
 }

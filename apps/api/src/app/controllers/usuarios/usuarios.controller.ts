@@ -43,7 +43,7 @@ export class UsuariosController {
     }
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN)
+    @Roles(Role.ADMIN, Role.CAJERO, Role.SECRE, Role.USUARIO)
     @Get('usuario/:id')
     async getUsuario(@Param('id') id: string): Promise<UsersModel> {
         return this.usuariosService.usuario({ id });
@@ -54,11 +54,13 @@ export class UsuariosController {
     @Roles(Role.ADMIN)
     @Post('usuario')
     async createUsuario(@Body() data: CreateUsuarioDto): Promise<UsersModel> {
-        return this.usuariosService.createUsuario(data);
+        const usuarioCreate = await this.usuariosService.createUsuario(data);
+        delete usuarioCreate.password;
+        return usuarioCreate;
     }
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN)
+    @Roles(Role.ADMIN, Role.CAJERO, Role.SECRE, Role.USUARIO)
     @Put('usuario/:id')
     async editUsuario(
         @Param('id') id: string,
@@ -74,6 +76,8 @@ export class UsuariosController {
     @Roles(Role.ADMIN)
     @Delete('usuario/:id')
     async deleteUsuario(@Param('id') id: string): Promise<UsersModel> {
-        return this.usuariosService.deleteUsuario({ id });
+        const usuarioDelete = await this.usuariosService.deleteUsuario({ id });
+        delete usuarioDelete.password;
+        return usuarioDelete;
     }
 }

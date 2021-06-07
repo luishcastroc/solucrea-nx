@@ -13,7 +13,7 @@ export class CreateAvalDto implements Prisma.AvalCreateInput {
     parentesco: Prisma.ParentescoCreateNestedOneWithoutAvalesInput;
     @IsNotEmpty({ message: 'Ocupación es requerida.' })
     ocupacion: Prisma.OcupacionCreateNestedOneWithoutAvalesInput;
-    creadoPor?: string;
+    creadoPor: string;
     fechaCreacion?: string | Date;
     actualizadoPor?: string;
     fechaActualizacion?: string | Date;
