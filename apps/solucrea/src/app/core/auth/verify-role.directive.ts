@@ -1,17 +1,18 @@
-import { AuthState } from './store/auth.state';
-import { Role, User } from './../_models/user.model';
-import { AuthService } from './auth.service';
 import {
     Directive,
+    Input,
+    OnDestroy,
     OnInit,
     TemplateRef,
     ViewContainerRef,
-    Input,
-    OnDestroy,
 } from '@angular/core';
+import { Select } from '@ngxs/store';
+import { Usuario, Role } from '@prisma/client';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Select } from '@ngxs/store';
+
+import { AuthService } from './auth.service';
+import { AuthState } from './store/auth.state';
 
 @Directive({
     selector: '[verifyRole]',
@@ -23,7 +24,7 @@ export class VerifyRoleDirective implements OnInit, OnDestroy {
         }
     }
 
-    @Select(AuthState.user) user$: Observable<User>;
+    @Select(AuthState.user) user$: Observable<Usuario>;
 
     roles: Role[];
 

@@ -58,10 +58,10 @@ export class AjustesComponent implements OnInit, OnDestroy {
                 description: 'Maneja tu contraseña',
             },
             {
-                id: 'permisos',
+                id: 'usuarios',
                 icon: 'heroicons_outline:user-group',
-                title: 'Permisos',
-                description: 'Maneja el equipo y sus permisos',
+                title: 'Usuarios',
+                description: 'Manejo de los usuarios y sus permisos',
             },
         ];
 

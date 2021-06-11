@@ -1,10 +1,10 @@
+import { Role } from '@prisma/client';
 /* eslint-disable arrow-parens */
 import { Route } from '@angular/router';
 import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 import { InitialDataResolver } from 'app/app.resolvers';
-import { Role } from './core/_models/user.model';
 
 // @formatter:off
 // tslint:disable:max-line-length
@@ -83,7 +83,7 @@ export const appRoutes: Route[] = [
             initialData: InitialDataResolver,
         },
         data: {
-            roles: [Role.all],
+            roles: [Role.ALL],
         },
         children: [
             {
@@ -127,7 +127,6 @@ export const appRoutes: Route[] = [
                     import('app/modules/ajustes/ajustes.module').then(
                         (m) => m.AjustesModule
                     ),
-                data: { roles: [Role.admin] },
             },
         ],
     },

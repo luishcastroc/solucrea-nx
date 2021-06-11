@@ -282,6 +282,7 @@ enum Role {
   CAJERO
   MANAGER
   SECRE
+  ALL
 }
 
 enum TipoDireccion {

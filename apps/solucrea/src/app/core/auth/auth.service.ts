@@ -1,4 +1,4 @@
-import { Role } from './../_models/user.model';
+import { Role } from '@prisma/client';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -55,7 +55,7 @@ export class AuthService {
 
     checkAuthorization(userRole: Role, allowedRoles: Role[]): boolean {
         for (const role of allowedRoles) {
-            if (role === userRole || role === Role.all) {
+            if (role === userRole || role === Role.ALL) {
                 return true;
             }
         }

@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 import { Injectable } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
@@ -11,7 +12,6 @@ import {
 } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Select, Store } from '@ngxs/store';
-import { Role } from 'app/core/_models/user.model';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';

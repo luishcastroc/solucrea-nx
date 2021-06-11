@@ -1,6 +1,6 @@
+import { Role } from '@prisma/client';
 import { FuseNavigationItem } from '@fuse/components/navigation';
 import { Layout } from 'app/layout/layout.types';
-import { Role } from '../_models/user.model';
 
 // Types
 export type Scheme = 'auto' | 'dark' | 'light';
@@ -37,7 +37,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         subtitle: 'Opciones del sistema',
         type: 'group',
         icon: 'heroicons_outline:document',
-        roles: [Role.all],
+        roles: [Role.ALL],
         children: [
             {
                 id: 'menu.clientes',
@@ -45,7 +45,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:clipboard-list',
                 link: '/clientes',
-                roles: [Role.all],
+                roles: [Role.ALL],
             },
             {
                 id: 'menu.creditos',
@@ -53,7 +53,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:credit-card',
                 link: '/creditos',
-                roles: [Role.all],
+                roles: [Role.ALL],
             },
             {
                 id: 'menu.reportes',
@@ -61,7 +61,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:document-report',
                 link: '/reportes',
-                roles: [Role.all],
+                roles: [Role.ALL],
             },
             {
                 id: 'menu.caja',
@@ -69,7 +69,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:cash',
                 link: '/caja',
-                roles: [Role.all],
+                roles: [Role.ALL],
             },
             {
                 id: 'menu.ajustes',
@@ -77,7 +77,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:adjustments',
                 link: '/ajustes',
-                roles: [Role.admin],
+                roles: [Role.ALL],
             },
         ],
     },

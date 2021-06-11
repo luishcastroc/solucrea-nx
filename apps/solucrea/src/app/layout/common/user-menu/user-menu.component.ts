@@ -10,8 +10,7 @@ import {
 } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Select, Store } from '@ngxs/store';
-import { User } from 'app/core/_models/user.model';
-import { UserService } from 'app/core/_services/user.service';
+import { Usuario } from '@prisma/client';
 import { AuthState } from 'app/core/auth/store/auth.state';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -26,10 +25,10 @@ import { takeUntil } from 'rxjs/operators';
 export class UserMenuComponent implements OnInit, OnDestroy {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     static ngAcceptInputType_showAvatar: BooleanInput;
-    @Select(AuthState.user) user$: Observable<User>;
+    @Select(AuthState.user) user$: Observable<Usuario>;
 
     @Input() showAvatar: boolean = true;
-    user: User;
+    user: Usuario;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -52,7 +51,7 @@ export class UserMenuComponent implements OnInit, OnDestroy {
         // Subscribe to user changes
         this.user$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((user: User) => {
+            .subscribe((user: Usuario) => {
                 this.user = user;
 
                 // Mark for check

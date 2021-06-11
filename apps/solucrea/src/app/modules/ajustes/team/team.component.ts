@@ -1,6 +1,15 @@
+import { AuthState } from '../../../core/auth/store/auth.state';
+import { GetAll } from './../_store/ajustes.actions';
+import { takeUntil } from 'rxjs/operators';
+import { Usuario, Role } from '@prisma/client';
+import { Observable, Subject } from 'rxjs';
+import { AjustesState } from './../_store/ajustes.state';
+import { Select, Store } from '@ngxs/store';
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
+    OnDestroy,
     OnInit,
     ViewEncapsulation,
 } from '@angular/core';
@@ -11,14 +20,21 @@ import {
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AjustesTeamComponent implements OnInit {
+export class AjustesTeamComponent implements OnInit, OnDestroy {
+    @Select(AjustesState.usuarios) usuarios$: Observable<Usuario[]>;
+    usuario = this._store.selectSnapshot(AuthState.user);
+    usuarios: Usuario[];
     members: any[];
     roles: any[];
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
      * Constructor
      */
-    constructor() {}
+    constructor(
+        private _changeDetectorRef: ChangeDetectorRef,
+        private _store: Store
+    ) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -28,71 +44,44 @@ export class AjustesTeamComponent implements OnInit {
      * On init
      */
     ngOnInit(): void {
-        // Setup the team members
-        this.members = [
-            {
-                avatar: 'assets/images/avatars/male-01.jpg',
-                name: 'Dejesus Michael',
-                email: 'dejesusmichael@mail.org',
-                role: 'admin',
-            },
-            {
-                avatar: 'assets/images/avatars/male-03.jpg',
-                name: 'Mclaughlin Steele',
-                email: 'mclaughlinsteele@mail.me',
-                role: 'admin',
-            },
-            {
-                avatar: 'assets/images/avatars/female-02.jpg',
-                name: 'Laverne Dodson',
-                email: 'lavernedodson@mail.ca',
-                role: 'write',
-            },
-            {
-                avatar: 'assets/images/avatars/female-03.jpg',
-                name: 'Trudy Berg',
-                email: 'trudyberg@mail.us',
-                role: 'read',
-            },
-            {
-                avatar: 'assets/images/avatars/male-07.jpg',
-                name: 'Lamb Underwood',
-                email: 'lambunderwood@mail.me',
-                role: 'read',
-            },
-            {
-                avatar: 'assets/images/avatars/male-08.jpg',
-                name: 'Mcleod Wagner',
-                email: 'mcleodwagner@mail.biz',
-                role: 'read',
-            },
-            {
-                avatar: 'assets/images/avatars/female-07.jpg',
-                name: 'Shannon Kennedy',
-                email: 'shannonkennedy@mail.ca',
-                role: 'read',
-            },
-        ];
+        this._store.dispatch(new GetAll(this.usuario.id));
+        this.usuarios$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((usuarios: Usuario[]) => {
+                this.usuarios = usuarios;
+
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
 
         // Setup the roles
         this.roles = [
             {
-                label: 'Read',
-                value: 'read',
+                label: 'Administrador',
+                value: Role.ADMIN,
                 description:
-                    'Can read and clone this repository. Can also open and comment on issues and pull requests.',
+                    'Tiene permisos para hacer todo, puede borrar, agregar o editar información.',
             },
             {
-                label: 'Write',
-                value: 'write',
-                description:
-                    'Can read, clone, and push to this repository. Can also manage issues and pull requests.',
+                label: 'Cajero',
+                value: Role.CAJERO,
+                description: 'Puede realizar operaciones generales de caja.',
             },
             {
-                label: 'Admin',
-                value: 'admin',
+                label: 'Director',
+                value: Role.DIRECTOR,
                 description:
-                    'Can read, clone, and push to this repository. Can also manage issues, pull requests, and repository settings, including adding collaborators.',
+                    'Tiene mayoria de permisos a excepcion de manejo de usuarios.',
+            },
+            {
+                label: 'Gerente',
+                value: Role.MANAGER,
+                description: 'Permisos generales y manejo de dinero.',
+            },
+            {
+                label: 'Usuario',
+                value: Role.USUARIO,
+                description: 'Usuario general con permisos mínimos.',
             },
         ];
     }
@@ -109,5 +98,14 @@ export class AjustesTeamComponent implements OnInit {
      */
     trackByFn(index: number, item: any): any {
         return item.id || index;
+    }
+
+    /**
+     * On destroy
+     */
+    ngOnDestroy(): void {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
     }
 }

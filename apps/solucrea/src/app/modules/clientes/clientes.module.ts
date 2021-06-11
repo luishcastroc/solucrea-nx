@@ -1,3 +1,8 @@
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { SharedModule } from './../../shared/shared.module';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
 
@@ -12,6 +17,13 @@ const clientesRoutes: Route[] = [
 
 @NgModule({
     declarations: [ClientesComponent],
-    imports: [RouterModule.forChild(clientesRoutes)],
+    imports: [
+        RouterModule.forChild(clientesRoutes),
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatButtonModule,
+        SharedModule,
+    ],
 })
 export class ClientesModule {}

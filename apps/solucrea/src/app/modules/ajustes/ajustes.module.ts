@@ -1,3 +1,5 @@
+import { AjustesState } from './_store/ajustes.state';
+import { NgxsModule } from '@ngxs/store';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -38,6 +40,7 @@ import { AjustesTeamComponent } from './team/team.component';
         FuseAlertModule,
         FuseAutogrowModule,
         SharedModule,
+        NgxsModule.forFeature([AjustesState]),
     ],
 })
 export class AjustesModule {}

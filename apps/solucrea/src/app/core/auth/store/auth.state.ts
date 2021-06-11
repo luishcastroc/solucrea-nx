@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { User } from 'app/core/_models/user.model';
+import { Usuario } from '@prisma/client';
 import { throwError } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -31,7 +31,7 @@ export class AuthState {
     }
 
     @Selector()
-    static user(state: AuthStateModel): User | null {
+    static user(state: AuthStateModel): Usuario | null {
         return state.user;
     }
 
@@ -43,7 +43,7 @@ export class AuthState {
             return throwError('El usuario ya ingresó al sistema.');
         }
         return this.authService.signIn({ username, password }).pipe(
-            tap((result: { accessToken: string; user: User }) => {
+            tap((result: { accessToken: string; user: Usuario }) => {
                 const { accessToken, user } = result;
                 ctx.patchState({
                     accessToken,

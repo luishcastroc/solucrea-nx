@@ -1,4 +1,4 @@
-import { Role } from '../../../app/core/_models/user.model';
+import { Role } from '@prisma/client';
 
 export interface FuseNavigationItem {
     id?: string;

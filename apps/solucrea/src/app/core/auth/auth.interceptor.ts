@@ -55,6 +55,8 @@ export class AuthInterceptor implements HttpInterceptor {
                         this._store.selectSnapshot(AuthState.accessToken)
                 ),
             });
+        } else {
+            this._store.dispatch(new Logout());
         }
 
         // Response
