@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { UpdateUsuarioDto } from './../../dtos/update-usuario.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma, Usuario } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
@@ -40,9 +41,36 @@ export class UsuariosService {
 
     async updateUsuario(params: {
         where: Prisma.UsuarioWhereUniqueInput;
-        data: Prisma.UsuarioUpdateInput;
+        data: UpdateUsuarioDto;
     }): Promise<Usuario> {
-        const { where, data } = params;
+        const { where } = params;
+        let { data } = params;
+        if (data.password) {
+            const usuario = await this.prisma.usuario.findUnique({ where });
+
+            if (!usuario) {
+                throw new HttpException(
+                    'El usuario no existe, verificar',
+                    HttpStatus.NOT_FOUND
+                );
+            }
+
+            const isMatch = await bcrypt.compare(
+                data.oldPassword,
+                usuario.password
+            );
+
+            if (!isMatch) {
+                throw new HttpException(
+                    'El password es incorrecto, verificar',
+                    HttpStatus.BAD_REQUEST
+                );
+            }
+            delete data.oldPassword;
+            const saltOrRounds = 10;
+            const hash = await bcrypt.hash(data.password, saltOrRounds);
+            data = { ...data, password: hash };
+        }
         const usuarioActualizado = await this.prisma.usuario.update({
             data,
             where,

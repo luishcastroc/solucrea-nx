@@ -1,4 +1,5 @@
-/* eslint-disable arrow-parens */
+import { IAlert } from './alert.model';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -13,17 +14,17 @@ import {
     SimpleChanges,
     ViewEncapsulation,
 } from '@angular/core';
-import { Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
-import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { fuseAnimations } from '@fuse/animations';
+import { FuseAlertService } from '@fuse/components/alert/alert.service';
 import {
     FuseAlertAppearance,
     FuseAlertType,
 } from '@fuse/components/alert/alert.types';
-import { FuseAlertService } from '@fuse/components/alert/alert.service';
 import { FuseUtilsService } from '@fuse/services/utils/utils.service';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 
+/* eslint-disable arrow-parens */
 @Component({
     selector: 'fuse-alert',
     templateUrl: './alert.component.html',
@@ -46,8 +47,9 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy {
     @Input() name: string = this._fuseUtilsService.randomId();
     @Input() showIcon: boolean = true;
     @Input() type: FuseAlertType = 'primary';
-    @Output() readonly dismissedChanged: EventEmitter<boolean> =
-        new EventEmitter<boolean>();
+    @Output()
+    readonly dismissedChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+    message: string;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -132,10 +134,14 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy {
         // Subscribe to the dismiss calls
         this._fuseAlertService.onDismiss
             .pipe(
-                filter((name) => this.name === name),
+                filter((alert: IAlert) => {
+                    if (alert) {
+                        return this.name === alert.name;
+                    }
+                }),
                 takeUntil(this._unsubscribeAll)
             )
-            .subscribe(() => {
+            .subscribe((alert: IAlert) => {
                 // Dismiss the alert
                 this.dismiss();
             });
@@ -143,12 +149,25 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy {
         // Subscribe to the show calls
         this._fuseAlertService.onShow
             .pipe(
-                filter((name) => this.name === name),
+                filter((alert: IAlert) => {
+                    if (alert) {
+                        return this.name === alert.name;
+                    }
+                }),
                 takeUntil(this._unsubscribeAll)
             )
-            .subscribe(() => {
-                // Show the alert
-                this.show();
+            .subscribe((alert: IAlert) => {
+                const { message } = alert;
+                if (message) {
+                    this.message = message;
+                    this.show();
+
+                    if (alert.dismissible && alert.dismissTime > 0) {
+                        setTimeout(() => {
+                            this.dismiss();
+                        }, alert.dismissTime * 1000);
+                    }
+                }
             });
     }
 

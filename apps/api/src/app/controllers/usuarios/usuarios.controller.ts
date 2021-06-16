@@ -1,3 +1,4 @@
+import { UpdateUsuarioDto } from './../../dtos/update-usuario.dto';
 import {
     Body,
     Controller,
@@ -64,7 +65,7 @@ export class UsuariosController {
     @Put('usuario/:id')
     async editUsuario(
         @Param('id') id: string,
-        @Body() data: Prisma.UsuarioUpdateInput
+        @Body() data: UpdateUsuarioDto
     ): Promise<UsersModel> {
         return this.usuariosService.updateUsuario({
             where: { id },

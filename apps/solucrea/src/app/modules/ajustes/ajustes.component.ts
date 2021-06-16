@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 /* eslint-disable arrow-parens */
 import {
     ChangeDetectionStrategy,
@@ -50,18 +51,21 @@ export class AjustesComponent implements OnInit, OnDestroy {
                 icon: 'heroicons_outline:user-circle',
                 title: 'Usuario',
                 description: 'Maneja tu perfil e información pública',
+                roles: [Role.ALL],
             },
             {
                 id: 'seguridad',
                 icon: 'heroicons_outline:lock-closed',
                 title: 'Seguridad',
                 description: 'Maneja tu contraseña',
+                roles: [Role.ALL],
             },
             {
                 id: 'usuarios',
                 icon: 'heroicons_outline:user-group',
                 title: 'Usuarios',
                 description: 'Manejo de los usuarios y sus permisos',
+                roles: [Role.ADMIN],
             },
         ];
 

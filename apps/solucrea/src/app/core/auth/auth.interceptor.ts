@@ -6,6 +6,7 @@ import {
     HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { Observable, throwError } from 'rxjs';
@@ -56,7 +57,7 @@ export class AuthInterceptor implements HttpInterceptor {
                 ),
             });
         } else {
-            this._store.dispatch(new Logout());
+            this._store.dispatch([new Logout(), new Navigate(['sign-in'])]);
         }
 
         // Response

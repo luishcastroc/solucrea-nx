@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+
+import { IAlert } from './alert.model';
 
 @Injectable({
     providedIn: 'root',
 })
 export class FuseAlertService {
-    private readonly _onDismiss: ReplaySubject<string> =
-        new ReplaySubject<string>(1);
-    private readonly _onShow: ReplaySubject<string> = new ReplaySubject<string>(
-        1
-    );
+    private readonly _onDismiss: Subject<IAlert> = new Subject<IAlert>();
+    private readonly _onShow: Subject<IAlert> = new Subject<IAlert>();
 
     /**
      * Constructor
@@ -43,14 +42,14 @@ export class FuseAlertService {
      *
      * @param name
      */
-    dismiss(name: string): void {
+    dismiss(alert: IAlert): void {
         // Return if the name is not provided
-        if (!name) {
+        if (!alert.name) {
             return;
         }
 
         // Execute the observable
-        this._onDismiss.next(name);
+        this._onDismiss.next(alert);
     }
 
     /**
@@ -58,13 +57,13 @@ export class FuseAlertService {
      *
      * @param name
      */
-    show(name: string): void {
+    show(alert: IAlert): void {
         // Return if the name is not provided
-        if (!name) {
+        if (!alert.name) {
             return;
         }
 
         // Execute the observable
-        this._onShow.next(name);
+        this._onShow.next(alert);
     }
 }

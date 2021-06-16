@@ -39,10 +39,9 @@ export class InitialDataResolver implements Resolve<any> {
         state: RouterStateSnapshot
     ): Observable<InitialData> {
         // Fork join multiple API endpoint calls to wait all of them to finish
-        return forkJoin([of(this._navigation), this.user$.pipe(take(1))]).pipe(
-            map(([navigation, user]) => ({
+        return forkJoin([of(this._navigation)]).pipe(
+            map(([navigation]) => ({
                 navigation,
-                user,
             }))
         );
     }

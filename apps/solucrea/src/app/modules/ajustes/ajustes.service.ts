@@ -1,4 +1,4 @@
-import { Usuario } from '@prisma/client';
+import { Usuario, Prisma } from '@prisma/client';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -37,6 +37,21 @@ export class AjustesService {
     getUsuario(id: string): Observable<Usuario> {
         return this._httpClient.get<Usuario>(
             `${this._environment.uri}/usuario/${id}`
+        );
+    }
+
+    /**
+     *  Edit Usuario
+     *
+     * @param Prisma.UsuarioUpdateInput
+     */
+    editUsuario(
+        id: string,
+        usuario: Prisma.UsuarioUpdateInput
+    ): Observable<Usuario> {
+        return this._httpClient.put<Usuario>(
+            `${this._environment.uri}/usuario/${id}`,
+            usuario
         );
     }
 }

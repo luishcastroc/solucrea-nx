@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ExtraOptions, PreloadAllModules, RouterModule } from '@angular/router';
-import { FuseModule } from '../@fuse';
 import { FuseConfigModule } from '@fuse/services/config';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
@@ -13,9 +12,10 @@ import { appRoutes } from 'app/app.routing';
 import { appConfig } from 'app/core/config/app.config';
 import { CoreModule } from 'app/core/core.module';
 import { LayoutModule } from 'app/layout/layout.module';
-import { environment } from '../environments/environment';
 import { MarkdownModule } from 'ngx-markdown';
 
+import { FuseModule } from '../@fuse';
+import { environment } from '../environments/environment';
 import { AuthState } from './core/auth/store/auth.state';
 
 const routerConfig: ExtraOptions = {

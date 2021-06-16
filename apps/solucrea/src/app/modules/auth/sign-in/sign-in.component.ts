@@ -1,3 +1,5 @@
+import { IAlert } from './../../../../@fuse/components/alert/alert.model';
+import { FuseAlertService } from '@fuse/components/alert/alert.service';
 import {
     Component,
     OnDestroy,
@@ -22,12 +24,17 @@ import { Subject } from 'rxjs';
 export class AuthSignInComponent implements OnInit, OnDestroy {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
 
-    alert: { type: FuseAlertType; message: string } = {
+    alert: IAlert = {
+        appearance: 'outline',
+        dismissed: true,
+        dismissible: true,
         type: 'success',
         message: '',
+        name: 'alertBoxSignIn',
+        showIcon: true,
+        dismissTime: 4,
     };
     signInForm: FormGroup;
-    showAlert: boolean = false;
     private destroy$ = new Subject<void>();
 
     /**
@@ -37,7 +44,8 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
         private _activatedRoute: ActivatedRoute,
         private _store: Store,
         private _formBuilder: FormBuilder,
-        private _actions$: Actions
+        private _actions$: Actions,
+        private _fuseAlertService: FuseAlertService
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -59,11 +67,12 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
             this.signInForm.enable();
             this.signInNgForm.resetForm();
             this.alert = {
+                ...this.alert,
                 type: 'error',
                 message:
                     'El usuario o contraseña son erroneos, favor de verificar.',
             };
-            this.showAlert = true;
+            this._fuseAlertService.show(this.alert);
         });
     }
 
@@ -84,7 +93,7 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
         this.signInForm.disable();
 
         // Hide the alert
-        this.showAlert = false;
+        this._fuseAlertService.dismiss(this.alert);
 
         const redirectURL =
             this._activatedRoute.snapshot.queryParamMap.get('redirectURL') ||

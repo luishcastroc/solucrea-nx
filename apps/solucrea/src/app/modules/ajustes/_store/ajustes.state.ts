@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Action, State, StateContext, Selector } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { tap } from 'rxjs/operators';
 
+import { UpdateUsuario } from '../../../core/auth/store/auth.actions';
 import { AjustesService } from './../ajustes.service';
 import * as UsuarioAction from './ajustes.actions';
 import { AjustesStateModel } from './ajustes.model';
@@ -30,10 +31,35 @@ export class AjustesState {
         const { id } = action;
         return this.ajustesService.getUsuarios().pipe(
             tap((result: Usuario[]) => {
-                const usuarios = result.filter(user => user.id !== id);
+                const usuarios = result.filter((user) => user.id !== id);
                 ctx.patchState({
                     usuarios,
                 });
+            })
+        );
+    }
+
+    @Action(UsuarioAction.Edit)
+    editUsuario(
+        ctx: StateContext<AjustesStateModel>,
+        action: UsuarioAction.Edit
+    ) {
+        const { id, payload } = action;
+        return this.ajustesService.editUsuario(id, payload).pipe(
+            tap((user: Usuario) => {
+                const state = ctx.getState();
+                if (state.usuarios) {
+                    const usuarios = [...state.usuarios];
+                    const usuarioIdx = usuarios.findIndex(
+                        (usuario) => usuario.id === id
+                    );
+                    usuarios[usuarioIdx] = user;
+
+                    ctx.patchState({
+                        usuarios,
+                    });
+                }
+                ctx.dispatch(new UpdateUsuario(user));
             })
         );
     }

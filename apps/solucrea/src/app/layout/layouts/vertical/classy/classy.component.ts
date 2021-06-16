@@ -1,6 +1,9 @@
+import { Usuario } from '@prisma/client';
+import { AuthState } from 'app/core/auth/store/auth.state';
+import { Select } from '@ngxs/store';
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FuseNavigationService } from '@fuse/components/navigation';
@@ -12,6 +15,7 @@ import { InitialData } from 'app/app.types';
     encapsulation: ViewEncapsulation.None,
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy {
+    @Select(AuthState.user) user$: Observable<Usuario>;
     data: InitialData;
     isScreenSmall: boolean;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -45,7 +49,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-        // Subscribe to the resolved route mock-api
+        // Subscribe to the resolved route
         this._activatedRoute.data.subscribe((data: Data) => {
             this.data = data.initialData;
         });

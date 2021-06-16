@@ -44,13 +44,7 @@
                     }
                 ],
                 "@typescript-eslint/no-inferrable-types": "off",
-                "arrow-parens": [
-                    "error",
-                    "as-needed",
-                    {
-                        "requireForBlockBody": true
-                    }
-                ],
+                "arrow-parens": ["off"],
                 "brace-style": ["off", "off"],
                 "import/order": "off",
                 "max-len": [

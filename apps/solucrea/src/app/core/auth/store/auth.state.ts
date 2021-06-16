@@ -6,7 +6,7 @@ import { throwError } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { AuthService } from '../auth.service';
-import { Login, Logout } from './auth.actions';
+import { Login, Logout, UpdateUsuario } from './auth.actions';
 import { AuthStateModel } from './auth.model';
 
 @State<AuthStateModel>({
@@ -60,5 +60,11 @@ export class AuthState {
             accessToken: null,
             user: null,
         });
+    }
+
+    @Action(UpdateUsuario)
+    updateUsuario(ctx: StateContext<AuthStateModel>, action: UpdateUsuario) {
+        const { payload: user } = action;
+        ctx.patchState({ user });
     }
 }

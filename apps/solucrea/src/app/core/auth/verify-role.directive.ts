@@ -6,7 +6,7 @@ import {
     TemplateRef,
     ViewContainerRef,
 } from '@angular/core';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { Usuario, Role } from '@prisma/client';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -24,31 +24,31 @@ export class VerifyRoleDirective implements OnInit, OnDestroy {
         }
     }
 
-    @Select(AuthState.user) user$: Observable<Usuario>;
-
     roles: Role[];
+    user: Usuario;
 
     private _unsubscribeAll: Subject<any>;
 
     constructor(
         private templateRef: TemplateRef<any>,
         private _authService: AuthService,
-        private viewContainer: ViewContainerRef
+        private viewContainer: ViewContainerRef,
+        private _store: Store
     ) {
         this._unsubscribeAll = new Subject();
     }
 
     ngOnInit(): void {
-        this.user$.pipe(takeUntil(this._unsubscribeAll)).subscribe((user) => {
-            if (
-                this.roles &&
-                this._authService.checkAuthorization(user.role, this.roles)
-            ) {
-                this.viewContainer.createEmbeddedView(this.templateRef);
-            } else {
-                this.viewContainer.clear();
-            }
-        });
+        this.user = this._store.selectSnapshot(AuthState.user);
+
+        if (
+            this.roles &&
+            this._authService.checkAuthorization(this.user.role, this.roles)
+        ) {
+            this.viewContainer.createEmbeddedView(this.templateRef);
+        } else {
+            this.viewContainer.clear();
+        }
     }
 
     ngOnDestroy(): void {
