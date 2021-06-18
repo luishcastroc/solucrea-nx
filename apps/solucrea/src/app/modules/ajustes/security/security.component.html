@@ -21,6 +21,11 @@
                         matInput
                     />
                 </mat-form-field>
+                <ng-container *ngIf="currentPassword.touched">
+                    <mat-error *ngIf="currentPassword.errors?.required">
+                        La contraseña actual es requerida.
+                    </mat-error>
+                </ng-container>
             </div>
             <!-- New password -->
             <div class="sm:col-span-4">
@@ -38,9 +43,22 @@
                     />
                 </mat-form-field>
                 <div class="mt-1 text-md text-hint">
-                    Minimo 8 caracteres. Debe incluir números, letras y
-                    caracteres especiales.
+                    Minimo 8 caracteres. Debe incluir una letra mayúscula, una
+                    minúscula y un caracter especial (#?!@$%^&*-).
                 </div>
+                <ng-container *ngIf="newPassword.touched">
+                    <mat-error *ngIf="newPassword.errors?.required">
+                        La nueva contraseña es requerida.
+                    </mat-error>
+                    <mat-error *ngIf="newPassword.errors?.minlength">
+                        La nueva contraseña debe tener mínimo 8 caracteres.
+                    </mat-error>
+                    <mat-error *ngIf="newPassword.errors?.passwordStrength">
+                        la Contraseña debe incluir mínimo 8 caracteres. Al menos
+                        una mayúscula, una minúscula, un número y un caracter
+                        especial (#?!@$%^&*-).
+                    </mat-error>
+                </ng-container>
             </div>
         </div>
 
@@ -49,15 +67,36 @@
 
         <!-- Actions -->
         <div class="flex items-center justify-end">
-            <button mat-stroked-button type="button">Cancelar</button>
+            <button
+                mat-stroked-button
+                type="button"
+                (click)="securityForm.reset()"
+            >
+                Cancelar
+            </button>
             <button
                 class="ml-4"
                 mat-flat-button
                 type="button"
                 [color]="'primary'"
+                [disabled]="securityForm.invalid"
+                (click)="submitNewPassword()"
             >
                 Guardar
             </button>
         </div>
+
+        <!-- Alert -->
+        <fuse-alert
+            class="mt-8 -mb-4 w-full"
+            [appearance]="alert.appearance"
+            [dismissible]="alert.dismissible"
+            [dismissed]="alert.dismissed"
+            [showIcon]="alert.showIcon"
+            [type]="alert.type"
+            [name]="alert.name"
+            [@shake]="alert.type === 'error'"
+        >
+        </fuse-alert>
     </form>
 </div>

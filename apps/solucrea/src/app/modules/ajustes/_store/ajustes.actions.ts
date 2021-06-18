@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import { UpdateUsuarioDto } from '../models/update-usuario.dto';
 
 export class Add {
     static readonly type = '[Usuario] Add';
@@ -12,7 +13,7 @@ export class GetAll {
 
 export class Edit {
     static readonly type = '[Usuario] Edit';
-    constructor(public id: string, public payload: Prisma.UsuarioUpdateInput) {}
+    constructor(public id: string, public payload: UpdateUsuarioDto) {}
 }
 
 export class Delete {

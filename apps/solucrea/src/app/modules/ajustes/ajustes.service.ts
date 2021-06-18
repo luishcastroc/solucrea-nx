@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
+import { UpdateUsuarioDto } from 'apps/api/src/app/dtos/update-usuario.dto';
 
 @Injectable({
     providedIn: 'root',
@@ -43,12 +44,9 @@ export class AjustesService {
     /**
      *  Edit Usuario
      *
-     * @param Prisma.UsuarioUpdateInput
+     * @param UpdateUsuarioDto
      */
-    editUsuario(
-        id: string,
-        usuario: Prisma.UsuarioUpdateInput
-    ): Observable<Usuario> {
+    editUsuario(id: string, usuario: UpdateUsuarioDto): Observable<Usuario> {
         return this._httpClient.put<Usuario>(
             `${this._environment.uri}/usuario/${id}`,
             usuario

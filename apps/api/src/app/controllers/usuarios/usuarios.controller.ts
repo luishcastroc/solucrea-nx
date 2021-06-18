@@ -65,8 +65,10 @@ export class UsuariosController {
     @Put('usuario/:id')
     async editUsuario(
         @Param('id') id: string,
-        @Body() data: UpdateUsuarioDto
+        @Body() data: UpdateUsuarioDto,
+        @Request() req
     ): Promise<UsersModel> {
+        data.actualizadoPor = req.user.username;
         return this.usuariosService.updateUsuario({
             where: { id },
             data,
