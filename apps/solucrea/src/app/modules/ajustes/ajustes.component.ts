@@ -1,3 +1,5 @@
+import { Navigate } from '@ngxs/router-plugin';
+import { Store } from '@ngxs/store';
 import { Role } from '@prisma/client';
 /* eslint-disable arrow-parens */
 import {
@@ -25,7 +27,7 @@ export class AjustesComponent implements OnInit, OnDestroy {
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    selectedPanel: string = 'usuario';
+    selectedPanel: string = 'perfil';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -33,7 +35,8 @@ export class AjustesComponent implements OnInit, OnDestroy {
      */
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
-        private _fuseMediaWatcherService: FuseMediaWatcherService
+        private _fuseMediaWatcherService: FuseMediaWatcherService,
+        private _store: Store
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -47,9 +50,9 @@ export class AjustesComponent implements OnInit, OnDestroy {
         // Setup available panels
         this.panels = [
             {
-                id: 'usuario',
+                id: 'perfil',
                 icon: 'heroicons_outline:user-circle',
-                title: 'Usuario',
+                title: 'Perfil',
                 description: 'Maneja tu perfil e información pública',
                 roles: [Role.ALL],
             },
@@ -107,6 +110,7 @@ export class AjustesComponent implements OnInit, OnDestroy {
      */
     goToPanel(panel: string): void {
         this.selectedPanel = panel;
+        this._store.dispatch(new Navigate([`ajustes/${panel}`]));
 
         // Close the drawer on 'over' mode
         if (this.drawerMode === 'over') {

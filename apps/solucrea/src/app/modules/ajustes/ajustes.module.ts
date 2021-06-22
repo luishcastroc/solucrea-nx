@@ -1,23 +1,25 @@
-import { AjustesState } from './_store/ajustes.state';
-import { NgxsModule } from '@ngxs/store';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { RouterModule } from '@angular/router';
 import { FuseAlertModule } from '@fuse/components/alert';
 import { FuseAutogrowModule } from '@fuse/directives/autogrow';
+import { NgxsModule } from '@ngxs/store';
 import { SharedModule } from 'app/shared/shared.module';
 
-import { ajustesRoutes } from './ajustes.routing';
-import { AjustesComponent } from './ajustes.component';
+import { AjustesState } from './_store/ajustes.state';
 import { AjustesAccountComponent } from './account/account.component';
+import { AjustesComponent } from './ajustes.component';
+import { ajustesRoutes } from './ajustes.routing';
 import { AjustesSecurityComponent } from './security/security.component';
+import { TeamDetailsComponent } from './team/details/team-details.component';
+import { TeamListComponent } from './team/list/team-list.component';
 import { AjustesTeamComponent } from './team/team.component';
 
 @NgModule({
@@ -26,6 +28,8 @@ import { AjustesTeamComponent } from './team/team.component';
         AjustesAccountComponent,
         AjustesSecurityComponent,
         AjustesTeamComponent,
+        TeamDetailsComponent,
+        TeamListComponent,
     ],
     imports: [
         RouterModule.forChild(ajustesRoutes),

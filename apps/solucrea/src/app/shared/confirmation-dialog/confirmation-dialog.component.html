@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>{{ data.title }}</h1>
+<div mat-dialog-content>
+    {{ data.message }}
+</div>
+<!-- Acciones -->
+<div class="flex items-center justify-end mt-8">
+    <button mat-stroked-button type="button" [mat-dialog-close]="false">
+        Cancelar
+    </button>
+    <button
+        class="ml-4"
+        mat-flat-button
+        type="button"
+        [color]="'primary'"
+        [mat-dialog-close]="true"
+    >
+        Guardar
+    </button>
+</div>

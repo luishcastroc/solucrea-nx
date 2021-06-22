@@ -52,4 +52,15 @@ export class AjustesService {
             usuario
         );
     }
+
+    /**
+     *  Edit Usuario
+     *
+     * @param id
+     */
+    deleteUsuario(id: string): Observable<Usuario> {
+        return this._httpClient.delete<Usuario>(
+            `${this._environment.uri}/usuario/${id}`
+        );
+    }
 }

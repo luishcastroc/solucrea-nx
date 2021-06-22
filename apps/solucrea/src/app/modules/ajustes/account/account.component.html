@@ -1,9 +1,10 @@
+<!-- Content -->
 <div class="w-full max-w-3xl">
     <!-- Form -->
     <form [formGroup]="accountForm">
         <!-- Section -->
         <div class="w-full">
-            <div class="text-xl">Perfil</div>
+            <div class="text-xl">Usuario</div>
             <div class="text-secondary">
                 Verificar que la información sea correcta.
             </div>
@@ -59,6 +60,7 @@
                 type="button"
                 [color]="'primary'"
                 (click)="saveChanges()"
+                [disabled]="!accountForm.touched"
             >
                 Guardar
             </button>

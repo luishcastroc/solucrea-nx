@@ -63,4 +63,30 @@ export class AjustesState {
             })
         );
     }
+
+    @Action(UsuarioAction.Delete)
+    deleteUsuario(
+        ctx: StateContext<AjustesStateModel>,
+        action: UsuarioAction.Delete
+    ) {
+        const { id } = action;
+        return this.ajustesService.deleteUsuario(id).pipe(
+            tap((user: Usuario) => {
+                const state = ctx.getState();
+                if (state.usuarios) {
+                    const usuarios = [...state.usuarios];
+                    const usuarioIdx = usuarios.findIndex(
+                        (usuario) => usuario.id === id
+                    );
+                    usuarios[usuarioIdx] = user;
+                    if (usuarioIdx !== -1) {
+                        usuarios.splice(usuarioIdx, 1);
+                        ctx.patchState({
+                            usuarios,
+                        });
+                    }
+                }
+            })
+        );
+    }
 }
