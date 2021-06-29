@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, Usuario } from '@prisma/client';
 import { UpdateUsuarioDto } from '../models/update-usuario.dto';
 
 export class Add {
@@ -19,4 +19,14 @@ export class Edit {
 export class Delete {
     static readonly type = '[Usuario] Delete';
     constructor(public id: string) {}
+}
+
+export class Select {
+    static readonly type = '[Usuario] Select';
+    constructor(public usuario: Usuario) {}
+}
+
+export class Toggle {
+    static readonly type = '[Usuario] Edit Mode';
+    constructor(public payload: boolean) {}
 }

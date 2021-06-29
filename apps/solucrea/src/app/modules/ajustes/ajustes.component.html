@@ -31,7 +31,12 @@
                     <div
                         class="flex px-8 py-5 cursor-pointer hover:bg-gray-100 dark:hover:bg-hover"
                         (click)="goToPanel(panel.id)"
-                        [routerLinkActive]="['bg-primary-50', 'dark:bg-hover']"
+                        [ngClass]="{
+                            'hover:bg-gray-100 dark:hover:bg-hover':
+                                !selectedPanel || selectedPanel !== panel.id,
+                            'bg-primary-50 dark:bg-hover':
+                                selectedPanel && selectedPanel === panel.id
+                        }"
                         *verifyRole="panel.roles"
                     >
                         <mat-icon

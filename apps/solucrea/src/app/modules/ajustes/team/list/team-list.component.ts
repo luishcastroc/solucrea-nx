@@ -1,10 +1,3 @@
-import { fuseAnimations } from '@fuse/animations';
-import { IAlert } from '@fuse/components/alert/alert.model';
-import { FuseAlertService } from '@fuse/components/alert/alert.service';
-import { Delete } from './../../_store/ajustes.actions';
-import { ConfirmationDialogComponent } from './../../../../shared/confirmation-dialog/confirmation-dialog.component';
-import { IRole } from './../../models/roles.model';
-import { Navigate } from '@ngxs/router-plugin';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -13,22 +6,29 @@ import {
     OnInit,
     ViewEncapsulation,
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { fuseAnimations } from '@fuse/animations';
+import { IAlert } from '@fuse/components/alert/alert.model';
+import { FuseAlertService } from '@fuse/components/alert/alert.service';
+import { Navigate } from '@ngxs/router-plugin';
 import {
-    Select,
-    Store,
     Actions,
     ofActionErrored,
     ofActionSuccessful,
+    Select,
+    Store,
 } from '@ngxs/store';
 import { Role, Usuario } from '@prisma/client';
+import { AuthUtils } from 'app/core/auth/auth.utils';
 import { AuthState } from 'app/core/auth/store/auth.state';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { GetAll } from '../../_store/ajustes.actions';
 import { AjustesState } from '../../_store/ajustes.state';
-import { AuthUtils } from 'app/core/auth/auth.utils';
-import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/confirmation-dialog.component';
+import * as UsuarioAction from '../../_store/ajustes.actions';
+import { IRole } from '../../models/roles.model';
 
 @Component({
     selector: 'team-list',
@@ -115,25 +115,29 @@ export class TeamListComponent implements OnInit, OnDestroy {
             },
         ];
 
-        this._actions$.pipe(ofActionErrored(Delete)).subscribe(() => {
-            this.alert = {
-                ...this.alert,
-                type: 'error',
-                message: 'Error al borrar usuario.',
-            };
+        this._actions$
+            .pipe(ofActionErrored(UsuarioAction.Delete))
+            .subscribe(() => {
+                this.alert = {
+                    ...this.alert,
+                    type: 'error',
+                    message: 'Error al borrar usuario.',
+                };
 
-            this._fuseAlertService.show(this.alert);
-        });
+                this._fuseAlertService.show(this.alert);
+            });
 
-        this._actions$.pipe(ofActionSuccessful(Delete)).subscribe(() => {
-            this.alert = {
-                ...this.alert,
-                type: 'success',
-                message: 'Usuario eliminado exitosamente.',
-            };
+        this._actions$
+            .pipe(ofActionSuccessful(UsuarioAction.Delete))
+            .subscribe(() => {
+                this.alert = {
+                    ...this.alert,
+                    type: 'success',
+                    message: 'Usuario eliminado exitosamente.',
+                };
 
-            this._fuseAlertService.show(this.alert);
-        });
+                this._fuseAlertService.show(this.alert);
+            });
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -153,13 +157,28 @@ export class TeamListComponent implements OnInit, OnDestroy {
     /**
      * Navigate to a new user creating a GUID for reference
      *
-     * @param index
      * @param item
+     *
      */
     openNewUser(): void {
-        this._store.dispatch(
-            new Navigate([`ajustes/usuarios/${AuthUtils.guid()}`])
-        );
+        this._store.dispatch([
+            new Navigate([`ajustes/usuarios/${AuthUtils.guid()}`]),
+            new UsuarioAction.Toggle(false),
+        ]);
+    }
+
+    /**
+     * Navigate to a new user creating a GUID for reference
+     *
+     * @param usuario
+     *
+     */
+    editUser(usuario: Usuario): void {
+        this._store.dispatch([
+            new Navigate([`ajustes/usuarios/${usuario.id}`]),
+            new UsuarioAction.Select(usuario),
+            new UsuarioAction.Toggle(true),
+        ]);
     }
 
     /**
@@ -187,7 +206,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
         });
         confirmDialog.afterClosed().subscribe((result) => {
             if (result === true) {
-                this._store.dispatch(new Delete(usuario.id));
+                this._store.dispatch(new UsuarioAction.Delete(usuario.id));
             }
         });
     }

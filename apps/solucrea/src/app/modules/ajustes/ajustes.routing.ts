@@ -1,10 +1,11 @@
+import { Route } from '@angular/router';
+
+import { AjustesAccountComponent } from './account/account.component';
+import { AjustesComponent } from './ajustes.component';
+import { AjustesSecurityComponent } from './security/security.component';
 import { TeamDetailsComponent } from './team/details/team-details.component';
 import { TeamListComponent } from './team/list/team-list.component';
 import { AjustesTeamComponent } from './team/team.component';
-import { AjustesSecurityComponent } from './security/security.component';
-import { AjustesAccountComponent } from './account/account.component';
-import { Route } from '@angular/router';
-import { AjustesComponent } from './ajustes.component';
 
 export const ajustesRoutes: Route[] = [
     {

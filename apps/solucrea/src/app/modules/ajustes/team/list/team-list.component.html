@@ -90,6 +90,16 @@
                         </button>
                         <button
                             mat-icon-button
+                            (click)="editUser(usuario)"
+                            aria-label="editar usuario"
+                        >
+                            <mat-icon
+                                class="text-hint"
+                                [svgIcon]="'heroicons_outline:clipboard-list'"
+                            ></mat-icon>
+                        </button>
+                        <button
+                            mat-icon-button
                             (click)="deleteUser(usuario)"
                             aria-label="borrar usuario"
                         >

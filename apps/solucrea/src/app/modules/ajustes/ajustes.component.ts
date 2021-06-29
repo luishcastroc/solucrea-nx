@@ -1,7 +1,4 @@
-import { Navigate } from '@ngxs/router-plugin';
-import { Store } from '@ngxs/store';
-import { Role } from '@prisma/client';
-/* eslint-disable arrow-parens */
+import { Router } from '@angular/router';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -13,9 +10,15 @@ import {
 } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
+import { Navigate } from '@ngxs/router-plugin';
+import { Store } from '@ngxs/store';
+import { Role } from '@prisma/client';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { IPanel } from './models/panel.model';
+
+/* eslint-disable arrow-parens */
 @Component({
     selector: 'settings',
     templateUrl: './ajustes.component.html',
@@ -26,7 +29,7 @@ export class AjustesComponent implements OnInit, OnDestroy {
     @ViewChild('drawer') drawer: MatDrawer;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
-    panels: any[] = [];
+    panels: IPanel[];
     selectedPanel: string = 'perfil';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -36,7 +39,8 @@ export class AjustesComponent implements OnInit, OnDestroy {
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-        private _store: Store
+        private _store: Store,
+        private _router: Router
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -47,6 +51,7 @@ export class AjustesComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
+        this.getPanelFromUrl(this._router.url, this.selectedPanel);
         // Setup available panels
         this.panels = [
             {
@@ -135,5 +140,12 @@ export class AjustesComponent implements OnInit, OnDestroy {
      */
     trackByFn(index: number, item: any): any {
         return item.id || index;
+    }
+
+    private getPanelFromUrl(url: string, panel: string): void {
+        const urlFromBrowser = this._router.url.split('/');
+        if (panel !== urlFromBrowser[2]) {
+            this.selectedPanel = urlFromBrowser[2];
+        }
     }
 }

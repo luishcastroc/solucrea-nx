@@ -5,13 +5,15 @@ import { tap } from 'rxjs/operators';
 
 import { UpdateUsuario } from '../../../core/auth/store/auth.actions';
 import { AjustesService } from './../ajustes.service';
-import * as UsuarioAction from './ajustes.actions';
+import * as AjustesAction from './ajustes.actions';
 import { AjustesStateModel } from './ajustes.model';
 
 @State<AjustesStateModel>({
     name: 'ajustes',
     defaults: {
         usuarios: null,
+        editMode: false,
+        selectedUsuario: null,
     },
 })
 @Injectable()
@@ -19,14 +21,24 @@ export class AjustesState {
     constructor(private ajustesService: AjustesService) {}
 
     @Selector()
-    static usuarios(state: AjustesStateModel): Usuario[] | null {
-        return state.usuarios;
+    static usuarios({ usuarios }: AjustesStateModel): Usuario[] | null {
+        return usuarios;
     }
 
-    @Action(UsuarioAction.GetAll)
+    @Selector()
+    static editMode({ editMode }: AjustesStateModel): boolean {
+        return editMode;
+    }
+
+    @Selector()
+    static selectedUsuario({ selectedUsuario }: AjustesStateModel): Usuario {
+        return selectedUsuario;
+    }
+
+    @Action(AjustesAction.GetAll)
     getAllUsuarios(
         ctx: StateContext<AjustesStateModel>,
-        action: UsuarioAction.GetAll
+        action: AjustesAction.GetAll
     ) {
         const { id } = action;
         return this.ajustesService.getUsuarios().pipe(
@@ -39,10 +51,10 @@ export class AjustesState {
         );
     }
 
-    @Action(UsuarioAction.Edit)
+    @Action(AjustesAction.Edit)
     editUsuario(
         ctx: StateContext<AjustesStateModel>,
-        action: UsuarioAction.Edit
+        action: AjustesAction.Edit
     ) {
         const { id, payload } = action;
         return this.ajustesService.editUsuario(id, payload).pipe(
@@ -64,10 +76,10 @@ export class AjustesState {
         );
     }
 
-    @Action(UsuarioAction.Delete)
+    @Action(AjustesAction.Delete)
     deleteUsuario(
         ctx: StateContext<AjustesStateModel>,
-        action: UsuarioAction.Delete
+        action: AjustesAction.Delete
     ) {
         const { id } = action;
         return this.ajustesService.deleteUsuario(id).pipe(
@@ -88,5 +100,23 @@ export class AjustesState {
                 }
             })
         );
+    }
+
+    @Action(AjustesAction.Select)
+    selectUsuario(
+        ctx: StateContext<AjustesStateModel>,
+        action: AjustesAction.Select
+    ) {
+        const { usuario: selectedUsuario } = action;
+        ctx.patchState({ selectedUsuario });
+    }
+
+    @Action(AjustesAction.Toggle)
+    toggleEditMode(
+        ctx: StateContext<AjustesStateModel>,
+        action: AjustesAction.Toggle
+    ) {
+        const { payload } = action;
+        ctx.patchState({ editMode: payload });
     }
 }

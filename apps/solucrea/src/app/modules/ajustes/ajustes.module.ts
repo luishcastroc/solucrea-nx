@@ -1,3 +1,5 @@
+import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -41,6 +43,7 @@ import { AjustesTeamComponent } from './team/team.component';
         MatSelectModule,
         MatSidenavModule,
         MatSlideToggleModule,
+        MatTooltipModule,
         FuseAlertModule,
         FuseAutogrowModule,
         SharedModule,

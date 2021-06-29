@@ -1,1 +1,86 @@
-<p>details works!</p>
+<!-- Content -->
+<div class="w-full max-w-3xl">
+    <!-- Form -->
+    <form [formGroup]="usuarioForm">
+        <!-- Section -->
+        <div class="w-full">
+            <div class="text-xl">Usuario</div>
+            <div class="text-secondary">
+                Verificar que la información sea correcta.
+            </div>
+        </div>
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+            <!-- Nombre -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Nombre</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:user'"
+                        matPrefix
+                    ></mat-icon>
+                    <input [formControlName]="'nombre'" matInput />
+                </mat-form-field>
+            </div>
+            <!-- Apellido -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Apellidos</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:user'"
+                        matPrefix
+                    ></mat-icon>
+                    <input [formControlName]="'apellido'" matInput />
+                </mat-form-field>
+            </div>
+            <!-- Nombre de Usuario -->
+            <div class="sm:col-span-4">
+                <mat-form-field
+                    class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full"
+                >
+                    <mat-label>Nombre de Usuario</mat-label>
+                    <div class="text-secondary" matPrefix>solucrea/</div>
+                    <input [formControlName]="'nombreUsuario'" matInput />
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="mt-11 mb-10 border-t"></div>
+
+        <!-- Acciones -->
+        <div class="flex items-center justify-end">
+            <button
+                mat-stroked-button
+                type="button"
+                (click)="toggleEditMode(false)"
+            >
+                Cancelar
+            </button>
+            <button
+                class="ml-4"
+                mat-flat-button
+                type="button"
+                [color]="'primary'"
+                (click)="updateContact()"
+                [disabled]="!usuarioForm.touched"
+            >
+                Guardar
+            </button>
+        </div>
+
+        <!-- Alert -->
+        <fuse-alert
+            class="mt-8 -mb-4 w-full"
+            [appearance]="alert.appearance"
+            [dismissible]="alert.dismissible"
+            [dismissed]="alert.dismissed"
+            [showIcon]="alert.showIcon"
+            [type]="alert.type"
+            [name]="alert.name"
+            [@shake]="alert.type === 'error'"
+        >
+        </fuse-alert>
+    </form>
+</div>
