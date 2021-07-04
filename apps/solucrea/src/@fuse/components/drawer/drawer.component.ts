@@ -47,14 +47,14 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy {
     @Input() opened: boolean = false;
     @Input() position: FuseDrawerPosition = 'left';
     @Input() transparentOverlay: boolean = false;
-    @Output() readonly fixedChanged: EventEmitter<boolean> =
-        new EventEmitter<boolean>();
-    @Output() readonly modeChanged: EventEmitter<FuseDrawerMode> =
-        new EventEmitter<FuseDrawerMode>();
-    @Output() readonly openedChanged: EventEmitter<boolean> =
-        new EventEmitter<boolean>();
-    @Output() readonly positionChanged: EventEmitter<FuseDrawerPosition> =
-        new EventEmitter<FuseDrawerPosition>();
+    @Output()
+    readonly fixedChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output()
+    readonly modeChanged: EventEmitter<FuseDrawerMode> = new EventEmitter<FuseDrawerMode>();
+    @Output()
+    readonly openedChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output()
+    readonly positionChanged: EventEmitter<FuseDrawerPosition> = new EventEmitter<FuseDrawerPosition>();
 
     private _animationsEnabled: boolean = false;
     private _hovered: boolean = false;
@@ -343,6 +343,12 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy {
             ])
             .create(this._overlay);
 
+        // Once the animation is done...
+        this._player.onDone(() => {
+            // Destroy the player
+            this._player.destroy();
+        });
+
         // Play the animation
         this._player.play();
 
@@ -377,6 +383,9 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy {
 
         // Once the animation is done...
         this._player.onDone(() => {
+            // Destroy the player
+            this._player.destroy();
+
             // If the backdrop still exists...
             if (this._overlay) {
                 // Remove the backdrop

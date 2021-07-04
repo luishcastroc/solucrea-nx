@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 import { Router } from '@angular/router';
 import {
     ChangeDetectionStrategy,
@@ -12,7 +13,6 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { Role } from '@prisma/client';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -142,8 +142,14 @@ export class AjustesComponent implements OnInit, OnDestroy {
         return item.id || index;
     }
 
+    /**
+     *
+     * @param url
+     * @param panel
+     */
+
     private getPanelFromUrl(url: string, panel: string): void {
-        const urlFromBrowser = this._router.url.split('/');
+        const urlFromBrowser = url.split('/');
         if (panel !== urlFromBrowser[2]) {
             this.selectedPanel = urlFromBrowser[2];
         }
