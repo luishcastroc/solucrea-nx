@@ -1,11 +1,13 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    OnDestroy,
     OnInit,
     ViewEncapsulation,
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations/public-api';
+import { IAlert } from '@fuse/components/alert/alert.model';
 import { FuseAlertService } from '@fuse/components/alert/alert.service';
 import {
     Actions,
@@ -15,12 +17,11 @@ import {
     Store,
 } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
-import { AuthState } from 'app/core/auth/store/auth.state';
+import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { isEqual } from 'lodash';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { IAlert } from '@fuse/components/alert/alert.model';
 import { Edit } from '../_store/ajustes.actions';
 
 @Component({
@@ -30,8 +31,8 @@ import { Edit } from '../_store/ajustes.actions';
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations,
 })
-export class AjustesAccountComponent implements OnInit {
-    @Select(AuthState.user) user$: Observable<Usuario>;
+export class AjustesAccountComponent implements OnInit, OnDestroy {
+    @Select(AjustesState.selectedUsuario) user$: Observable<Usuario>;
 
     accountForm: FormGroup;
     defaultUser: Usuario;
@@ -123,5 +124,10 @@ export class AjustesAccountComponent implements OnInit {
                 new Edit(this.defaultUser.id, this.accountForm.value)
             );
         }
+    }
+
+    ngOnDestroy(): void {
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
     }
 }

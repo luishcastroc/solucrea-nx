@@ -1,9 +1,17 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    OnDestroy,
     OnInit,
     ViewEncapsulation,
 } from '@angular/core';
+import { Select, Store } from '@ngxs/store';
+import { Usuario } from '@prisma/client';
+import { AuthState } from 'app/core/auth/store/auth.state';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import { Select as SelectUsuario } from '../_store/ajustes.actions';
 
 @Component({
     selector: 'settings-team',
@@ -11,11 +19,16 @@ import {
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AjustesTeamComponent implements OnInit {
+export class AjustesTeamComponent implements OnInit, OnDestroy {
+    @Select(AuthState.user) usuario$: Observable<Usuario>;
+    usuario: Usuario;
+    private _unsubscribeAll: Subject<any>;
     /**
      * Constructor
      */
-    constructor() {}
+    constructor(private _store: Store) {
+        this._unsubscribeAll = new Subject();
+    }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -24,5 +37,19 @@ export class AjustesTeamComponent implements OnInit {
     /**
      * On init
      */
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this.usuario$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((usuario: Usuario) => {
+                if (usuario) {
+                    this.usuario = usuario;
+                }
+            });
+    }
+
+    ngOnDestroy(): void {
+        this._store.dispatch(new SelectUsuario(this.usuario));
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
+    }
 }

@@ -1,18 +1,3 @@
-import { fuseAnimations } from './../../../../@fuse/animations/public-api';
-import { FuseAlertService } from '@fuse/components/alert/alert.service';
-import { IAlert } from '@fuse/components/alert/alert.model';
-import { Edit } from './../_store/ajustes.actions';
-import { takeUntil } from 'rxjs/operators';
-import { Usuario } from '@prisma/client';
-import { Observable, Subject } from 'rxjs';
-import { AuthState } from 'app/core/auth/store/auth.state';
-import {
-    Store,
-    Select,
-    Actions,
-    ofActionErrored,
-    ofActionSuccessful,
-} from '@ngxs/store';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -20,7 +5,23 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { IAlert } from '@fuse/components/alert/alert.model';
+import { FuseAlertService } from '@fuse/components/alert/alert.service';
+import {
+    Actions,
+    ofActionErrored,
+    ofActionSuccessful,
+    Select,
+    Store,
+} from '@ngxs/store';
+import { Usuario } from '@prisma/client';
+import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { createPasswordStrengthValidator } from '../validators/custom.validators';
+import { fuseAnimations } from './../../../../@fuse/animations/public-api';
+import { Edit } from './../_store/ajustes.actions';
 
 @Component({
     selector: 'settings-security',
@@ -30,7 +31,7 @@ import { createPasswordStrengthValidator } from '../validators/custom.validators
     animations: fuseAnimations,
 })
 export class AjustesSecurityComponent implements OnInit {
-    @Select(AuthState.user) user$: Observable<Usuario>;
+    @Select(AjustesState.selectedUsuario) user$: Observable<Usuario>;
     securityForm: FormGroup;
     usuario: Usuario;
     alert: IAlert = {

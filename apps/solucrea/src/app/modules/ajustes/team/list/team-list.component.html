@@ -90,12 +90,22 @@
                         </button>
                         <button
                             mat-icon-button
-                            (click)="editUser(usuario)"
+                            (click)="editUser(usuario, 'edit')"
                             aria-label="editar usuario"
                         >
                             <mat-icon
                                 class="text-hint"
                                 [svgIcon]="'heroicons_outline:clipboard-list'"
+                            ></mat-icon>
+                        </button>
+                        <button
+                            mat-icon-button
+                            (click)="editUser(usuario, 'password')"
+                            aria-label="cambiar contraseña"
+                        >
+                            <mat-icon
+                                class="text-hint"
+                                [svgIcon]="'heroicons_solid:key'"
                             ></mat-icon>
                         </button>
                         <button

@@ -29,6 +29,7 @@ import { AjustesState } from '../../_store/ajustes.state';
 import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/confirmation-dialog.component';
 import * as UsuarioAction from '../../_store/ajustes.actions';
 import { IRole } from '../../models/roles.model';
+import { EditMode } from '../../_store/ajustes.model';
 
 @Component({
     selector: 'team-list',
@@ -163,7 +164,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
     openNewUser(): void {
         this._store.dispatch([
             new Navigate([`ajustes/usuarios/${AuthUtils.guid()}`]),
-            new UsuarioAction.Toggle(false),
+            new UsuarioAction.Mode('new'),
         ]);
     }
 
@@ -173,11 +174,11 @@ export class TeamListComponent implements OnInit, OnDestroy {
      * @param usuario
      *
      */
-    editUser(usuario: Usuario): void {
+    editUser(usuario: Usuario, mode: EditMode): void {
         this._store.dispatch([
             new Navigate([`ajustes/usuarios/${usuario.id}`]),
             new UsuarioAction.Select(usuario),
-            new UsuarioAction.Toggle(true),
+            new UsuarioAction.Mode(mode),
         ]);
     }
 

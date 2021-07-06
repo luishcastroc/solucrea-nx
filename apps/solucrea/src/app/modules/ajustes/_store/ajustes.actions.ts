@@ -1,3 +1,4 @@
+import { EditMode } from './ajustes.model';
 import { Prisma, Usuario } from '@prisma/client';
 import { UpdateUsuarioDto } from '../models/update-usuario.dto';
 
@@ -26,7 +27,7 @@ export class Select {
     constructor(public usuario: Usuario) {}
 }
 
-export class Toggle {
+export class Mode {
     static readonly type = '[Usuario] Edit Mode';
-    constructor(public payload: boolean) {}
+    constructor(public payload: EditMode) {}
 }

@@ -12,7 +12,7 @@ import { AjustesStateModel } from './ajustes.model';
     name: 'ajustes',
     defaults: {
         usuarios: null,
-        editMode: false,
+        editMode: 'edit',
         selectedUsuario: null,
     },
 })
@@ -26,7 +26,7 @@ export class AjustesState {
     }
 
     @Selector()
-    static editMode({ editMode }: AjustesStateModel): boolean {
+    static editMode({ editMode }: AjustesStateModel): string {
         return editMode;
     }
 
@@ -111,10 +111,10 @@ export class AjustesState {
         ctx.patchState({ selectedUsuario });
     }
 
-    @Action(AjustesAction.Toggle)
+    @Action(AjustesAction.Mode)
     toggleEditMode(
         ctx: StateContext<AjustesStateModel>,
-        action: AjustesAction.Toggle
+        action: AjustesAction.Mode
     ) {
         const { payload } = action;
         ctx.patchState({ editMode: payload });

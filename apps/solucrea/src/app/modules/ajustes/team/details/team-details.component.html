@@ -1,49 +1,99 @@
 <!-- Content -->
-<div class="w-full max-w-3xl">
+<div class="w-full max-w-3xl" *ngIf="editMode$ | async as editMode">
     <!-- Form -->
     <form [formGroup]="usuarioForm">
         <!-- Section -->
         <div class="w-full">
             <div class="text-xl">Usuario</div>
-            <div class="text-secondary">
-                Verificar que la información sea correcta.
+            <div class="text-secondary" [ngSwitch]="editMode">
+                <ng-container *ngSwitchCase="'edit'">
+                    Verificar que la información sea correcta.
+                </ng-container>
+                <ng-container *ngSwitchCase="'password'">
+                    Cambiar contraseña de {{ selectedUsuario.nombreUsuario }}.
+                </ng-container>
             </div>
         </div>
         <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
-            <!-- Nombre -->
-            <div class="sm:col-span-4">
-                <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label>Nombre</mat-label>
-                    <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:user'"
-                        matPrefix
-                    ></mat-icon>
-                    <input [formControlName]="'nombre'" matInput />
-                </mat-form-field>
-            </div>
-            <!-- Apellido -->
-            <div class="sm:col-span-4">
-                <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label>Apellidos</mat-label>
-                    <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:user'"
-                        matPrefix
-                    ></mat-icon>
-                    <input [formControlName]="'apellido'" matInput />
-                </mat-form-field>
-            </div>
-            <!-- Nombre de Usuario -->
-            <div class="sm:col-span-4">
-                <mat-form-field
-                    class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full"
-                >
-                    <mat-label>Nombre de Usuario</mat-label>
-                    <div class="text-secondary" matPrefix>solucrea/</div>
-                    <input [formControlName]="'nombreUsuario'" matInput />
-                </mat-form-field>
-            </div>
+            <ng-container [ngSwitch]="editMode">
+                <ng-container *ngSwitchCase="'edit'">
+                    <!-- Nombre -->
+                    <div class="sm:col-span-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Nombre</mat-label>
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="'heroicons_solid:user'"
+                                matPrefix
+                            ></mat-icon>
+                            <input [formControlName]="'nombre'" matInput />
+                        </mat-form-field>
+                    </div>
+                    <!-- Apellido -->
+                    <div class="sm:col-span-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Apellidos</mat-label>
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="'heroicons_solid:user'"
+                                matPrefix
+                            ></mat-icon>
+                            <input [formControlName]="'apellido'" matInput />
+                        </mat-form-field>
+                    </div>
+                    <!-- Nombre de Usuario -->
+                    <div class="sm:col-span-4">
+                        <mat-form-field
+                            class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full"
+                        >
+                            <mat-label>Nombre de Usuario</mat-label>
+                            <div class="text-secondary" matPrefix>
+                                solucrea/
+                            </div>
+                            <input
+                                [formControlName]="'nombreUsuario'"
+                                matInput
+                            />
+                        </mat-form-field>
+                    </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="'password'">
+                    <!-- password -->
+                    <div class="sm:col-span-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Nueva contraseña</mat-label>
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="'heroicons_solid:key'"
+                                matPrefix
+                            ></mat-icon>
+                            <input
+                                [formControlName]="'password'"
+                                type="password"
+                                matInput
+                            />
+                        </mat-form-field>
+                        <div class="mt-1 text-md text-hint">
+                            Minimo 8 caracteres. Debe incluir una letra
+                            mayúscula, una minúscula y un caracter especial
+                            (#?!@$%^&*-).
+                        </div>
+                        <ng-container *ngIf="password.touched">
+                            <mat-error *ngIf="password.errors?.minlength">
+                                La nueva contraseña debe tener mínimo 8
+                                caracteres.
+                            </mat-error>
+                            <mat-error
+                                *ngIf="password.errors?.passwordStrength"
+                            >
+                                la Contraseña debe incluir mínimo 8 caracteres.
+                                Al menos una mayúscula, una minúscula, un número
+                                y un caracter especial (#?!@$%^&*-).
+                            </mat-error>
+                        </ng-container>
+                    </div>
+                </ng-container>
+            </ng-container>
         </div>
 
         <!-- Divider -->
@@ -51,11 +101,7 @@
 
         <!-- Acciones -->
         <div class="flex items-center justify-end">
-            <button
-                mat-stroked-button
-                type="button"
-                (click)="toggleEditMode(false)"
-            >
+            <button mat-stroked-button type="button" (click)="cancelEdit()">
                 Cancelar
             </button>
             <button
@@ -64,7 +110,11 @@
                 type="button"
                 [color]="'primary'"
                 (click)="updateContact()"
-                [disabled]="!usuarioForm.touched"
+                [disabled]="
+                    !usuarioForm.touched ||
+                    (editMode === 'password' && !password.value) ||
+                    usuarioForm.invalid
+                "
             >
                 Guardar
             </button>

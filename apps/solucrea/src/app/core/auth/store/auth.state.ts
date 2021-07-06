@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
+import { Select } from 'app/modules/ajustes/_store/ajustes.actions';
 import { throwError } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -49,7 +50,7 @@ export class AuthState {
                     accessToken,
                     user,
                 });
-                ctx.dispatch(new Navigate([redirectURL]));
+                ctx.dispatch([new Navigate([redirectURL]), new Select(user)]);
             })
         );
     }
