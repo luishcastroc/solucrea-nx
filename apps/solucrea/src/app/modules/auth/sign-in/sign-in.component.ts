@@ -1,3 +1,4 @@
+import { takeUntil } from 'rxjs/operators';
 import { IAlert } from './../../../../@fuse/components/alert/alert.model';
 import { FuseAlertService } from '@fuse/components/alert/alert.service';
 import {
@@ -63,17 +64,19 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
             rememberMe: [''],
         });
 
-        this._actions$.pipe(ofActionErrored(Login)).subscribe(() => {
-            this.signInForm.enable();
-            this.signInNgForm.resetForm();
-            this.alert = {
-                ...this.alert,
-                type: 'error',
-                message:
-                    'El usuario o contraseña son erroneos, favor de verificar.',
-            };
-            this._fuseAlertService.show(this.alert);
-        });
+        this._actions$
+            .pipe(takeUntil(this.destroy$), ofActionErrored(Login))
+            .subscribe(() => {
+                this.signInForm.enable();
+                this.signInNgForm.resetForm();
+                this.alert = {
+                    ...this.alert,
+                    type: 'error',
+                    message:
+                        'El usuario o contraseña son erroneos, favor de verificar.',
+                };
+                this._fuseAlertService.show(this.alert);
+            });
     }
 
     // -----------------------------------------------------------------------------------------------------

@@ -111,10 +111,10 @@ export class AjustesState {
         ctx.patchState({ selectedUsuario });
     }
 
-    @Action(AjustesAction.Mode)
+    @Action(AjustesAction.AjustesMode)
     toggleEditMode(
         ctx: StateContext<AjustesStateModel>,
-        action: AjustesAction.Mode
+        action: AjustesAction.AjustesMode
     ) {
         const { payload } = action;
         ctx.patchState({ editMode: payload });

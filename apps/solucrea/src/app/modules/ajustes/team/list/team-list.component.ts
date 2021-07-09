@@ -21,15 +21,15 @@ import {
 import { Role, Usuario } from '@prisma/client';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { AuthState } from 'app/core/auth/store/auth.state';
+import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/confirmation-dialog.component';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { GetAll } from '../../_store/ajustes.actions';
-import { AjustesState } from '../../_store/ajustes.state';
-import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/confirmation-dialog.component';
 import * as UsuarioAction from '../../_store/ajustes.actions';
-import { IRole } from '../../models/roles.model';
 import { EditMode } from '../../_store/ajustes.model';
+import { AjustesState } from '../../_store/ajustes.state';
+import { IRole } from '../../models/roles.model';
 
 @Component({
     selector: 'team-list',
@@ -117,7 +117,10 @@ export class TeamListComponent implements OnInit, OnDestroy {
         ];
 
         this._actions$
-            .pipe(ofActionErrored(UsuarioAction.Delete))
+            .pipe(
+                takeUntil(this._unsubscribeAll),
+                ofActionErrored(UsuarioAction.Delete)
+            )
             .subscribe(() => {
                 this.alert = {
                     ...this.alert,
@@ -129,7 +132,10 @@ export class TeamListComponent implements OnInit, OnDestroy {
             });
 
         this._actions$
-            .pipe(ofActionSuccessful(UsuarioAction.Delete))
+            .pipe(
+                takeUntil(this._unsubscribeAll),
+                ofActionSuccessful(UsuarioAction.Delete)
+            )
             .subscribe(() => {
                 this.alert = {
                     ...this.alert,
@@ -164,7 +170,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
     openNewUser(): void {
         this._store.dispatch([
             new Navigate([`ajustes/usuarios/${AuthUtils.guid()}`]),
-            new UsuarioAction.Mode('new'),
+            new UsuarioAction.AjustesMode('new'),
         ]);
     }
 
@@ -178,7 +184,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
         this._store.dispatch([
             new Navigate([`ajustes/usuarios/${usuario.id}`]),
             new UsuarioAction.Select(usuario),
-            new UsuarioAction.Mode(mode),
+            new UsuarioAction.AjustesMode(mode),
         ]);
     }
 

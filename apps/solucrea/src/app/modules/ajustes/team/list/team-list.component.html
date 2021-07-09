@@ -12,7 +12,15 @@
                 matPrefix
             ></mat-icon>
             <input matInput [placeholder]="'Nombre'" />
-            <button mat-icon-button matSuffix (click)="openNewUser()">
+            <button
+                mat-icon-button
+                matSuffix
+                (click)="openNewUser()"
+                aria-label="Crear usuario"
+                #tooltip="matTooltip"
+                matTooltip="Crear usuario"
+                [matTooltipPosition]="'below'"
+            >
                 <mat-icon
                     class="icon-size-5"
                     [svgIcon]="'heroicons_solid:plus-circle'"
@@ -29,7 +37,15 @@
             >
                 <div class="flex items-center">
                     <div
-                        class="flex flex-0 items-center justify-center w-10 h-10 rounded-full overflow-hidden"
+                        class="
+                            flex flex-0
+                            items-center
+                            justify-center
+                            w-10
+                            h-10
+                            rounded-full
+                            overflow-hidden
+                        "
                     ></div>
                     <div class="ml-4">
                         <div class="font-medium">
@@ -68,7 +84,13 @@
                                             {{ role.label }}
                                         </div>
                                         <div
-                                            class="mt-1.5 text-sm whitespace-normal leading-normal text-secondary"
+                                            class="
+                                                mt-1.5
+                                                text-sm
+                                                whitespace-normal
+                                                leading-normal
+                                                text-secondary
+                                            "
                                         >
                                             {{ role.description }}
                                         </div>
@@ -81,7 +103,10 @@
                         <button
                             mat-icon-button
                             (click)="saveUser(usuario, roleSelect.value)"
-                            aria-label="guardar usuario"
+                            aria-label="guardar cambios"
+                            #tooltip="matTooltip"
+                            matTooltip="Guardar cambios"
+                            [matTooltipPosition]="'below'"
                         >
                             <mat-icon
                                 class="text-hint"
@@ -91,7 +116,10 @@
                         <button
                             mat-icon-button
                             (click)="editUser(usuario, 'edit')"
-                            aria-label="editar usuario"
+                            aria-label="Editar usuario"
+                            #tooltip="matTooltip"
+                            matTooltip="Editar usuario"
+                            [matTooltipPosition]="'below'"
                         >
                             <mat-icon
                                 class="text-hint"
@@ -101,7 +129,10 @@
                         <button
                             mat-icon-button
                             (click)="editUser(usuario, 'password')"
-                            aria-label="cambiar contraseña"
+                            aria-label="Cambiar contraseña"
+                            #tooltip="matTooltip"
+                            matTooltip="Cambiar contraseña"
+                            [matTooltipPosition]="'below'"
                         >
                             <mat-icon
                                 class="text-hint"
@@ -111,7 +142,10 @@
                         <button
                             mat-icon-button
                             (click)="deleteUser(usuario)"
-                            aria-label="borrar usuario"
+                            aria-label="Borrar usuario"
+                            #tooltip="matTooltip"
+                            matTooltip="Borrar usuario"
+                            [matTooltipPosition]="'below'"
                         >
                             <mat-icon
                                 class="text-hint"

@@ -27,7 +27,7 @@ export class Select {
     constructor(public usuario: Usuario) {}
 }
 
-export class Mode {
-    static readonly type = '[Usuario] Edit Mode';
+export class AjustesMode {
+    static readonly type = '[Ajustes] Edit Mode';
     constructor(public payload: EditMode) {}
 }

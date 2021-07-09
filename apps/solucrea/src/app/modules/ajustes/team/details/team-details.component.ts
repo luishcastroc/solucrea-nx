@@ -1,6 +1,8 @@
+import { Edit } from './../../_store/ajustes.actions';
 import {
     ChangeDetectionStrategy,
     Component,
+    OnDestroy,
     OnInit,
     ViewEncapsulation,
 } from '@angular/core';
@@ -9,11 +11,18 @@ import { fuseAnimations } from '@fuse/animations/public-api';
 import { IAlert } from '@fuse/components/alert/alert.model';
 import { FuseAlertService } from '@fuse/components/alert/alert.service';
 import { Navigate } from '@ngxs/router-plugin';
-import { Actions, Select, Store } from '@ngxs/store';
+import {
+    Actions,
+    Select,
+    Store,
+    ofActionErrored,
+    ofActionSuccessful,
+} from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
 import { createPasswordStrengthValidator } from '../../validators/custom.validators';
 
 @Component({
@@ -24,11 +33,12 @@ import { createPasswordStrengthValidator } from '../../validators/custom.validat
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations,
 })
-export class TeamDetailsComponent implements OnInit {
+export class TeamDetailsComponent implements OnInit, OnDestroy {
     @Select(AjustesState.editMode) editMode$: Observable<boolean>;
     @Select(AjustesState.selectedUsuario) selectedUsuario$: Observable<Usuario>;
     selectedUsuario: Usuario;
     usuarioForm: FormGroup;
+    message: { success: string; error: string };
 
     alert: IAlert = {
         appearance: 'soft',
@@ -68,6 +78,32 @@ export class TeamDetailsComponent implements OnInit {
                     this.usuarioForm.patchValue(this.selectedUsuario);
                 }
             });
+
+        this._actions$
+            .pipe(takeUntil(this._unsubscribeAll), ofActionErrored(Edit))
+            .subscribe(() => {
+                this.alert = {
+                    ...this.alert,
+                    type: 'error',
+                    message: this.message.error,
+                };
+
+                this._fuseAlertService.show(this.alert);
+                this.usuarioForm.enable();
+            });
+
+        this._actions$
+            .pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(Edit))
+            .subscribe(() => {
+                this.alert = {
+                    ...this.alert,
+                    type: 'success',
+                    message: this.message.success,
+                };
+
+                this._fuseAlertService.show(this.alert);
+                this.usuarioForm.enable();
+            });
     }
 
     createUsuarioForm(): void {
@@ -88,17 +124,12 @@ export class TeamDetailsComponent implements OnInit {
 
     cancelEdit(): void {
         this._store.dispatch(new Navigate(['/ajustes/usuarios']));
-        console.log('toggleEditMode');
     }
 
     updateContact(): void {
         console.log('updateContact');
-        const {
-            nombre,
-            apellido,
-            nombreUsuario,
-            password,
-        } = this.usuarioForm.value;
+        const { nombre, apellido, nombreUsuario, password } =
+            this.usuarioForm.value;
         let usuario;
         if (!password) {
             usuario = {
@@ -112,5 +143,14 @@ export class TeamDetailsComponent implements OnInit {
         }
 
         console.log(usuario);
+    }
+
+    /**
+     * On destroy
+     */
+    ngOnDestroy(): void {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
     }
 }

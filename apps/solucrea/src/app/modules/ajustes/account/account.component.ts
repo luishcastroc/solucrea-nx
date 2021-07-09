@@ -82,27 +82,31 @@ export class AjustesAccountComponent implements OnInit, OnDestroy {
             }
         });
 
-        this._actions$.pipe(ofActionErrored(Edit)).subscribe(() => {
-            this.alert = {
-                ...this.alert,
-                type: 'error',
-                message: 'Error al editar usuario.',
-            };
+        this._actions$
+            .pipe(takeUntil(this._unsubscribeAll), ofActionErrored(Edit))
+            .subscribe(() => {
+                this.alert = {
+                    ...this.alert,
+                    type: 'error',
+                    message: 'Error al editar usuario.',
+                };
 
-            this._fuseAlertService.show(this.alert);
-            this.accountForm.enable();
-        });
+                this._fuseAlertService.show(this.alert);
+                this.accountForm.enable();
+            });
 
-        this._actions$.pipe(ofActionSuccessful(Edit)).subscribe(() => {
-            this.alert = {
-                ...this.alert,
-                type: 'success',
-                message: 'Usuario modificado exitosamente.',
-            };
+        this._actions$
+            .pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(Edit))
+            .subscribe(() => {
+                this.alert = {
+                    ...this.alert,
+                    type: 'success',
+                    message: 'Usuario modificado exitosamente.',
+                };
 
-            this._fuseAlertService.show(this.alert);
-            this.accountForm.enable();
-        });
+                this._fuseAlertService.show(this.alert);
+                this.accountForm.enable();
+            });
     }
 
     cancelEdit(): void {

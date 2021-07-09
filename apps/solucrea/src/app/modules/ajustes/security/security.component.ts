@@ -1,6 +1,7 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    OnDestroy,
     OnInit,
     ViewEncapsulation,
 } from '@angular/core';
@@ -30,7 +31,7 @@ import { Edit } from './../_store/ajustes.actions';
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations,
 })
-export class AjustesSecurityComponent implements OnInit {
+export class AjustesSecurityComponent implements OnInit, OnDestroy {
     @Select(AjustesState.selectedUsuario) user$: Observable<Usuario>;
     securityForm: FormGroup;
     usuario: Usuario;
@@ -93,27 +94,31 @@ export class AjustesSecurityComponent implements OnInit {
             }
         });
 
-        this._actions$.pipe(ofActionErrored(Edit)).subscribe(() => {
-            this.alert = {
-                ...this.alert,
-                type: 'error',
-                message: 'Error al editar contraseña.',
-            };
+        this._actions$
+            .pipe(takeUntil(this._unsubscribeAll), ofActionErrored(Edit))
+            .subscribe(() => {
+                this.alert = {
+                    ...this.alert,
+                    type: 'error',
+                    message: 'Error al editar contraseña.',
+                };
 
-            this._fuseAlertService.show(this.alert);
-            this.securityForm.enable();
-        });
+                this._fuseAlertService.show(this.alert);
+                this.securityForm.enable();
+            });
 
-        this._actions$.pipe(ofActionSuccessful(Edit)).subscribe(() => {
-            this.alert = {
-                ...this.alert,
-                type: 'success',
-                message: 'Contraseña modificada exitosamente.',
-            };
+        this._actions$
+            .pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(Edit))
+            .subscribe(() => {
+                this.alert = {
+                    ...this.alert,
+                    type: 'success',
+                    message: 'Contraseña modificada exitosamente.',
+                };
 
-            this._fuseAlertService.show(this.alert);
-            this.securityForm.enable();
-        });
+                this._fuseAlertService.show(this.alert);
+                this.securityForm.enable();
+            });
     }
 
     submitNewPassword(): void {
@@ -124,5 +129,14 @@ export class AjustesSecurityComponent implements OnInit {
                 oldPassword: this.currentPassword.value,
             })
         );
+    }
+
+    /**
+     * On destroy
+     */
+    ngOnDestroy(): void {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
     }
 }
