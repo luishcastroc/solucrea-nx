@@ -1,6 +1,6 @@
 import { UpdateUsuarioDto } from './../../dtos/update-usuario.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Prisma, Usuario } from '@prisma/client';
+import { Prisma, Usuario, Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 import { PrismaService } from '../../prisma/prisma.service';
@@ -42,8 +42,9 @@ export class UsuariosService {
     async updateUsuario(params: {
         where: Prisma.UsuarioWhereUniqueInput;
         data: UpdateUsuarioDto;
+        role: Role;
     }): Promise<Usuario> {
-        const { where } = params;
+        const { where, role } = params;
         let { data } = params;
         if (data.password) {
             const usuario = await this.prisma.usuario.findUnique({ where });
@@ -55,18 +56,24 @@ export class UsuariosService {
                 );
             }
 
-            const isMatch = await bcrypt.compare(
-                data.oldPassword,
-                usuario.password
-            );
-
-            if (!isMatch) {
-                throw new HttpException(
-                    'El password es incorrecto, verificar',
-                    HttpStatus.BAD_REQUEST
+            // if someone with ADMIN role is trying to change the password most likely is from the screen
+            // so we let it pass
+            if (role !== 'ADMIN') {
+                const isMatch = await bcrypt.compare(
+                    data.oldPassword,
+                    usuario.password
                 );
+
+                if (!isMatch) {
+                    throw new HttpException(
+                        'El password es incorrecto, verificar',
+                        HttpStatus.BAD_REQUEST
+                    );
+                }
+                delete data.oldPassword;
             }
-            delete data.oldPassword;
+
+            // encrypting the new password
             const saltOrRounds = 10;
             const hash = await bcrypt.hash(data.password, saltOrRounds);
             data = { ...data, password: hash };

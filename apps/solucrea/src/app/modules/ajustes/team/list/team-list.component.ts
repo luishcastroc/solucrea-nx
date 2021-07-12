@@ -1,3 +1,4 @@
+import { Edit, Delete } from './../../_store/ajustes.actions';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -119,13 +120,17 @@ export class TeamListComponent implements OnInit, OnDestroy {
         this._actions$
             .pipe(
                 takeUntil(this._unsubscribeAll),
-                ofActionErrored(UsuarioAction.Delete)
+                ofActionErrored(UsuarioAction.Delete, UsuarioAction.Edit)
             )
-            .subscribe(() => {
+            .subscribe((action) => {
+                let message = 'Error al modificar rol de usuario.';
+                if (action instanceof UsuarioAction.Delete) {
+                    message = 'Error al borrar usuario.';
+                }
                 this.alert = {
                     ...this.alert,
                     type: 'error',
-                    message: 'Error al borrar usuario.',
+                    message,
                 };
 
                 this._fuseAlertService.show(this.alert);
@@ -134,13 +139,17 @@ export class TeamListComponent implements OnInit, OnDestroy {
         this._actions$
             .pipe(
                 takeUntil(this._unsubscribeAll),
-                ofActionSuccessful(UsuarioAction.Delete)
+                ofActionSuccessful(UsuarioAction.Delete, UsuarioAction.Edit)
             )
-            .subscribe(() => {
+            .subscribe((action) => {
+                let message = 'Rol de usuario modificado exitosamente';
+                if (action instanceof UsuarioAction.Delete) {
+                    message = 'Usuario eliminado exitosamente.';
+                }
                 this.alert = {
                     ...this.alert,
                     type: 'success',
-                    message: 'Usuario eliminado exitosamente.',
+                    message,
                 };
 
                 this._fuseAlertService.show(this.alert);
@@ -194,8 +203,11 @@ export class TeamListComponent implements OnInit, OnDestroy {
      * @param role
      *
      */
-    saveUser(usuario: Usuario, role: string): void {
-        console.log('save user', role);
+    saveUser(usuario: Usuario, role: Role): void {
+        if (usuario.role !== role) {
+            const usuarioUpdate = { ...usuario, role };
+            this._store.dispatch(new Edit(usuarioUpdate.id, usuarioUpdate));
+        }
     }
 
     /**

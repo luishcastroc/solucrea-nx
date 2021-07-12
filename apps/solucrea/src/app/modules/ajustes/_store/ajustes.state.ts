@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
+import { UpdateUsuario } from 'app/core/auth/store/auth.actions';
+import { AuthState } from 'app/core/auth/store/auth.state';
 import { tap } from 'rxjs/operators';
 
-import { UpdateUsuario } from '../../../core/auth/store/auth.actions';
 import { AjustesService } from './../ajustes.service';
 import * as AjustesAction from './ajustes.actions';
 import { AjustesStateModel } from './ajustes.model';
@@ -11,14 +12,17 @@ import { AjustesStateModel } from './ajustes.model';
 @State<AjustesStateModel>({
     name: 'ajustes',
     defaults: {
-        usuarios: null,
+        usuarios: [],
         editMode: 'edit',
         selectedUsuario: null,
     },
 })
 @Injectable()
 export class AjustesState {
-    constructor(private ajustesService: AjustesService) {}
+    constructor(
+        private ajustesService: AjustesService,
+        private _store: Store
+    ) {}
 
     @Selector()
     static usuarios({ usuarios }: AjustesStateModel): Usuario[] | null {
@@ -51,12 +55,30 @@ export class AjustesState {
         );
     }
 
+    @Action(AjustesAction.Add)
+    addUsuario(
+        ctx: StateContext<AjustesStateModel>,
+        action: AjustesAction.Add
+    ) {
+        const { payload } = action;
+        return this.ajustesService.addUsuario(payload).pipe(
+            tap((user: Usuario) => {
+                const state = ctx.getState();
+                const usuarios = [...state.usuarios];
+                usuarios.push(user);
+
+                ctx.patchState({ usuarios });
+            })
+        );
+    }
+
     @Action(AjustesAction.Edit)
     editUsuario(
         ctx: StateContext<AjustesStateModel>,
         action: AjustesAction.Edit
     ) {
         const { id, payload } = action;
+        const authenticatedUser = this._store.selectSnapshot(AuthState.user);
         return this.ajustesService.editUsuario(id, payload).pipe(
             tap((user: Usuario) => {
                 const state = ctx.getState();
@@ -71,7 +93,9 @@ export class AjustesState {
                         usuarios,
                     });
                 }
-                ctx.dispatch(new UpdateUsuario(user));
+                if (authenticatedUser.id === user.id) {
+                    ctx.dispatch(new UpdateUsuario(user));
+                }
             })
         );
     }

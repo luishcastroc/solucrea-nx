@@ -1,4 +1,6 @@
-import { Edit } from './../../_store/ajustes.actions';
+import { ActivatedRoute } from '@angular/router';
+import { EditMode } from './../../_store/ajustes.model';
+import { Edit, Add } from './../../_store/ajustes.actions';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -20,8 +22,8 @@ import {
 } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, Subject, combineLatest } from 'rxjs';
+import { takeUntil, map } from 'rxjs/operators';
 
 import { createPasswordStrengthValidator } from '../../validators/custom.validators';
 
@@ -34,11 +36,13 @@ import { createPasswordStrengthValidator } from '../../validators/custom.validat
     animations: fuseAnimations,
 })
 export class TeamDetailsComponent implements OnInit, OnDestroy {
-    @Select(AjustesState.editMode) editMode$: Observable<boolean>;
+    @Select(AjustesState.editMode) editMode$: Observable<EditMode>;
     @Select(AjustesState.selectedUsuario) selectedUsuario$: Observable<Usuario>;
     selectedUsuario: Usuario;
     usuarioForm: FormGroup;
-    message: { success: string; error: string };
+    successMessage: string;
+    errorMessage: string;
+    mode: EditMode;
 
     alert: IAlert = {
         appearance: 'soft',
@@ -59,7 +63,8 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
         private _formBuilder: FormBuilder,
         private _store: Store,
         private _actions$: Actions,
-        private _fuseAlertService: FuseAlertService
+        private _fuseAlertService: FuseAlertService,
+        private _route: ActivatedRoute
     ) {
         this._unsubscribeAll = new Subject();
     }
@@ -69,23 +74,33 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.selectedUsuario$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((usuario: Usuario) => {
-                if (usuario) {
-                    this.selectedUsuario = usuario;
+        combineLatest([this.selectedUsuario$, this.editMode$])
+            .pipe(
+                takeUntil(this._unsubscribeAll),
+                map(([selectedUsuario, editMode]) => ({
+                    selectedUsuario,
+                    editMode,
+                }))
+            )
+            .subscribe(({ selectedUsuario, editMode }) => {
+                this.mode = editMode;
+                this.setMessage(editMode);
+                if (selectedUsuario) {
                     this.createUsuarioForm();
-                    this.usuarioForm.patchValue(this.selectedUsuario);
+                    this.selectedUsuario = selectedUsuario;
+                    if (editMode === 'edit') {
+                        this.usuarioForm.patchValue(this.selectedUsuario);
+                    }
                 }
             });
 
         this._actions$
-            .pipe(takeUntil(this._unsubscribeAll), ofActionErrored(Edit))
+            .pipe(takeUntil(this._unsubscribeAll), ofActionErrored(Edit, Add))
             .subscribe(() => {
                 this.alert = {
                     ...this.alert,
                     type: 'error',
-                    message: this.message.error,
+                    message: this.errorMessage,
                 };
 
                 this._fuseAlertService.show(this.alert);
@@ -93,19 +108,36 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
             });
 
         this._actions$
-            .pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(Edit))
-            .subscribe(() => {
+            .pipe(
+                takeUntil(this._unsubscribeAll),
+                ofActionSuccessful(Edit, Add)
+            )
+            .subscribe((action) => {
                 this.alert = {
                     ...this.alert,
                     type: 'success',
-                    message: this.message.success,
+                    message: this.successMessage,
                 };
 
                 this._fuseAlertService.show(this.alert);
                 this.usuarioForm.enable();
+                if (this.mode === 'password') {
+                    this.usuarioForm.reset();
+                }
+                if (action instanceof Add) {
+                    setTimeout(() => {
+                        this._store.dispatch(
+                            new Navigate(['/ajustes/usuarios/'])
+                        );
+                    }, 4000);
+                }
             });
     }
 
+    /**
+     * Generate user form
+     *
+     */
     createUsuarioForm(): void {
         this.usuarioForm = this._formBuilder.group({
             nombre: [''],
@@ -118,16 +150,20 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
-    deleteContact(): void {
-        console.log('delete');
-    }
-
+    /**
+     * Navigate to the ajustes screen
+     *
+     */
     cancelEdit(): void {
         this._store.dispatch(new Navigate(['/ajustes/usuarios']));
     }
 
-    updateContact(): void {
-        console.log('updateContact');
+    /**
+     * update Usuario in the database, this can be only password or full user
+     *
+     * @param mode
+     */
+    updateUsuario(): void {
         const { nombre, apellido, nombreUsuario, password } =
             this.usuarioForm.value;
         let usuario;
@@ -142,7 +178,17 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
             usuario = { ...this.selectedUsuario, password };
         }
 
-        console.log(usuario);
+        this._store.dispatch(new Edit(this.selectedUsuario.id, usuario));
+    }
+
+    /**
+     * Save new Usuario to the DB
+     *
+     */
+    saveUsuario(): void {
+        const id = this._route.snapshot.paramMap.get('id');
+        const usuario = { id, ...this.usuarioForm.value };
+        this._store.dispatch(new Add(usuario));
     }
 
     /**
@@ -152,5 +198,26 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
+    }
+
+    /**
+     * Set error and success messages depending on the component mode
+     *
+     * @param mode
+     */
+    private setMessage(mode: EditMode): void {
+        switch (mode) {
+            case 'edit':
+                this.successMessage = 'Usuario modificado exitosamente.';
+                this.errorMessage = 'Error al modificar el usuario.';
+                break;
+            case 'password':
+                this.successMessage = 'Contraseña modificada exitosamente.';
+                this.errorMessage = 'Error al modificar la contraseña.';
+                break;
+            default:
+                this.successMessage = 'Usuario creado exitosamente.';
+                this.errorMessage = 'Error al crear usuario.';
+        }
     }
 }

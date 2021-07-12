@@ -68,10 +68,12 @@ export class UsuariosController {
         @Body() data: UpdateUsuarioDto,
         @Request() req
     ): Promise<UsersModel> {
+        const role = req.user.role;
         data.actualizadoPor = req.user.username;
         return this.usuariosService.updateUsuario({
             where: { id },
             data,
+            role,
         });
     }
 

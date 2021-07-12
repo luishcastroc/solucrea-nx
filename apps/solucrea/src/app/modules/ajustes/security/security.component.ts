@@ -118,9 +118,14 @@ export class AjustesSecurityComponent implements OnInit, OnDestroy {
 
                 this._fuseAlertService.show(this.alert);
                 this.securityForm.enable();
+                this.securityForm.reset();
             });
     }
 
+    /**
+     * Save new password to the DB
+     *
+     */
     submitNewPassword(): void {
         this.securityForm.disable();
         this._store.dispatch(
