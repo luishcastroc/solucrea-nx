@@ -1,5 +1,3 @@
-import { Role } from '@prisma/client';
-import { Router } from '@angular/router';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -10,9 +8,11 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
+import { Router } from '@angular/router';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
+import { Role } from '@prisma/client';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

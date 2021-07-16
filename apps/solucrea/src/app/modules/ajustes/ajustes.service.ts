@@ -1,10 +1,11 @@
-import { Usuario, Prisma } from '@prisma/client';
-import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
-import { UpdateUsuarioDto } from './models/update-usuario.dto';
+import { Usuario } from '@prisma/client';
+import { Observable } from 'rxjs';
+
+import { environment } from '../../../environments/environment';
 import { CreateUsuarioDto } from './models/create-usuario.dto';
+import { UpdateUsuarioDto } from './models/update-usuario.dto';
 
 @Injectable({
     providedIn: 'root',

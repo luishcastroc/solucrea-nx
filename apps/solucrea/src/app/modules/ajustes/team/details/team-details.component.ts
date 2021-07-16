@@ -1,6 +1,3 @@
-import { ActivatedRoute } from '@angular/router';
-import { EditMode } from './../../_store/ajustes.model';
-import { Edit, Add } from './../../_store/ajustes.actions';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -9,23 +6,26 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations/public-api';
 import { IAlert } from '@fuse/components/alert/alert.model';
 import { FuseAlertService } from '@fuse/components/alert/alert.service';
 import { Navigate } from '@ngxs/router-plugin';
 import {
     Actions,
-    Select,
-    Store,
     ofActionErrored,
     ofActionSuccessful,
+    Select,
+    Store,
 } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
-import { Observable, Subject, combineLatest } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
+import { combineLatest, Observable, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 
 import { createPasswordStrengthValidator } from '../../validators/custom.validators';
+import { Add, Edit } from './../../_store/ajustes.actions';
+import { EditMode } from './../../_store/ajustes.model';
 
 @Component({
     selector: 'team-details',

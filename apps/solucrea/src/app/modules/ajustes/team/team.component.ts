@@ -1,3 +1,4 @@
+import { Usuario } from '@prisma/client';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -6,7 +7,6 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { Usuario } from '@prisma/client';
 import { AuthState } from 'app/core/auth/store/auth.state';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

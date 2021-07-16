@@ -31,3 +31,8 @@ export class AjustesMode {
     static readonly type = '[Ajustes] Edit Mode';
     constructor(public payload: EditMode) {}
 }
+
+export class Search {
+    static readonly type = '[Usuario] Search';
+    constructor(public payload: string) {}
+}

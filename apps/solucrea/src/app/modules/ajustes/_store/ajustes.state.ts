@@ -15,6 +15,7 @@ import { AjustesStateModel } from './ajustes.model';
         usuarios: [],
         editMode: 'edit',
         selectedUsuario: null,
+        searchResult: [],
     },
 })
 @Injectable()
@@ -25,8 +26,10 @@ export class AjustesState {
     ) {}
 
     @Selector()
-    static usuarios({ usuarios }: AjustesStateModel): Usuario[] | null {
-        return usuarios;
+    static searchResults({
+        searchResult,
+    }: AjustesStateModel): Usuario[] | null {
+        return searchResult;
     }
 
     @Selector()
@@ -50,6 +53,7 @@ export class AjustesState {
                 const usuarios = result.filter((user) => user.id !== id);
                 ctx.patchState({
                     usuarios,
+                    searchResult: usuarios,
                 });
             })
         );
@@ -142,5 +146,21 @@ export class AjustesState {
     ) {
         const { payload } = action;
         ctx.patchState({ editMode: payload });
+    }
+
+    @Action(AjustesAction.Search)
+    searchUsuario(
+        ctx: StateContext<AjustesStateModel>,
+        action: AjustesAction.Search
+    ) {
+        const { payload } = action;
+        const state = ctx.getState();
+        const usuarios = [...state.usuarios];
+        const searchResult = usuarios.filter(
+            (usuario) =>
+                usuario.nombre &&
+                usuario.nombre.toLowerCase().includes(payload.toLowerCase())
+        );
+        ctx.patchState({ searchResult });
     }
 }

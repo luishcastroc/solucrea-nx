@@ -1,4 +1,3 @@
-import { Edit, Delete } from './../../_store/ajustes.actions';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -7,6 +6,7 @@ import {
     OnInit,
     ViewEncapsulation,
 } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
 import { IAlert } from '@fuse/components/alert/alert.model';
@@ -24,13 +24,15 @@ import { AuthUtils } from 'app/core/auth/auth.utils';
 import { AuthState } from 'app/core/auth/store/auth.state';
 import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/confirmation-dialog.component';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { switchMap, takeUntil } from 'rxjs/operators';
 
 import { GetAll } from '../../_store/ajustes.actions';
 import * as UsuarioAction from '../../_store/ajustes.actions';
 import { EditMode } from '../../_store/ajustes.model';
 import { AjustesState } from '../../_store/ajustes.state';
 import { IRole } from '../../models/roles.model';
+import { Edit, Search } from './../../_store/ajustes.actions';
+import { defaultRoles } from './../../roles';
 
 @Component({
     selector: 'team-list',
@@ -41,10 +43,10 @@ import { IRole } from '../../models/roles.model';
     animations: fuseAnimations,
 })
 export class TeamListComponent implements OnInit, OnDestroy {
-    @Select(AjustesState.usuarios) usuarios$: Observable<Usuario[]>;
+    @Select(AjustesState.searchResults) searchResults$: Observable<Usuario[]>;
     usuario = this._store.selectSnapshot(AuthState.user);
-    usuarios: Usuario[];
-    roles: IRole[];
+    searchResults: Usuario[];
+    roles: IRole[] = defaultRoles;
     alert: IAlert = {
         appearance: 'soft',
         name: 'alertBoxDel',
@@ -55,6 +57,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
         message: '',
         dismissTime: 4,
     };
+    searchInputControl: FormControl = new FormControl();
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -77,45 +80,23 @@ export class TeamListComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
         this._store.dispatch(new GetAll(this.usuario.id));
-        this.usuarios$
+
+        this.searchResults$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((usuarios: Usuario[]) => {
-                this.usuarios = usuarios;
+                this.searchResults = usuarios;
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
 
-        // Setup the roles
-        this.roles = [
-            {
-                label: 'Administrador',
-                value: Role.ADMIN,
-                description:
-                    'Tiene permisos para hacer todo, puede borrar, agregar o editar información.',
-            },
-            {
-                label: 'Cajero',
-                value: Role.CAJERO,
-                description: 'Puede realizar operaciones generales de caja.',
-            },
-            {
-                label: 'Director',
-                value: Role.DIRECTOR,
-                description:
-                    'Tiene mayoria de permisos a excepcion de manejo de usuarios.',
-            },
-            {
-                label: 'Gerente',
-                value: Role.MANAGER,
-                description: 'Permisos generales y manejo de dinero.',
-            },
-            {
-                label: 'Usuario',
-                value: Role.USUARIO,
-                description: 'Usuario general con permisos mínimos.',
-            },
-        ];
+        // Subscribe to search input field value changes
+        this.searchInputControl.valueChanges
+            .pipe(
+                takeUntil(this._unsubscribeAll),
+                switchMap((query) => this._store.dispatch(new Search(query)))
+            )
+            .subscribe();
 
         this._actions$
             .pipe(
