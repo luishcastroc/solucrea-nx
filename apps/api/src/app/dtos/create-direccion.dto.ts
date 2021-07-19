@@ -10,18 +10,18 @@ export class CreateDireccionDto implements Prisma.DireccionCreateInput {
     @IsNotEmpty({ message: 'Número es requerido' })
     numero: string;
     @IsNotEmpty({ message: 'Colonia es requerida' })
-    colonia: string;
-    @IsNotEmpty({ message: 'Codigo Postal es requerido' })
-    codigoPostal: Prisma.CodigoPostalCreateNestedOneWithoutDireccionInput;
+    colonia: Prisma.ColoniaCreateNestedOneWithoutDireccionInput;
     @IsNotEmpty({ message: 'Ciudad es requerida' })
     ciudad: Prisma.CiudadCreateNestedOneWithoutDireccionesInput;
     @IsNotEmpty({ message: 'Estado es requerido' })
     estado: Prisma.EstadoCreateNestedOneWithoutDireccionesInput;
+    id?: string;
     cruzamientos?: string;
-    sucursales?: Prisma.SucursalCreateNestedManyWithoutDireccionInput;
-    cliente?: Prisma.ClienteCreateNestedOneWithoutDireccionesInput;
     creadoPor: string;
     fechaCreacion?: string | Date;
     actualizadoPor?: string;
     fechaActualizacion?: string | Date;
+    codigoPostalId: string;
+    sucursales?: Prisma.SucursalCreateNestedManyWithoutDireccionInput;
+    cliente?: Prisma.ClienteCreateNestedOneWithoutDireccionesInput;
 }

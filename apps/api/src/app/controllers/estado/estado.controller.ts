@@ -31,7 +31,7 @@ export class EstadoController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('estado/:id')
-    async getEstado(@Param('id') id: string): Promise<Estado> {
+    async getEstado(@Param('id') id: number): Promise<Estado> {
         return this.estadoService.estado({ id });
     }
 
@@ -47,7 +47,7 @@ export class EstadoController {
     @Roles(Role.ADMIN)
     @Put('estado/:id')
     async editEstado(
-        @Param('id') id: string,
+        @Param('id') id: number,
         @Body() tiposDeViviendaData: Estado
     ): Promise<Estado> {
         return this.estadoService.updateEstado({
@@ -59,7 +59,7 @@ export class EstadoController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Delete('estado/:id')
-    async deleteEstado(@Param('id') id: string): Promise<Estado> {
+    async deleteEstado(@Param('id') id: number): Promise<Estado> {
         return this.estadoService.deleteEstado({ id });
     }
 }

@@ -33,7 +33,7 @@ export class CiudadController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('ciudad/:id')
-    async getCiudad(@Param('id') id: string): Promise<Ciudad> {
+    async getCiudad(@Param('id') id: number): Promise<Ciudad> {
         return this.ciudadService.ciudad({ id });
     }
 
@@ -49,7 +49,7 @@ export class CiudadController {
     @Roles(Role.ADMIN)
     @Put('ciudad/:id')
     async editCiudad(
-        @Param('id') id: string,
+        @Param('id') id: number,
         @Body() data: Ciudad
     ): Promise<Ciudad> {
         return this.ciudadService.updateCiudad({
@@ -61,7 +61,7 @@ export class CiudadController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Delete('ciudad/:id')
-    async deleteCiudad(@Param('id') id: string): Promise<Ciudad> {
+    async deleteCiudad(@Param('id') id: number): Promise<Ciudad> {
         return this.ciudadService.deleteCiudad({ id });
     }
 }
