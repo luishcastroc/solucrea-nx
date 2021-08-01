@@ -37,8 +37,8 @@ export class AuthState {
     }
 
     @Action(Login)
-    login(ctx: StateContext<AuthStateModel>, action: Login) {
-        const { username, password, redirectURL } = action.payload;
+    login(ctx: StateContext<AuthStateModel>, { payload }: Login) {
+        const { username, password, redirectURL } = payload;
         const state = ctx.getState();
         if (state.accessToken) {
             return throwError('El usuario ya ingresó al sistema.');

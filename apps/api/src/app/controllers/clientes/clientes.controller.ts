@@ -43,7 +43,7 @@ export class ClientesController {
     async createTipoDeVivienda(
         @Body() data: CreateClienteDto
     ): Promise<Cliente> {
-        return this.clientesService.createClientes(data);
+        return this.clientesService.createCliente(data);
     }
 
     @UseGuards(RolesGuard)
@@ -53,7 +53,7 @@ export class ClientesController {
         @Param('id') id: string,
         @Body() data: Prisma.ClienteUpdateInput
     ): Promise<Cliente> {
-        return this.clientesService.updateClientes({
+        return this.clientesService.updateCliente({
             where: { id },
             data,
         });
@@ -63,6 +63,6 @@ export class ClientesController {
     @Roles(Role.ADMIN)
     @Delete('cliente/:id')
     async deleteTipoDeVivienda(@Param('id') id: string): Promise<Cliente> {
-        return this.clientesService.deleteClientes({ id });
+        return this.clientesService.deleteCliente({ id });
     }
 }

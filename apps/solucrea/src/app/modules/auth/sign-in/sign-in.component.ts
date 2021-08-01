@@ -24,6 +24,7 @@ import { Subject } from 'rxjs';
 })
 export class AuthSignInComponent implements OnInit, OnDestroy {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
+    usuario: string = localStorage.getItem('usuario');
 
     alert: IAlert = {
         appearance: 'outline',
@@ -59,9 +60,14 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         // Create the form
         this.signInForm = this._formBuilder.group({
-            username: ['', [Validators.required]],
+            username: [this.usuario ? this.usuario : '', [Validators.required]],
             password: ['', Validators.required],
-            rememberMe: [''],
+            rememberMe: [
+                {
+                    value: this.usuario ? true : false,
+                    disabled: this.usuario ? false : true,
+                },
+            ],
         });
 
         this._actions$
@@ -77,6 +83,17 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
                 };
                 this._fuseAlertService.show(this.alert);
             });
+
+        this.signInForm
+            .get('username')
+            .valueChanges.pipe(takeUntil(this.destroy$))
+            .subscribe((value) => {
+                if (value) {
+                    this.signInForm.get('rememberMe').enable();
+                } else {
+                    this.signInForm.get('rememberMe').disable();
+                }
+            });
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -87,6 +104,7 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
      * Sign in
      */
     signIn(): void {
+        const { username, password } = this.signInForm.value;
         // Return if the form is invalid
         if (this.signInForm.invalid) {
             return;
@@ -103,9 +121,23 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
             '/signed-in-redirect';
 
         // Sign in
-        this._store.dispatch(
-            new Login({ ...this.signInForm.value, redirectURL })
-        );
+        this._store.dispatch(new Login({ username, password, redirectURL }));
+    }
+
+    /**
+     *
+     * Function recordarme
+     *
+     * @param event
+     */
+    recordarme(e): void {
+        const { checked } = e;
+        const { username } = this.signInForm.value;
+        if (checked && username) {
+            localStorage.setItem('usuario', username);
+        } else {
+            localStorage.removeItem('usuario');
+        }
     }
 
     ngOnDestroy(): void {

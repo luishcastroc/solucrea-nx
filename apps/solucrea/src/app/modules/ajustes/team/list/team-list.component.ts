@@ -28,11 +28,11 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 
 import { GetAll } from '../../_store/ajustes.actions';
 import * as UsuarioAction from '../../_store/ajustes.actions';
-import { EditMode } from '../../_store/ajustes.model';
 import { AjustesState } from '../../_store/ajustes.state';
 import { IRole } from '../../models/roles.model';
 import { Edit, Search } from './../../_store/ajustes.actions';
 import { defaultRoles } from './../../roles';
+import { EditMode } from 'app/core/models/edit-mode.type';
 
 @Component({
     selector: 'team-list',

@@ -19,13 +19,13 @@ import {
     Store,
 } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
+import { EditMode } from 'app/core/models/edit-mode.type';
 import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
-import { createPasswordStrengthValidator } from '../../validators/custom.validators';
-import { Add, Edit } from './../../_store/ajustes.actions';
-import { EditMode } from './../../_store/ajustes.model';
+import { createPasswordStrengthValidator } from '../../validators/custom-ajustes.validators';
+import { Add, Edit } from '../../_store/ajustes.actions';
 
 @Component({
     selector: 'team-details',

@@ -108,28 +108,26 @@ model EstadoCivil {
 }
 
 model Estado {
-    id                 Int         @id @default(autoincrement())
+    id                 Int      @id @default(autoincrement())
     descripcion        String
-    direcciones        Direccion[]
-    creadoPor          String      @default("ADMIN")
-    fechaCreacion      DateTime    @default(now())
-    actualizadoPor     String      @default("ADMIN")
-    fechaActualizacion DateTime    @default(now()) @updatedAt
+    creadoPor          String   @default("ADMIN")
+    fechaCreacion      DateTime @default(now())
+    actualizadoPor     String   @default("ADMIN")
+    fechaActualizacion DateTime @default(now()) @updatedAt
 
     Ciudad Ciudad[]
     @@map(name: "Estados")
 }
 
 model Ciudad {
-    id                 Int         @id @default(autoincrement())
+    id                 Int       @id @default(autoincrement())
     descripcion        String
-    estado             Estado      @relation(fields: [estadoId], references: [id])
+    estado             Estado    @relation(fields: [estadoId], references: [id])
     colonias           Colonia[]
-    direcciones        Direccion[]
-    creadoPor          String      @default("ADMIN")
-    fechaCreacion      DateTime    @default(now())
-    actualizadoPor     String      @default("ADMIN")
-    fechaActualizacion DateTime    @default(now()) @updatedAt
+    creadoPor          String    @default("ADMIN")
+    fechaCreacion      DateTime  @default(now())
+    actualizadoPor     String    @default("ADMIN")
+    fechaActualizacion DateTime  @default(now()) @updatedAt
     estadoId           Int
 
     @@map(name: "Ciudades")
@@ -333,20 +331,15 @@ model Direccion {
     numero             String
     cruzamientos       String?
     colonia            Colonia       @relation(fields: [coloniaId], references: [id])
-    ciudad             Ciudad        @relation(fields: [ciudadId], references: [id])
-    estado             Estado        @relation(fields: [estadoId], references: [id])
     sucursales         Sucursal[]
     cliente            Cliente?      @relation(fields: [clienteId], references: [id])
     creadoPor          String
     fechaCreacion      DateTime      @default(now())
     actualizadoPor     String        @default("ADMIN")
     fechaActualizacion DateTime      @default(now()) @updatedAt
-    ciudadId           Int
-    estadoId           Int
     clienteId          String?
-    codigoPostalId     String
+    coloniaId          String
 
-    coloniaId String
     @@map(name: "Direcciones")
 }
 

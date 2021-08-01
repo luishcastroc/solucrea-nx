@@ -1,9 +1,9 @@
 import { Usuario } from '@prisma/client';
-export type EditMode = 'new' | 'edit' | 'password';
+import { EditMode } from 'app/core/models/edit-mode.type';
 
 export interface AjustesStateModel {
     usuarios: Usuario[] | null;
-    editMode: 'new' | 'edit' | 'password';
+    editMode: EditMode;
     selectedUsuario: Usuario | null;
     searchResult: Usuario[] | null;
 }

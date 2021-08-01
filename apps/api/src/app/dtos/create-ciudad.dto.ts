@@ -9,5 +9,4 @@ export class CreateCiudadDto implements Prisma.CiudadCreateInput {
     fechaCreacion?: string | Date;
     actualizadoPor?: string;
     fechaActualizacion?: string | Date;
-    direcciones?: Prisma.DireccionCreateNestedManyWithoutCiudadInput;
 }

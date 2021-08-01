@@ -34,13 +34,13 @@ export class ClientesService {
         });
     }
 
-    async createClientes(data: Prisma.ClienteCreateInput): Promise<Cliente> {
+    async createCliente(data: Prisma.ClienteCreateInput): Promise<Cliente> {
         return await this.prisma.cliente.create({
             data,
         });
     }
 
-    async updateClientes(params: {
+    async updateCliente(params: {
         where: Prisma.ClienteWhereUniqueInput;
         data: Prisma.ClienteUpdateInput;
     }): Promise<Cliente> {
@@ -51,7 +51,7 @@ export class ClientesService {
         });
     }
 
-    async deleteClientes(
+    async deleteCliente(
         where: Prisma.ClienteWhereUniqueInput
     ): Promise<Cliente> {
         return this.prisma.cliente.delete({

@@ -59,6 +59,10 @@ export class UserMenuComponent implements OnInit, OnDestroy {
             });
     }
 
+    goToPerfil(): void {
+        this._store.dispatch(new Navigate(['/ajustes/perfil']));
+    }
+
     /**
      * On destroy
      */

@@ -1,3 +1,4 @@
+import { IColoniaReturnDto } from './../../dtos/colonia-return.dto';
 import {
     Body,
     Controller,
@@ -39,7 +40,9 @@ export class ColoniasController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('colonias/cp/:cp')
-    async getColoniasByCp(@Param('cp') cp: string): Promise<Colonia[]> {
+    async getColoniasByCp(
+        @Param('cp') cp: string
+    ): Promise<IColoniaReturnDto[]> {
         return this.coloniasService.coloniasByCp({ codigoPostal: cp });
     }
 

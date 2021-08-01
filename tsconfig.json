@@ -16,7 +16,8 @@
         "rootDir": ".",
         "paths": {
             "@fuse/*": ["apps/solucrea/src/@fuse/*"],
-            "app/*": ["apps/solucrea/src/app/*"]
+            "app/*": ["apps/solucrea/src/app/*"],
+            "api/*": ["apps/api/src/app/*"]
         }
     },
     "angularCompilerOptions": {

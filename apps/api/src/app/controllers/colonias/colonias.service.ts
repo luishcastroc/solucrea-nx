@@ -1,3 +1,4 @@
+import { IColoniaReturnDto } from './../../dtos/colonia-return.dto';
 import { Prisma } from '@prisma/client';
 import { Colonia } from '.prisma/client';
 import { Injectable } from '@nestjs/common';
@@ -21,10 +22,21 @@ export class ColoniasService {
 
     async coloniasByCp(
         coloniaWhereInput: Prisma.ColoniaWhereInput
-    ): Promise<Colonia[]> {
+    ): Promise<IColoniaReturnDto[]> {
         return this.prisma.colonia.findMany({
             where: coloniaWhereInput,
-            include: { ciudad: { include: { estado: true } } },
+            select: {
+                id: true,
+                descripcion: true,
+                codigoPostal: true,
+                ciudad: {
+                    select: {
+                        id: true,
+                        descripcion: true,
+                        estado: { select: { id: true, descripcion: true } },
+                    },
+                },
+            },
         });
     }
 

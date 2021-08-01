@@ -1,10 +1,11 @@
-import { EditMode } from './ajustes.model';
-import { Prisma, Usuario } from '@prisma/client';
-import { UpdateUsuarioDto } from '../models/update-usuario.dto';
+import { Usuario } from '@prisma/client';
+import { CreateUsuarioDto } from 'api/dtos/create-usuario.dto';
+import { UpdateUsuarioDto } from 'api/dtos/update-usuario.dto';
+import { EditMode } from 'app/core/models/edit-mode.type';
 
 export class Add {
     static readonly type = '[Usuario] Add';
-    constructor(public payload: Prisma.UsuarioCreateInput) {}
+    constructor(public payload: CreateUsuarioDto) {}
 }
 
 export class GetAll {

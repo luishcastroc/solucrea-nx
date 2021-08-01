@@ -11,17 +11,12 @@ export class CreateDireccionDto implements Prisma.DireccionCreateInput {
     numero: string;
     @IsNotEmpty({ message: 'Colonia es requerida' })
     colonia: Prisma.ColoniaCreateNestedOneWithoutDireccionInput;
-    @IsNotEmpty({ message: 'Ciudad es requerida' })
-    ciudad: Prisma.CiudadCreateNestedOneWithoutDireccionesInput;
-    @IsNotEmpty({ message: 'Estado es requerido' })
-    estado: Prisma.EstadoCreateNestedOneWithoutDireccionesInput;
     id?: string;
     cruzamientos?: string;
     creadoPor: string;
     fechaCreacion?: string | Date;
     actualizadoPor?: string;
     fechaActualizacion?: string | Date;
-    codigoPostalId: string;
     sucursales?: Prisma.SucursalCreateNestedManyWithoutDireccionInput;
     cliente?: Prisma.ClienteCreateNestedOneWithoutDireccionesInput;
 }

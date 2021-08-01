@@ -1,3 +1,4 @@
+import { createPasswordStrengthValidator } from '../validators/custom-ajustes.validators';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -20,8 +21,7 @@ import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { createPasswordStrengthValidator } from '../validators/custom.validators';
-import { fuseAnimations } from './../../../../@fuse/animations/public-api';
+import { fuseAnimations } from '@fuse/animations/public-api';
 import { Edit } from './../_store/ajustes.actions';
 
 @Component({

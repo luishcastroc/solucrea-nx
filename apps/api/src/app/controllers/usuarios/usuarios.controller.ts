@@ -19,7 +19,7 @@ import { Public } from '../../decorators/public.decorator';
 import { Roles } from '../../decorators/roles.decorator';
 import { LocalAuthGuard } from '../../guards/local.auth.guard';
 import { RolesGuard } from '../../guards/roles.guard';
-import { CreateUsuarioDto } from './../../dtos/create-usuario.dto';
+import { CreateUsuarioDto } from '../../dtos/create-usuario.dto';
 import { UsuariosService } from './usuarios.service';
 
 @Controller()
