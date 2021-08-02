@@ -18,32 +18,21 @@
         <div class="w-full">
             <!-- Form -->
             <form [formGroup]="clienteForm">
-                <div
-                    class="
-                        grid
-                        sm:grid-cols-1
-                        md:grid-cols-2
-                        lg:grid-cols-3
-                        gap-6
-                        w-full
-                        mt-8
-                    "
-                >
+                <div class="flex flex-wrap gap-6 w-full mt-8">
                     <h3
                         class="
                             text-3xl
                             font-extrabold
                             tracking-tight
                             leading-none
-                            col-start-1
-                            md:col-span-2
-                            lg:col-span-3
+                            flex-auto
+                            w-full
                         "
                     >
                         Datos Generales
                     </h3>
                     <!-- Nombre -->
-                    <div class="w-full">
+                    <div class="md:max-w-3/12 w-full">
                         <mat-form-field class="fuse-mat-no-subscript w-full">
                             <mat-label>Nombre</mat-label>
                             <mat-icon
@@ -55,7 +44,9 @@
                         </mat-form-field>
                     </div>
                     <!-- Apellido -->
-                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-form-field
+                        class="fuse-mat-no-subscript w-full md:max-w-3/12"
+                    >
                         <mat-label>Apellidos</mat-label>
                         <mat-icon
                             class="icon-size-5"
@@ -66,7 +57,7 @@
                     </mat-form-field>
                     <!-- Fecha de Nacimiento -->
                     <mat-form-field
-                        class="fuse-mat-no-subscript sm:w-full md:max-w-72"
+                        class="fuse-mat-no-subscript sm:w-full md:max-w-1/6"
                     >
                         <mat-label>Fecha de Nacimiento</mat-label>
                         <mat-icon
@@ -87,36 +78,9 @@
                         </mat-datepicker-toggle>
                         <mat-datepicker #birthdayDatepicker></mat-datepicker>
                     </mat-form-field>
-                    <!-- CURP -->
-                    <mat-form-field
-                        class="lg:col-start-1 fuse-mat-no-subscript w-full"
-                    >
-                        <mat-label>CURP</mat-label>
-                        <mat-icon
-                            class="icon-size-5"
-                            [svgIcon]="'heroicons_outline:document-text'"
-                            matPrefix
-                        ></mat-icon>
-                        <input [formControlName]="'curp'" matInput />
-                    </mat-form-field>
-                    <!-- RFC -->
-                    <mat-form-field class="fuse-mat-no-subscript sm:w-full">
-                        <mat-label>RFC</mat-label>
-                        <mat-icon
-                            class="icon-size-5"
-                            [svgIcon]="'heroicons_outline:document-text'"
-                            matPrefix
-                        ></mat-icon>
-                        <input [formControlName]="'rfc'" matInput />
-                    </mat-form-field>
                     <!-- Estado Civil -->
                     <mat-form-field
-                        class="
-                            fuse-mat-no-subscript
-                            w-full
-                            sm:max-w-40
-                            md:max-w-72
-                        "
+                        class="fuse-mat-no-subscript w-full md:max-w-1/6"
                     >
                         <mat-label>Estado Civil</mat-label>
                         <mat-icon
@@ -135,331 +99,309 @@
                             <mat-option [value]="'italy'">Italy</mat-option>
                         </mat-select>
                     </mat-form-field>
+                    <!-- CURP -->
+                    <mat-form-field
+                        class="fuse-mat-no-subscript sm:w-full md:max-w-72"
+                    >
+                        <mat-label>CURP</mat-label>
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_outline:document-text'"
+                            matPrefix
+                        ></mat-icon>
+                        <input [formControlName]="'curp'" matInput />
+                    </mat-form-field>
+                    <!-- RFC -->
+                    <mat-form-field
+                        class="fuse-mat-no-subscript sm:w-full md:max-w-64"
+                    >
+                        <mat-label>RFC</mat-label>
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_outline:document-text'"
+                            matPrefix
+                        ></mat-icon>
+                        <input [formControlName]="'rfc'" matInput />
+                    </mat-form-field>
                     <h3
                         class="
                             text-3xl
                             font-extrabold
                             tracking-tight
                             leading-none
-                            col-start-1
-                            md:col-span-2
-                            lg:col-span-3
+                            flex-auto
+                            w-full
                         "
                     >
                         Direcciones
                     </h3>
                     <!-- Direcciones -->
-                    <div class="col-start-1 md:col-span-2 lg:col-span-3">
-                        <div class="space-y-4" formArrayName="direcciones">
-                            <ng-container
-                                *ngFor="
-                                    let direccion of direcciones.controls;
-                                    let i = index;
-                                    let first = first;
-                                    let last = last;
-                                    trackBy: trackByFn
-                                "
+                    <div
+                        class="space-y-4 grid grid-cols-12"
+                        formArrayName="direcciones"
+                    >
+                        <ng-container
+                            *ngFor="
+                                let direccion of direcciones.controls;
+                                let i = index;
+                                let first = first;
+                                let last = last;
+                                trackBy: trackByFn
+                            "
+                        >
+                            <div
+                                class="flex flex-wrap gap-6 w-full col-span-11"
                             >
-                                <div class="flex flex-row">
-                                    <div class="flex flex-wrap gap-2 w-full">
-                                        <!-- Calle -->
-                                        <mat-form-field
-                                            class="
-                                                fuse-mat-no-subscript
-                                                w-full
-                                                xsm:max-w-60
-                                                md:max-w-72
-                                            "
+                                <!-- Calle -->
+                                <mat-form-field
+                                    class="
+                                        fuse-mat-no-subscript
+                                        w-full
+                                        xsm:max-w-60
+                                        sm:
+                                        max-w-7/12
+                                        md:max-w-3/12
+                                    "
+                                >
+                                    <mat-label *ngIf="first">Calle</mat-label>
+                                    <mat-icon
+                                        matPrefix
+                                        class="hidden sm:flex icon-size-5"
+                                        [svgIcon]="
+                                            'heroicons_solid:location-marker'
+                                        "
+                                    ></mat-icon>
+                                    <input
+                                        matInput
+                                        [formControl]="direccion.get('calle')"
+                                        [placeholder]="'Calle'"
+                                        [spellcheck]="false"
+                                    />
+                                </mat-form-field>
+                                <!-- Número -->
+                                <mat-form-field
+                                    class="
+                                        fuse-mat-no-subscript
+                                        w-full
+                                        xsm:max-w-50
+                                        sm:max-w-4/12
+                                        md:max-w-2/12
+                                    "
+                                >
+                                    <mat-label *ngIf="first">Número</mat-label>
+                                    <mat-icon
+                                        matPrefix
+                                        class="hidden sm:flex icon-size-5"
+                                        [svgIcon]="
+                                            'heroicons_solid:location-marker'
+                                        "
+                                    ></mat-icon>
+                                    <input
+                                        matInput
+                                        [formControl]="direccion.get('numero')"
+                                        [placeholder]="'Número'"
+                                    />
+                                </mat-form-field>
+                                <!-- Cruzamientos -->
+                                <mat-form-field
+                                    class="
+                                        fuse-mat-no-subscript
+                                        w-full
+                                        xsm:max-w-60
+                                        sm:
+                                        max-w-7/12
+                                        md:max-w-80
+                                    "
+                                >
+                                    <mat-label *ngIf="first"
+                                        >Cruzamientos</mat-label
+                                    >
+                                    <mat-icon
+                                        matPrefix
+                                        class="hidden sm:flex icon-size-5"
+                                        [svgIcon]="
+                                            'heroicons_solid:location-marker'
+                                        "
+                                    ></mat-icon>
+                                    <input
+                                        matInput
+                                        [formControl]="
+                                            direccion.get('cruzamientos')
+                                        "
+                                        [placeholder]="'Cruzamientos'"
+                                    />
+                                </mat-form-field>
+                                <!-- Código Postal -->
+                                <mat-form-field
+                                    class="
+                                        fuse-mat-no-subscript
+                                        w-full
+                                        xsm:max-w-50
+                                        sm:max-w-4/12
+                                        md:max-w-2/12
+                                    "
+                                >
+                                    <mat-label *ngIf="first"
+                                        >Código Postal</mat-label
+                                    >
+                                    <mat-icon
+                                        matPrefix
+                                        class="hidden sm:flex icon-size-5"
+                                        [svgIcon]="
+                                            'heroicons_solid:location-marker'
+                                        "
+                                    ></mat-icon>
+                                    <input
+                                        matInput
+                                        [formControl]="
+                                            direccion.get('codigoPostal')
+                                        "
+                                        [placeholder]="'Código Postal'"
+                                        (change)="
+                                            getColonias(
+                                                direccion.get('codigoPostal')
+                                                    .value
+                                            )
+                                        "
+                                    />
+                                </mat-form-field>
+                                <!-- Estado -->
+                                <mat-form-field
+                                    class="
+                                        fuse-mat-no-subscript
+                                        w-full
+                                        sm:max-w-2/5
+                                        md:max-w-72
+                                    "
+                                >
+                                    <mat-label *ngIf="first">Estado</mat-label>
+                                    <mat-icon
+                                        matPrefix
+                                        class="hidden sm:flex icon-size-5"
+                                        [svgIcon]="
+                                            'heroicons_solid:location-marker'
+                                        "
+                                    ></mat-icon>
+                                    <input
+                                        matInput
+                                        [formControl]="direccion.get('estado')"
+                                        [placeholder]="'Estado'"
+                                    />
+                                </mat-form-field>
+                                <!-- Ciudad -->
+                                <mat-form-field
+                                    class="
+                                        fuse-mat-no-subscript
+                                        w-full
+                                        sm:max-w-2/5
+                                        md:max-w-72
+                                    "
+                                >
+                                    <mat-label *ngIf="first">Ciudad</mat-label>
+                                    <mat-icon
+                                        matPrefix
+                                        class="hidden sm:flex icon-size-5"
+                                        [svgIcon]="
+                                            'heroicons_solid:location-marker'
+                                        "
+                                    ></mat-icon>
+                                    <input
+                                        matInput
+                                        [formControl]="direccion.get('ciudad')"
+                                        [placeholder]="'ciudad'"
+                                    />
+                                </mat-form-field>
+                                <!-- Colonia -->
+                                <mat-form-field
+                                    class="
+                                        fuse-mat-no-subscript
+                                        w-full
+                                        sm:max-w-2/5
+                                        md:max-w-72
+                                    "
+                                >
+                                    <mat-label *ngIf="first">Colonia</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="
+                                            'heroicons_solid:location-marker'
+                                        "
+                                        matPrefix
+                                    ></mat-icon>
+                                    <mat-select
+                                        [formControl]="direccion.get('colonia')"
+                                    >
+                                        <mat-option [value]="'usa'"
+                                            >United States</mat-option
                                         >
-                                            <mat-label *ngIf="first"
-                                                >Calle</mat-label
-                                            >
-                                            <mat-icon
-                                                matPrefix
-                                                class="
-                                                    hidden
-                                                    sm:flex
-                                                    icon-size-5
-                                                "
-                                                [svgIcon]="
-                                                    'heroicons_solid:location-marker'
-                                                "
-                                            ></mat-icon>
-                                            <input
-                                                matInput
-                                                [formControl]="
-                                                    direccion.get('calle')
-                                                "
-                                                [placeholder]="'Calle'"
-                                                [spellcheck]="false"
-                                            />
-                                        </mat-form-field>
-                                        <!-- Número -->
-                                        <mat-form-field
-                                            class="
-                                                fuse-mat-no-subscript
-                                                w-full
-                                                xsm:max-w-50
-                                                sm:max-w-40
-                                            "
+                                        <mat-option [value]="'canada'"
+                                            >Canada</mat-option
                                         >
-                                            <mat-label *ngIf="first"
-                                                >Número</mat-label
-                                            >
-                                            <mat-icon
-                                                matPrefix
-                                                class="
-                                                    hidden
-                                                    sm:flex
-                                                    icon-size-5
-                                                "
-                                                [svgIcon]="
-                                                    'heroicons_solid:location-marker'
-                                                "
-                                            ></mat-icon>
-                                            <input
-                                                matInput
-                                                [formControl]="
-                                                    direccion.get('numero')
-                                                "
-                                                [placeholder]="'Número'"
-                                            />
-                                        </mat-form-field>
-                                        <!-- Cruzamientos -->
-                                        <mat-form-field
-                                            class="
-                                                fuse-mat-no-subscript
-                                                w-full
-                                                xsm:max-w-60
-                                                sm:max-w-40
-                                                md:max-w-72
-                                            "
+                                        <mat-option [value]="'mexico'"
+                                            >Mexico</mat-option
                                         >
-                                            <mat-label *ngIf="first"
-                                                >Cruzamientos</mat-label
-                                            >
-                                            <mat-icon
-                                                matPrefix
-                                                class="
-                                                    hidden
-                                                    sm:flex
-                                                    icon-size-5
-                                                "
-                                                [svgIcon]="
-                                                    'heroicons_solid:location-marker'
-                                                "
-                                            ></mat-icon>
-                                            <input
-                                                matInput
-                                                [formControl]="
-                                                    direccion.get(
-                                                        'cruzamientos'
-                                                    )
-                                                "
-                                                [placeholder]="'Cruzamientos'"
-                                            />
-                                        </mat-form-field>
-                                        <!-- Código Postal -->
-                                        <mat-form-field
-                                            class="
-                                                fuse-mat-no-subscript
-                                                w-full
-                                                xsm:max-w-50
-                                                sm:max-w-40
-                                            "
+                                        <mat-option [value]="'france'"
+                                            >France</mat-option
                                         >
-                                            <mat-label *ngIf="first"
-                                                >Código Postal</mat-label
-                                            >
-                                            <mat-icon
-                                                matPrefix
-                                                class="
-                                                    hidden
-                                                    sm:flex
-                                                    icon-size-5
-                                                "
-                                                [svgIcon]="
-                                                    'heroicons_solid:location-marker'
-                                                "
-                                            ></mat-icon>
-                                            <input
-                                                matInput
-                                                [formControl]="
-                                                    direccion.get(
-                                                        'codigoPostal'
-                                                    )
-                                                "
-                                                [placeholder]="'Código Postal'"
-                                                (change)="
-                                                    getColonias(
-                                                        direccion.get(
-                                                            'codigoPostal'
-                                                        ).value
-                                                    )
-                                                "
-                                            />
-                                        </mat-form-field>
-                                        <!-- Estado -->
-                                        <mat-form-field
-                                            class="
-                                                fuse-mat-no-subscript
-                                                w-full
-                                                sm:max-w-40
-                                                md:max-w-72
-                                            "
+                                        <mat-option [value]="'germany'"
+                                            >Germany</mat-option
                                         >
-                                            <mat-label *ngIf="first"
-                                                >Estado</mat-label
-                                            >
-                                            <mat-icon
-                                                matPrefix
-                                                class="
-                                                    hidden
-                                                    sm:flex
-                                                    icon-size-5
-                                                "
-                                                [svgIcon]="
-                                                    'heroicons_solid:location-marker'
-                                                "
-                                            ></mat-icon>
-                                            <input
-                                                matInput
-                                                [formControl]="
-                                                    direccion.get('estado')
-                                                "
-                                                [placeholder]="'Estado'"
-                                            />
-                                        </mat-form-field>
-                                        <!-- Ciudad -->
-                                        <mat-form-field
-                                            class="
-                                                fuse-mat-no-subscript
-                                                w-full
-                                                sm:max-w-40
-                                                md:max-w-72
-                                            "
+                                        <mat-option [value]="'italy'"
+                                            >Italy</mat-option
                                         >
-                                            <mat-label *ngIf="first"
-                                                >Ciudad</mat-label
-                                            >
-                                            <mat-icon
-                                                matPrefix
-                                                class="
-                                                    hidden
-                                                    sm:flex
-                                                    icon-size-5
-                                                "
-                                                [svgIcon]="
-                                                    'heroicons_solid:location-marker'
-                                                "
-                                            ></mat-icon>
-                                            <input
-                                                matInput
-                                                [formControl]="
-                                                    direccion.get('ciudad')
-                                                "
-                                                [placeholder]="'ciudad'"
-                                            />
-                                        </mat-form-field>
-                                        <!-- Colonia -->
-                                        <mat-form-field
-                                            class="
-                                                fuse-mat-no-subscript
-                                                w-full
-                                                sm:max-w-40
-                                                md:max-w-72
-                                            "
-                                        >
-                                            <mat-label *ngIf="first"
-                                                >Colonia</mat-label
-                                            >
-                                            <mat-icon
-                                                class="icon-size-5"
-                                                [svgIcon]="
-                                                    'heroicons_solid:location-marker'
-                                                "
-                                                matPrefix
-                                            ></mat-icon>
-                                            <mat-select
-                                                [formControl]="
-                                                    direccion.get('colonia')
-                                                "
-                                            >
-                                                <mat-option [value]="'usa'"
-                                                    >United States</mat-option
-                                                >
-                                                <mat-option [value]="'canada'"
-                                                    >Canada</mat-option
-                                                >
-                                                <mat-option [value]="'mexico'"
-                                                    >Mexico</mat-option
-                                                >
-                                                <mat-option [value]="'france'"
-                                                    >France</mat-option
-                                                >
-                                                <mat-option [value]="'germany'"
-                                                    >Germany</mat-option
-                                                >
-                                                <mat-option [value]="'italy'"
-                                                    >Italy</mat-option
-                                                >
-                                            </mat-select>
-                                        </mat-form-field>
-                                    </div>
-                                    <!-- Remover Dirección -->
-                                    <ng-container *ngIf="!(first && last)">
-                                        <div
-                                            class="flex items-center w-10 pl-2"
-                                            [ngClass]="{ 'mt-6': first }"
-                                        >
-                                            <button
-                                                class="w-8 h-8 min-h-8"
-                                                mat-icon-button
-                                                (click)="
-                                                    removeDireccionesField(i)
-                                                "
-                                                matTooltip="Remove"
-                                            >
-                                                <mat-icon
-                                                    class="icon-size-5"
-                                                    [svgIcon]="
-                                                        'heroicons_solid:trash'
-                                                    "
-                                                ></mat-icon>
-                                            </button>
-                                        </div>
-                                    </ng-container>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <!-- Remover Dirección -->
+                            <ng-container *ngIf="!(first && last)">
+                                <div
+                                    class="flex items-center w-10 pl-2"
+                                    [ngClass]="{ 'mt-6': first }"
+                                >
+                                    <button
+                                        class="w-8 h-8 min-h-8"
+                                        mat-icon-button
+                                        (click)="removeDireccionesField(i)"
+                                        matTooltip="Borrar"
+                                    >
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_solid:trash'"
+                                        ></mat-icon>
+                                    </button>
                                 </div>
                             </ng-container>
-                        </div>
-                        <div
+                        </ng-container>
+                    </div>
+                    <div
+                        class="
+                            group
+                            inline-flex
+                            w-full
+                            flex-auto
+                            items-center
+                            mt-2
+                            -ml-4
+                            py-2
+                            px-4
+                            rounded
+                            cursor-pointer
+                        "
+                        (click)="addDireccionesField()"
+                    >
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_solid:plus-circle'"
+                        ></mat-icon>
+                        <span
                             class="
-                                group
-                                inline-flex
-                                items-center
-                                mt-2
-                                -ml-4
-                                py-2
-                                px-4
-                                rounded
-                                cursor-pointer
+                                ml-2
+                                font-medium
+                                text-secondary
+                                group-hover:underline
                             "
-                            (click)="addDireccionesField()"
+                            >Agregar Dirección</span
                         >
-                            <mat-icon
-                                class="icon-size-5"
-                                [svgIcon]="'heroicons_solid:plus-circle'"
-                            ></mat-icon>
-                            <span
-                                class="
-                                    ml-2
-                                    font-medium
-                                    text-secondary
-                                    group-hover:underline
-                                "
-                                >Agregar Dirección</span
-                            >
-                        </div>
                     </div>
                 </div>
             </form>

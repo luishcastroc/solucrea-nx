@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { Cliente } from '@prisma/client';
-import { IColoniaReturnDto } from 'api/dtos/colonia-return.dto';
+import { IColoniaReturnDto } from 'api/dtos';
 import { tap } from 'rxjs/operators';
 
 import { ClientesService } from './../clientes.service';

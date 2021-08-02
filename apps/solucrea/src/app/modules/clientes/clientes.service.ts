@@ -1,12 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Cliente } from '@prisma/client';
-import { IColoniaReturnDto } from 'api/dtos/colonia-return.dto';
-import { CreateClienteDto } from 'api/dtos/create-cliente.dto';
+import {
+    CreateClienteDto,
+    IColoniaReturnDto,
+    UpdateClienteDto,
+} from 'api/dtos';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import { UpdateClienteDto } from './models/update-cliente.dto';
 
 @Injectable({
     providedIn: 'root',

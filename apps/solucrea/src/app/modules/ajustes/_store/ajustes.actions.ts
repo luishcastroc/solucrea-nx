@@ -1,6 +1,5 @@
 import { Usuario } from '@prisma/client';
-import { CreateUsuarioDto } from 'api/dtos/create-usuario.dto';
-import { UpdateUsuarioDto } from 'api/dtos/update-usuario.dto';
+import { CreateUsuarioDto, UpdateUsuarioDto } from 'api/dtos';
 import { EditMode } from 'app/core/models/edit-mode.type';
 
 export class Add {

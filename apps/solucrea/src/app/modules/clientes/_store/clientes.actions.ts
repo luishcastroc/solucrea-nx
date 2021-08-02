@@ -1,8 +1,6 @@
+import { CreateClienteDto, UpdateClienteDto } from 'api/dtos';
 import { Cliente } from '@prisma/client';
 import { EditMode } from 'app/core/models/edit-mode.type';
-
-import { CreateClienteDto } from '../models/create-cliente.dto';
-import { UpdateClienteDto } from '../models/update-cliente.dto';
 
 export class Add {
     static readonly type = '[Cliente] Add';

@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Usuario } from '@prisma/client';
-import { CreateUsuarioDto } from 'api/dtos/create-usuario.dto';
-import { UpdateUsuarioDto } from 'api/dtos/update-usuario.dto';
+import { CreateUsuarioDto, UpdateUsuarioDto } from 'api/dtos';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';

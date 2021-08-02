@@ -1,5 +1,5 @@
 import { Cliente } from '@prisma/client';
-import { IColoniaReturnDto } from 'api/dtos/colonia-return.dto';
+import { IColoniaReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models/edit-mode.type';
 
 export interface ClientesStateModel {
