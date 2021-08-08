@@ -4,8 +4,10 @@ import { IsDate, IsNotEmpty } from 'class-validator';
 export class CreateClienteDto implements Prisma.ClienteCreateInput {
     @IsNotEmpty({ message: 'Nombre es requerido' })
     nombre: string;
-    @IsNotEmpty({ message: 'Apellido es requerido' })
-    apellidos: string;
+    @IsNotEmpty({ message: 'Apellido paterno es requerido' })
+    apellidoPaterno: string;
+    @IsNotEmpty({ message: 'Apellido materno es requerido' })
+    apellidoMaterno: string;
     @IsNotEmpty({ message: 'Fecha de nacimiento es requerida' })
     @IsDate({ message: 'Fecha inválida favor de verificar' })
     fechaDeNacimiento: string | Date;

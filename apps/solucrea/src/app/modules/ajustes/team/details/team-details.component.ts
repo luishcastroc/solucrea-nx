@@ -7,9 +7,8 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { fuseAnimations } from '@fuse/animations/public-api';
 import { IAlert } from '@fuse/components/alert/alert.model';
-import { FuseAlertService } from '@fuse/components/alert/alert.service';
+import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import {
     Actions,
@@ -24,8 +23,8 @@ import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
-import { createPasswordStrengthValidator } from '../../validators/custom-ajustes.validators';
 import { Add, Edit } from '../../_store/ajustes.actions';
+import { createPasswordStrengthValidator } from '../../validators/custom-ajustes.validators';
 
 @Component({
     selector: 'team-details',
@@ -33,7 +32,6 @@ import { Add, Edit } from '../../_store/ajustes.actions';
     styleUrls: ['./team-details.component.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: fuseAnimations,
 })
 export class TeamDetailsComponent implements OnInit, OnDestroy {
     @Select(AjustesState.editMode) editMode$: Observable<EditMode>;
@@ -63,8 +61,8 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
         private _formBuilder: FormBuilder,
         private _store: Store,
         private _actions$: Actions,
-        private _fuseAlertService: FuseAlertService,
-        private _route: ActivatedRoute
+        private _route: ActivatedRoute,
+        private _toast: HotToastService
     ) {
         this._unsubscribeAll = new Subject();
     }
@@ -97,13 +95,11 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
         this._actions$
             .pipe(takeUntil(this._unsubscribeAll), ofActionErrored(Edit, Add))
             .subscribe(() => {
-                this.alert = {
-                    ...this.alert,
-                    type: 'error',
-                    message: this.errorMessage,
-                };
-
-                this._fuseAlertService.show(this.alert);
+                const message = this.errorMessage;
+                this._toast.error(message, {
+                    duration: 5000,
+                    position: 'bottom-center',
+                });
                 this.usuarioForm.enable();
             });
 
@@ -113,13 +109,11 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
                 ofActionSuccessful(Edit, Add)
             )
             .subscribe((action) => {
-                this.alert = {
-                    ...this.alert,
-                    type: 'success',
-                    message: this.successMessage,
-                };
-
-                this._fuseAlertService.show(this.alert);
+                const message = this.successMessage;
+                this._toast.success(message, {
+                    duration: 5000,
+                    position: 'bottom-center',
+                });
                 this.usuarioForm.enable();
                 if (this.mode === 'password') {
                     this.usuarioForm.reset();

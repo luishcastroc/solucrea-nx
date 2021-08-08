@@ -37,7 +37,10 @@
             <!-- Nombre de Usuario -->
             <div class="sm:col-span-4">
                 <mat-form-field
-                    class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full"
+                    class="
+                        fuse-mat-no-subscript fuse-mat-emphasized-affix
+                        w-full
+                    "
                 >
                     <mat-label>Nombre de Usuario</mat-label>
                     <div class="text-secondary" matPrefix>solucrea/</div>
@@ -65,18 +68,5 @@
                 Guardar
             </button>
         </div>
-
-        <!-- Alert -->
-        <fuse-alert
-            class="mt-8 -mb-4 w-full"
-            [appearance]="alert.appearance"
-            [dismissible]="alert.dismissible"
-            [dismissed]="alert.dismissed"
-            [showIcon]="alert.showIcon"
-            [type]="alert.type"
-            [name]="alert.name"
-            [@shake]="alert.type === 'error'"
-        >
-        </fuse-alert>
     </form>
 </div>

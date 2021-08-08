@@ -18,7 +18,7 @@
         <div class="w-full">
             <!-- Form -->
             <form [formGroup]="clienteForm">
-                <div class="flex flex-wrap gap-6 w-full mt-8">
+                <div class="flex flex-wrap gap-3 w-full mt-8">
                     <h3
                         class="
                             text-3xl
@@ -31,33 +31,45 @@
                     >
                         Datos Generales
                     </h3>
-                    <!-- Nombre -->
-                    <div class="md:max-w-3/12 w-full">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Nombre</mat-label>
-                            <mat-icon
-                                class="icon-size-5"
-                                [svgIcon]="'heroicons_solid:user'"
-                                matPrefix
-                            ></mat-icon>
-                            <input [formControlName]="'nombre'" matInput />
-                        </mat-form-field>
-                    </div>
-                    <!-- Apellido -->
+                    <!-- Apellido Paterno -->
                     <mat-form-field
-                        class="fuse-mat-no-subscript w-full md:max-w-3/12"
+                        class="fuse-mat-no-subscript md:max-w-3/12 w-full"
                     >
-                        <mat-label>Apellidos</mat-label>
+                        <mat-label>Apellido Paterno</mat-label>
                         <mat-icon
                             class="icon-size-5"
                             [svgIcon]="'heroicons_solid:user'"
                             matPrefix
                         ></mat-icon>
-                        <input [formControlName]="'apellidos'" matInput />
+                        <input [formControlName]="'apellidoPaterno'" matInput />
+                    </mat-form-field>
+                    <!-- Apellido Materno -->
+                    <mat-form-field
+                        class="fuse-mat-no-subscript w-full md:max-w-3/12"
+                    >
+                        <mat-label>Apellido Materno</mat-label>
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_solid:user'"
+                            matPrefix
+                        ></mat-icon>
+                        <input [formControlName]="'apellidoMaterno'" matInput />
+                    </mat-form-field>
+                    <!-- Nombre -->
+                    <mat-form-field
+                        class="fuse-mat-no-subscript md:max-w-3/12 w-full"
+                    >
+                        <mat-label>Nombre</mat-label>
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_solid:user'"
+                            matPrefix
+                        ></mat-icon>
+                        <input [formControlName]="'nombre'" matInput />
                     </mat-form-field>
                     <!-- Fecha de Nacimiento -->
                     <mat-form-field
-                        class="fuse-mat-no-subscript sm:w-full md:max-w-1/6"
+                        class="fuse-mat-no-subscript w-full md:w-2/12"
                     >
                         <mat-label>Fecha de Nacimiento</mat-label>
                         <mat-icon
@@ -77,6 +89,27 @@
                         >
                         </mat-datepicker-toggle>
                         <mat-datepicker #birthdayDatepicker></mat-datepicker>
+                    </mat-form-field>
+                    <!-- Genero -->
+                    <mat-form-field
+                        class="fuse-mat-no-subscript w-full md:max-w-1/6"
+                    >
+                        <mat-label>Genero</mat-label>
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_outline:library'"
+                            matPrefix
+                        ></mat-icon>
+                        <mat-select [formControlName]="'genero'">
+                            <mat-option [value]="'usa'"
+                                >United States</mat-option
+                            >
+                            <mat-option [value]="'canada'">Canada</mat-option>
+                            <mat-option [value]="'mexico'">Mexico</mat-option>
+                            <mat-option [value]="'france'">France</mat-option>
+                            <mat-option [value]="'germany'">Germany</mat-option>
+                            <mat-option [value]="'italy'">Italy</mat-option>
+                        </mat-select>
                     </mat-form-field>
                     <!-- Estado Civil -->
                     <mat-form-field
@@ -99,9 +132,51 @@
                             <mat-option [value]="'italy'">Italy</mat-option>
                         </mat-select>
                     </mat-form-field>
+                    <!-- Tipo de Vivienda -->
+                    <mat-form-field
+                        class="fuse-mat-no-subscript w-full md:max-w-1/6"
+                    >
+                        <mat-label>Tipo de Vivienda</mat-label>
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_outline:home'"
+                            matPrefix
+                        ></mat-icon>
+                        <mat-select [formControlName]="'tipoDeVivienda'">
+                            <mat-option [value]="'usa'"
+                                >United States</mat-option
+                            >
+                            <mat-option [value]="'canada'">Canada</mat-option>
+                            <mat-option [value]="'mexico'">Mexico</mat-option>
+                            <mat-option [value]="'france'">France</mat-option>
+                            <mat-option [value]="'germany'">Germany</mat-option>
+                            <mat-option [value]="'italy'">Italy</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <!-- Escolaridad -->
+                    <mat-form-field
+                        class="fuse-mat-no-subscript w-full md:max-w-1/6"
+                    >
+                        <mat-label>Escolaridad</mat-label>
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_outline:academic-cap'"
+                            matPrefix
+                        ></mat-icon>
+                        <mat-select [formControlName]="'escolaridad'">
+                            <mat-option [value]="'usa'"
+                                >United States</mat-option
+                            >
+                            <mat-option [value]="'canada'">Canada</mat-option>
+                            <mat-option [value]="'mexico'">Mexico</mat-option>
+                            <mat-option [value]="'france'">France</mat-option>
+                            <mat-option [value]="'germany'">Germany</mat-option>
+                            <mat-option [value]="'italy'">Italy</mat-option>
+                        </mat-select>
+                    </mat-form-field>
                     <!-- CURP -->
                     <mat-form-field
-                        class="fuse-mat-no-subscript sm:w-full md:max-w-72"
+                        class="fuse-mat-no-subscript w-full md:max-w-72"
                     >
                         <mat-label>CURP</mat-label>
                         <mat-icon
@@ -113,7 +188,7 @@
                     </mat-form-field>
                     <!-- RFC -->
                     <mat-form-field
-                        class="fuse-mat-no-subscript sm:w-full md:max-w-64"
+                        class="fuse-mat-no-subscript w-full md:max-w-64"
                     >
                         <mat-label>RFC</mat-label>
                         <mat-icon
@@ -150,7 +225,7 @@
                             "
                         >
                             <div
-                                class="flex flex-wrap gap-6 w-full col-span-11"
+                                class="flex flex-wrap gap-3 w-full col-span-11"
                             >
                                 <!-- Calle -->
                                 <mat-form-field
@@ -210,7 +285,7 @@
                                         xsm:max-w-60
                                         sm:
                                         max-w-7/12
-                                        md:max-w-80
+                                        md:max-w-3/12
                                     "
                                 >
                                     <mat-label *ngIf="first"
@@ -271,7 +346,7 @@
                                         fuse-mat-no-subscript
                                         w-full
                                         sm:max-w-2/5
-                                        md:max-w-72
+                                        md:max-w-3/12
                                     "
                                 >
                                     <mat-label *ngIf="first">Estado</mat-label>
@@ -294,7 +369,7 @@
                                         fuse-mat-no-subscript
                                         w-full
                                         sm:max-w-2/5
-                                        md:max-w-72
+                                        md:max-w-3/12
                                     "
                                 >
                                     <mat-label *ngIf="first">Ciudad</mat-label>
@@ -317,7 +392,7 @@
                                         fuse-mat-no-subscript
                                         w-full
                                         sm:max-w-2/5
-                                        md:max-w-72
+                                        md:max-w-3/12
                                     "
                                 >
                                     <mat-label *ngIf="first">Colonia</mat-label>
@@ -373,35 +448,35 @@
                             </ng-container>
                         </ng-container>
                     </div>
-                    <div
-                        class="
-                            group
-                            inline-flex
-                            w-full
-                            flex-auto
-                            items-center
-                            mt-2
-                            -ml-4
-                            py-2
-                            px-4
-                            rounded
-                            cursor-pointer
-                        "
-                        (click)="addDireccionesField()"
-                    >
-                        <mat-icon
-                            class="icon-size-5"
-                            [svgIcon]="'heroicons_solid:plus-circle'"
-                        ></mat-icon>
-                        <span
+                    <div class="w-full flex-auto">
+                        <div
                             class="
-                                ml-2
-                                font-medium
-                                text-secondary
-                                group-hover:underline
+                                group
+                                inline-flex
+                                items-center
+                                mt-2
+                                -ml-4
+                                py-2
+                                px-4
+                                rounded
+                                cursor-pointer
                             "
-                            >Agregar Dirección</span
+                            (click)="addDireccionesField()"
                         >
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="'heroicons_solid:plus-circle'"
+                            ></mat-icon>
+                            <span
+                                class="
+                                    ml-2
+                                    font-medium
+                                    text-secondary
+                                    group-hover:underline
+                                "
+                                >Agregar Dirección</span
+                            >
+                        </div>
                     </div>
                 </div>
             </form>

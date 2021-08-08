@@ -3,8 +3,10 @@ import { Prisma } from '@prisma/client';
 export class CreateAvalDto implements Prisma.AvalCreateInput {
     @IsNotEmpty({ message: 'Nombre es requerido.' })
     nombre: string;
-    @IsNotEmpty({ message: 'Apellidos son requeridos.' })
-    apellidos: string;
+    @IsNotEmpty({ message: 'Apellido paterno es requerido.' })
+    apellidoPaterno: string;
+    @IsNotEmpty({ message: 'Apellido materno es requerido.' })
+    apellidoMaterno: string;
     @IsNotEmpty({ message: 'Teléfono es requerido.' })
     telefono: string;
     @IsNotEmpty({ message: 'Fecha de nacimiento es requerida.' })

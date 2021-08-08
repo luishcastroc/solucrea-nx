@@ -1,5 +1,3 @@
-import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,8 +7,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { FuseAlertModule } from '@fuse/components/alert';
 import { FuseAutogrowModule } from '@fuse/directives/autogrow';
 import { NgxsModule } from '@ngxs/store';
 import { SharedModule } from 'app/shared/shared.module';
@@ -44,7 +42,6 @@ import { AjustesTeamComponent } from './team/team.component';
         MatSidenavModule,
         MatSlideToggleModule,
         MatTooltipModule,
-        FuseAlertModule,
         FuseAutogrowModule,
         SharedModule,
         NgxsModule.forFeature([AjustesState]),

@@ -40,7 +40,8 @@ export class ClienteComponent implements OnInit {
     ngOnInit(): void {
         this.clienteForm = this._formBuilder.group({
             nombre: ['', Validators.required],
-            apellidos: ['', Validators.required],
+            apellidoPaterno: ['', Validators.required],
+            apellidoMaterno: ['', Validators.required],
             fechaDeNacimiento: [null, Validators.required],
             genero: ['', Validators.required],
             estadoCivil: ['', Validators.required],

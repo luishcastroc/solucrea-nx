@@ -8,9 +8,7 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { fuseAnimations } from '@fuse/animations';
-import { IAlert } from '@fuse/components/alert/alert.model';
-import { FuseAlertService } from '@fuse/components/alert/alert.service';
+import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import {
     Actions,
@@ -22,17 +20,16 @@ import {
 import { Role, Usuario } from '@prisma/client';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { AuthState } from 'app/core/auth/store/auth.state';
-import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/confirmation-dialog.component';
+import { EditMode } from 'app/core/models/edit-mode.type';
+import { ConfirmationDialogComponent } from 'app/shared';
 import { Observable, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
-import { GetAll } from '../../_store/ajustes.actions';
+import { Edit, GetAll, Search } from '../../_store/ajustes.actions';
 import * as UsuarioAction from '../../_store/ajustes.actions';
 import { AjustesState } from '../../_store/ajustes.state';
 import { IRole } from '../../models/roles.model';
-import { Edit, Search } from './../../_store/ajustes.actions';
-import { defaultRoles } from './../../roles';
-import { EditMode } from 'app/core/models/edit-mode.type';
+import { defaultRoles } from '../../roles';
 
 @Component({
     selector: 'team-list',
@@ -40,23 +37,12 @@ import { EditMode } from 'app/core/models/edit-mode.type';
     styleUrls: ['./team-list.component.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: fuseAnimations,
 })
 export class TeamListComponent implements OnInit, OnDestroy {
     @Select(AjustesState.searchResults) searchResults$: Observable<Usuario[]>;
     usuario = this._store.selectSnapshot(AuthState.user);
     searchResults: Usuario[];
     roles: IRole[] = defaultRoles;
-    alert: IAlert = {
-        appearance: 'soft',
-        name: 'alertBoxDel',
-        type: 'success',
-        dismissible: true,
-        dismissed: true,
-        showIcon: true,
-        message: '',
-        dismissTime: 4,
-    };
     searchInputControl: FormControl = new FormControl();
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -68,7 +54,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
         private _store: Store,
         private _dialog: MatDialog,
         private _actions$: Actions,
-        private _fuseAlertService: FuseAlertService
+        private _toast: HotToastService
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -108,13 +94,11 @@ export class TeamListComponent implements OnInit, OnDestroy {
                 if (action instanceof UsuarioAction.Delete) {
                     message = 'Error al borrar usuario.';
                 }
-                this.alert = {
-                    ...this.alert,
-                    type: 'error',
-                    message,
-                };
 
-                this._fuseAlertService.show(this.alert);
+                this._toast.error(message, {
+                    duration: 5000,
+                    position: 'bottom-center',
+                });
             });
 
         this._actions$
@@ -127,13 +111,11 @@ export class TeamListComponent implements OnInit, OnDestroy {
                 if (action instanceof UsuarioAction.Delete) {
                     message = 'Usuario eliminado exitosamente.';
                 }
-                this.alert = {
-                    ...this.alert,
-                    type: 'success',
-                    message,
-                };
 
-                this._fuseAlertService.show(this.alert);
+                this._toast.success(message, {
+                    duration: 5000,
+                    position: 'bottom-center',
+                });
             });
     }
 
@@ -165,7 +147,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Navigate to a new user creating a GUID for reference
+     * Edit user
      *
      * @param usuario
      *

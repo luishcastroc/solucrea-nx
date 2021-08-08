@@ -7,8 +7,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations/public-api';
-import { IAlert } from '@fuse/components/alert/alert.model';
-import { FuseAlertService } from '@fuse/components/alert/alert.service';
+import { HotToastService } from '@ngneat/hot-toast';
 import {
     Actions,
     ofActionErrored,
@@ -17,12 +16,12 @@ import {
     Store,
 } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
-import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { isEqual } from 'lodash';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { Edit } from '../_store/ajustes.actions';
+import { AjustesState } from '../_store/ajustes.state';
 
 @Component({
     selector: 'settings-account',
@@ -36,16 +35,6 @@ export class AjustesAccountComponent implements OnInit, OnDestroy {
 
     accountForm: FormGroup;
     defaultUser: Usuario;
-    alert: IAlert = {
-        appearance: 'soft',
-        name: 'alertBoxAj',
-        type: 'success',
-        dismissible: true,
-        dismissed: true,
-        showIcon: true,
-        message: '',
-        dismissTime: 4,
-    };
     private _unsubscribeAll: Subject<any>;
 
     /**
@@ -55,7 +44,7 @@ export class AjustesAccountComponent implements OnInit, OnDestroy {
         private _formBuilder: FormBuilder,
         private _store: Store,
         private _actions$: Actions,
-        private _fuseAlertService: FuseAlertService
+        private _toast: HotToastService
     ) {
         this._unsubscribeAll = new Subject();
     }
@@ -85,26 +74,22 @@ export class AjustesAccountComponent implements OnInit, OnDestroy {
         this._actions$
             .pipe(takeUntil(this._unsubscribeAll), ofActionErrored(Edit))
             .subscribe(() => {
-                this.alert = {
-                    ...this.alert,
-                    type: 'error',
-                    message: 'Error al editar usuario.',
-                };
-
-                this._fuseAlertService.show(this.alert);
+                const message = 'Error al editar usuario.';
+                this._toast.error(message, {
+                    duration: 5000,
+                    position: 'bottom-center',
+                });
                 this.accountForm.enable();
             });
 
         this._actions$
             .pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(Edit))
             .subscribe(() => {
-                this.alert = {
-                    ...this.alert,
-                    type: 'success',
-                    message: 'Usuario modificado exitosamente.',
-                };
-
-                this._fuseAlertService.show(this.alert);
+                const message = 'Usuario modificado exitosamente.';
+                this._toast.success(message, {
+                    duration: 5000,
+                    position: 'bottom-center',
+                });
                 this.accountForm.enable();
             });
     }

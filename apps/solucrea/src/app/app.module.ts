@@ -17,6 +17,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { FuseModule } from '../@fuse';
 import { environment } from '../environments/environment';
 import { AuthState } from './core/auth/store/auth.state';
+import { HotToastModule } from '@ngneat/hot-toast';
 
 const routerConfig: ExtraOptions = {
     scrollPositionRestoration: 'enabled',
@@ -50,6 +51,7 @@ const routerConfig: ExtraOptions = {
         }),
         NgxsRouterPluginModule.forRoot(),
         NgxsReduxDevtoolsPluginModule.forRoot(),
+        HotToastModule.forRoot(),
     ],
     bootstrap: [AppComponent],
 })

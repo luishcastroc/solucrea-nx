@@ -1,3 +1,4 @@
+import { HotToastService } from '@ngneat/hot-toast';
 import { createPasswordStrengthValidator } from '../validators/custom-ajustes.validators';
 import {
     ChangeDetectionStrategy,
@@ -8,7 +9,6 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IAlert } from '@fuse/components/alert/alert.model';
-import { FuseAlertService } from '@fuse/components/alert/alert.service';
 import {
     Actions,
     ofActionErrored,
@@ -29,22 +29,11 @@ import { Edit } from './../_store/ajustes.actions';
     templateUrl: './security.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: fuseAnimations,
 })
 export class AjustesSecurityComponent implements OnInit, OnDestroy {
     @Select(AjustesState.selectedUsuario) user$: Observable<Usuario>;
     securityForm: FormGroup;
     usuario: Usuario;
-    alert: IAlert = {
-        appearance: 'soft',
-        name: 'alertBoxPwd',
-        type: 'success',
-        dismissible: true,
-        dismissed: true,
-        showIcon: true,
-        message: '',
-        dismissTime: 4,
-    };
     private _unsubscribeAll: Subject<any>;
 
     /**
@@ -54,7 +43,7 @@ export class AjustesSecurityComponent implements OnInit, OnDestroy {
         private _formBuilder: FormBuilder,
         private _store: Store,
         private _actions$: Actions,
-        private _fuseAlertService: FuseAlertService
+        private _toast: HotToastService
     ) {
         this._unsubscribeAll = new Subject();
     }
@@ -97,26 +86,22 @@ export class AjustesSecurityComponent implements OnInit, OnDestroy {
         this._actions$
             .pipe(takeUntil(this._unsubscribeAll), ofActionErrored(Edit))
             .subscribe(() => {
-                this.alert = {
-                    ...this.alert,
-                    type: 'error',
-                    message: 'Error al editar contraseña.',
-                };
-
-                this._fuseAlertService.show(this.alert);
+                const message = 'Error al editar contraseña.';
+                this._toast.error(message, {
+                    duration: 5000,
+                    position: 'bottom-center',
+                });
                 this.securityForm.enable();
             });
 
         this._actions$
             .pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(Edit))
             .subscribe(() => {
-                this.alert = {
-                    ...this.alert,
-                    type: 'success',
-                    message: 'Contraseña modificada exitosamente.',
-                };
-
-                this._fuseAlertService.show(this.alert);
+                const message = 'Contraseña modificada exitosamente.';
+                this._toast.success(message, {
+                    duration: 5000,
+                    position: 'bottom-center',
+                });
                 this.securityForm.enable();
                 this.securityForm.reset();
             });

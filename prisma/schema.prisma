@@ -393,7 +393,8 @@ model Pago {
 model Cliente {
     id                   String         @id @default(uuid())
     nombre               String
-    apellidos            String
+    apellidoPaterno      String
+    apellidoMaterno      String
     fechaDeNacimiento    DateTime
     rfc                  String         @unique
     curp                 String         @unique
@@ -424,7 +425,8 @@ model Cliente {
 model Aval {
     id                 String     @id @default(uuid())
     nombre             String
-    apellidos          String
+    apellidoPaterno    String
+    apellidoMaterno    String
     telefono           String
     fechaDeNacimiento  DateTime
     parentesco         Parentesco @relation(fields: [parentescoId], references: [id])
