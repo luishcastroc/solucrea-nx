@@ -1,22 +1,24 @@
-import { GetColonias } from './../_store/clientes.actions';
-import { rfcValidator } from './../validators/custom-clientes.validators';
-import { curpValidator } from '../validators/custom-clientes.validators';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    OnDestroy,
     OnInit,
 } from '@angular/core';
-import {
-    FormArray,
-    FormBuilder,
-    FormGroup,
-    Validators,
-    FormControl,
-} from '@angular/forms';
-import { FuseAlertService } from '@fuse/components/alert/alert.service';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Navigate } from '@ngxs/router-plugin';
-import { Actions, Store } from '@ngxs/store';
+import { Actions, Select, Store } from '@ngxs/store';
+import { IColoniaReturnDto } from 'api/dtos';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import { GetColonias, GetConfig } from '../_store/clientes.actions';
+import { ClientesState } from '../_store/clientes.state';
+import { IConfig } from '../models/config.model';
+import {
+    curpValidator,
+    rfcValidator,
+} from '../validators/custom-clientes.validators';
 
 @Component({
     selector: 'app-cliente',
@@ -24,20 +26,54 @@ import { Actions, Store } from '@ngxs/store';
     styleUrls: ['./cliente.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClienteComponent implements OnInit {
+export class ClienteComponent implements OnInit, OnDestroy {
+    @Select(ClientesState.config) config$: Observable<IConfig>;
+    @Select(ClientesState.loading) loading$: Observable<boolean>;
+    @Select(ClientesState.colonias) colonias$: Observable<IColoniaReturnDto[]>;
+    ubicacion: IColoniaReturnDto[] = [];
+
     clienteForm: FormGroup;
     get direcciones() {
         return this.clienteForm.get('direcciones') as FormArray;
     }
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
+
     constructor(
         private _store: Store,
         private _formBuilder: FormBuilder,
         private _actions$: Actions,
-        private _fuseAlertService: FuseAlertService,
         private _changeDetectorRef: ChangeDetectorRef
     ) {}
 
     ngOnInit(): void {
+        this._store.dispatch(new GetConfig());
+        this.createClienteForm();
+        this.addDireccionesField();
+        this.colonias$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((ubicacion) => {
+                if (ubicacion.length > 0) {
+                    (
+                        this.clienteForm.get('direcciones') as FormArray
+                    ).controls.forEach((direccion, i) => {
+                        direccion
+                            .get('ciudad')
+                            .patchValue(ubicacion[i].ciudad.descripcion);
+                        direccion
+                            .get('estado')
+                            .patchValue(ubicacion[i].estado.descripcion);
+                    });
+
+                    this.ubicacion = ubicacion;
+                }
+            });
+    }
+
+    /**
+     * Create ClienteForm
+     *
+     */
+    createClienteForm(): void {
         this.clienteForm = this._formBuilder.group({
             nombre: ['', Validators.required],
             apellidoPaterno: ['', Validators.required],
@@ -53,8 +89,6 @@ export class ClienteComponent implements OnInit {
             telefono2: [''],
             direcciones: this._formBuilder.array([]),
         });
-
-        this.addDireccionesField();
     }
 
     /**
@@ -68,7 +102,7 @@ export class ClienteComponent implements OnInit {
      * Agregar un campo direcciones vacio
      */
     addDireccionesField(): void {
-        // Create an empty phone number form group
+        // Create an empty address form group
         const direccionesFormGroup = this._formBuilder.group({
             tipo: ['CLIENTE'],
             calle: ['', Validators.required],
@@ -76,8 +110,8 @@ export class ClienteComponent implements OnInit {
             cruzamientos: [''],
             codigoPostal: ['', Validators.required],
             colonia: ['', Validators.required],
-            ciudad: ['', Validators.required],
-            estado: ['', Validators.required],
+            ciudad: [{ value: '', disabled: true }, Validators.required],
+            estado: [{ value: '', disabled: true }, Validators.required],
         });
 
         // agregar direcciones form group tal array direcciones
@@ -122,7 +156,16 @@ export class ClienteComponent implements OnInit {
      *
      * @param cp
      */
-    getColonias(cp: string): void {
-        this._store.dispatch(new GetColonias(cp));
+    getColonias(cp: string, index: number): void {
+        this._store.dispatch(new GetColonias(cp, index));
+    }
+
+    /**
+     * On destroy
+     */
+    ngOnDestroy(): void {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
     }
 }

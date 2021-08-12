@@ -36,3 +36,7 @@ export class Search {
     static readonly type = '[Usuario] Search';
     constructor(public payload: string) {}
 }
+
+export class ClearAjustesState {
+    static readonly type = '[Ajustes] Clear State';
+}

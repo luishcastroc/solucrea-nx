@@ -13,6 +13,7 @@ import { Role, TipoDeVivienda } from '@prisma/client';
 import { Public } from '../../decorators/public.decorator';
 import { Roles } from '../../decorators/roles.decorator';
 import { RolesGuard } from '../../guards/roles.guard';
+import { ITipoDeViviendaReturnDto } from './../../dtos/tipo-de-vivienda-return.dto';
 import { TiposViviendaService } from './tipos-vivienda.service';
 
 @Controller()
@@ -22,14 +23,16 @@ export class TiposViviendaController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('tipos-de-vivienda')
-    async getTiposDeVivienda(): Promise<TipoDeVivienda[]> {
+    async getTiposDeVivienda(): Promise<ITipoDeViviendaReturnDto[]> {
         return this.tiposViviendaService.tiposDeVivienda();
     }
 
     @UseGuards(RolesGuard)
     @Public()
     @Get('tipo-de-vivienda/:id')
-    async getTipoDeVivienda(@Param('id') id: string): Promise<TipoDeVivienda> {
+    async getTipoDeVivienda(
+        @Param('id') id: string
+    ): Promise<ITipoDeViviendaReturnDto> {
         return this.tiposViviendaService.tipoDeVivienda({ id });
     }
 
@@ -38,7 +41,7 @@ export class TiposViviendaController {
     @Post('tipo-de-vivienda')
     async createTipoDeVivienda(
         @Body() data: TipoDeVivienda
-    ): Promise<TipoDeVivienda> {
+    ): Promise<ITipoDeViviendaReturnDto> {
         return this.tiposViviendaService.createTipoDeVivienda(data);
     }
 
@@ -48,7 +51,7 @@ export class TiposViviendaController {
     async editTipoDeVivienda(
         @Param('id') id: string,
         @Body() data: TipoDeVivienda
-    ): Promise<TipoDeVivienda> {
+    ): Promise<ITipoDeViviendaReturnDto> {
         return this.tiposViviendaService.updateTipoDeVivienda({
             where: { id },
             data,
@@ -60,7 +63,7 @@ export class TiposViviendaController {
     @Delete('tipo-de-vivienda/:id')
     async deleteTipoDeVivienda(
         @Param('id') id: string
-    ): Promise<TipoDeVivienda> {
+    ): Promise<ITipoDeViviendaReturnDto> {
         return this.tiposViviendaService.deleteTipoDeVivienda({
             id,
         });

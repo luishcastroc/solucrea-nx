@@ -1,7 +1,7 @@
 import { IColoniaReturnDto } from './../../dtos/colonia-return.dto';
 import { Prisma } from '@prisma/client';
 import { Colonia } from '.prisma/client';
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
@@ -21,10 +21,10 @@ export class ColoniasService {
     }
 
     async coloniasByCp(
-        coloniaWhereInput: Prisma.ColoniaWhereInput
-    ): Promise<IColoniaReturnDto[]> {
-        return this.prisma.colonia.findMany({
-            where: coloniaWhereInput,
+        where: Prisma.ColoniaWhereInput
+    ): Promise<IColoniaReturnDto> {
+        const singleColonia = await this.prisma.colonia.findFirst({
+            where,
             select: {
                 id: true,
                 descripcion: true,
@@ -38,6 +38,35 @@ export class ColoniasService {
                 },
             },
         });
+
+        if (!singleColonia) {
+            throw new HttpException(
+                'El Codigo Postal no existe, verificar',
+                HttpStatus.NOT_FOUND
+            );
+        }
+
+        const ciudad = {
+            id: singleColonia.ciudad.id,
+            descripcion: singleColonia.ciudad.descripcion,
+        };
+        const estado = {
+            id: singleColonia.ciudad.estado.id,
+            descripcion: singleColonia.ciudad.estado.descripcion,
+        };
+
+        const colonias = await this.prisma.colonia.findMany({
+            where,
+            select: {
+                id: true,
+                descripcion: true,
+                codigoPostal: true,
+            },
+        });
+
+        const coloniasReturn = { ciudad, estado, colonias };
+
+        return coloniasReturn;
     }
 
     async createColonia(data: Prisma.ColoniaCreateInput): Promise<Colonia> {

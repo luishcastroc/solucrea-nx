@@ -13,3 +13,7 @@ export * from './update-cliente.dto';
 export * from './update-usuario.dto';
 export * from './usuario-login.dto';
 export * from './usuario-respuesta.dto';
+export * from './genero.return.dto';
+export * from './escolaridad-return.dto';
+export * from './estado-civil-return.dto';
+export * from './tipo-de-vivienda-return.dto';

@@ -92,6 +92,7 @@ model ActividadEconomica {
     actualizadoPor     String   @default("ADMIN")
     fechaActualizacion DateTime @default(now()) @updatedAt
 
+    Trabajo Trabajo[]
     @@map(name: "ActividadesEconomicas")
 }
 
@@ -273,6 +274,7 @@ enum TipoDireccion {
     CLIENTE
     AVAL
     NEGOCIO
+    TRABAJO
     OTRO
 }
 
@@ -314,7 +316,6 @@ model Sucursal {
     creditos           Credito[]
     comisiones         Comision[]
     cajas              Caja[]
-    pagos              Pago[]
     creadoPor          String         @default("ADMIN")
     fechaCreacion      DateTime       @default(now())
     actualizadoPor     String         @default("ADMIN")
@@ -340,6 +341,7 @@ model Direccion {
     clienteId          String?
     coloniaId          String
 
+    Trabajo Trabajo[]
     @@map(name: "Direcciones")
 }
 
@@ -377,9 +379,9 @@ model Pago {
     id                 String   @id @default(uuid())
     monto              Decimal  @db.Decimal(15, 2)
     fechaDePago        DateTime
-    cliente            Cliente  @relation(fields: [clienteId], references: [id])
-    sucursal           Sucursal @relation(fields: [sucursalId], references: [id])
     observaciones      String?
+    Credito            Credito? @relation(fields: [creditoId], references: [id])
+    creditoId          String?
     creadoPor          String
     fechaCreacion      DateTime @default(now())
     actualizadoPor     String   @default("ADMIN")
@@ -400,13 +402,13 @@ model Cliente {
     curp                 String         @unique
     telefono1            String
     telefono2            String?
+    trabajo              Trabajo        @relation(fields: [trabajoId], references: [id])
     estadoCivil          EstadoCivil    @relation(fields: [estadoCivilId], references: [id])
     tipoDeVivienda       TipoDeVivienda @relation(fields: [tipoDeViviendaId], references: [id])
     escolaridad          Escolaridad    @relation(fields: [escolaridadId], references: [id])
     genero               Genero         @relation(fields: [generoId], references: [id])
     direcciones          Direccion[]
     creditos             Credito[]
-    pagos                Pago[]
     montoMinimo          Decimal        @db.Decimal(15, 2)
     montoMaximo          Decimal        @db.Decimal(15, 2)
     numeroCreditosCrecer Int            @default(3)
@@ -414,12 +416,32 @@ model Cliente {
     tipoDeViviendaId     String
     escolaridadId        String
     generoId             String
+    trabajoId            String
     creadoPor            String
     fechaCreacion        DateTime       @default(now())
     actualizadoPor       String         @default("ADMIN")
     fechaActualizacion   DateTime       @default(now()) @updatedAt
 
     @@map(name: "Clientes")
+}
+
+model Trabajo {
+    id                   String             @id @default(uuid())
+    nombre               String
+    direccion            Direccion          @relation(fields: [direccionId], references: [id])
+    telefono             String
+    antiguedad           Int
+    actividadEconomica   ActividadEconomica @relation(fields: [actividadEconomicaId], references: [id])
+    direccionId          String
+    actividadEconomicaId String
+    creadoPor            String
+    fechaCreacion        DateTime           @default(now())
+    actualizadoPor       String             @default("ADMIN")
+    fechaActualizacion   DateTime           @default(now()) @updatedAt
+
+    Credito Credito[]
+    Cliente Cliente[]
+    @@map(name: "Trabajos")
 }
 
 model Aval {
@@ -499,6 +521,7 @@ model Credito {
     modalidadSeguro     ModalidadDeSeguro @relation(fields: [modalidadDeSeguroId], references: [id])
     aval                Aval              @relation(fields: [avalId], references: [id])
     comisiones          Comision[]
+    pagos               Pago[]
     creadoPor           String
     fechaCreacion       DateTime          @default(now())
     actualizadoPor      String            @default("ADMIN")
@@ -511,6 +534,8 @@ model Credito {
     modalidadDeSeguroId String
     avalId              String
 
+    Trabajo   Trabajo? @relation(fields: [trabajoId], references: [id])
+    trabajoId String?
     @@map(name: "Creditos")
 }
 

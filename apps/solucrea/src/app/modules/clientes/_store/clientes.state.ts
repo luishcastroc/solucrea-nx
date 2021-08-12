@@ -1,12 +1,20 @@
+import { IConfig } from '../models/config.model';
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { Cliente } from '@prisma/client';
 import { IColoniaReturnDto } from 'api/dtos';
 import { tap } from 'rxjs/operators';
 
-import { ClientesService } from './../clientes.service';
-import { Add, GetAll, GetColonias } from './clientes.actions';
+import { ClientesService } from '../clientes.service';
+import {
+    Add,
+    GetAll,
+    GetColonias,
+    GetConfig,
+    ClearClientesState,
+} from './clientes.actions';
 import { ClientesStateModel } from './clientes.model';
+import { forkJoin } from 'rxjs';
 
 @State<ClientesStateModel>({
     name: 'clientes',
@@ -16,6 +24,8 @@ import { ClientesStateModel } from './clientes.model';
         selectedCliente: null,
         searchResult: [],
         colonias: [],
+        config: null,
+        loading: false,
     },
 })
 @Injectable()
@@ -38,6 +48,21 @@ export class ClientesState {
     @Selector()
     static selectedUsuario({ selectedCliente }: ClientesStateModel): Cliente {
         return selectedCliente;
+    }
+
+    @Selector()
+    static config({ config }: ClientesStateModel): IConfig {
+        return config;
+    }
+
+    @Selector()
+    static loading({ loading }: ClientesStateModel): boolean {
+        return loading;
+    }
+
+    @Selector()
+    static colonias({ colonias }: ClientesStateModel): IColoniaReturnDto[] {
+        return colonias;
     }
 
     @Action(GetAll)
@@ -72,12 +97,63 @@ export class ClientesState {
     @Action(GetColonias)
     getColonias(
         ctx: StateContext<ClientesStateModel>,
-        { payload }: GetColonias
+        { cp, index }: GetColonias
     ) {
-        return this.clientesService.getColoniasByCp(payload).pipe(
-            tap((colonias: IColoniaReturnDto[]) => {
-                ctx.patchState({ colonias });
+        return this.clientesService.getColoniasByCp(cp).pipe(
+            tap((colonias: IColoniaReturnDto) => {
+                const state = ctx.getState();
+                if (state.colonias) {
+                    const coloniasState = [...state.colonias];
+                    coloniasState[index] = colonias;
+
+                    ctx.patchState({
+                        colonias: coloniasState,
+                    });
+                }
             })
         );
+    }
+
+    @Action(GetConfig)
+    getConfig(ctx: StateContext<ClientesStateModel>) {
+        let loading = true;
+        ctx.patchState({ loading });
+        return forkJoin({
+            generos: this.clientesService.getGeneros(),
+            estadosCiviles: this.clientesService.getEstadosCiviles(),
+            escolaridades: this.clientesService.getEscolaridades(),
+            tiposDeVivienda: this.clientesService.getTiposDeVivienda(),
+        }).pipe(
+            tap(
+                ({
+                    generos,
+                    estadosCiviles,
+                    escolaridades,
+                    tiposDeVivienda,
+                }) => {
+                    const config = {
+                        generos,
+                        estadosCiviles,
+                        escolaridades,
+                        tiposDeVivienda,
+                    };
+                    loading = false;
+                    ctx.patchState({ config, loading });
+                }
+            )
+        );
+    }
+
+    @Action(ClearClientesState)
+    clearState(ctx: StateContext<ClientesStateModel>) {
+        ctx.patchState({
+            clientes: [],
+            editMode: 'edit',
+            selectedCliente: null,
+            searchResult: [],
+            colonias: [],
+            config: null,
+            loading: false,
+        });
     }
 }

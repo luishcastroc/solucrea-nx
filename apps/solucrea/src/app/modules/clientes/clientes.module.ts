@@ -1,22 +1,23 @@
-import { NgxsModule } from '@ngxs/store';
-import { ClientesState } from './_store/clientes.state';
-import { MatSelectModule } from '@angular/material/select';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgModule } from '@angular/core';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatButtonModule } from '@angular/material/button';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
+import { NgxsModule } from '@ngxs/store';
 
 import { SharedModule } from './../../shared/shared.module';
+import { ClientesState } from './_store/clientes.state';
+import { ClienteListComponent } from './cliente-list/cliente-list.component';
 import { ClienteComponent } from './cliente/cliente.component';
 import { ClientesComponent } from './clientes.component';
 import { clientesRoutes } from './clientes.routing';
-import { ClienteListComponent } from './cliente-list/cliente-list.component';
-import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
     declarations: [ClientesComponent, ClienteComponent, ClienteListComponent],
@@ -31,6 +32,7 @@ import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
         MatNativeDateModule,
         MatMomentDateModule,
         MatSelectModule,
+        MatProgressSpinnerModule,
         SharedModule,
         NgxsModule.forFeature([ClientesState]),
     ],

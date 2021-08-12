@@ -1,3 +1,4 @@
+import { IEscolaridadReturnDto } from './../../dtos/escolaridad-return.dto';
 import {
     Body,
     Controller,
@@ -24,14 +25,16 @@ export class EscolaridadesController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('escolaridades')
-    async getEscolaridades(): Promise<Escolaridad[]> {
+    async getEscolaridades(): Promise<IEscolaridadReturnDto[]> {
         return this.escolaridadesService.escolaridades();
     }
 
     @UseGuards(RolesGuard)
     @Public()
     @Get('escolaridad/:id')
-    async getEscolaridad(@Param('id') id: string): Promise<Escolaridad> {
+    async getEscolaridad(
+        @Param('id') id: string
+    ): Promise<IEscolaridadReturnDto> {
         return this.escolaridadesService.escolaridad({ id });
     }
 
@@ -39,7 +42,9 @@ export class EscolaridadesController {
     @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN)
     @Post('escolaridad')
-    async createEscolaridad(@Body() data: Escolaridad): Promise<Escolaridad> {
+    async createEscolaridad(
+        @Body() data: Escolaridad
+    ): Promise<IEscolaridadReturnDto> {
         return this.escolaridadesService.createEscolaridad(data);
     }
 
@@ -49,7 +54,7 @@ export class EscolaridadesController {
     async editEscolaridad(
         @Param('id') id: string,
         @Body() data: Escolaridad
-    ): Promise<Escolaridad> {
+    ): Promise<IEscolaridadReturnDto> {
         return this.escolaridadesService.updateEscolaridad({
             where: { id },
             data,
@@ -59,7 +64,9 @@ export class EscolaridadesController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Delete('escolaridad/:id')
-    async deleteEscolaridad(@Param('id') id: string): Promise<Escolaridad> {
+    async deleteEscolaridad(
+        @Param('id') id: string
+    ): Promise<IEscolaridadReturnDto> {
         return this.escolaridadesService.deleteEscolaridad({ id });
     }
 }

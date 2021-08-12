@@ -1,3 +1,4 @@
+import { ITipoDeViviendaReturnDto } from './../../dtos/tipo-de-vivienda-return.dto';
 import { Injectable } from '@nestjs/common';
 import { Prisma, TipoDeVivienda } from '@prisma/client';
 
@@ -11,40 +12,46 @@ export class TiposViviendaService {
 
     async tipoDeVivienda(
         where: Prisma.TipoDeViviendaWhereUniqueInput
-    ): Promise<TipoDeVivienda | null> {
+    ): Promise<ITipoDeViviendaReturnDto | null> {
         return await this.prisma.tipoDeVivienda.findUnique({
             where,
+            select: { id: true, descripcion: true },
         });
     }
 
-    async tiposDeVivienda(): Promise<TipoDeVivienda[]> {
-        return await this.prisma.tipoDeVivienda.findMany();
+    async tiposDeVivienda(): Promise<ITipoDeViviendaReturnDto[]> {
+        return await this.prisma.tipoDeVivienda.findMany({
+            select: { id: true, descripcion: true },
+        });
     }
 
     async createTipoDeVivienda(
         data: Prisma.TipoDeViviendaCreateInput
-    ): Promise<TipoDeVivienda> {
+    ): Promise<ITipoDeViviendaReturnDto> {
         return await this.prisma.tipoDeVivienda.create({
             data,
+            select: { id: true, descripcion: true },
         });
     }
 
     async updateTipoDeVivienda(params: {
         where: Prisma.TipoDeViviendaWhereUniqueInput;
         data: Prisma.TipoDeViviendaUpdateInput;
-    }): Promise<TipoDeVivienda> {
+    }): Promise<ITipoDeViviendaReturnDto> {
         const { where, data } = params;
         return await this.prisma.tipoDeVivienda.update({
             data,
             where,
+            select: { id: true, descripcion: true },
         });
     }
 
     async deleteTipoDeVivienda(
         where: Prisma.TipoDeViviendaWhereUniqueInput
-    ): Promise<TipoDeVivienda> {
+    ): Promise<ITipoDeViviendaReturnDto> {
         return this.prisma.tipoDeVivienda.delete({
             where,
+            select: { id: true, descripcion: true },
         });
     }
 }

@@ -1,3 +1,4 @@
+import { IEstadoCivilReturnDto } from './../../dtos/estado-civil-return.dto';
 import {
     Body,
     Controller,
@@ -25,14 +26,16 @@ export class EstadosCivilesController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('estados-civiles')
-    async getEstadosCiviles(): Promise<EstadoCivil[]> {
+    async getEstadosCiviles(): Promise<IEstadoCivilReturnDto[]> {
         return this.estadosCivilesService.estadosCiviles();
     }
 
     @UseGuards(RolesGuard)
     @Public()
     @Get('estado-civil/:id')
-    async getEstadoCivil(@Param('id') id: string): Promise<EstadoCivil> {
+    async getEstadoCivil(
+        @Param('id') id: string
+    ): Promise<IEstadoCivilReturnDto> {
         return this.estadosCivilesService.estadoCivil({ id });
     }
 
@@ -41,7 +44,7 @@ export class EstadosCivilesController {
     @Post('estado-civil')
     async createEstadoCivil(
         @Body() data: CreateEstadoCivilDto
-    ): Promise<EstadoCivil> {
+    ): Promise<IEstadoCivilReturnDto> {
         return this.estadosCivilesService.createEstadoCivil(data);
     }
 
@@ -51,7 +54,7 @@ export class EstadosCivilesController {
     async editEstadoCivil(
         @Param('id') id: string,
         @Body() data: EstadoCivil
-    ): Promise<EstadoCivil> {
+    ): Promise<IEstadoCivilReturnDto> {
         return this.estadosCivilesService.updateEstadoCivil({
             where: { id },
             data,
@@ -61,7 +64,9 @@ export class EstadosCivilesController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Delete('estado-civil/:id')
-    async deleteEstadoCivil(@Param('id') id: string): Promise<EstadoCivil> {
+    async deleteEstadoCivil(
+        @Param('id') id: string
+    ): Promise<IEstadoCivilReturnDto> {
         return this.estadosCivilesService.deleteEstadoCivil({ id });
     }
 }

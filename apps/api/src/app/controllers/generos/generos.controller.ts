@@ -1,3 +1,4 @@
+import { IGeneroReturnDto } from './../../dtos/genero.return.dto';
 import {
     Body,
     Controller,
@@ -25,14 +26,14 @@ export class GenerosController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('generos')
-    async getGeneros(): Promise<Genero[]> {
+    async getGeneros(): Promise<IGeneroReturnDto[]> {
         return this.generosService.generos();
     }
 
     @UseGuards(RolesGuard)
     @Public()
     @Get('genero/:id')
-    async getGenero(@Param('id') id: string): Promise<Genero> {
+    async getGenero(@Param('id') id: string): Promise<IGeneroReturnDto> {
         return this.generosService.genero({ id });
     }
 
@@ -40,7 +41,9 @@ export class GenerosController {
     @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN)
     @Post('genero')
-    async createGenero(@Body() data: CreateGeneroDto): Promise<Genero> {
+    async createGenero(
+        @Body() data: CreateGeneroDto
+    ): Promise<IGeneroReturnDto> {
         return this.generosService.createGenero(data);
     }
 
@@ -50,7 +53,7 @@ export class GenerosController {
     async editGenero(
         @Param('id') id: string,
         @Body() data: Genero
-    ): Promise<Genero> {
+    ): Promise<IGeneroReturnDto> {
         return this.generosService.updateGenero({
             where: { id },
             data,
@@ -60,7 +63,7 @@ export class GenerosController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Delete('generos/:id')
-    async deleteGenero(@Param('id') id: string): Promise<Genero> {
+    async deleteGenero(@Param('id') id: string): Promise<IGeneroReturnDto> {
         return this.generosService.deleteGenero({ id });
     }
 }

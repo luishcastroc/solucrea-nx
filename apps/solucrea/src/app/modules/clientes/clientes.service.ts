@@ -1,9 +1,13 @@
+import { IEstadoCivilReturnDto } from './../../../../../api/src/app/dtos/estado-civil-return.dto';
+import { IEscolaridadReturnDto } from './../../../../../api/src/app/dtos/escolaridad-return.dto';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Cliente } from '@prisma/client';
 import {
     CreateClienteDto,
     IColoniaReturnDto,
+    IGeneroReturnDto,
+    ITipoDeViviendaReturnDto,
     UpdateClienteDto,
 } from 'api/dtos';
 import { Observable } from 'rxjs';
@@ -86,9 +90,49 @@ export class ClientesService {
      *
      * @param cp
      */
-    getColoniasByCp(cp: string): Observable<IColoniaReturnDto[]> {
-        return this._httpClient.get<IColoniaReturnDto[]>(
+    getColoniasByCp(cp: string): Observable<IColoniaReturnDto> {
+        return this._httpClient.get<IColoniaReturnDto>(
             `${this._environment.uri}/colonias/cp/${cp}`
+        );
+    }
+
+    /**
+     *  Get Generos
+     *
+     */
+    getGeneros(): Observable<IGeneroReturnDto[]> {
+        return this._httpClient.get<IGeneroReturnDto[]>(
+            `${this._environment.uri}/generos/`
+        );
+    }
+
+    /**
+     *  Get Escolaridades
+     *
+     */
+    getEscolaridades(): Observable<IEscolaridadReturnDto[]> {
+        return this._httpClient.get<IEscolaridadReturnDto[]>(
+            `${this._environment.uri}/escolaridades/`
+        );
+    }
+
+    /**
+     *  Get Tipos de Vivienda
+     *
+     */
+    getTiposDeVivienda(): Observable<ITipoDeViviendaReturnDto[]> {
+        return this._httpClient.get<ITipoDeViviendaReturnDto[]>(
+            `${this._environment.uri}/tipos-de-vivienda/`
+        );
+    }
+
+    /**
+     *  Get Generos
+     *
+     */
+    getEstadosCiviles(): Observable<IEstadoCivilReturnDto[]> {
+        return this._httpClient.get<IEstadoCivilReturnDto[]>(
+            `${this._environment.uri}/estados-civiles/`
         );
     }
 }

@@ -29,6 +29,8 @@ export class CreateClienteDto implements Prisma.ClienteCreateInput {
     genero: Prisma.GeneroCreateNestedOneWithoutClientesInput;
     @IsNotEmpty({ message: 'Teléfono es requerido' })
     telefono1: string;
+    @IsNotEmpty({ message: 'Trabajo es requerido' })
+    trabajo: Prisma.TrabajoCreateNestedOneWithoutClienteInput;
     telefono2?: string;
     numeroCreditosCrecer?: number;
     creadoPor: string;

@@ -1,3 +1,4 @@
+import { IGeneroReturnDto } from './../../dtos/genero.return.dto';
 import { Injectable } from '@nestjs/common';
 import { Genero, Prisma } from '@prisma/client';
 
@@ -9,36 +10,48 @@ export class GenerosService {
 
     // Genero
 
-    async genero(where: Prisma.GeneroWhereUniqueInput): Promise<Genero | null> {
+    async genero(
+        where: Prisma.GeneroWhereUniqueInput
+    ): Promise<IGeneroReturnDto | null> {
         return await this.prisma.genero.findUnique({
             where,
+            select: { id: true, descripcion: true },
         });
     }
 
-    async generos(): Promise<Genero[]> {
-        return await this.prisma.genero.findMany();
+    async generos(): Promise<IGeneroReturnDto[]> {
+        return await this.prisma.genero.findMany({
+            select: { id: true, descripcion: true },
+        });
     }
 
-    async createGenero(data: Prisma.GeneroCreateInput): Promise<Genero> {
+    async createGenero(
+        data: Prisma.GeneroCreateInput
+    ): Promise<IGeneroReturnDto> {
         return await this.prisma.genero.create({
             data,
+            select: { id: true, descripcion: true },
         });
     }
 
     async updateGenero(params: {
         where: Prisma.GeneroWhereUniqueInput;
         data: Prisma.GeneroUpdateInput;
-    }): Promise<Genero> {
+    }): Promise<IGeneroReturnDto> {
         const { where, data } = params;
         return await this.prisma.genero.update({
             data,
             where,
+            select: { id: true, descripcion: true },
         });
     }
 
-    async deleteGenero(where: Prisma.GeneroWhereUniqueInput): Promise<Genero> {
+    async deleteGenero(
+        where: Prisma.GeneroWhereUniqueInput
+    ): Promise<IGeneroReturnDto> {
         return this.prisma.genero.delete({
             where,
+            select: { id: true, descripcion: true },
         });
     }
 }

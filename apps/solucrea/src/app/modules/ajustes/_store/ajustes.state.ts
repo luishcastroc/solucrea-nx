@@ -163,4 +163,14 @@ export class AjustesState {
         );
         ctx.patchState({ searchResult });
     }
+
+    @Action(AjustesAction.ClearAjustesState)
+    clearState(ctx: StateContext<AjustesStateModel>) {
+        ctx.patchState({
+            usuarios: [],
+            editMode: 'edit',
+            selectedUsuario: null,
+            searchResult: [],
+        });
+    }
 }

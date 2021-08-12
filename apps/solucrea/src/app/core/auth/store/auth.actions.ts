@@ -14,6 +14,10 @@ export class Logout {
     static readonly type = '[Auth] Logout';
 }
 
+export class ClearAuthState {
+    static readonly type = '[Auth] Clear Auth State';
+}
+
 export class UpdateUsuario {
     static readonly type = '[Auth] Update Usuario';
     constructor(public payload: Usuario) {}

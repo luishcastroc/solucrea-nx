@@ -39,5 +39,13 @@ export class Search {
 
 export class GetColonias {
     static readonly type = '[Cliente] Get Colonias';
-    constructor(public payload: string) {}
+    constructor(public cp: string, public index: number) {}
+}
+
+export class GetConfig {
+    static readonly type = '[Cliente] Get Config';
+}
+
+export class ClearClientesState {
+    static readonly type = '[Clientes] Clear State';
 }

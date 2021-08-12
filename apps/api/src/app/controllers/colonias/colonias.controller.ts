@@ -40,9 +40,7 @@ export class ColoniasController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('colonias/cp/:cp')
-    async getColoniasByCp(
-        @Param('cp') cp: string
-    ): Promise<IColoniaReturnDto[]> {
+    async getColoniasByCp(@Param('cp') cp: string): Promise<IColoniaReturnDto> {
         return this.coloniasService.coloniasByCp({ codigoPostal: cp });
     }
 
