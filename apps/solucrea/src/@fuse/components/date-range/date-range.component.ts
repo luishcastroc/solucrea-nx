@@ -16,18 +16,10 @@ import {
     ViewContainerRef,
     ViewEncapsulation,
 } from '@angular/core';
-import {
-    ControlValueAccessor,
-    FormControl,
-    NG_VALUE_ACCESSOR,
-    Validators,
-} from '@angular/forms';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { Overlay } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import {
-    MatCalendarCellCssClasses,
-    MatMonthView,
-} from '@angular/material/datepicker';
+import { MatCalendarCellCssClasses, MatMonthView } from '@angular/material/datepicker';
 import { Subject } from 'rxjs';
 import * as moment from 'moment';
 import { Moment } from 'moment';
@@ -46,9 +38,7 @@ import { Moment } from 'moment';
         },
     ],
 })
-export class FuseDateRangeComponent
-    implements ControlValueAccessor, OnInit, OnDestroy
-{
+export class FuseDateRangeComponent implements ControlValueAccessor, OnInit, OnDestroy {
     @Output() readonly rangeChanged: EventEmitter<{
         start: string;
         end: string;
@@ -187,9 +177,7 @@ export class FuseDateRangeComponent
 
         // Check if the value is an object and has 'start' and 'end' values
         if (!value.start || !value.end) {
-            console.error(
-                'Range input must have "start" and "end" properties!'
-            );
+            console.error('Range input must have "start" and "end" properties!');
 
             return;
         }
@@ -286,12 +274,8 @@ export class FuseDateRangeComponent
         };
 
         // Set the time form controls
-        this.startTimeFormControl.setValue(
-            this._range.start.clone().format(this._timeFormat).toString()
-        );
-        this.endTimeFormControl.setValue(
-            this._range.end.clone().format(this._timeFormat).toString()
-        );
+        this.startTimeFormControl.setValue(this._range.start.clone().format(this._timeFormat).toString());
+        this.endTimeFormControl.setValue(this._range.end.clone().format(this._timeFormat).toString());
 
         // Run ngAfterContentInit on month views to trigger
         // re-render on month views if they are available
@@ -312,13 +296,9 @@ export class FuseDateRangeComponent
         // Build and return the range object
         return {
             startDate: start.clone().format(this.dateFormat),
-            startTime: this.timeRange
-                ? start.clone().format(this.timeFormat)
-                : null,
+            startTime: this.timeRange ? start.clone().format(this.timeFormat) : null,
             endDate: end.clone().format(this.dateFormat),
-            endTime: this.timeRange
-                ? end.clone().format(this.timeFormat)
-                : null,
+            endTime: this.timeRange ? end.clone().format(this.timeFormat) : null,
         };
     }
 
@@ -414,10 +394,7 @@ export class FuseDateRangeComponent
         });
 
         // Create a portal from the template
-        const templatePortal = new TemplatePortal(
-            this._pickerPanel,
-            this._viewContainerRef
-        );
+        const templatePortal = new TemplatePortal(this._pickerPanel, this._viewContainerRef);
 
         // On backdrop click
         overlayRef.backdropClick().subscribe(() => {
@@ -458,15 +435,8 @@ export class FuseDateRangeComponent
     dateClass(): any {
         return (date: Moment): MatCalendarCellCssClasses => {
             // If the date is both start and end date...
-            if (
-                date.isSame(this._range.start, 'day') &&
-                date.isSame(this._range.end, 'day')
-            ) {
-                return [
-                    'fuse-date-range',
-                    'fuse-date-range-start',
-                    'fuse-date-range-end',
-                ];
+            if (date.isSame(this._range.start, 'day') && date.isSame(this._range.end, 'day')) {
+                return ['fuse-date-range', 'fuse-date-range-start', 'fuse-date-range-end'];
             }
 
             // If the date is the start date...
@@ -493,11 +463,7 @@ export class FuseDateRangeComponent
      */
     dateFilter(): any {
         // If we are selecting the end date, disable all the dates that comes before the start date
-        return (date: Moment): boolean =>
-            !(
-                this.setWhichDate === 'end' &&
-                date.isBefore(this._range.start, 'day')
-            );
+        return (date: Moment): boolean => !(this.setWhichDate === 'end' && date.isBefore(this._range.start, 'day'));
     }
 
     /**
@@ -522,11 +488,7 @@ export class FuseDateRangeComponent
                 .date(date.date())
                 .toISOString();
         } else {
-            newRange.end = moment(newRange.end)
-                .year(date.year())
-                .month(date.month())
-                .date(date.date())
-                .toISOString();
+            newRange.end = moment(newRange.end).year(date.year()).month(date.month()).date(date.date()).toISOString();
         }
 
         // Append the which date to the new range object
@@ -543,28 +505,16 @@ export class FuseDateRangeComponent
      * Go to previous month on both views
      */
     prev(): void {
-        this.activeDates.month1 = moment(this.activeDates.month1).subtract(
-            1,
-            'month'
-        );
-        this.activeDates.month2 = moment(this.activeDates.month2).subtract(
-            1,
-            'month'
-        );
+        this.activeDates.month1 = moment(this.activeDates.month1).subtract(1, 'month');
+        this.activeDates.month2 = moment(this.activeDates.month2).subtract(1, 'month');
     }
 
     /**
      * Go to next month on both views
      */
     next(): void {
-        this.activeDates.month1 = moment(this.activeDates.month1).add(
-            1,
-            'month'
-        );
-        this.activeDates.month2 = moment(this.activeDates.month2).add(
-            1,
-            'month'
-        );
+        this.activeDates.month1 = moment(this.activeDates.month1).add(1, 'month');
+        this.activeDates.month2 = moment(this.activeDates.month2).add(1, 'month');
     }
 
     /**
@@ -589,10 +539,7 @@ export class FuseDateRangeComponent
         }
 
         // Append the new time to the start date
-        const startDate = this._range.start
-            .clone()
-            .hours(parsedTime.hours())
-            .minutes(parsedTime.minutes());
+        const startDate = this._range.start.clone().hours(parsedTime.hours()).minutes(parsedTime.minutes());
 
         // If the new start date is after the current end date,
         // use the end date's time and set the start date again
@@ -634,10 +581,7 @@ export class FuseDateRangeComponent
         }
 
         // Append the new time to the end date
-        const endDate = this._range.end
-            .clone()
-            .hours(parsedTime.hours())
-            .minutes(parsedTime.minutes());
+        const endDate = this._range.end.clone().hours(parsedTime.hours()).minutes(parsedTime.minutes());
 
         // If the new end date is before the current start date,
         // use the start date's time and set the end date again
@@ -668,12 +612,8 @@ export class FuseDateRangeComponent
      */
     private _init(): void {
         // Start and end time form controls
-        this.startTimeFormControl = new FormControl('', [
-            Validators.pattern(this._timeRegExp),
-        ]);
-        this.endTimeFormControl = new FormControl('', [
-            Validators.pattern(this._timeRegExp),
-        ]);
+        this.startTimeFormControl = new FormControl('', [Validators.pattern(this._timeRegExp)]);
+        this.endTimeFormControl = new FormControl('', [Validators.pattern(this._timeRegExp)]);
 
         // Set the default range
         this._programmaticChange = true;
@@ -695,9 +635,7 @@ export class FuseDateRangeComponent
      */
     private _parseTime(value: string): Moment {
         // Parse the time using the time regexp
-        const timeArr = value
-            .split(this._timeRegExp)
-            .filter((part) => part !== '');
+        const timeArr = value.split(this._timeRegExp).filter((part) => part !== '');
 
         // Get the meridiem
         const meridiem = timeArr[2] || null;

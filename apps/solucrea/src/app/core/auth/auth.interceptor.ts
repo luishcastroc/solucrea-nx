@@ -1,10 +1,4 @@
-import {
-    HttpErrorResponse,
-    HttpEvent,
-    HttpHandler,
-    HttpInterceptor,
-    HttpRequest,
-} from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
@@ -28,10 +22,7 @@ export class AuthInterceptor implements HttpInterceptor {
      * @param req
      * @param next
      */
-    intercept(
-        req: HttpRequest<any>,
-        next: HttpHandler
-    ): Observable<HttpEvent<any>> {
+    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // Clone the request object
         let newReq = req.clone();
 
@@ -45,15 +36,12 @@ export class AuthInterceptor implements HttpInterceptor {
         // the user out from the app.
         if (
             this._store.selectSnapshot(AuthState.accessToken) &&
-            !AuthUtils.isTokenExpired(
-                this._store.selectSnapshot(AuthState.accessToken)
-            )
+            !AuthUtils.isTokenExpired(this._store.selectSnapshot(AuthState.accessToken))
         ) {
             newReq = req.clone({
                 headers: req.headers.set(
                     'Authorization',
-                    'Bearer ' +
-                        this._store.selectSnapshot(AuthState.accessToken)
+                    'Bearer ' + this._store.selectSnapshot(AuthState.accessToken)
                 ),
             });
         } else {
@@ -64,10 +52,7 @@ export class AuthInterceptor implements HttpInterceptor {
         return next.handle(newReq).pipe(
             catchError((error) => {
                 // Catch "401 Unauthorized" responses
-                if (
-                    error instanceof HttpErrorResponse &&
-                    error.status === 401
-                ) {
+                if (error instanceof HttpErrorResponse && error.status === 401) {
                     // Sign out
                     this._store.dispatch(new Logout());
                 }

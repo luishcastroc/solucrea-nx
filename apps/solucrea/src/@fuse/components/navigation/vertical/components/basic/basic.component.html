@@ -8,9 +8,7 @@
     <!-- Item with an internal link -->
     <a
         class="fuse-vertical-navigation-item"
-        *ngIf="
-            item.link && !item.externalLink && !item.function && !item.disabled
-        "
+        *ngIf="item.link && !item.externalLink && !item.function && !item.disabled"
         [ngClass]="{
             'fuse-vertical-navigation-item-active-forced': item.active
         }"
@@ -24,9 +22,7 @@
     <!-- Item with an external link -->
     <a
         class="fuse-vertical-navigation-item"
-        *ngIf="
-            item.link && item.externalLink && !item.function && !item.disabled
-        "
+        *ngIf="item.link && item.externalLink && !item.function && !item.disabled"
         [href]="item.link"
     >
         <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
@@ -47,9 +43,7 @@
     <!-- Item with an internal link and function -->
     <a
         class="fuse-vertical-navigation-item"
-        *ngIf="
-            item.link && !item.externalLink && item.function && !item.disabled
-        "
+        *ngIf="item.link && !item.externalLink && item.function && !item.disabled"
         [ngClass]="{
             'fuse-vertical-navigation-item-active-forced': item.active
         }"
@@ -64,9 +58,7 @@
     <!-- Item with an external link and function -->
     <a
         class="fuse-vertical-navigation-item"
-        *ngIf="
-            item.link && item.externalLink && item.function && !item.disabled
-        "
+        *ngIf="item.link && item.externalLink && item.function && !item.disabled"
         [href]="item.link"
         (click)="item.function(item)"
     >
@@ -85,12 +77,7 @@
     </div>
 
     <!-- Item is disabled -->
-    <div
-        class="
-            fuse-vertical-navigation-item fuse-vertical-navigation-item-disabled
-        "
-        *ngIf="item.disabled"
-    >
+    <div class="fuse-vertical-navigation-item fuse-vertical-navigation-item-disabled" *ngIf="item.disabled">
         <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
     </div>
 </div>
@@ -112,10 +99,7 @@
                 {{ item.title }}
             </span>
         </div>
-        <div
-            class="fuse-vertical-navigation-item-subtitle"
-            *ngIf="item.subtitle"
-        >
+        <div class="fuse-vertical-navigation-item-subtitle" *ngIf="item.subtitle">
             <span [ngClass]="item.classes?.subtitle">
                 {{ item.subtitle }}
             </span>
@@ -124,10 +108,7 @@
 
     <!-- Badge -->
     <div class="fuse-vertical-navigation-item-badge" *ngIf="item.badge">
-        <div
-            class="fuse-vertical-navigation-item-badge-content"
-            [ngClass]="item.badge.classes"
-        >
+        <div class="fuse-vertical-navigation-item-badge-content" [ngClass]="item.badge.classes">
             {{ item.badge.title }}
         </div>
     </div>

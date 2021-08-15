@@ -47,9 +47,6 @@ import { SharedModule } from 'app/shared/shared.module';
         FuseScrollbarModule,
         SharedModule,
     ],
-    exports: [
-        FuseHorizontalNavigationComponent,
-        FuseVerticalNavigationComponent,
-    ],
+    exports: [FuseHorizontalNavigationComponent, FuseVerticalNavigationComponent],
 })
 export class FuseNavigationModule {}

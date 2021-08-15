@@ -56,11 +56,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
     canActivateChild(
         childRoute: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
-    ):
-        | Observable<boolean | UrlTree>
-        | Promise<boolean | UrlTree>
-        | boolean
-        | UrlTree {
+    ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         const redirectUrl = state.url === '/sign-out' ? '/' : state.url;
         return this._check(redirectUrl, childRoute.data.roles);
     }
@@ -71,10 +67,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
      * @param route
      * @param segments
      */
-    canLoad(
-        route: Route,
-        segments: UrlSegment[]
-    ): Observable<boolean> | Promise<boolean> | boolean {
+    canLoad(route: Route, segments: UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean {
         return this._check('/', route.data.roles);
     }
 
@@ -95,19 +88,13 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
                 // If the user is not authenticated...
                 if (!authenticated) {
                     // Redirect to the sign-in page
-                    this._store.dispatch(
-                        new Navigate(['sign-in'], { redirectURL })
-                    );
+                    this._store.dispatch(new Navigate(['sign-in'], { redirectURL }));
 
                     // Prevent the access
                     return of(false);
                 }
 
-                if (
-                    this.user &&
-                    roles &&
-                    !this._authService.checkAuthorization(this.user.role, roles)
-                ) {
+                if (this.user && roles && !this._authService.checkAuthorization(this.user.role, roles)) {
                     return of(false);
                 }
 

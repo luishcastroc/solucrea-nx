@@ -1,4 +1,18 @@
-import { Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, Renderer2, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    Renderer2,
+    SimpleChanges,
+    ViewChild,
+    ViewEncapsulation,
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
@@ -6,14 +20,13 @@ import { debounceTime, filter, map, takeUntil } from 'rxjs/operators';
 import { fuseAnimations } from '@fuse/animations/public-api';
 
 @Component({
-    selector     : 'search',
-    templateUrl  : './search.component.html',
+    selector: 'search',
+    templateUrl: './search.component.html',
     encapsulation: ViewEncapsulation.None,
-    exportAs     : 'fuseSearch',
-    animations   : fuseAnimations
+    exportAs: 'fuseSearch',
+    animations: fuseAnimations,
 })
-export class SearchComponent implements OnChanges, OnInit, OnDestroy
-{
+export class SearchComponent implements OnChanges, OnInit, OnDestroy {
     @Input() appearance: 'basic' | 'bar' = 'basic';
     @Input() debounce: number = 300;
     @Input() minLength: number = 2;
@@ -27,13 +40,7 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
     /**
      * Constructor
      */
-    constructor(
-        private _elementRef: ElementRef,
-        private _httpClient: HttpClient,
-        private _renderer2: Renderer2
-    )
-    {
-    }
+    constructor(private _elementRef: ElementRef, private _httpClient: HttpClient, private _renderer2: Renderer2) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -42,12 +49,11 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
     /**
      * Host binding for component classes
      */
-    @HostBinding('class') get classList(): any
-    {
+    @HostBinding('class') get classList(): any {
         return {
-            'search-appearance-bar'  : this.appearance === 'bar',
+            'search-appearance-bar': this.appearance === 'bar',
             'search-appearance-basic': this.appearance === 'basic',
-            'search-opened'          : this.opened
+            'search-opened': this.opened,
         };
     }
 
@@ -57,15 +63,12 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
      * @param value
      */
     @ViewChild('barSearchInput')
-    set barSearchInput(value: ElementRef)
-    {
+    set barSearchInput(value: ElementRef) {
         // If the value exists, it means that the search input
         // is now in the DOM and we can focus on the input..
-        if ( value )
-        {
+        if (value) {
             // Give Angular time to complete the change detection cycle
             setTimeout(() => {
-
                 // Focus to the input element
                 value.nativeElement.focus();
             });
@@ -81,11 +84,9 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
      *
      * @param changes
      */
-    ngOnChanges(changes: SimpleChanges): void
-    {
+    ngOnChanges(changes: SimpleChanges): void {
         // Appearance
-        if ( 'appearance' in changes )
-        {
+        if ('appearance' in changes) {
             // To prevent any issues, close the
             // search after changing the appearance
             this.close();
@@ -95,20 +96,17 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Subscribe to the search field value changes
         this.searchControl.valueChanges
             .pipe(
                 debounceTime(this.debounce),
                 takeUntil(this._unsubscribeAll),
                 map((value) => {
-
                     // Set the search results to null if there is no value or
                     // the length of the value is smaller than the minLength
                     // so the autocomplete panel can be closed
-                    if ( !value || value.length < this.minLength )
-                    {
+                    if (!value || value.length < this.minLength) {
                         this.results = null;
                     }
 
@@ -117,26 +115,23 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
                 }),
                 // Filter out undefined/null/false statements and also
                 // filter out the values that are smaller than minLength
-                filter(value => value && value.length >= this.minLength)
+                filter((value) => value && value.length >= this.minLength)
             )
             .subscribe((value) => {
-                this._httpClient.post('api/common/search', {query: value})
-                    .subscribe((response: any) => {
+                this._httpClient.post('api/common/search', { query: value }).subscribe((response: any) => {
+                    // Store the results
+                    this.results = response.results;
 
-                        // Store the results
-                        this.results = response.results;
-
-                        // Execute the event
-                        this.search.next(this.results);
-                    });
+                    // Execute the event
+                    this.search.next(this.results);
+                });
             });
     }
 
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
@@ -151,15 +146,12 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
      *
      * @param event
      */
-    onKeydown(event: KeyboardEvent): void
-    {
+    onKeydown(event: KeyboardEvent): void {
         // Listen for escape to close the search
         // if the appearance is 'bar'
-        if ( this.appearance === 'bar' )
-        {
+        if (this.appearance === 'bar') {
             // Escape
-            if ( event.code === 'Escape' )
-            {
+            if (event.code === 'Escape') {
                 // Close the search
                 this.close();
             }
@@ -170,11 +162,9 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
      * Open the search
      * Used in 'bar'
      */
-    open(): void
-    {
+    open(): void {
         // Return if it's already opened
-        if ( this.opened )
-        {
+        if (this.opened) {
             return;
         }
 
@@ -186,11 +176,9 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
      * Close the search
      * * Used in 'bar'
      */
-    close(): void
-    {
+    close(): void {
         // Return if it's already closed
-        if ( !this.opened )
-        {
+        if (!this.opened) {
             return;
         }
 

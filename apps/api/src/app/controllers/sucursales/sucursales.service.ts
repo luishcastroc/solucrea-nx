@@ -7,9 +7,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 export class SucursalesService {
     constructor(private prisma: PrismaService) {}
 
-    async sucursal(
-        sucursalWhereUniqueInput: Prisma.SucursalWhereUniqueInput
-    ): Promise<Sucursal | null> {
+    async sucursal(sucursalWhereUniqueInput: Prisma.SucursalWhereUniqueInput): Promise<Sucursal | null> {
         return this.prisma.sucursal.findUnique({
             where: sucursalWhereUniqueInput,
         });
@@ -36,9 +34,7 @@ export class SucursalesService {
         });
     }
 
-    async deleteSucursal(
-        where: Prisma.SucursalWhereUniqueInput
-    ): Promise<Sucursal> {
+    async deleteSucursal(where: Prisma.SucursalWhereUniqueInput): Promise<Sucursal> {
         return this.prisma.sucursal.delete({
             where,
         });

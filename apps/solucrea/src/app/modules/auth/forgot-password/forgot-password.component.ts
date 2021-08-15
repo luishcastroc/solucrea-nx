@@ -26,10 +26,7 @@ export class AuthForgotPasswordComponent implements OnInit {
     /**
      * Constructor
      */
-    constructor(
-        private _authService: AuthService,
-        private _formBuilder: FormBuilder
-    ) {}
+    constructor(private _authService: AuthService, private _formBuilder: FormBuilder) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -84,16 +81,14 @@ export class AuthForgotPasswordComponent implements OnInit {
                     // Set the alert
                     this.alert = {
                         type: 'success',
-                        message:
-                            "Password reset sent! You'll receive an email if you are registered on our system.",
+                        message: "Password reset sent! You'll receive an email if you are registered on our system.",
                     };
                 },
                 (response) => {
                     // Set the alert
                     this.alert = {
                         type: 'error',
-                        message:
-                            'Email does not found! Are you sure you are already a member?',
+                        message: 'Email does not found! Are you sure you are already a member?',
                     };
                 }
             );

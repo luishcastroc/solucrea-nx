@@ -6,10 +6,7 @@ import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types
 })
 export class FuseNavigationService {
     private _componentRegistry: Map<string, any> = new Map<string, any>();
-    private _navigationStore: Map<string, FuseNavigationItem[]> = new Map<
-        string,
-        any
-    >();
+    private _navigationStore: Map<string, FuseNavigationItem[]> = new Map<string, any>();
 
     /**
      * Constructor
@@ -76,9 +73,7 @@ export class FuseNavigationService {
     deleteNavigation(key: string): void {
         // Check if the navigation exists
         if (!this._navigationStore.has(key)) {
-            console.warn(
-                `Navigation with the key '${key}' does not exist in the store.`
-            );
+            console.warn(`Navigation with the key '${key}' does not exist in the store.`);
         }
 
         // Delete from the storage
@@ -102,11 +97,7 @@ export class FuseNavigationService {
                 continue;
             }
 
-            if (
-                item.type === 'aside' ||
-                item.type === 'collapsable' ||
-                item.type === 'group'
-            ) {
+            if (item.type === 'aside' || item.type === 'collapsable' || item.type === 'group') {
                 if (item.children) {
                     this.getFlatNavigation(item.children, flatNavigation);
                 }
@@ -123,10 +114,7 @@ export class FuseNavigationService {
      * @param id
      * @param navigation
      */
-    getItem(
-        id: string,
-        navigation: FuseNavigationItem[]
-    ): FuseNavigationItem | null {
+    getItem(id: string, navigation: FuseNavigationItem[]): FuseNavigationItem | null {
         for (const item of navigation) {
             if (item.id === id) {
                 return item;

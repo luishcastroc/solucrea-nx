@@ -49,10 +49,7 @@ export class AuthUtils {
         let d = new Date().getTime();
 
         // Use high-precision timer if available
-        if (
-            typeof performance !== 'undefined' &&
-            typeof performance.now === 'function'
-        ) {
+        if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
             d += performance.now();
         }
 
@@ -77,8 +74,7 @@ export class AuthUtils {
      * @private
      */
     private static _b64decode(str: string): string {
-        const chars =
-            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
         let output = '';
 
         str = String(str).replace(/=+$/, '');
@@ -119,11 +115,7 @@ export class AuthUtils {
     private static _b64DecodeUnicode(str: any): string {
         return decodeURIComponent(
             Array.prototype.map
-                .call(
-                    this._b64decode(str),
-                    (c: any) =>
-                        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-                )
+                .call(this._b64decode(str), (c: any) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
                 .join('')
         );
     }

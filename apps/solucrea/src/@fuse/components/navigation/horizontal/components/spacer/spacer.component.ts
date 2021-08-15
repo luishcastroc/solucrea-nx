@@ -1,11 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    Input,
-    OnDestroy,
-    OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FuseHorizontalNavigationComponent } from '@fuse/components/navigation/horizontal/horizontal.component';
@@ -18,9 +11,7 @@ import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types
     styles: [],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FuseHorizontalNavigationSpacerItemComponent
-    implements OnInit, OnDestroy
-{
+export class FuseHorizontalNavigationSpacerItemComponent implements OnInit, OnDestroy {
     @Input() item: FuseNavigationItem;
     @Input() name: string;
 
@@ -30,10 +21,7 @@ export class FuseHorizontalNavigationSpacerItemComponent
     /**
      * Constructor
      */
-    constructor(
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _fuseNavigationService: FuseNavigationService
-    ) {}
+    constructor(private _changeDetectorRef: ChangeDetectorRef, private _fuseNavigationService: FuseNavigationService) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -44,16 +32,13 @@ export class FuseHorizontalNavigationSpacerItemComponent
      */
     ngOnInit(): void {
         // Get the parent navigation component
-        this._fuseHorizontalNavigationComponent =
-            this._fuseNavigationService.getComponent(this.name);
+        this._fuseHorizontalNavigationComponent = this._fuseNavigationService.getComponent(this.name);
 
         // Subscribe to onRefreshed on the navigation component
-        this._fuseHorizontalNavigationComponent.onRefreshed
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(() => {
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+        this._fuseHorizontalNavigationComponent.onRefreshed.pipe(takeUntil(this._unsubscribeAll)).subscribe(() => {
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
     }
 
     /**

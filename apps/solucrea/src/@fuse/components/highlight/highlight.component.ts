@@ -126,13 +126,10 @@ export class FuseHighlightComponent implements OnChanges, AfterViewInit {
         }
 
         // Render and insert the template
-        this._viewRef = this._viewContainerRef.createEmbeddedView(
-            this.templateRef,
-            {
-                highlightedCode: this.highlightedCode,
-                lang: this.lang,
-            }
-        );
+        this._viewRef = this._viewContainerRef.createEmbeddedView(this.templateRef, {
+            highlightedCode: this.highlightedCode,
+            lang: this.lang,
+        });
 
         // Detect the changes
         this._viewRef.detectChanges();

@@ -17,15 +17,8 @@
     <div class="start">
         <div class="month">
             <div class="month-header">
-                <button
-                    class="previous-button"
-                    mat-icon-button
-                    (click)="prev()"
-                    tabindex="1"
-                >
-                    <mat-icon
-                        [svgIcon]="'heroicons_outline:chevron-left'"
-                    ></mat-icon>
+                <button class="previous-button" mat-icon-button (click)="prev()" tabindex="1">
+                    <mat-icon [svgIcon]="'heroicons_outline:chevron-left'"></mat-icon>
                 </button>
                 <div class="month-label">{{ getMonthLabel(1) }}</div>
             </div>
@@ -40,10 +33,7 @@
             </mat-month-view>
         </div>
 
-        <mat-form-field
-            class="fuse-mat-no-subscript time start-time"
-            *ngIf="timeRange"
-        >
+        <mat-form-field class="fuse-mat-no-subscript time start-time" *ngIf="timeRange">
             <input
                 matInput
                 [autocomplete]="'off'"
@@ -60,15 +50,8 @@
         <div class="month">
             <div class="month-header">
                 <div class="month-label">{{ getMonthLabel(2) }}</div>
-                <button
-                    class="next-button"
-                    mat-icon-button
-                    (click)="next()"
-                    tabindex="2"
-                >
-                    <mat-icon
-                        [svgIcon]="'heroicons_outline:chevron-right'"
-                    ></mat-icon>
+                <button class="next-button" mat-icon-button (click)="next()" tabindex="2">
+                    <mat-icon [svgIcon]="'heroicons_outline:chevron-right'"></mat-icon>
                 </button>
             </div>
             <mat-month-view
@@ -82,16 +65,8 @@
             </mat-month-view>
         </div>
 
-        <mat-form-field
-            class="fuse-mat-no-subscript time end-time"
-            *ngIf="timeRange"
-        >
-            <input
-                matInput
-                [formControl]="endTimeFormControl"
-                (blur)="updateEndTime($event)"
-                tabindex="4"
-            />
+        <mat-form-field class="fuse-mat-no-subscript time end-time" *ngIf="timeRange">
+            <input matInput [formControl]="endTimeFormControl" (blur)="updateEndTime($event)" tabindex="4" />
             <mat-label>End time</mat-label>
         </mat-form-field>
     </div>

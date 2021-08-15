@@ -16,17 +16,13 @@
     >
         <!-- Content header -->
         <div class="fuse-vertical-navigation-content-header">
-            <ng-content
-                select="[fuseVerticalNavigationContentHeader]"
-            ></ng-content>
+            <ng-content select="[fuseVerticalNavigationContentHeader]"></ng-content>
         </div>
 
         <!-- Items -->
         <ng-container *ngFor="let item of navigation; trackBy: trackByFn">
             <!-- Skip the hidden items -->
-            <ng-container
-                *ngIf="(item.hidden && !item.hidden(item)) || !item.hidden"
-            >
+            <ng-container *ngIf="(item.hidden && !item.hidden(item)) || !item.hidden">
                 <!-- Aside -->
                 <fuse-vertical-navigation-aside-item
                     *ngIf="item.type === 'aside'"
@@ -79,9 +75,7 @@
 
         <!-- Content footer -->
         <div class="fuse-vertical-navigation-content-footer">
-            <ng-content
-                select="[fuseVerticalNavigationContentFooter]"
-            ></ng-content>
+            <ng-content select="[fuseVerticalNavigationContentFooter]"></ng-content>
         </div>
     </div>
 
@@ -105,9 +99,7 @@
     <!-- Items -->
     <ng-container *ngFor="let item of navigation; trackBy: trackByFn">
         <!-- Skip the hidden items -->
-        <ng-container
-            *ngIf="(item.hidden && !item.hidden(item)) || !item.hidden"
-        >
+        <ng-container *ngIf="(item.hidden && !item.hidden(item)) || !item.hidden">
             <!-- Aside -->
             <fuse-vertical-navigation-aside-item
                 *ngIf="item.type === 'aside' && item.id === activeAsideItemId"

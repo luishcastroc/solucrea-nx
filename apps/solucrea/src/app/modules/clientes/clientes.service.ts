@@ -34,9 +34,7 @@ export class ClientesService {
      *
      */
     getClientes(): Observable<Cliente[]> {
-        return this._httpClient.get<Cliente[]>(
-            `${this._environment.uri}/clientes`
-        );
+        return this._httpClient.get<Cliente[]>(`${this._environment.uri}/clientes`);
     }
 
     /**
@@ -45,9 +43,7 @@ export class ClientesService {
      * @param id
      */
     getCliente(id: string): Observable<Cliente> {
-        return this._httpClient.get<Cliente>(
-            `${this._environment.uri}/cliente/${id}`
-        );
+        return this._httpClient.get<Cliente>(`${this._environment.uri}/cliente/${id}`);
     }
 
     /**
@@ -56,10 +52,7 @@ export class ClientesService {
      * @param CreateClienteDto
      */
     addCliente(cliente: CreateClienteDto): Observable<Cliente> {
-        return this._httpClient.post<Cliente>(
-            `${this._environment.uri}/cliente`,
-            cliente
-        );
+        return this._httpClient.post<Cliente>(`${this._environment.uri}/cliente`, cliente);
     }
 
     /**
@@ -68,10 +61,7 @@ export class ClientesService {
      * @param UpdateClienteDto
      */
     editCliente(id: string, cliente: UpdateClienteDto): Observable<Cliente> {
-        return this._httpClient.put<Cliente>(
-            `${this._environment.uri}/cliente/${id}`,
-            cliente
-        );
+        return this._httpClient.put<Cliente>(`${this._environment.uri}/cliente/${id}`, cliente);
     }
 
     /**
@@ -80,9 +70,7 @@ export class ClientesService {
      * @param id
      */
     deleteCliente(id: string): Observable<Cliente> {
-        return this._httpClient.delete<Cliente>(
-            `${this._environment.uri}/cliente/${id}`
-        );
+        return this._httpClient.delete<Cliente>(`${this._environment.uri}/cliente/${id}`);
     }
 
     /**
@@ -91,9 +79,7 @@ export class ClientesService {
      * @param cp
      */
     getColoniasByCp(cp: string): Observable<IColoniaReturnDto> {
-        return this._httpClient.get<IColoniaReturnDto>(
-            `${this._environment.uri}/colonias/cp/${cp}`
-        );
+        return this._httpClient.get<IColoniaReturnDto>(`${this._environment.uri}/colonias/cp/${cp}`);
     }
 
     /**
@@ -101,9 +87,7 @@ export class ClientesService {
      *
      */
     getGeneros(): Observable<IGeneroReturnDto[]> {
-        return this._httpClient.get<IGeneroReturnDto[]>(
-            `${this._environment.uri}/generos/`
-        );
+        return this._httpClient.get<IGeneroReturnDto[]>(`${this._environment.uri}/generos/`);
     }
 
     /**
@@ -111,9 +95,7 @@ export class ClientesService {
      *
      */
     getEscolaridades(): Observable<IEscolaridadReturnDto[]> {
-        return this._httpClient.get<IEscolaridadReturnDto[]>(
-            `${this._environment.uri}/escolaridades/`
-        );
+        return this._httpClient.get<IEscolaridadReturnDto[]>(`${this._environment.uri}/escolaridades/`);
     }
 
     /**
@@ -121,9 +103,7 @@ export class ClientesService {
      *
      */
     getTiposDeVivienda(): Observable<ITipoDeViviendaReturnDto[]> {
-        return this._httpClient.get<ITipoDeViviendaReturnDto[]>(
-            `${this._environment.uri}/tipos-de-vivienda/`
-        );
+        return this._httpClient.get<ITipoDeViviendaReturnDto[]>(`${this._environment.uri}/tipos-de-vivienda/`);
     }
 
     /**
@@ -131,8 +111,6 @@ export class ClientesService {
      *
      */
     getEstadosCiviles(): Observable<IEstadoCivilReturnDto[]> {
-        return this._httpClient.get<IEstadoCivilReturnDto[]>(
-            `${this._environment.uri}/estados-civiles/`
-        );
+        return this._httpClient.get<IEstadoCivilReturnDto[]>(`${this._environment.uri}/estados-civiles/`);
     }
 }

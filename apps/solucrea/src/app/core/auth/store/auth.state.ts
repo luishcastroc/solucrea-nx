@@ -1,15 +1,15 @@
-import { ClearAjustesState } from '../../../modules/ajustes/_store/ajustes.actions';
-import { ClearClientesState } from '../../../modules/clientes/_store/clientes.actions';
 import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
-import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { Select } from 'app/modules/ajustes/_store/ajustes.actions';
 import { throwError } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
+import { ClearAjustesState } from '../../../modules/ajustes/_store/ajustes.actions';
+import { ClearClientesState } from '../../../modules/clientes/_store/clientes.actions';
 import { AuthService } from '../auth.service';
-import { Login, Logout, UpdateUsuario, ClearAuthState } from './auth.actions';
+import { ClearAuthState, Login, Logout, UpdateUsuario } from './auth.actions';
 import { AuthStateModel } from './auth.model';
 
 @State<AuthStateModel>({
@@ -21,7 +21,7 @@ import { AuthStateModel } from './auth.model';
 })
 @Injectable()
 export class AuthState {
-    constructor(private authService: AuthService, private _store: Store) {}
+    constructor(private authService: AuthService) {}
 
     @Selector()
     static accessToken(state: AuthStateModel): string | null {
@@ -59,11 +59,7 @@ export class AuthState {
 
     @Action(Logout)
     logout(ctx: StateContext<AuthStateModel>) {
-        this._store.dispatch([
-            new ClearClientesState(),
-            new ClearAjustesState(),
-            new ClearAuthState(),
-        ]);
+        ctx.dispatch([new ClearClientesState(), new ClearAjustesState(), new ClearAuthState()]);
     }
 
     @Action(ClearAuthState)

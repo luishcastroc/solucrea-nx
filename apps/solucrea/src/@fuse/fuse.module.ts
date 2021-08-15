@@ -6,12 +6,7 @@ import { FuseTailwindConfigModule } from '@fuse/services/tailwind/tailwind.modul
 import { FuseUtilsModule } from '@fuse/services/utils/utils.module';
 
 @NgModule({
-    imports: [
-        FuseMediaWatcherModule,
-        FuseSplashScreenModule,
-        FuseTailwindConfigModule,
-        FuseUtilsModule,
-    ],
+    imports: [FuseMediaWatcherModule, FuseSplashScreenModule, FuseTailwindConfigModule, FuseUtilsModule],
     providers: [
         {
             // Use the 'fill' appearance on Angular Material form fields by default
@@ -28,9 +23,7 @@ export class FuseModule {
      */
     constructor(@Optional() @SkipSelf() parentModule?: FuseModule) {
         if (parentModule) {
-            throw new Error(
-                'FuseModule has already been loaded. Import this module in the AppModule only!'
-            );
+            throw new Error('FuseModule has already been loaded. Import this module in the AppModule only!');
         }
     }
 }

@@ -1,13 +1,4 @@
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param,
-    Post,
-    Put,
-    UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { Role, TipoDeVivienda } from '@prisma/client';
 
 import { Public } from '../../decorators/public.decorator';
@@ -30,28 +21,21 @@ export class TiposViviendaController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('tipo-de-vivienda/:id')
-    async getTipoDeVivienda(
-        @Param('id') id: string
-    ): Promise<ITipoDeViviendaReturnDto> {
+    async getTipoDeVivienda(@Param('id') id: string): Promise<ITipoDeViviendaReturnDto> {
         return this.tiposViviendaService.tipoDeVivienda({ id });
     }
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Post('tipo-de-vivienda')
-    async createTipoDeVivienda(
-        @Body() data: TipoDeVivienda
-    ): Promise<ITipoDeViviendaReturnDto> {
+    async createTipoDeVivienda(@Body() data: TipoDeVivienda): Promise<ITipoDeViviendaReturnDto> {
         return this.tiposViviendaService.createTipoDeVivienda(data);
     }
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Put('tipo-de-vivienda/:id')
-    async editTipoDeVivienda(
-        @Param('id') id: string,
-        @Body() data: TipoDeVivienda
-    ): Promise<ITipoDeViviendaReturnDto> {
+    async editTipoDeVivienda(@Param('id') id: string, @Body() data: TipoDeVivienda): Promise<ITipoDeViviendaReturnDto> {
         return this.tiposViviendaService.updateTipoDeVivienda({
             where: { id },
             data,
@@ -61,9 +45,7 @@ export class TiposViviendaController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Delete('tipo-de-vivienda/:id')
-    async deleteTipoDeVivienda(
-        @Param('id') id: string
-    ): Promise<ITipoDeViviendaReturnDto> {
+    async deleteTipoDeVivienda(@Param('id') id: string): Promise<ITipoDeViviendaReturnDto> {
         return this.tiposViviendaService.deleteTipoDeVivienda({
             id,
         });

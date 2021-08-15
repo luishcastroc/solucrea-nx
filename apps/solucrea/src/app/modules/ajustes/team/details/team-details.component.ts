@@ -1,22 +1,10 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    OnDestroy,
-    OnInit,
-    ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { IAlert } from '@fuse/components/alert/alert.model';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
-import {
-    Actions,
-    ofActionErrored,
-    ofActionSuccessful,
-    Select,
-    Store,
-} from '@ngxs/store';
+import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { EditMode } from 'app/core/models/edit-mode.type';
 import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
@@ -92,40 +80,31 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this._actions$
-            .pipe(takeUntil(this._unsubscribeAll), ofActionErrored(Edit, Add))
-            .subscribe(() => {
-                const message = this.errorMessage;
-                this._toast.error(message, {
-                    duration: 5000,
-                    position: 'bottom-center',
-                });
-                this.usuarioForm.enable();
+        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionErrored(Edit, Add)).subscribe(() => {
+            const message = this.errorMessage;
+            this._toast.error(message, {
+                duration: 5000,
+                position: 'bottom-center',
             });
+            this.usuarioForm.enable();
+        });
 
-        this._actions$
-            .pipe(
-                takeUntil(this._unsubscribeAll),
-                ofActionSuccessful(Edit, Add)
-            )
-            .subscribe((action) => {
-                const message = this.successMessage;
-                this._toast.success(message, {
-                    duration: 5000,
-                    position: 'bottom-center',
-                });
-                this.usuarioForm.enable();
-                if (this.mode === 'password') {
-                    this.usuarioForm.reset();
-                }
-                if (action instanceof Add) {
-                    setTimeout(() => {
-                        this._store.dispatch(
-                            new Navigate(['/ajustes/usuarios/'])
-                        );
-                    }, 4000);
-                }
+        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(Edit, Add)).subscribe((action) => {
+            const message = this.successMessage;
+            this._toast.success(message, {
+                duration: 5000,
+                position: 'bottom-center',
             });
+            this.usuarioForm.enable();
+            if (this.mode === 'password') {
+                this.usuarioForm.reset();
+            }
+            if (action instanceof Add) {
+                setTimeout(() => {
+                    this._store.dispatch(new Navigate(['/ajustes/usuarios/']));
+                }, 4000);
+            }
+        });
     }
 
     /**
@@ -137,10 +116,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
             nombre: [''],
             apellido: [''],
             nombreUsuario: [''],
-            password: [
-                '',
-                [Validators.minLength(8), createPasswordStrengthValidator()],
-            ],
+            password: ['', [Validators.minLength(8), createPasswordStrengthValidator()]],
         });
     }
 
@@ -158,8 +134,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
      * @param mode
      */
     updateUsuario(): void {
-        const { nombre, apellido, nombreUsuario, password } =
-            this.usuarioForm.value;
+        const { nombre, apellido, nombreUsuario, password } = this.usuarioForm.value;
         let usuario;
         if (!password) {
             usuario = {

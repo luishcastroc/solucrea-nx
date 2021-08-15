@@ -7,9 +7,7 @@
     <!-- Item with an internal link -->
     <div
         class="fuse-horizontal-navigation-item"
-        *ngIf="
-            item.link && !item.externalLink && !item.function && !item.disabled
-        "
+        *ngIf="item.link && !item.externalLink && !item.function && !item.disabled"
         [ngClass]="{
             'fuse-horizontal-navigation-item-active-forced': item.active
         }"
@@ -23,9 +21,7 @@
     <!-- Item with an external link -->
     <a
         class="fuse-horizontal-navigation-item"
-        *ngIf="
-            item.link && item.externalLink && !item.function && !item.disabled
-        "
+        *ngIf="item.link && item.externalLink && !item.function && !item.disabled"
         [href]="item.link"
     >
         <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
@@ -46,9 +42,7 @@
     <!-- Item with an internal link and function -->
     <div
         class="fuse-horizontal-navigation-item"
-        *ngIf="
-            item.link && !item.externalLink && item.function && !item.disabled
-        "
+        *ngIf="item.link && !item.externalLink && item.function && !item.disabled"
         [ngClass]="{
             'fuse-horizontal-navigation-item-active-forced': item.active
         }"
@@ -63,9 +57,7 @@
     <!-- Item with an external link and function -->
     <a
         class="fuse-horizontal-navigation-item"
-        *ngIf="
-            item.link && item.externalLink && item.function && !item.disabled
-        "
+        *ngIf="item.link && item.externalLink && item.function && !item.disabled"
         [href]="item.link"
         (click)="item.function(item)"
         mat-menu-item
@@ -85,13 +77,7 @@
     </div>
 
     <!-- Item is disabled -->
-    <div
-        class="
-            fuse-horizontal-navigation-item
-            fuse-horizontal-navigation-item-disabled
-        "
-        *ngIf="item.disabled"
-    >
+    <div class="fuse-horizontal-navigation-item fuse-horizontal-navigation-item-disabled" *ngIf="item.disabled">
         <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
     </div>
 </div>
@@ -113,10 +99,7 @@
                 {{ item.title }}
             </span>
         </div>
-        <div
-            class="fuse-horizontal-navigation-item-subtitle text-hint"
-            *ngIf="item.subtitle"
-        >
+        <div class="fuse-horizontal-navigation-item-subtitle text-hint" *ngIf="item.subtitle">
             <span [ngClass]="item.classes?.subtitle">
                 {{ item.subtitle }}
             </span>
@@ -125,10 +108,7 @@
 
     <!-- Badge -->
     <div class="fuse-horizontal-navigation-item-badge" *ngIf="item.badge">
-        <div
-            class="fuse-horizontal-navigation-item-badge-content"
-            [ngClass]="item.badge.classes"
-        >
+        <div class="fuse-horizontal-navigation-item-badge-content" [ngClass]="item.badge.classes">
             {{ item.badge.title }}
         </div>
     </div>

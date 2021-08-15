@@ -1,15 +1,4 @@
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param,
-    Post,
-    Put,
-    UseGuards,
-    UsePipes,
-    ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Cliente, Prisma, Role } from '@prisma/client';
 
 import { CreateClienteDto } from '../../dtos/create-cliente.dto';
@@ -40,19 +29,14 @@ export class ClientesController {
     @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN)
     @Post('cliente')
-    async createTipoDeVivienda(
-        @Body() data: CreateClienteDto
-    ): Promise<Cliente> {
+    async createTipoDeVivienda(@Body() data: CreateClienteDto): Promise<Cliente> {
         return this.clientesService.createCliente(data);
     }
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Put('cliente/:id')
-    async editTipoDeVivienda(
-        @Param('id') id: string,
-        @Body() data: Prisma.ClienteUpdateInput
-    ): Promise<Cliente> {
+    async editTipoDeVivienda(@Param('id') id: string, @Body() data: Prisma.ClienteUpdateInput): Promise<Cliente> {
         return this.clientesService.updateCliente({
             where: { id },
             data,

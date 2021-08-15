@@ -10,7 +10,7 @@ fuse-drawer {
     min-width: #{$fuse-drawer-width}px;
     max-width: #{$fuse-drawer-width}px;
     z-index: 300;
-    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .35);
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.35);
     @apply bg-card;
 
     /* Animations */
@@ -40,7 +40,6 @@ fuse-drawer {
 
     /* Left position */
     &.fuse-drawer-position-left {
-
         /* Side mode */
         &.fuse-drawer-mode-side {
             margin-left: -#{$fuse-drawer-width}px;
@@ -68,7 +67,6 @@ fuse-drawer {
 
     /* Right position */
     &.fuse-drawer-position-right {
-
         /* Side mode */
         &.fuse-drawer-mode-side {
             margin-right: -#{$fuse-drawer-width}px;

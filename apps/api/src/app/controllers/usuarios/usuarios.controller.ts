@@ -24,10 +24,7 @@ import { UsuariosService } from './usuarios.service';
 
 @Controller()
 export class UsuariosController {
-    constructor(
-        private readonly usuariosService: UsuariosService,
-        private readonly authService: AuthService
-    ) {}
+    constructor(private readonly usuariosService: UsuariosService, private readonly authService: AuthService) {}
 
     @Public()
     @UseGuards(LocalAuthGuard)
@@ -63,11 +60,7 @@ export class UsuariosController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN, Role.CAJERO, Role.SECRE, Role.USUARIO)
     @Put('usuario/:id')
-    async editUsuario(
-        @Param('id') id: string,
-        @Body() data: UpdateUsuarioDto,
-        @Request() req
-    ): Promise<UsersModel> {
+    async editUsuario(@Param('id') id: string, @Body() data: UpdateUsuarioDto, @Request() req): Promise<UsersModel> {
         const role = req.user.role;
         data.actualizadoPor = req.user.username;
         return this.usuariosService.updateUsuario({

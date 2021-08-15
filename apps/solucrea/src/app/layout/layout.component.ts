@@ -1,11 +1,4 @@
-import {
-    Component,
-    Inject,
-    OnDestroy,
-    OnInit,
-    Renderer2,
-    ViewEncapsulation,
-} from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, Renderer2, ViewEncapsulation } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { combineLatest, Subject } from 'rxjs';
@@ -76,11 +69,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
                     // If the scheme is set to 'auto'...
                     if (config.scheme === 'auto') {
                         // Decide the scheme using the media query
-                        options.scheme = mql.breakpoints[
-                            '(prefers-color-scheme: dark)'
-                        ]
-                            ? 'dark'
-                            : 'light';
+                        options.scheme = mql.breakpoints['(prefers-color-scheme: dark)'] ? 'dark' : 'light';
                     }
 
                     return options;
@@ -97,15 +86,13 @@ export class LayoutComponent implements OnInit, OnDestroy {
             });
 
         // Subscribe to config changes
-        this._fuseConfigService.config$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((config: AppConfig) => {
-                // Store the config
-                this.config = config;
+        this._fuseConfigService.config$.pipe(takeUntil(this._unsubscribeAll)).subscribe((config: AppConfig) => {
+            // Store the config
+            this.config = config;
 
-                // Update the layout
-                this._updateLayout();
-            });
+            // Update the layout
+            this._updateLayout();
+        });
 
         // Subscribe to NavigationEnd event
         this._router.events
@@ -120,11 +107,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
             });
 
         // Set the app version
-        this._renderer2.setAttribute(
-            this._document.querySelector('[ng-version]'),
-            'fuse-version',
-            FUSE_VERSION
-        );
+        this._renderer2.setAttribute(this._document.querySelector('[ng-version]'), 'fuse-version', FUSE_VERSION);
     }
 
     /**
@@ -197,9 +180,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
         // 2. Get the query parameter from the current route and
         // set the layout and save the layout to the config
-        const layoutFromQueryParam = route.snapshot.queryParamMap.get(
-            'layout'
-        ) as Layout;
+        const layoutFromQueryParam = route.snapshot.queryParamMap.get('layout') as Layout;
         if (layoutFromQueryParam) {
             this.layout = layoutFromQueryParam;
             if (this.config) {
@@ -226,11 +207,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
         const paths = route.pathFromRoot;
         paths.forEach((path) => {
             // Check if there is a 'layout' mock-api
-            if (
-                path.routeConfig &&
-                path.routeConfig.data &&
-                path.routeConfig.data.layout
-            ) {
+            if (path.routeConfig && path.routeConfig.data && path.routeConfig.data.layout) {
                 // Set the layout
                 this.layout = path.routeConfig.data.layout;
             }
@@ -259,10 +236,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
         // Find the class name for the previously selected theme and remove it
         this._document.body.classList.forEach((className: string) => {
             if (className.startsWith('theme-')) {
-                this._document.body.classList.remove(
-                    className,
-                    className.split('-')[1]
-                );
+                this._document.body.classList.remove(className, className.split('-')[1]);
             }
         });
 

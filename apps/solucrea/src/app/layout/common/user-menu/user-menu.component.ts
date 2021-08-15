@@ -35,10 +35,7 @@ export class UserMenuComponent implements OnInit, OnDestroy {
     /**
      * Constructor
      */
-    constructor(
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _store: Store
-    ) {}
+    constructor(private _changeDetectorRef: ChangeDetectorRef, private _store: Store) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -49,14 +46,12 @@ export class UserMenuComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
         // Subscribe to user changes
-        this.user$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((user: Usuario) => {
-                this.user = user;
+        this.user$.pipe(takeUntil(this._unsubscribeAll)).subscribe((user: Usuario) => {
+            this.user = user;
 
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
     }
 
     goToPerfil(): void {

@@ -6,20 +6,17 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { AuthInterceptor } from 'app/core/auth/auth.interceptor';
 
 @NgModule({
-    imports  : [
-        HttpClientModule
-    ],
+    imports: [HttpClientModule],
     providers: [
         AuthService,
         {
-            provide : HTTP_INTERCEPTORS,
+            provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,
-            multi   : true
-        }
-    ]
+            multi: true,
+        },
+    ],
 })
-export class CoreModule
-{
+export class CoreModule {
     /**
      * Constructor
      */
@@ -27,21 +24,39 @@ export class CoreModule
         private _domSanitizer: DomSanitizer,
         private _matIconRegistry: MatIconRegistry,
         @Optional() @SkipSelf() parentModule?: CoreModule
-    )
-    {
+    ) {
         // Do not allow multiple injections
-        if ( parentModule )
-        {
+        if (parentModule) {
             throw new Error('CoreModule has already been loaded. Import this module in the AppModule only.');
         }
 
         // Register icon sets
-        this._matIconRegistry.addSvgIconSet(this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/material-twotone.svg'));
-        this._matIconRegistry.addSvgIconSetInNamespace('mat_outline', this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/material-outline.svg'));
-        this._matIconRegistry.addSvgIconSetInNamespace('mat_solid', this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/material-solid.svg'));
-        this._matIconRegistry.addSvgIconSetInNamespace('iconsmind', this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/iconsmind.svg'));
-        this._matIconRegistry.addSvgIconSetInNamespace('feather', this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/feather.svg'));
-        this._matIconRegistry.addSvgIconSetInNamespace('heroicons_outline', this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/heroicons-outline.svg'));
-        this._matIconRegistry.addSvgIconSetInNamespace('heroicons_solid', this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/heroicons-solid.svg'));
+        this._matIconRegistry.addSvgIconSet(
+            this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/material-twotone.svg')
+        );
+        this._matIconRegistry.addSvgIconSetInNamespace(
+            'mat_outline',
+            this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/material-outline.svg')
+        );
+        this._matIconRegistry.addSvgIconSetInNamespace(
+            'mat_solid',
+            this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/material-solid.svg')
+        );
+        this._matIconRegistry.addSvgIconSetInNamespace(
+            'iconsmind',
+            this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/iconsmind.svg')
+        );
+        this._matIconRegistry.addSvgIconSetInNamespace(
+            'feather',
+            this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/feather.svg')
+        );
+        this._matIconRegistry.addSvgIconSetInNamespace(
+            'heroicons_outline',
+            this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/heroicons-outline.svg')
+        );
+        this._matIconRegistry.addSvgIconSetInNamespace(
+            'heroicons_solid',
+            this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/heroicons-solid.svg')
+        );
     }
 }

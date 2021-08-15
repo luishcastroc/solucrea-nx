@@ -16,9 +16,6 @@ export class ClienteListComponent implements OnInit {
     ngOnInit(): void {}
 
     newCliente() {
-        this._store.dispatch([
-            new Navigate([`clientes/${AuthUtils.guid()}`]),
-            new ClientesMode('edit'),
-        ]);
+        this._store.dispatch([new Navigate([`clientes/${AuthUtils.guid()}`]), new ClientesMode('edit')]);
     }
 }

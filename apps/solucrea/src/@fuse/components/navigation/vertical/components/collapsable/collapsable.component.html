@@ -23,10 +23,7 @@
                     {{ item.title }}
                 </span>
             </div>
-            <div
-                class="fuse-vertical-navigation-item-subtitle"
-                *ngIf="item.subtitle"
-            >
+            <div class="fuse-vertical-navigation-item-subtitle" *ngIf="item.subtitle">
                 <span [ngClass]="item.classes?.subtitle">
                     {{ item.subtitle }}
                 </span>
@@ -35,10 +32,7 @@
 
         <!-- Badge -->
         <div class="fuse-vertical-navigation-item-badge" *ngIf="item.badge">
-            <div
-                class="fuse-vertical-navigation-item-badge-content"
-                [ngClass]="item.badge.classes"
-            >
+            <div class="fuse-vertical-navigation-item-badge-content" [ngClass]="item.badge.classes">
                 {{ item.badge.title }}
             </div>
         </div>
@@ -51,16 +45,10 @@
     </div>
 </div>
 
-<div
-    class="fuse-vertical-navigation-item-children"
-    *ngIf="!isCollapsed"
-    @expandCollapse
->
+<div class="fuse-vertical-navigation-item-children" *ngIf="!isCollapsed" @expandCollapse>
     <ng-container *ngFor="let item of item.children; trackBy: trackByFn">
         <!-- Skip the hidden items -->
-        <ng-container
-            *ngIf="(item.hidden && !item.hidden(item)) || !item.hidden"
-        >
+        <ng-container *ngIf="(item.hidden && !item.hidden(item)) || !item.hidden">
             <!-- Basic -->
             <fuse-vertical-navigation-basic-item
                 *ngIf="item.type === 'basic'"

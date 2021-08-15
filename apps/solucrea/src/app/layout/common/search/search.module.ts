@@ -10,29 +10,23 @@ import { SharedModule } from 'app/shared/shared.module';
 import { SearchComponent } from 'app/layout/common/search/search.component';
 
 @NgModule({
-    declarations: [
-        SearchComponent
-    ],
-    imports     : [
+    declarations: [SearchComponent],
+    imports: [
         RouterModule.forChild([]),
         MatAutocompleteModule,
         MatButtonModule,
         MatFormFieldModule,
         MatIconModule,
         MatInputModule,
-        SharedModule
+        SharedModule,
     ],
-    exports     : [
-        SearchComponent
-    ],
-    providers   : [
+    exports: [SearchComponent],
+    providers: [
         {
-            provide   : MAT_AUTOCOMPLETE_SCROLL_STRATEGY,
+            provide: MAT_AUTOCOMPLETE_SCROLL_STRATEGY,
             useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.block(),
-            deps      : [Overlay]
-        }
-    ]
+            deps: [Overlay],
+        },
+    ],
 })
-export class SearchModule
-{
-}
+export class SearchModule {}

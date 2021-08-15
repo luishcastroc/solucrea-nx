@@ -6,14 +6,8 @@ import { IColoniaReturnDto } from 'api/dtos';
 import { tap } from 'rxjs/operators';
 
 import { ClientesService } from '../clientes.service';
-import {
-    Add,
-    GetAll,
-    GetColonias,
-    GetConfig,
-    ClearClientesState,
-} from './clientes.actions';
-import { ClientesStateModel } from './clientes.model';
+import { Add, GetAll, GetColonias, GetConfig, ClearClientesState } from './clientes.actions';
+import { ClientesStateModel, IColoniasState } from './clientes.model';
 import { forkJoin } from 'rxjs';
 
 @State<ClientesStateModel>({
@@ -30,10 +24,7 @@ import { forkJoin } from 'rxjs';
 })
 @Injectable()
 export class ClientesState {
-    constructor(
-        private clientesService: ClientesService,
-        private _store: Store
-    ) {}
+    constructor(private clientesService: ClientesService, private _store: Store) {}
 
     @Selector()
     static searchResults({ searchResult }: ClientesStateModel): Cliente[] | [] {
@@ -61,7 +52,7 @@ export class ClientesState {
     }
 
     @Selector()
-    static colonias({ colonias }: ClientesStateModel): IColoniaReturnDto[] {
+    static colonias({ colonias }: ClientesStateModel): IColoniasState[] {
         return colonias;
     }
 
@@ -95,16 +86,13 @@ export class ClientesState {
     }
 
     @Action(GetColonias)
-    getColonias(
-        ctx: StateContext<ClientesStateModel>,
-        { cp, index }: GetColonias
-    ) {
+    getColonias(ctx: StateContext<ClientesStateModel>, { cp, index, tipo }: GetColonias) {
         return this.clientesService.getColoniasByCp(cp).pipe(
             tap((colonias: IColoniaReturnDto) => {
                 const state = ctx.getState();
                 if (state.colonias) {
                     const coloniasState = [...state.colonias];
-                    coloniasState[index] = colonias;
+                    coloniasState[index] = { tipoDireccion: tipo, ubicacion: colonias };
 
                     ctx.patchState({
                         colonias: coloniasState,
@@ -124,23 +112,16 @@ export class ClientesState {
             escolaridades: this.clientesService.getEscolaridades(),
             tiposDeVivienda: this.clientesService.getTiposDeVivienda(),
         }).pipe(
-            tap(
-                ({
+            tap(({ generos, estadosCiviles, escolaridades, tiposDeVivienda }) => {
+                const config = {
                     generos,
                     estadosCiviles,
                     escolaridades,
                     tiposDeVivienda,
-                }) => {
-                    const config = {
-                        generos,
-                        estadosCiviles,
-                        escolaridades,
-                        tiposDeVivienda,
-                    };
-                    loading = false;
-                    ctx.patchState({ config, loading });
-                }
-            )
+                };
+                loading = false;
+                ctx.patchState({ config, loading });
+            })
         );
     }
 

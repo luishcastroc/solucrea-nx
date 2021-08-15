@@ -1,5 +1,5 @@
 import { CreateClienteDto, UpdateClienteDto } from 'api/dtos';
-import { Cliente } from '@prisma/client';
+import { Cliente, TipoDireccion } from '@prisma/client';
 import { EditMode } from 'app/core/models/edit-mode.type';
 
 export class Add {
@@ -39,7 +39,7 @@ export class Search {
 
 export class GetColonias {
     static readonly type = '[Cliente] Get Colonias';
-    constructor(public cp: string, public index: number) {}
+    constructor(public cp: string, public index: number, public tipo: TipoDireccion) {}
 }
 
 export class GetConfig {

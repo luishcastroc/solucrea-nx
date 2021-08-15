@@ -10,8 +10,7 @@ export const curpValidator =
             let lngSuma = 0.0;
             let lngDigito = 0.0;
             for (let i = 0; i < 17; i++) {
-                lngSuma =
-                    lngSuma + diccionario.indexOf(curp17.charAt(i)) * (18 - i);
+                lngSuma = lngSuma + diccionario.indexOf(curp17.charAt(i)) * (18 - i);
             }
             lngDigito = 10 - (lngSuma % 10);
             if (lngDigito === 10) {
@@ -80,8 +79,7 @@ export const rfcValidator =
             } //Ajuste para persona moral
 
             for (let i = 0; i < len; i++) {
-                suma +=
-                    diccionario.indexOf(rfcSinDigito.charAt(i)) * (indice - i);
+                suma += diccionario.indexOf(rfcSinDigito.charAt(i)) * (indice - i);
             }
             digitoEsperado = 11 - (suma % 11);
             if (digitoEsperado === 11) {
@@ -94,14 +92,10 @@ export const rfcValidator =
             // o es un RFC Genérico (ventas a público general)?
             if (
                 Number(digitoVerificador) !== digitoEsperado &&
-                (!aceptarGenerico ||
-                    rfcSinDigito + digitoVerificador !== 'XAXX010101000')
+                (!aceptarGenerico || rfcSinDigito + digitoVerificador !== 'XAXX010101000')
             ) {
                 return false;
-            } else if (
-                !aceptarGenerico &&
-                rfcSinDigito + digitoVerificador === 'XEXX010101000'
-            ) {
+            } else if (!aceptarGenerico && rfcSinDigito + digitoVerificador === 'XEXX010101000') {
                 return false;
             }
             return true;

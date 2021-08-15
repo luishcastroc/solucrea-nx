@@ -10,9 +10,7 @@ export class EstadosCivilesService {
 
     // Estado Civil
 
-    async estadoCivil(
-        where: Prisma.EstadoCivilWhereUniqueInput
-    ): Promise<IEstadoCivilReturnDto | null> {
+    async estadoCivil(where: Prisma.EstadoCivilWhereUniqueInput): Promise<IEstadoCivilReturnDto | null> {
         return await this.prisma.estadoCivil.findUnique({
             where,
             select: { id: true, descripcion: true },
@@ -25,9 +23,7 @@ export class EstadosCivilesService {
         });
     }
 
-    async createEstadoCivil(
-        data: Prisma.EstadoCivilCreateInput
-    ): Promise<IEstadoCivilReturnDto> {
+    async createEstadoCivil(data: Prisma.EstadoCivilCreateInput): Promise<IEstadoCivilReturnDto> {
         return await this.prisma.estadoCivil.create({
             data,
             select: { id: true, descripcion: true },
@@ -46,9 +42,7 @@ export class EstadosCivilesService {
         });
     }
 
-    async deleteEstadoCivil(
-        where: Prisma.EstadoCivilWhereUniqueInput
-    ): Promise<IEstadoCivilReturnDto> {
+    async deleteEstadoCivil(where: Prisma.EstadoCivilWhereUniqueInput): Promise<IEstadoCivilReturnDto> {
         return this.prisma.estadoCivil.delete({
             where,
             select: { id: true, descripcion: true },

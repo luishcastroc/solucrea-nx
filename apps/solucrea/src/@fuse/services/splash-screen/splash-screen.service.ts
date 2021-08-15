@@ -9,10 +9,7 @@ export class FuseSplashScreenService {
     /**
      * Constructor
      */
-    constructor(
-        @Inject(DOCUMENT) private _document: any,
-        private _router: Router
-    ) {
+    constructor(@Inject(DOCUMENT) private _document: any, private _router: Router) {
         // Hide it on the first NavigationEnd event
         this._router.events
             .pipe(

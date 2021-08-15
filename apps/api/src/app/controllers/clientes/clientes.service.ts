@@ -7,9 +7,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 export class ClientesService {
     constructor(private prisma: PrismaService) {}
 
-    async cliente(
-        where: Prisma.ClienteWhereUniqueInput
-    ): Promise<Cliente | null> {
+    async cliente(where: Prisma.ClienteWhereUniqueInput): Promise<Cliente | null> {
         return await this.prisma.cliente.findUnique({
             where,
             include: {
@@ -51,17 +49,13 @@ export class ClientesService {
         });
     }
 
-    async deleteCliente(
-        where: Prisma.ClienteWhereUniqueInput
-    ): Promise<Cliente> {
+    async deleteCliente(where: Prisma.ClienteWhereUniqueInput): Promise<Cliente> {
         return this.prisma.cliente.delete({
             where,
         });
     }
 
-    async searchClientesByCurp(
-        where: Prisma.ClienteWhereUniqueInput
-    ): Promise<Cliente> {
+    async searchClientesByCurp(where: Prisma.ClienteWhereUniqueInput): Promise<Cliente> {
         return this.prisma.cliente.findUnique({
             where,
             include: {

@@ -1,20 +1,8 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    OnDestroy,
-    OnInit,
-    ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations/public-api';
 import { HotToastService } from '@ngneat/hot-toast';
-import {
-    Actions,
-    ofActionErrored,
-    ofActionSuccessful,
-    Select,
-    Store,
-} from '@ngxs/store';
+import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { isEqual } from 'lodash';
 import { Observable, Subject } from 'rxjs';
@@ -71,27 +59,23 @@ export class AjustesAccountComponent implements OnInit, OnDestroy {
             }
         });
 
-        this._actions$
-            .pipe(takeUntil(this._unsubscribeAll), ofActionErrored(Edit))
-            .subscribe(() => {
-                const message = 'Error al editar usuario.';
-                this._toast.error(message, {
-                    duration: 5000,
-                    position: 'bottom-center',
-                });
-                this.accountForm.enable();
+        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionErrored(Edit)).subscribe(() => {
+            const message = 'Error al editar usuario.';
+            this._toast.error(message, {
+                duration: 5000,
+                position: 'bottom-center',
             });
+            this.accountForm.enable();
+        });
 
-        this._actions$
-            .pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(Edit))
-            .subscribe(() => {
-                const message = 'Usuario modificado exitosamente.';
-                this._toast.success(message, {
-                    duration: 5000,
-                    position: 'bottom-center',
-                });
-                this.accountForm.enable();
+        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(Edit)).subscribe(() => {
+            const message = 'Usuario modificado exitosamente.';
+            this._toast.success(message, {
+                duration: 5000,
+                position: 'bottom-center',
             });
+            this.accountForm.enable();
+        });
     }
 
     cancelEdit(): void {
@@ -109,9 +93,7 @@ export class AjustesAccountComponent implements OnInit, OnDestroy {
 
         if (!isEqual(prevUser, this.accountForm.value)) {
             this.accountForm.disable();
-            this._store.dispatch(
-                new Edit(this.defaultUser.id, this.accountForm.value)
-            );
+            this._store.dispatch(new Edit(this.defaultUser.id, this.accountForm.value));
         }
     }
 

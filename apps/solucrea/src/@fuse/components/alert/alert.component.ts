@@ -16,10 +16,7 @@ import {
 } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertService } from '@fuse/components/alert/alert.service';
-import {
-    FuseAlertAppearance,
-    FuseAlertType,
-} from '@fuse/components/alert/alert.types';
+import { FuseAlertAppearance, FuseAlertType } from '@fuse/components/alert/alert.types';
 import { FuseUtilsService } from '@fuse/services/utils/utils.service';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
@@ -102,9 +99,7 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy {
         // Dismissed
         if ('dismissed' in changes) {
             // Coerce the value to a boolean
-            this.dismissed = coerceBooleanProperty(
-                changes.dismissed.currentValue
-            );
+            this.dismissed = coerceBooleanProperty(changes.dismissed.currentValue);
 
             // Dismiss/show the alert
             this._toggleDismiss(this.dismissed);
@@ -113,17 +108,13 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy {
         // Dismissible
         if ('dismissible' in changes) {
             // Coerce the value to a boolean
-            this.dismissible = coerceBooleanProperty(
-                changes.dismissible.currentValue
-            );
+            this.dismissible = coerceBooleanProperty(changes.dismissible.currentValue);
         }
 
         // Show icon
         if ('showIcon' in changes) {
             // Coerce the value to a boolean
-            this.showIcon = coerceBooleanProperty(
-                changes.showIcon.currentValue
-            );
+            this.showIcon = coerceBooleanProperty(changes.showIcon.currentValue);
         }
     }
 

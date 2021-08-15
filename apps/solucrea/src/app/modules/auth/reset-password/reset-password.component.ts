@@ -25,10 +25,7 @@ export class AuthResetPasswordComponent implements OnInit {
     /**
      * Constructor
      */
-    constructor(
-        private _authService: AuthService,
-        private _formBuilder: FormBuilder
-    ) {}
+    constructor(private _authService: AuthService, private _formBuilder: FormBuilder) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -45,10 +42,7 @@ export class AuthResetPasswordComponent implements OnInit {
                 passwordConfirm: ['', Validators.required],
             },
             {
-                validators: FuseValidators.mustMatch(
-                    'password',
-                    'passwordConfirm'
-                ),
+                validators: FuseValidators.mustMatch('password', 'passwordConfirm'),
             }
         );
     }

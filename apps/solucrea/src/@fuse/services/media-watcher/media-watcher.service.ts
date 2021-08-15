@@ -10,9 +10,7 @@ export class FuseMediaWatcherService {
     private _onMediaChange: ReplaySubject<{
         matchingAliases: string[];
         matchingQueries: any;
-    }> = new ReplaySubject<{ matchingAliases: string[]; matchingQueries: any }>(
-        1
-    );
+    }> = new ReplaySubject<{ matchingAliases: string[]; matchingQueries: any }>(1);
 
     /**
      * Constructor
@@ -24,39 +22,35 @@ export class FuseMediaWatcherService {
         this._fuseTailwindConfigService.tailwindConfig$
             .pipe(
                 switchMap((config) =>
-                    this._breakpointObserver
-                        .observe(Object.values(config.breakpoints))
-                        .pipe(
-                            map((state) => {
-                                // Prepare the observable values and set their defaults
-                                const matchingAliases: string[] = [];
-                                const matchingQueries: any = {};
+                    this._breakpointObserver.observe(Object.values(config.breakpoints)).pipe(
+                        map((state) => {
+                            // Prepare the observable values and set their defaults
+                            const matchingAliases: string[] = [];
+                            const matchingQueries: any = {};
 
-                                // Get the matching breakpoints and use them to fill the subject
-                                const matchingBreakpoints =
-                                    Object.entries(state.breakpoints).filter(
-                                        ([query, matches]) => matches
-                                    ) ?? [];
-                                for (const [query] of matchingBreakpoints) {
-                                    // Find the alias of the matching query
-                                    const matchingAlias = Object.entries(
-                                        config.breakpoints
-                                    ).find(([alias, q]) => q === query)[0];
+                            // Get the matching breakpoints and use them to fill the subject
+                            const matchingBreakpoints =
+                                Object.entries(state.breakpoints).filter(([query, matches]) => matches) ?? [];
+                            for (const [query] of matchingBreakpoints) {
+                                // Find the alias of the matching query
+                                const matchingAlias = Object.entries(config.breakpoints).find(
+                                    ([alias, q]) => q === query
+                                )[0];
 
-                                    // Add the matching query to the observable values
-                                    if (matchingAlias) {
-                                        matchingAliases.push(matchingAlias);
-                                        matchingQueries[matchingAlias] = query;
-                                    }
+                                // Add the matching query to the observable values
+                                if (matchingAlias) {
+                                    matchingAliases.push(matchingAlias);
+                                    matchingQueries[matchingAlias] = query;
                                 }
+                            }
 
-                                // Execute the observable
-                                this._onMediaChange.next({
-                                    matchingAliases,
-                                    matchingQueries,
-                                });
-                            })
-                        )
+                            // Execute the observable
+                            this._onMediaChange.next({
+                                matchingAliases,
+                                matchingQueries,
+                            });
+                        })
+                    )
                 )
             )
             .subscribe();

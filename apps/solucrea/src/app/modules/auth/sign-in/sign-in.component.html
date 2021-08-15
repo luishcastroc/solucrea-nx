@@ -1,15 +1,4 @@
-<div
-    class="
-        flex flex-col
-        sm:flex-row
-        items-center
-        md:items-start
-        sm:justify-center
-        md:justify-start
-        flex-auto
-        min-w-0
-    "
->
+<div class="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0">
     <div
         class="
             md:flex md:items-center md:justify-end
@@ -34,17 +23,7 @@
             </div>
 
             <!-- Title -->
-            <div
-                class="
-                    mt-8
-                    text-4xl
-                    font-extrabold
-                    tracking-tight
-                    leading-tight
-                "
-            >
-                Ingresar
-            </div>
+            <div class="mt-8 text-4xl font-extrabold tracking-tight leading-tight">Ingresar</div>
 
             <!-- Alert -->
             <fuse-alert
@@ -64,14 +43,8 @@
                 <!-- Username field -->
                 <mat-form-field class="w-full">
                     <mat-label>Nombre de Usuario</mat-label>
-                    <input
-                        id="username"
-                        matInput
-                        [formControlName]="'username'"
-                    />
-                    <mat-error
-                        *ngIf="signInForm.get('username').hasError('required')"
-                    >
+                    <input id="username" matInput [formControlName]="'username'" />
+                    <mat-error *ngIf="signInForm.get('username').hasError('required')">
                         Nombre de usuario es requerido
                     </mat-error>
                 </mat-form-field>
@@ -79,13 +52,7 @@
                 <!-- Password field -->
                 <mat-form-field class="w-full">
                     <mat-label>Contraseña</mat-label>
-                    <input
-                        id="password"
-                        matInput
-                        type="password"
-                        [formControlName]="'password'"
-                        #passwordField
-                    />
+                    <input id="password" matInput type="password" [formControlName]="'password'" #passwordField />
                     <button
                         mat-icon-button
                         type="button"
@@ -111,24 +78,11 @@
                 </mat-form-field>
 
                 <!-- Actions -->
-                <div
-                    class="inline-flex items-end justify-between w-full mt-1.5"
-                >
-                    <mat-checkbox
-                        [color]="'primary'"
-                        [formControlName]="'rememberMe'"
-                        (change)="recordarme($event)"
-                    >
+                <div class="inline-flex items-end justify-between w-full mt-1.5">
+                    <mat-checkbox [color]="'primary'" [formControlName]="'rememberMe'" (change)="recordarme($event)">
                         Recordarme
                     </mat-checkbox>
-                    <a
-                        class="
-                            text-md
-                            font-medium
-                            text-primary-500
-                            hover:underline
-                        "
-                        [routerLink]="['/forgot-password']"
+                    <a class="text-md font-medium text-primary-500 hover:underline" [routerLink]="['/forgot-password']"
                         >Olvidaste tu contraseña?
                     </a>
                 </div>
@@ -178,12 +132,7 @@
             preserveAspectRatio="xMidYMax slice"
             xmlns="http://www.w3.org/2000/svg"
         >
-            <g
-                class="text-gray-700 opacity-25"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="100"
-            >
+            <g class="text-gray-700 opacity-25" fill="none" stroke="currentColor" stroke-width="100">
                 <circle r="234" cx="196" cy="23"></circle>
                 <circle r="234" cx="790" cy="491"></circle>
             </g>
@@ -205,20 +154,10 @@
                     height="20"
                     patternUnits="userSpaceOnUse"
                 >
-                    <rect
-                        x="0"
-                        y="0"
-                        width="4"
-                        height="4"
-                        fill="currentColor"
-                    ></rect>
+                    <rect x="0" y="0" width="4" height="4" fill="currentColor"></rect>
                 </pattern>
             </defs>
-            <rect
-                width="220"
-                height="192"
-                fill="url(#837c3e70-6c3a-44e6-8854-cc48c737b659)"
-            ></rect>
+            <rect width="220" height="192" fill="url(#837c3e70-6c3a-44e6-8854-cc48c737b659)"></rect>
         </svg>
         <!-- @formatter:on -->
         <!-- Content -->
@@ -227,9 +166,7 @@
                 <div>Bienvenido</div>
                 <div>a Solucrea.</div>
             </div>
-            <div class="mt-6 text-lg tracking-tight leading-6 text-gray-400">
-                Software para el manejo de créditos.
-            </div>
+            <div class="mt-6 text-lg tracking-tight leading-6 text-gray-400">Software para el manejo de créditos.</div>
         </div>
     </div>
 </div>

@@ -1,16 +1,5 @@
 import { CreateCiudadDto } from './../../dtos/create-ciudad.dto';
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param,
-    Post,
-    Put,
-    UseGuards,
-    UsePipes,
-    ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 
 import { Public } from '../../decorators/public.decorator';
 import { Roles } from '../../decorators/roles.decorator';
@@ -48,10 +37,7 @@ export class CiudadController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Put('ciudad/:id')
-    async editCiudad(
-        @Param('id') id: number,
-        @Body() data: Ciudad
-    ): Promise<Ciudad> {
+    async editCiudad(@Param('id') id: number, @Body() data: Ciudad): Promise<Ciudad> {
         return this.ciudadService.updateCiudad({
             where: { id },
             data,

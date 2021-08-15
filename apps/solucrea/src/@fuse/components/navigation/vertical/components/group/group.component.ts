@@ -1,11 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    Input,
-    OnDestroy,
-    OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -19,9 +12,7 @@ import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types
     styles: [],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FuseVerticalNavigationGroupItemComponent
-    implements OnInit, OnDestroy
-{
+export class FuseVerticalNavigationGroupItemComponent implements OnInit, OnDestroy {
     /* eslint-disable @typescript-eslint/naming-convention */
     static ngAcceptInputType_autoCollapse: BooleanInput;
     /* eslint-enable @typescript-eslint/naming-convention */
@@ -36,10 +27,7 @@ export class FuseVerticalNavigationGroupItemComponent
     /**
      * Constructor
      */
-    constructor(
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _fuseNavigationService: FuseNavigationService
-    ) {}
+    constructor(private _changeDetectorRef: ChangeDetectorRef, private _fuseNavigationService: FuseNavigationService) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -50,16 +38,13 @@ export class FuseVerticalNavigationGroupItemComponent
      */
     ngOnInit(): void {
         // Get the parent navigation component
-        this._fuseVerticalNavigationComponent =
-            this._fuseNavigationService.getComponent(this.name);
+        this._fuseVerticalNavigationComponent = this._fuseNavigationService.getComponent(this.name);
 
         // Subscribe to onRefreshed on the navigation component
-        this._fuseVerticalNavigationComponent.onRefreshed
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(() => {
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+        this._fuseVerticalNavigationComponent.onRefreshed.pipe(takeUntil(this._unsubscribeAll)).subscribe(() => {
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
     }
 
     /**

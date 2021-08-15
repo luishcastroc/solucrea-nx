@@ -15,11 +15,8 @@ export class FuseTailwindService {
         const config: any = {};
 
         // Extract the style from the class
-        const regexpForClass =
-            /\.fuse-tailwind-extracted-config\s\{([\s\S]*)\}/g;
-        const style = regexpForClass
-            .exec(extractedTailwindConfigStyle.default)[1]
-            .trim();
+        const regexpForClass = /\.fuse-tailwind-extracted-config\s\{([\s\S]*)\}/g;
+        const style = regexpForClass.exec(extractedTailwindConfigStyle.default)[1].trim();
 
         // Extract the rules
         const regexp = /(--[\s\S]*?):'([\s\S]*?)';/g;
@@ -32,15 +29,12 @@ export class FuseTailwindService {
                 config[configGroup] = {};
             }
 
-            config[configGroup][rules[1].replace(/(--[\s\S]*?-)/g, '')] =
-                rules[2];
+            config[configGroup][rules[1].replace(/(--[\s\S]*?-)/g, '')] = rules[2];
             rules = regexp.exec(style);
         }
 
         // Parse the themes objects
-        config.themes = fromPairs(
-            map(config.themes, (value, key) => [key, JSON.parse(value)])
-        );
+        config.themes = fromPairs(map(config.themes, (value, key) => [key, JSON.parse(value)]));
 
         // Execute the observable with the config
         this._tailwindConfig.next(config);

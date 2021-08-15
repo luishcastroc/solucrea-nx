@@ -12,10 +12,10 @@
     },
     "npmScope": "solucrea",
     "projects": {
-        "solucrea": {
+        "api": {
             "tags": []
         },
-        "api": {
+        "solucrea": {
             "tags": []
         }
     }

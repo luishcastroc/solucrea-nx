@@ -1,10 +1,6 @@
 import { Usuario } from '@prisma/client';
 import { Injectable } from '@angular/core';
-import {
-    ActivatedRouteSnapshot,
-    Resolve,
-    RouterStateSnapshot,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { Select } from '@ngxs/store';
 import { InitialData } from 'app/app.types';
 import { forkJoin, Observable, of } from 'rxjs';
@@ -34,10 +30,7 @@ export class InitialDataResolver implements Resolve<any> {
      * @param route
      * @param state
      */
-    resolve(
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot
-    ): Observable<InitialData> {
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InitialData> {
         // Fork join multiple API endpoint calls to wait all of them to finish
         return forkJoin([of(this._navigation)]).pipe(
             map(([navigation]) => ({

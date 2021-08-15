@@ -24,9 +24,7 @@ import { FuseUtilsService } from '@fuse/services/utils/utils.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs: 'fuseHorizontalNavigation',
 })
-export class FuseHorizontalNavigationComponent
-    implements OnChanges, OnInit, OnDestroy
-{
+export class FuseHorizontalNavigationComponent implements OnChanges, OnInit, OnDestroy {
     @Input() name: string = this._fuseUtilsService.randomId();
     @Input() navigation: FuseNavigationItem[];
 

@@ -1,13 +1,7 @@
 import { takeUntil } from 'rxjs/operators';
 import { IAlert } from './../../../../@fuse/components/alert/alert.model';
 import { FuseAlertService } from '@fuse/components/alert/alert.service';
-import {
-    Component,
-    OnDestroy,
-    OnInit,
-    ViewChild,
-    ViewEncapsulation,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
@@ -70,19 +64,16 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
             ],
         });
 
-        this._actions$
-            .pipe(takeUntil(this.destroy$), ofActionErrored(Login))
-            .subscribe(() => {
-                this.signInForm.enable();
-                this.signInNgForm.resetForm();
-                this.alert = {
-                    ...this.alert,
-                    type: 'error',
-                    message:
-                        'El usuario o contraseña son erroneos, favor de verificar.',
-                };
-                this._fuseAlertService.show(this.alert);
-            });
+        this._actions$.pipe(takeUntil(this.destroy$), ofActionErrored(Login)).subscribe(() => {
+            this.signInForm.enable();
+            this.signInNgForm.resetForm();
+            this.alert = {
+                ...this.alert,
+                type: 'error',
+                message: 'El usuario o contraseña son erroneos, favor de verificar.',
+            };
+            this._fuseAlertService.show(this.alert);
+        });
 
         this.signInForm
             .get('username')
@@ -116,9 +107,7 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
         // Hide the alert
         this._fuseAlertService.dismiss(this.alert);
 
-        const redirectURL =
-            this._activatedRoute.snapshot.queryParamMap.get('redirectURL') ||
-            '/signed-in-redirect';
+        const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
 
         // Sign in
         this._store.dispatch(new Login({ username, password, redirectURL }));

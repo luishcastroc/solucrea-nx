@@ -23,9 +23,7 @@ import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types
     animations: fuseAnimations,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FuseVerticalNavigationCollapsableItemComponent
-    implements OnInit, OnDestroy
-{
+export class FuseVerticalNavigationCollapsableItemComponent implements OnInit, OnDestroy {
     /* eslint-disable @typescript-eslint/naming-convention */
     static ngAcceptInputType_autoCollapse: BooleanInput;
     /* eslint-enable @typescript-eslint/naming-convention */
@@ -71,8 +69,7 @@ export class FuseVerticalNavigationCollapsableItemComponent
      */
     ngOnInit(): void {
         // Get the parent navigation component
-        this._fuseVerticalNavigationComponent =
-            this._fuseNavigationService.getComponent(this.name);
+        this._fuseVerticalNavigationComponent = this._fuseNavigationService.getComponent(this.name);
 
         // If the item has a children that has a matching url with the current url, expand...
         if (this._hasActiveChild(this.item, this._router.url)) {
@@ -134,10 +131,7 @@ export class FuseVerticalNavigationCollapsableItemComponent
         // Attach a listener to the NavigationEnd event
         this._router.events
             .pipe(
-                filter(
-                    (event): event is NavigationEnd =>
-                        event instanceof NavigationEnd
-                ),
+                filter((event): event is NavigationEnd => event instanceof NavigationEnd),
                 takeUntil(this._unsubscribeAll)
             )
             .subscribe((event: NavigationEnd) => {
@@ -155,12 +149,10 @@ export class FuseVerticalNavigationCollapsableItemComponent
             });
 
         // Subscribe to onRefreshed on the navigation component
-        this._fuseVerticalNavigationComponent.onRefreshed
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(() => {
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+        this._fuseVerticalNavigationComponent.onRefreshed.pipe(takeUntil(this._unsubscribeAll)).subscribe(() => {
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
     }
 
     /**
@@ -198,9 +190,7 @@ export class FuseVerticalNavigationCollapsableItemComponent
         this._changeDetectorRef.markForCheck();
 
         // Execute the observable
-        this._fuseVerticalNavigationComponent.onCollapsableItemCollapsed.next(
-            this.item
-        );
+        this._fuseVerticalNavigationComponent.onCollapsableItemCollapsed.next(this.item);
     }
 
     /**
@@ -225,9 +215,7 @@ export class FuseVerticalNavigationCollapsableItemComponent
         this._changeDetectorRef.markForCheck();
 
         // Execute the observable
-        this._fuseVerticalNavigationComponent.onCollapsableItemExpanded.next(
-            this.item
-        );
+        this._fuseVerticalNavigationComponent.onCollapsableItemExpanded.next(this.item);
     }
 
     /**
@@ -264,10 +252,7 @@ export class FuseVerticalNavigationCollapsableItemComponent
      * @param currentUrl
      * @private
      */
-    private _hasActiveChild(
-        item: FuseNavigationItem,
-        currentUrl: string
-    ): boolean {
+    private _hasActiveChild(item: FuseNavigationItem, currentUrl: string): boolean {
         const children = item.children;
 
         if (!children) {
@@ -282,10 +267,7 @@ export class FuseVerticalNavigationCollapsableItemComponent
             }
 
             // Check if the child has a link and is active
-            if (
-                child.link &&
-                this._router.isActive(child.link, child.exactMatch || false)
-            ) {
+            if (child.link && this._router.isActive(child.link, child.exactMatch || false)) {
                 return true;
             }
         }
@@ -301,10 +283,7 @@ export class FuseVerticalNavigationCollapsableItemComponent
      * @param item
      * @private
      */
-    private _isChildrenOf(
-        parent: FuseNavigationItem,
-        item: FuseNavigationItem
-    ): boolean {
+    private _isChildrenOf(parent: FuseNavigationItem, item: FuseNavigationItem): boolean {
         const children = parent.children;
 
         if (!children) {

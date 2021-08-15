@@ -5,6 +5,57 @@
     },
     "defaultProject": "solucrea",
     "projects": {
+        "api": {
+            "root": "apps/api",
+            "sourceRoot": "apps/api/src",
+            "projectType": "application",
+            "architect": {
+                "build": {
+                    "builder": "@nrwl/node:build",
+                    "outputs": ["{options.outputPath}"],
+                    "options": {
+                        "outputPath": "dist/apps/api",
+                        "main": "apps/api/src/main.ts",
+                        "tsConfig": "apps/api/tsconfig.app.json",
+                        "assets": ["apps/api/src/assets"]
+                    },
+                    "configurations": {
+                        "production": {
+                            "optimization": true,
+                            "extractLicenses": true,
+                            "inspect": false,
+                            "generatePackageJson": true,
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/api/src/environments/environment.ts",
+                                    "with": "apps/api/src/environments/environment.prod.ts"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "serve": {
+                    "builder": "@nrwl/node:execute",
+                    "options": {
+                        "buildTarget": "api:build"
+                    }
+                },
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": ["apps/api/**/*.ts"]
+                    }
+                },
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/apps/api"],
+                    "options": {
+                        "jestConfig": "apps/api/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                }
+            }
+        },
         "solucrea": {
             "projectType": "application",
             "schematics": {
@@ -114,10 +165,7 @@
                         "tsConfig": "apps/solucrea/tsconfig.spec.json",
                         "karmaConfig": "apps/solucrea/karma.conf.js",
                         "inlineStyleLanguage": "scss",
-                        "assets": [
-                            "apps/solucrea/src/assets",
-                            "apps/solucrea/src/assets/favicon"
-                        ],
+                        "assets": ["apps/solucrea/src/assets", "apps/solucrea/src/assets/favicon"],
                         "styles": ["apps/solucrea/src/styles.scss"],
                         "scripts": []
                     }
@@ -126,61 +174,7 @@
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
                         "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"],
-                        "tsConfig": [
-                            "apps/solucrea/tsconfig.app.json",
-                            "apps/solucrea/tsconfig.spec.json"
-                        ]
-                    }
-                }
-            }
-        },
-        "api": {
-            "root": "apps/api",
-            "sourceRoot": "apps/api/src",
-            "projectType": "application",
-            "architect": {
-                "build": {
-                    "builder": "@nrwl/node:build",
-                    "outputs": ["{options.outputPath}"],
-                    "options": {
-                        "outputPath": "dist/apps/api",
-                        "main": "apps/api/src/main.ts",
-                        "tsConfig": "apps/api/tsconfig.app.json",
-                        "assets": ["apps/api/src/assets"]
-                    },
-                    "configurations": {
-                        "production": {
-                            "optimization": true,
-                            "extractLicenses": true,
-                            "inspect": false,
-                            "generatePackageJson": true,
-                            "fileReplacements": [
-                                {
-                                    "replace": "apps/api/src/environments/environment.ts",
-                                    "with": "apps/api/src/environments/environment.prod.ts"
-                                }
-                            ]
-                        }
-                    }
-                },
-                "serve": {
-                    "builder": "@nrwl/node:execute",
-                    "options": {
-                        "buildTarget": "api:build"
-                    }
-                },
-                "lint": {
-                    "builder": "@nrwl/linter:eslint",
-                    "options": {
-                        "lintFilePatterns": ["apps/api/**/*.ts"]
-                    }
-                },
-                "test": {
-                    "builder": "@nrwl/jest:jest",
-                    "outputs": ["coverage/apps/api"],
-                    "options": {
-                        "jestConfig": "apps/api/jest.config.js",
-                        "passWithNoTests": true
+                        "tsConfig": ["apps/solucrea/tsconfig.app.json", "apps/solucrea/tsconfig.spec.json"]
                     }
                 }
             }

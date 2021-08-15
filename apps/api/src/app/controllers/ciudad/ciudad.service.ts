@@ -6,9 +6,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 export class CiudadService {
     constructor(private prisma: PrismaService) {}
 
-    async ciudad(
-        ciudadWhereUniqueInput: Prisma.CiudadWhereUniqueInput
-    ): Promise<Ciudad | null> {
+    async ciudad(ciudadWhereUniqueInput: Prisma.CiudadWhereUniqueInput): Promise<Ciudad | null> {
         return this.prisma.ciudad.findUnique({
             where: ciudadWhereUniqueInput,
         });

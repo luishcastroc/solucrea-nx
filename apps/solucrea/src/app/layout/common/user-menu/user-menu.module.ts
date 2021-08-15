@@ -7,20 +7,8 @@ import { UserMenuComponent } from 'app/layout/common/user-menu/user-menu.compone
 import { SharedModule } from 'app/shared/shared.module';
 
 @NgModule({
-    declarations: [
-        UserMenuComponent
-    ],
-    imports     : [
-        MatButtonModule,
-        MatDividerModule,
-        MatIconModule,
-        MatMenuModule,
-        SharedModule
-    ],
-    exports     : [
-        UserMenuComponent
-    ]
+    declarations: [UserMenuComponent],
+    imports: [MatButtonModule, MatDividerModule, MatIconModule, MatMenuModule, SharedModule],
+    exports: [UserMenuComponent],
 })
-export class UserMenuModule
-{
-}
+export class UserMenuModule {}

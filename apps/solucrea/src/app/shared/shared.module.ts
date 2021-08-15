@@ -9,19 +9,7 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
 
 @NgModule({
     declarations: [VerifyRoleDirective, ConfirmationDialogComponent],
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatDialogModule,
-        MatButtonModule,
-    ],
-    exports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        VerifyRoleDirective,
-        ConfirmationDialogComponent,
-    ],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, MatDialogModule, MatButtonModule],
+    exports: [CommonModule, FormsModule, ReactiveFormsModule, VerifyRoleDirective, ConfirmationDialogComponent],
 })
 export class SharedModule {}

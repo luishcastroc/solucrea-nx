@@ -9,9 +9,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 export class UsuariosService {
     constructor(private prisma: PrismaService) {}
 
-    async usuario(
-        where: Prisma.UsuarioWhereUniqueInput
-    ): Promise<Usuario | null> {
+    async usuario(where: Prisma.UsuarioWhereUniqueInput): Promise<Usuario | null> {
         const usuarioReturn = await this.prisma.usuario.findUnique({
             where,
         });
@@ -50,25 +48,16 @@ export class UsuariosService {
             const usuario = await this.prisma.usuario.findUnique({ where });
 
             if (!usuario) {
-                throw new HttpException(
-                    'El usuario no existe, verificar',
-                    HttpStatus.NOT_FOUND
-                );
+                throw new HttpException('El usuario no existe, verificar', HttpStatus.NOT_FOUND);
             }
 
             // if someone with ADMIN role is trying to change the password most likely is from the screen
             // so we let it pass
             if (role !== 'ADMIN') {
-                const isMatch = await bcrypt.compare(
-                    data.oldPassword,
-                    usuario.password
-                );
+                const isMatch = await bcrypt.compare(data.oldPassword, usuario.password);
 
                 if (!isMatch) {
-                    throw new HttpException(
-                        'El password es incorrecto, verificar',
-                        HttpStatus.BAD_REQUEST
-                    );
+                    throw new HttpException('El password es incorrecto, verificar', HttpStatus.BAD_REQUEST);
                 }
                 delete data.oldPassword;
             }
@@ -86,17 +75,13 @@ export class UsuariosService {
         return usuarioActualizado;
     }
 
-    async deleteUsuario(
-        where: Prisma.UsuarioWhereUniqueInput
-    ): Promise<Usuario> {
+    async deleteUsuario(where: Prisma.UsuarioWhereUniqueInput): Promise<Usuario> {
         return this.prisma.usuario.delete({
             where,
         });
     }
 
-    async searchUsuarioByName(
-        where: Prisma.UsuarioWhereUniqueInput
-    ): Promise<Usuario> {
+    async searchUsuarioByName(where: Prisma.UsuarioWhereUniqueInput): Promise<Usuario> {
         return this.prisma.usuario.findFirst({
             where,
         });

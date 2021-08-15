@@ -1,22 +1,10 @@
 <div class="w-full max-w-3xl flex flex-col">
     <!-- Add team member -->
     <div class="w-full">
-        <mat-form-field
-            class="fuse-mat-no-subscript w-full"
-            [floatLabel]="'always'"
-        >
+        <mat-form-field class="fuse-mat-no-subscript w-full" [floatLabel]="'always'">
             <mat-label>Buscar Usuario</mat-label>
-            <mat-icon
-                class="icon-size-5"
-                [svgIcon]="'heroicons_solid:user'"
-                matPrefix
-            ></mat-icon>
-            <input
-                matInput
-                [formControl]="searchInputControl"
-                [autocomplete]="'off'"
-                [placeholder]="'Nombre'"
-            />
+            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
+            <input matInput [formControl]="searchInputControl" [autocomplete]="'off'" [placeholder]="'Nombre'" />
             <button
                 mat-icon-button
                 matSuffix
@@ -26,10 +14,7 @@
                 matTooltip="Crear usuario"
                 [matTooltipPosition]="'below'"
             >
-                <mat-icon
-                    class="icon-size-5"
-                    [svgIcon]="'heroicons_solid:plus-circle'"
-                ></mat-icon>
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
             </button>
         </mat-form-field>
     </div>
@@ -37,25 +22,11 @@
     <!-- Team members -->
     <div class="mt-8 divide-y border-t border-b flex-auto">
         <ng-container *ngFor="let usuario of searchResults; trackBy: trackByFn">
-            <div
-                class="flex flex-col sm:flex-row sm:items-center py-6 flex-auto"
-            >
+            <div class="flex flex-col sm:flex-row sm:items-center py-6 flex-auto">
                 <div class="flex items-center">
-                    <div
-                        class="
-                            flex flex-0
-                            items-center
-                            justify-center
-                            w-10
-                            h-10
-                            rounded-full
-                            overflow-hidden
-                        "
-                    ></div>
+                    <div class="flex flex-0 items-center justify-center w-10 h-10 rounded-full overflow-hidden"></div>
                     <div class="ml-4">
-                        <div class="font-medium">
-                            {{ usuario.nombre }} {{ usuario.apellido }}
-                        </div>
+                        <div class="font-medium">{{ usuario.nombre }} {{ usuario.apellido }}</div>
                         <div class="text-secondary">
                             {{ usuario.nombreUsuario }}
                         </div>
@@ -63,40 +34,23 @@
                 </div>
                 <div class="flex items-center mt-4 sm:mt-0 sm:ml-auto">
                     <div class="order-2 sm:order-1 ml-4 sm:ml-0">
-                        <mat-form-field
-                            class="fuse-mat-dense fuse-mat-no-subscript w-32"
-                        >
+                        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-32">
                             <mat-select
-                                [panelClass]="
-                                    'w-72 min-w-72 max-w-72 h-auto max-h-none'
-                                "
+                                [panelClass]="'w-72 min-w-72 max-w-72 h-auto max-h-none'"
                                 [value]="usuario.role"
                                 disableOptionCentering
                                 #roleSelect="matSelect"
                             >
                                 <mat-select-trigger class="text-md">
                                     <span>Rol:</span>
-                                    <span class="ml-1 font-medium">{{
-                                        roleSelect.value | titlecase
-                                    }}</span>
+                                    <span class="ml-1 font-medium">{{ roleSelect.value | titlecase }}</span>
                                 </mat-select-trigger>
                                 <ng-container *ngFor="let role of roles">
-                                    <mat-option
-                                        class="h-auto py-4 leading-none"
-                                        [value]="role.value"
-                                    >
+                                    <mat-option class="h-auto py-4 leading-none" [value]="role.value">
                                         <div class="font-medium">
                                             {{ role.label }}
                                         </div>
-                                        <div
-                                            class="
-                                                mt-1.5
-                                                text-sm
-                                                whitespace-normal
-                                                leading-normal
-                                                text-secondary
-                                            "
-                                        >
+                                        <div class="mt-1.5 text-sm whitespace-normal leading-normal text-secondary">
                                             {{ role.description }}
                                         </div>
                                     </mat-option>
@@ -113,10 +67,7 @@
                             matTooltip="Guardar cambios"
                             [matTooltipPosition]="'below'"
                         >
-                            <mat-icon
-                                class="text-hint"
-                                [svgIcon]="'heroicons_outline:save'"
-                            ></mat-icon>
+                            <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:save'"></mat-icon>
                         </button>
                         <button
                             mat-icon-button
@@ -126,10 +77,7 @@
                             matTooltip="Editar usuario"
                             [matTooltipPosition]="'below'"
                         >
-                            <mat-icon
-                                class="text-hint"
-                                [svgIcon]="'heroicons_outline:clipboard-list'"
-                            ></mat-icon>
+                            <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:clipboard-list'"></mat-icon>
                         </button>
                         <button
                             mat-icon-button
@@ -139,10 +87,7 @@
                             matTooltip="Cambiar contraseña"
                             [matTooltipPosition]="'below'"
                         >
-                            <mat-icon
-                                class="text-hint"
-                                [svgIcon]="'heroicons_solid:key'"
-                            ></mat-icon>
+                            <mat-icon class="text-hint" [svgIcon]="'heroicons_solid:key'"></mat-icon>
                         </button>
                         <button
                             mat-icon-button
@@ -152,10 +97,7 @@
                             matTooltip="Borrar usuario"
                             [matTooltipPosition]="'below'"
                         >
-                            <mat-icon
-                                class="text-hint"
-                                [svgIcon]="'heroicons_outline:trash'"
-                            ></mat-icon>
+                            <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                         </button>
                     </div>
                 </div>

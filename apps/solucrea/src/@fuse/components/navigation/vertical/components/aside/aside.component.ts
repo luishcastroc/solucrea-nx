@@ -22,9 +22,7 @@ import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types
     styles: [],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FuseVerticalNavigationAsideItemComponent
-    implements OnChanges, OnInit, OnDestroy
-{
+export class FuseVerticalNavigationAsideItemComponent implements OnChanges, OnInit, OnDestroy {
     /* eslint-disable @typescript-eslint/naming-convention */
     static ngAcceptInputType_autoCollapse: BooleanInput;
     static ngAcceptInputType_skipChildren: BooleanInput;
@@ -76,10 +74,7 @@ export class FuseVerticalNavigationAsideItemComponent
         // Attach a listener to the NavigationEnd event
         this._router.events
             .pipe(
-                filter(
-                    (event): event is NavigationEnd =>
-                        event instanceof NavigationEnd
-                ),
+                filter((event): event is NavigationEnd => event instanceof NavigationEnd),
                 takeUntil(this._unsubscribeAll)
             )
             .subscribe((event: NavigationEnd) => {
@@ -88,16 +83,13 @@ export class FuseVerticalNavigationAsideItemComponent
             });
 
         // Get the parent navigation component
-        this._fuseVerticalNavigationComponent =
-            this._fuseNavigationService.getComponent(this.name);
+        this._fuseVerticalNavigationComponent = this._fuseNavigationService.getComponent(this.name);
 
         // Subscribe to onRefreshed on the navigation component
-        this._fuseVerticalNavigationComponent.onRefreshed
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(() => {
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+        this._fuseVerticalNavigationComponent.onRefreshed.pipe(takeUntil(this._unsubscribeAll)).subscribe(() => {
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
     }
 
     /**
@@ -135,10 +127,7 @@ export class FuseVerticalNavigationAsideItemComponent
      * @param currentUrl
      * @private
      */
-    private _hasActiveChild(
-        item: FuseNavigationItem,
-        currentUrl: string
-    ): boolean {
+    private _hasActiveChild(item: FuseNavigationItem, currentUrl: string): boolean {
         const children = item.children;
 
         if (!children) {
@@ -158,10 +147,7 @@ export class FuseVerticalNavigationAsideItemComponent
             }
 
             // Check if the child has a link and is active
-            if (
-                child.link &&
-                this._router.isActive(child.link, child.exactMatch || false)
-            ) {
+            if (child.link && this._router.isActive(child.link, child.exactMatch || false)) {
                 return true;
             }
         }

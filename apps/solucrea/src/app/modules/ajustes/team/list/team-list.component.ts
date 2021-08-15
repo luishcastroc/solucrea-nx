@@ -10,13 +10,7 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
-import {
-    Actions,
-    ofActionErrored,
-    ofActionSuccessful,
-    Select,
-    Store,
-} from '@ngxs/store';
+import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Role, Usuario } from '@prisma/client';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { AuthState } from 'app/core/auth/store/auth.state';
@@ -67,14 +61,12 @@ export class TeamListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this._store.dispatch(new GetAll(this.usuario.id));
 
-        this.searchResults$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((usuarios: Usuario[]) => {
-                this.searchResults = usuarios;
+        this.searchResults$.pipe(takeUntil(this._unsubscribeAll)).subscribe((usuarios: Usuario[]) => {
+            this.searchResults = usuarios;
 
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
 
         // Subscribe to search input field value changes
         this.searchInputControl.valueChanges
@@ -85,10 +77,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
             .subscribe();
 
         this._actions$
-            .pipe(
-                takeUntil(this._unsubscribeAll),
-                ofActionErrored(UsuarioAction.Delete, UsuarioAction.Edit)
-            )
+            .pipe(takeUntil(this._unsubscribeAll), ofActionErrored(UsuarioAction.Delete, UsuarioAction.Edit))
             .subscribe((action) => {
                 let message = 'Error al modificar rol de usuario.';
                 if (action instanceof UsuarioAction.Delete) {
@@ -102,10 +91,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
             });
 
         this._actions$
-            .pipe(
-                takeUntil(this._unsubscribeAll),
-                ofActionSuccessful(UsuarioAction.Delete, UsuarioAction.Edit)
-            )
+            .pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(UsuarioAction.Delete, UsuarioAction.Edit))
             .subscribe((action) => {
                 let message = 'Rol de usuario modificado exitosamente';
                 if (action instanceof UsuarioAction.Delete) {

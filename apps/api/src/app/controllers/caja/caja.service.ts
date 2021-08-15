@@ -7,9 +7,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 export class CajaService {
     constructor(private prisma: PrismaService) {}
 
-    async caja(
-        cajaWhereUniqueInput: Prisma.CajaWhereUniqueInput
-    ): Promise<Caja | null> {
+    async caja(cajaWhereUniqueInput: Prisma.CajaWhereUniqueInput): Promise<Caja | null> {
         return this.prisma.caja.findUnique({
             where: cajaWhereUniqueInput,
         });
@@ -25,10 +23,7 @@ export class CajaService {
         });
     }
 
-    async updateCaja(params: {
-        where: Prisma.CajaWhereUniqueInput;
-        data: Prisma.CajaUpdateInput;
-    }): Promise<Caja> {
+    async updateCaja(params: { where: Prisma.CajaWhereUniqueInput; data: Prisma.CajaUpdateInput }): Promise<Caja> {
         const { where, data } = params;
         return this.prisma.caja.update({
             data,

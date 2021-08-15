@@ -1,8 +1,6 @@
 <div class="flex flex-col flex-auto py-8 px-6">
     <div class="flex justify-between border-b pb-3">
-        <h1 class="text-4xl font-extrabold tracking-tight leading-none">
-            Nuevo Cliente
-        </h1>
+        <h1 class="text-4xl font-extrabold tracking-tight leading-none">Nuevo Cliente</h1>
         <button
             mat-icon-button
             aria-label="Regresar"
@@ -14,9 +12,7 @@
             <mat-icon svgIcon="heroicons_outline:arrow-left"></mat-icon>
         </button>
     </div>
-    <ng-container
-        *ngIf="loading$ | async; then loadingTemplate; else formTemplate"
-    ></ng-container>
+    <ng-container *ngIf="loading$ | async; then loadingTemplate; else formTemplate"></ng-container>
     <ng-template #loadingTemplate>
         <mat-spinner> </mat-spinner>
     </ng-template>
@@ -24,566 +20,401 @@
         <ng-container *ngIf="config$ | async as config">
             <div class="flex-auto flex flex-col">
                 <div class="w-full">
-                    <!-- Form -->
-                    <form [formGroup]="clienteForm">
-                        <div class="flex flex-wrap gap-3 w-full mt-8">
-                            <h3
-                                class="
-                                    text-3xl
-                                    font-extrabold
-                                    tracking-tight
-                                    leading-none
-                                    flex-auto
-                                    w-full
-                                "
-                            >
-                                Datos Generales
-                            </h3>
-                            <!-- Apellido Paterno -->
-                            <mat-form-field
-                                class="
-                                    fuse-mat-no-subscript
-                                    md:max-w-3/12
-                                    w-full
-                                "
-                            >
-                                <mat-label>Apellido Paterno</mat-label>
-                                <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="'heroicons_solid:user'"
-                                    matPrefix
-                                ></mat-icon>
-                                <input
-                                    [formControlName]="'apellidoPaterno'"
-                                    matInput
-                                />
-                            </mat-form-field>
-                            <!-- Apellido Materno -->
-                            <mat-form-field
-                                class="
-                                    fuse-mat-no-subscript
-                                    w-full
-                                    md:max-w-3/12
-                                "
-                            >
-                                <mat-label>Apellido Materno</mat-label>
-                                <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="'heroicons_solid:user'"
-                                    matPrefix
-                                ></mat-icon>
-                                <input
-                                    [formControlName]="'apellidoMaterno'"
-                                    matInput
-                                />
-                            </mat-form-field>
-                            <!-- Nombre -->
-                            <mat-form-field
-                                class="
-                                    fuse-mat-no-subscript
-                                    md:max-w-3/12
-                                    w-full
-                                "
-                            >
-                                <mat-label>Nombre</mat-label>
-                                <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="'heroicons_solid:user'"
-                                    matPrefix
-                                ></mat-icon>
-                                <input [formControlName]="'nombre'" matInput />
-                            </mat-form-field>
-                            <!-- Fecha de Nacimiento -->
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full md:w-2/12"
-                            >
-                                <mat-label>Fecha de Nacimiento</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:cake'"
-                                ></mat-icon>
-                                <input
-                                    matInput
-                                    [matDatepicker]="birthdayDatepicker"
-                                    [formControlName]="'fechaDeNacimiento'"
-                                    [placeholder]="'Fecha de Nacimiento'"
-                                />
-                                <mat-datepicker-toggle
-                                    matSuffix
-                                    [for]="birthdayDatepicker"
-                                >
-                                </mat-datepicker-toggle>
-                                <mat-datepicker
-                                    #birthdayDatepicker
-                                ></mat-datepicker>
-                            </mat-form-field>
-                            <!-- Genero -->
-                            <mat-form-field
-                                class="
-                                    fuse-mat-no-subscript
-                                    w-full
-                                    md:max-w-1/6
-                                "
-                            >
-                                <mat-label>Genero</mat-label>
-                                <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="'heroicons_outline:library'"
-                                    matPrefix
-                                ></mat-icon>
-                                <mat-select [formControlName]="'genero'">
-                                    <mat-option
-                                        *ngFor="let genero of config.generos"
-                                        [value]="genero.id"
-                                        >{{ genero.descripcion }}</mat-option
-                                    >
-                                </mat-select>
-                            </mat-form-field>
-                            <!-- Estado Civil -->
-                            <mat-form-field
-                                class="
-                                    fuse-mat-no-subscript
-                                    w-full
-                                    md:max-w-1/6
-                                "
-                            >
-                                <mat-label>Estado Civil</mat-label>
-                                <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="'heroicons_outline:library'"
-                                    matPrefix
-                                ></mat-icon>
-                                <mat-select [formControlName]="'estadoCivil'">
-                                    <mat-option
-                                        *ngFor="
-                                            let estadoCivil of config.estadosCiviles
-                                        "
-                                        [value]="estadoCivil.id"
-                                        >{{
-                                            estadoCivil.descripcion
-                                        }}</mat-option
-                                    >
-                                </mat-select>
-                            </mat-form-field>
-                            <!-- Tipo de Vivienda -->
-                            <mat-form-field
-                                class="
-                                    fuse-mat-no-subscript
-                                    w-full
-                                    md:max-w-1/6
-                                "
-                            >
-                                <mat-label>Tipo de Vivienda</mat-label>
-                                <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="'heroicons_outline:home'"
-                                    matPrefix
-                                ></mat-icon>
-                                <mat-select
-                                    [formControlName]="'tipoDeVivienda'"
-                                >
-                                    <mat-option
-                                        *ngFor="
-                                            let tipoDeVivienda of config.tiposDeVivienda
-                                        "
-                                        [value]="tipoDeVivienda.id"
-                                        >{{
-                                            tipoDeVivienda.descripcion
-                                        }}</mat-option
-                                    >
-                                </mat-select>
-                            </mat-form-field>
-                            <!-- Escolaridad -->
-                            <mat-form-field
-                                class="
-                                    fuse-mat-no-subscript
-                                    w-full
-                                    md:max-w-1/6
-                                "
-                            >
-                                <mat-label>Escolaridad</mat-label>
-                                <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="'heroicons_outline:academic-cap'"
-                                    matPrefix
-                                ></mat-icon>
-                                <mat-select [formControlName]="'escolaridad'">
-                                    <mat-option
-                                        *ngFor="
-                                            let escolaridad of config.escolaridades
-                                        "
-                                        [value]="escolaridad.id"
-                                        >{{
-                                            escolaridad.descripcion
-                                        }}</mat-option
-                                    >
-                                </mat-select>
-                            </mat-form-field>
-                            <!-- CURP -->
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full md:max-w-72"
-                            >
-                                <mat-label>CURP</mat-label>
-                                <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="
-                                        'heroicons_outline:document-text'
-                                    "
-                                    matPrefix
-                                ></mat-icon>
-                                <input [formControlName]="'curp'" matInput />
-                            </mat-form-field>
-                            <!-- RFC -->
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full md:max-w-64"
-                            >
-                                <mat-label>RFC</mat-label>
-                                <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="
-                                        'heroicons_outline:document-text'
-                                    "
-                                    matPrefix
-                                ></mat-icon>
-                                <input [formControlName]="'rfc'" matInput />
-                            </mat-form-field>
-                            <h3
-                                class="
-                                    text-3xl
-                                    font-extrabold
-                                    tracking-tight
-                                    leading-none
-                                    flex-auto
-                                    w-full
-                                "
-                            >
-                                Direcciones
-                            </h3>
-                            <!-- Direcciones -->
-                            <div
-                                class="space-y-4 grid grid-cols-12"
-                                formArrayName="direcciones"
-                            >
-                                <ng-container
-                                    *ngFor="
-                                        let direccion of direcciones.controls;
-                                        let i = index;
-                                        let first = first;
-                                        let last = last;
-                                        trackBy: trackByFn
-                                    "
-                                >
-                                    <div
-                                        class="
-                                            flex flex-wrap
-                                            gap-3
-                                            w-full
-                                            col-span-11
-                                        "
-                                    >
-                                        <!-- Calle -->
-                                        <mat-form-field
-                                            class="
-                                                fuse-mat-no-subscript
-                                                w-full
-                                                xsm:max-w-60
-                                                sm:
-                                                max-w-7/12
-                                                md:max-w-3/12
+                    <mat-stepper [linear]="true" #stepper>
+                        <mat-step [stepControl]="clienteForm">
+                            <!-- Form -->
+                            <form [formGroup]="clienteForm">
+                                <ng-template matStepLabel>Datos Generales</ng-template>
+                                <div class="flex flex-wrap gap-3 w-full mt-8">
+                                    <!-- Apellido Paterno -->
+                                    <mat-form-field class="fuse-mat-no-subscript md:max-w-3/12 w-full">
+                                        <mat-label>Apellido Paterno</mat-label>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_solid:user'"
+                                            matPrefix
+                                        ></mat-icon>
+                                        <input [formControlName]="'apellidoPaterno'" matInput />
+                                    </mat-form-field>
+                                    <!-- Apellido Materno -->
+                                    <mat-form-field class="fuse-mat-no-subscript w-full md:max-w-3/12">
+                                        <mat-label>Apellido Materno</mat-label>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_solid:user'"
+                                            matPrefix
+                                        ></mat-icon>
+                                        <input [formControlName]="'apellidoMaterno'" matInput />
+                                    </mat-form-field>
+                                    <!-- Nombre -->
+                                    <mat-form-field class="fuse-mat-no-subscript md:max-w-3/12 w-full">
+                                        <mat-label>Nombre</mat-label>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_solid:user'"
+                                            matPrefix
+                                        ></mat-icon>
+                                        <input [formControlName]="'nombre'" matInput />
+                                    </mat-form-field>
+                                    <!-- Fecha de Nacimiento -->
+                                    <mat-form-field class="fuse-mat-no-subscript w-full md:w-2/12">
+                                        <mat-label>Fecha de Nacimiento</mat-label>
+                                        <mat-icon
+                                            matPrefix
+                                            class="hidden sm:flex icon-size-5"
+                                            [svgIcon]="'heroicons_solid:cake'"
+                                        ></mat-icon>
+                                        <input
+                                            matInput
+                                            [matDatepicker]="birthdayDatepicker"
+                                            [formControlName]="'fechaDeNacimiento'"
+                                            [placeholder]="'Fecha de Nacimiento'"
+                                        />
+                                        <mat-datepicker-toggle matSuffix [for]="birthdayDatepicker">
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #birthdayDatepicker></mat-datepicker>
+                                    </mat-form-field>
+                                    <!-- Genero -->
+                                    <mat-form-field class="fuse-mat-no-subscript w-full md:max-w-1/6">
+                                        <mat-label>Genero</mat-label>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_outline:library'"
+                                            matPrefix
+                                        ></mat-icon>
+                                        <mat-select [formControlName]="'genero'">
+                                            <mat-option *ngFor="let genero of config.generos" [value]="genero.id">{{
+                                                genero.descripcion
+                                            }}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <!-- Estado Civil -->
+                                    <mat-form-field class="fuse-mat-no-subscript w-full md:max-w-1/6">
+                                        <mat-label>Estado Civil</mat-label>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_outline:library'"
+                                            matPrefix
+                                        ></mat-icon>
+                                        <mat-select [formControlName]="'estadoCivil'">
+                                            <mat-option
+                                                *ngFor="let estadoCivil of config.estadosCiviles"
+                                                [value]="estadoCivil.id"
+                                                >{{ estadoCivil.descripcion }}</mat-option
+                                            >
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <!-- Tipo de Vivienda -->
+                                    <mat-form-field class="fuse-mat-no-subscript w-full md:max-w-1/6">
+                                        <mat-label>Tipo de Vivienda</mat-label>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_outline:home'"
+                                            matPrefix
+                                        ></mat-icon>
+                                        <mat-select [formControlName]="'tipoDeVivienda'">
+                                            <mat-option
+                                                *ngFor="let tipoDeVivienda of config.tiposDeVivienda"
+                                                [value]="tipoDeVivienda.id"
+                                                >{{ tipoDeVivienda.descripcion }}</mat-option
+                                            >
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <!-- Escolaridad -->
+                                    <mat-form-field class="fuse-mat-no-subscript w-full md:max-w-1/6">
+                                        <mat-label>Escolaridad</mat-label>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_outline:academic-cap'"
+                                            matPrefix
+                                        ></mat-icon>
+                                        <mat-select [formControlName]="'escolaridad'">
+                                            <mat-option
+                                                *ngFor="let escolaridad of config.escolaridades"
+                                                [value]="escolaridad.id"
+                                                >{{ escolaridad.descripcion }}</mat-option
+                                            >
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <!-- CURP -->
+                                    <mat-form-field class="fuse-mat-no-subscript w-full md:max-w-72">
+                                        <mat-label>CURP</mat-label>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_outline:document-text'"
+                                            matPrefix
+                                        ></mat-icon>
+                                        <input [formControlName]="'curp'" matInput />
+                                    </mat-form-field>
+                                    <!-- RFC -->
+                                    <mat-form-field class="fuse-mat-no-subscript w-full md:max-w-64">
+                                        <mat-label>RFC</mat-label>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_outline:document-text'"
+                                            matPrefix
+                                        ></mat-icon>
+                                        <input [formControlName]="'rfc'" matInput />
+                                    </mat-form-field>
+                                    <!-- Teléfono 1 -->
+                                    <mat-form-field class="fuse-mat-no-subscript w-full md:max-w-64">
+                                        <mat-label>Teléfono 1</mat-label>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_solid:phone'"
+                                            matPrefix
+                                        ></mat-icon>
+                                        <input [formControlName]="'telefono1'" matInput />
+                                    </mat-form-field>
+                                    <!-- Teléfono 2 -->
+                                    <mat-form-field class="fuse-mat-no-subscript w-full md:max-w-64">
+                                        <mat-label>Teléfono 2</mat-label>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_solid:phone'"
+                                            matPrefix
+                                        ></mat-icon>
+                                        <input [formControlName]="'telefono2'" matInput />
+                                    </mat-form-field>
+                                    <h3 class="text-3xl font-extrabold tracking-tight leading-none flex-auto w-full">
+                                        Direcciones
+                                    </h3>
+                                    <!-- Direcciones -->
+                                    <div class="space-y-4 grid grid-cols-12" formArrayName="direcciones">
+                                        <ng-container
+                                            *ngFor="
+                                                let direccion of direcciones.controls;
+                                                let i = index;
+                                                let first = first;
+                                                let last = last;
+                                                trackBy: trackByFn
                                             "
                                         >
-                                            <mat-label *ngIf="first"
-                                                >Calle</mat-label
-                                            >
-                                            <mat-icon
-                                                matPrefix
-                                                class="
-                                                    hidden
-                                                    sm:flex
-                                                    icon-size-5
-                                                "
-                                                [svgIcon]="
-                                                    'heroicons_solid:location-marker'
-                                                "
-                                            ></mat-icon>
-                                            <input
-                                                matInput
-                                                [formControl]="
-                                                    direccion.get('calle')
-                                                "
-                                                [placeholder]="'Calle'"
-                                                [spellcheck]="false"
-                                            />
-                                        </mat-form-field>
-                                        <!-- Número -->
-                                        <mat-form-field
+                                            <div class="flex flex-wrap gap-3 w-full col-span-11">
+                                                <!-- Calle -->
+                                                <mat-form-field
+                                                    class="
+                                                        fuse-mat-no-subscript
+                                                        w-full
+                                                        xsm:max-w-60
+                                                        sm:
+                                                        max-w-7/12
+                                                        md:max-w-3/12
+                                                    "
+                                                >
+                                                    <mat-label *ngIf="first">Calle</mat-label>
+                                                    <mat-icon
+                                                        matPrefix
+                                                        class="hidden sm:flex icon-size-5"
+                                                        [svgIcon]="'heroicons_solid:location-marker'"
+                                                    ></mat-icon>
+                                                    <input
+                                                        matInput
+                                                        [formControl]="direccion.get('calle')"
+                                                        [placeholder]="'Calle'"
+                                                        [spellcheck]="false"
+                                                    />
+                                                </mat-form-field>
+                                                <!-- Número -->
+                                                <mat-form-field
+                                                    class="
+                                                        fuse-mat-no-subscript
+                                                        w-full
+                                                        xsm:max-w-50
+                                                        sm:max-w-4/12
+                                                        md:max-w-2/12
+                                                    "
+                                                >
+                                                    <mat-label *ngIf="first">Número</mat-label>
+                                                    <mat-icon
+                                                        matPrefix
+                                                        class="hidden sm:flex icon-size-5"
+                                                        [svgIcon]="'heroicons_solid:location-marker'"
+                                                    ></mat-icon>
+                                                    <input
+                                                        matInput
+                                                        [formControl]="direccion.get('numero')"
+                                                        [placeholder]="'Número'"
+                                                    />
+                                                </mat-form-field>
+                                                <!-- Cruzamientos -->
+                                                <mat-form-field
+                                                    class="
+                                                        fuse-mat-no-subscript
+                                                        w-full
+                                                        xsm:max-w-60
+                                                        sm:
+                                                        max-w-7/12
+                                                        md:max-w-3/12
+                                                    "
+                                                >
+                                                    <mat-label *ngIf="first">Cruzamientos</mat-label>
+                                                    <mat-icon
+                                                        matPrefix
+                                                        class="hidden sm:flex icon-size-5"
+                                                        [svgIcon]="'heroicons_solid:location-marker'"
+                                                    ></mat-icon>
+                                                    <input
+                                                        matInput
+                                                        [formControl]="direccion.get('cruzamientos')"
+                                                        [placeholder]="'Cruzamientos'"
+                                                    />
+                                                </mat-form-field>
+                                                <!-- Código Postal -->
+                                                <mat-form-field
+                                                    class="
+                                                        fuse-mat-no-subscript
+                                                        w-full
+                                                        xsm:max-w-50
+                                                        sm:max-w-4/12
+                                                        md:max-w-2/12
+                                                    "
+                                                >
+                                                    <mat-label *ngIf="first">Código Postal</mat-label>
+                                                    <mat-icon
+                                                        matPrefix
+                                                        class="hidden sm:flex icon-size-5"
+                                                        [svgIcon]="'heroicons_solid:location-marker'"
+                                                    ></mat-icon>
+                                                    <input
+                                                        matInput
+                                                        [formControl]="direccion.get('codigoPostal')"
+                                                        [placeholder]="'Código Postal'"
+                                                        (change)="
+                                                            getColonias(
+                                                                direccion.get('codigoPostal').value,
+                                                                i,
+                                                                'CLIENTE'
+                                                            )
+                                                        "
+                                                    />
+                                                </mat-form-field>
+                                                <!-- Estado -->
+                                                <mat-form-field
+                                                    class="fuse-mat-no-subscript w-full sm:max-w-2/5 md:max-w-3/12"
+                                                >
+                                                    <mat-label *ngIf="first">Estado</mat-label>
+                                                    <mat-icon
+                                                        matPrefix
+                                                        class="hidden sm:flex icon-size-5"
+                                                        [svgIcon]="'heroicons_solid:location-marker'"
+                                                    ></mat-icon>
+                                                    <input
+                                                        matInput
+                                                        [formControl]="direccion.get('estado')"
+                                                        [placeholder]="'Estado'"
+                                                    />
+                                                </mat-form-field>
+                                                <!-- Ciudad -->
+                                                <mat-form-field
+                                                    class="fuse-mat-no-subscript w-full sm:max-w-2/5 md:max-w-3/12"
+                                                >
+                                                    <mat-label *ngIf="first">Ciudad</mat-label>
+                                                    <mat-icon
+                                                        matPrefix
+                                                        class="hidden sm:flex icon-size-5"
+                                                        [svgIcon]="'heroicons_solid:location-marker'"
+                                                    ></mat-icon>
+                                                    <input
+                                                        matInput
+                                                        [formControl]="direccion.get('ciudad')"
+                                                        [placeholder]="'ciudad'"
+                                                    />
+                                                </mat-form-field>
+                                                <!-- Colonia -->
+                                                <mat-form-field
+                                                    class="fuse-mat-no-subscript w-full sm:max-w-2/5 md:max-w-3/12"
+                                                >
+                                                    <mat-label *ngIf="first">Colonia</mat-label>
+                                                    <mat-icon
+                                                        class="icon-size-5"
+                                                        [svgIcon]="'heroicons_solid:location-marker'"
+                                                        matPrefix
+                                                    ></mat-icon>
+                                                    <mat-select [formControl]="direccion.get('colonia')">
+                                                        <mat-option
+                                                            *ngFor="let colonia of ubicacion[i]?.ubicacion.colonias"
+                                                            [value]="colonia.id"
+                                                            >{{ colonia.descripcion }}</mat-option
+                                                        >
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                            <!-- Remover Dirección -->
+                                            <ng-container *ngIf="!(first && last)">
+                                                <div class="flex items-center w-10 pl-2" [ngClass]="{ 'mt-6': first }">
+                                                    <button
+                                                        class="w-8 h-8 min-h-8"
+                                                        mat-icon-button
+                                                        (click)="removeDireccionesField(i)"
+                                                        matTooltip="Borrar"
+                                                    >
+                                                        <mat-icon
+                                                            class="icon-size-5"
+                                                            [svgIcon]="'heroicons_solid:trash'"
+                                                        ></mat-icon>
+                                                    </button>
+                                                </div>
+                                            </ng-container>
+                                        </ng-container>
+                                    </div>
+                                    <div class="w-full flex-auto">
+                                        <div
                                             class="
-                                                fuse-mat-no-subscript
-                                                w-full
-                                                xsm:max-w-50
-                                                sm:max-w-4/12
-                                                md:max-w-2/12
+                                                group
+                                                inline-flex
+                                                items-center
+                                                mt-2
+                                                -ml-4
+                                                py-2
+                                                px-4
+                                                rounded
+                                                cursor-pointer
                                             "
+                                            (click)="addDireccionesField()"
                                         >
-                                            <mat-label *ngIf="first"
-                                                >Número</mat-label
-                                            >
-                                            <mat-icon
-                                                matPrefix
-                                                class="
-                                                    hidden
-                                                    sm:flex
-                                                    icon-size-5
-                                                "
-                                                [svgIcon]="
-                                                    'heroicons_solid:location-marker'
-                                                "
-                                            ></mat-icon>
-                                            <input
-                                                matInput
-                                                [formControl]="
-                                                    direccion.get('numero')
-                                                "
-                                                [placeholder]="'Número'"
-                                            />
-                                        </mat-form-field>
-                                        <!-- Cruzamientos -->
-                                        <mat-form-field
-                                            class="
-                                                fuse-mat-no-subscript
-                                                w-full
-                                                xsm:max-w-60
-                                                sm:
-                                                max-w-7/12
-                                                md:max-w-3/12
-                                            "
-                                        >
-                                            <mat-label *ngIf="first"
-                                                >Cruzamientos</mat-label
-                                            >
-                                            <mat-icon
-                                                matPrefix
-                                                class="
-                                                    hidden
-                                                    sm:flex
-                                                    icon-size-5
-                                                "
-                                                [svgIcon]="
-                                                    'heroicons_solid:location-marker'
-                                                "
-                                            ></mat-icon>
-                                            <input
-                                                matInput
-                                                [formControl]="
-                                                    direccion.get(
-                                                        'cruzamientos'
-                                                    )
-                                                "
-                                                [placeholder]="'Cruzamientos'"
-                                            />
-                                        </mat-form-field>
-                                        <!-- Código Postal -->
-                                        <mat-form-field
-                                            class="
-                                                fuse-mat-no-subscript
-                                                w-full
-                                                xsm:max-w-50
-                                                sm:max-w-4/12
-                                                md:max-w-2/12
-                                            "
-                                        >
-                                            <mat-label *ngIf="first"
-                                                >Código Postal</mat-label
-                                            >
-                                            <mat-icon
-                                                matPrefix
-                                                class="
-                                                    hidden
-                                                    sm:flex
-                                                    icon-size-5
-                                                "
-                                                [svgIcon]="
-                                                    'heroicons_solid:location-marker'
-                                                "
-                                            ></mat-icon>
-                                            <input
-                                                matInput
-                                                [formControl]="
-                                                    direccion.get(
-                                                        'codigoPostal'
-                                                    )
-                                                "
-                                                [placeholder]="'Código Postal'"
-                                                (change)="
-                                                    getColonias(
-                                                        direccion.get(
-                                                            'codigoPostal'
-                                                        ).value,
-                                                        i
-                                                    )
-                                                "
-                                            />
-                                        </mat-form-field>
-                                        <!-- Estado -->
-                                        <mat-form-field
-                                            class="
-                                                fuse-mat-no-subscript
-                                                w-full
-                                                sm:max-w-2/5
-                                                md:max-w-3/12
-                                            "
-                                        >
-                                            <mat-label *ngIf="first"
-                                                >Estado</mat-label
-                                            >
-                                            <mat-icon
-                                                matPrefix
-                                                class="
-                                                    hidden
-                                                    sm:flex
-                                                    icon-size-5
-                                                "
-                                                [svgIcon]="
-                                                    'heroicons_solid:location-marker'
-                                                "
-                                            ></mat-icon>
-                                            <input
-                                                matInput
-                                                [formControl]="
-                                                    direccion.get('estado')
-                                                "
-                                                [placeholder]="'Estado'"
-                                            />
-                                        </mat-form-field>
-                                        <!-- Ciudad -->
-                                        <mat-form-field
-                                            class="
-                                                fuse-mat-no-subscript
-                                                w-full
-                                                sm:max-w-2/5
-                                                md:max-w-3/12
-                                            "
-                                        >
-                                            <mat-label *ngIf="first"
-                                                >Ciudad</mat-label
-                                            >
-                                            <mat-icon
-                                                matPrefix
-                                                class="
-                                                    hidden
-                                                    sm:flex
-                                                    icon-size-5
-                                                "
-                                                [svgIcon]="
-                                                    'heroicons_solid:location-marker'
-                                                "
-                                            ></mat-icon>
-                                            <input
-                                                matInput
-                                                [formControl]="
-                                                    direccion.get('ciudad')
-                                                "
-                                                [placeholder]="'ciudad'"
-                                            />
-                                        </mat-form-field>
-                                        <!-- Colonia -->
-                                        <mat-form-field
-                                            class="
-                                                fuse-mat-no-subscript
-                                                w-full
-                                                sm:max-w-2/5
-                                                md:max-w-3/12
-                                            "
-                                        >
-                                            <mat-label *ngIf="first"
-                                                >Colonia</mat-label
-                                            >
                                             <mat-icon
                                                 class="icon-size-5"
-                                                [svgIcon]="
-                                                    'heroicons_solid:location-marker'
-                                                "
-                                                matPrefix
+                                                [svgIcon]="'heroicons_solid:plus-circle'"
                                             ></mat-icon>
-                                            <mat-select
-                                                [formControl]="
-                                                    direccion.get('colonia')
-                                                "
+                                            <span class="ml-2 font-medium text-secondary group-hover:underline"
+                                                >Agregar Dirección</span
                                             >
-                                                <mat-option
-                                                    *ngFor="
-                                                        let colonia of ubicacion[
-                                                            i
-                                                        ]?.colonias
-                                                    "
-                                                    [value]="colonia.id"
-                                                    >{{
-                                                        colonia.descripcion
-                                                    }}</mat-option
-                                                >
-                                            </mat-select>
-                                        </mat-form-field>
-                                    </div>
-                                    <!-- Remover Dirección -->
-                                    <ng-container *ngIf="!(first && last)">
-                                        <div
-                                            class="flex items-center w-10 pl-2"
-                                            [ngClass]="{ 'mt-6': first }"
-                                        >
-                                            <button
-                                                class="w-8 h-8 min-h-8"
-                                                mat-icon-button
-                                                (click)="
-                                                    removeDireccionesField(i)
-                                                "
-                                                matTooltip="Borrar"
-                                            >
-                                                <mat-icon
-                                                    class="icon-size-5"
-                                                    [svgIcon]="
-                                                        'heroicons_solid:trash'
-                                                    "
-                                                ></mat-icon>
-                                            </button>
                                         </div>
-                                    </ng-container>
-                                </ng-container>
-                            </div>
-                            <div class="w-full flex-auto">
-                                <div
-                                    class="
-                                        group
-                                        inline-flex
-                                        items-center
-                                        mt-2
-                                        -ml-4
-                                        py-2
-                                        px-4
-                                        rounded
-                                        cursor-pointer
-                                    "
-                                    (click)="addDireccionesField()"
-                                >
+                                    </div>
+                                    <div>
+                                        <button mat-button matStepperNext>Siguiente</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </mat-step>
+                        <mat-step [stepControl]="trabajoForm">
+                            <!-- Form -->
+                            <form [formGroup]="trabajoForm">
+                                <ng-template matStepLabel>Datos Laborales</ng-template>
+                                <!-- Nombre -->
+                                <mat-form-field class="fuse-mat-no-subscript md:max-w-3/12 w-full">
+                                    <mat-label>Nombre</mat-label>
                                     <mat-icon
                                         class="icon-size-5"
-                                        [svgIcon]="
-                                            'heroicons_solid:plus-circle'
-                                        "
+                                        [svgIcon]="'heroicons_solid:user'"
+                                        matPrefix
                                     ></mat-icon>
-                                    <span
-                                        class="
-                                            ml-2
-                                            font-medium
-                                            text-secondary
-                                            group-hover:underline
-                                        "
-                                        >Agregar Dirección</span
-                                    >
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                                    <input [formControlName]="'nombre'" matInput />
+                                </mat-form-field>
+                                <!-- Teléfono-->
+                                <mat-form-field class="fuse-mat-no-subscript w-full md:max-w-64">
+                                    <mat-label>Teléfono</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_solid:phone'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <input [formControlName]="'telefono'" matInput />
+                                </mat-form-field>
+                            </form>
+                        </mat-step>
+                    </mat-stepper>
                 </div>
             </div>
         </ng-container>

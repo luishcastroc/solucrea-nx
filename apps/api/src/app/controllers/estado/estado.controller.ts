@@ -1,15 +1,4 @@
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param,
-    Post,
-    Put,
-    UseGuards,
-    UsePipes,
-    ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 
 import { Public } from '../../decorators/public.decorator';
 import { Roles } from '../../decorators/roles.decorator';
@@ -46,10 +35,7 @@ export class EstadoController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Put('estado/:id')
-    async editEstado(
-        @Param('id') id: number,
-        @Body() tiposDeViviendaData: Estado
-    ): Promise<Estado> {
+    async editEstado(@Param('id') id: number, @Body() tiposDeViviendaData: Estado): Promise<Estado> {
         return this.estadoService.updateEstado({
             where: { id },
             data: tiposDeViviendaData,

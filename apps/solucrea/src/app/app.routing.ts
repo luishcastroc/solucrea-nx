@@ -32,23 +32,20 @@ export const appRoutes: Route[] = [
             {
                 path: 'forgot-password',
                 loadChildren: () =>
-                    import(
-                        'app/modules/auth/forgot-password/forgot-password.module'
-                    ).then((m) => m.AuthForgotPasswordModule),
+                    import('app/modules/auth/forgot-password/forgot-password.module').then(
+                        (m) => m.AuthForgotPasswordModule
+                    ),
             },
             {
                 path: 'reset-password',
                 loadChildren: () =>
-                    import(
-                        'app/modules/auth/reset-password/reset-password.module'
-                    ).then((m) => m.AuthResetPasswordModule),
+                    import('app/modules/auth/reset-password/reset-password.module').then(
+                        (m) => m.AuthResetPasswordModule
+                    ),
             },
             {
                 path: 'sign-in',
-                loadChildren: () =>
-                    import('app/modules/auth/sign-in/sign-in.module').then(
-                        (m) => m.AuthSignInModule
-                    ),
+                loadChildren: () => import('app/modules/auth/sign-in/sign-in.module').then((m) => m.AuthSignInModule),
             },
         ],
     },
@@ -66,9 +63,7 @@ export const appRoutes: Route[] = [
             {
                 path: 'sign-out',
                 loadChildren: () =>
-                    import('app/modules/auth/sign-out/sign-out.module').then(
-                        (m) => m.AuthSignOutModule
-                    ),
+                    import('app/modules/auth/sign-out/sign-out.module').then((m) => m.AuthSignOutModule),
             },
         ],
     },
@@ -88,45 +83,27 @@ export const appRoutes: Route[] = [
         children: [
             {
                 path: 'main',
-                loadChildren: () =>
-                    import('app/modules/main/main.module').then(
-                        (m) => m.MainModule
-                    ),
+                loadChildren: () => import('app/modules/main/main.module').then((m) => m.MainModule),
             },
             {
                 path: 'clientes',
-                loadChildren: () =>
-                    import('app/modules/clientes/clientes.module').then(
-                        (m) => m.ClientesModule
-                    ),
+                loadChildren: () => import('app/modules/clientes/clientes.module').then((m) => m.ClientesModule),
             },
             {
                 path: 'creditos',
-                loadChildren: () =>
-                    import('app/modules/creditos/creditos.module').then(
-                        (m) => m.CreditosModule
-                    ),
+                loadChildren: () => import('app/modules/creditos/creditos.module').then((m) => m.CreditosModule),
             },
             {
                 path: 'reportes',
-                loadChildren: () =>
-                    import('app/modules/reportes/reportes.module').then(
-                        (m) => m.ReportesModule
-                    ),
+                loadChildren: () => import('app/modules/reportes/reportes.module').then((m) => m.ReportesModule),
             },
             {
                 path: 'caja',
-                loadChildren: () =>
-                    import('app/modules/caja/caja.module').then(
-                        (m) => m.CajaModule
-                    ),
+                loadChildren: () => import('app/modules/caja/caja.module').then((m) => m.CajaModule),
             },
             {
                 path: 'ajustes',
-                loadChildren: () =>
-                    import('app/modules/ajustes/ajustes.module').then(
-                        (m) => m.AjustesModule
-                    ),
+                loadChildren: () => import('app/modules/ajustes/ajustes.module').then((m) => m.AjustesModule),
             },
         ],
     },

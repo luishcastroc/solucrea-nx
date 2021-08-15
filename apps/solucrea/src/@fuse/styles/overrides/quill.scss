@@ -16,9 +16,7 @@
     }
 
     .ql-picker {
-
         &.ql-expanded {
-
             .ql-picker-label {
                 @apply border-gray-300;
 
@@ -42,7 +40,6 @@
         }
 
         .ql-picker-options {
-
             .ql-picker-item {
                 @apply text-default;
             }

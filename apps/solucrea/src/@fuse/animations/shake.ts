@@ -1,10 +1,4 @@
-import {
-    animate,
-    keyframes,
-    style,
-    transition,
-    trigger,
-} from '@angular/animations';
+import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 
 // -----------------------------------------------------------------------------------------------------
 // @ Shake

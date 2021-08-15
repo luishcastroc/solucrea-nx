@@ -10,53 +10,32 @@
             <div class="sm:col-span-4">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>Contraseña actual</mat-label>
-                    <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:key'"
-                        matPrefix
-                    ></mat-icon>
-                    <input
-                        [formControlName]="'currentPassword'"
-                        type="password"
-                        matInput
-                    />
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:key'" matPrefix></mat-icon>
+                    <input [formControlName]="'currentPassword'" type="password" matInput />
                 </mat-form-field>
                 <ng-container *ngIf="currentPassword.touched">
-                    <mat-error *ngIf="currentPassword.errors?.required">
-                        La contraseña actual es requerida.
-                    </mat-error>
+                    <mat-error *ngIf="currentPassword.errors?.required"> La contraseña actual es requerida. </mat-error>
                 </ng-container>
             </div>
             <!-- New password -->
             <div class="sm:col-span-4">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>Nueva contraseña</mat-label>
-                    <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:key'"
-                        matPrefix
-                    ></mat-icon>
-                    <input
-                        [formControlName]="'newPassword'"
-                        type="password"
-                        matInput
-                    />
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:key'" matPrefix></mat-icon>
+                    <input [formControlName]="'newPassword'" type="password" matInput />
                 </mat-form-field>
                 <div class="mt-1 text-md text-hint">
-                    Minimo 8 caracteres. Debe incluir una letra mayúscula, una
-                    minúscula y un caracter especial (#?!@$%^&*-).
+                    Minimo 8 caracteres. Debe incluir una letra mayúscula, una minúscula y un caracter especial
+                    (#?!@$%^&*-).
                 </div>
                 <ng-container *ngIf="newPassword.touched">
-                    <mat-error *ngIf="newPassword.errors?.required">
-                        La nueva contraseña es requerida.
-                    </mat-error>
+                    <mat-error *ngIf="newPassword.errors?.required"> La nueva contraseña es requerida. </mat-error>
                     <mat-error *ngIf="newPassword.errors?.minlength">
                         La nueva contraseña debe tener mínimo 8 caracteres.
                     </mat-error>
                     <mat-error *ngIf="newPassword.errors?.passwordStrength">
-                        la Contraseña debe incluir mínimo 8 caracteres. Al menos
-                        una mayúscula, una minúscula, un número y un caracter
-                        especial (#?!@$%^&*-).
+                        la Contraseña debe incluir mínimo 8 caracteres. Al menos una mayúscula, una minúscula, un número
+                        y un caracter especial (#?!@$%^&*-).
                     </mat-error>
                 </ng-container>
             </div>
@@ -67,13 +46,7 @@
 
         <!-- Actions -->
         <div class="flex items-center justify-end">
-            <button
-                mat-stroked-button
-                type="button"
-                (click)="securityForm.reset()"
-            >
-                Cancelar
-            </button>
+            <button mat-stroked-button type="button" (click)="securityForm.reset()">Cancelar</button>
             <button
                 class="ml-4"
                 mat-flat-button

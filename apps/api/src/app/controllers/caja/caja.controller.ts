@@ -2,18 +2,7 @@ import { CreateCajaDto } from './../../dtos/create-caja.dto';
 import { Roles } from '../../decorators/roles.decorator';
 import { RolesGuard } from '../../guards/roles.guard';
 import { CajaService } from './caja.service';
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param,
-    Post,
-    Put,
-    UseGuards,
-    UsePipes,
-    ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Public } from '../../decorators/public.decorator';
 import { Caja, Role } from '.prisma/client';
 

@@ -17,13 +17,7 @@ const layoutModules = [
 
 @NgModule({
     declarations: [LayoutComponent],
-    imports: [
-        MatIconModule,
-        MatTooltipModule,
-        FuseDrawerModule,
-        SharedModule,
-        ...layoutModules,
-    ],
+    imports: [MatIconModule, MatTooltipModule, FuseDrawerModule, SharedModule, ...layoutModules],
     exports: [LayoutComponent, ...layoutModules],
 })
 export class LayoutModule {}

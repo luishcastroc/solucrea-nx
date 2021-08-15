@@ -8,14 +8,9 @@ import { IUsuarioRespuestaDto } from '../dtos/usuario-respuesta.dto';
 
 @Injectable()
 export class AuthService {
-    constructor(
-        private usuariosService: UsuariosService,
-        private jwtService: JwtService
-    ) {}
+    constructor(private usuariosService: UsuariosService, private jwtService: JwtService) {}
 
-    async validarUsuario(
-        usuarioDto: IUsuarioDto
-    ): Promise<IUsuarioRespuestaDto> {
+    async validarUsuario(usuarioDto: IUsuarioDto): Promise<IUsuarioRespuestaDto> {
         const user = await this.usuariosService.searchUsuarioByName({
             nombreUsuario: usuarioDto.nombreUsuario,
         });
@@ -24,10 +19,7 @@ export class AuthService {
             return null;
         }
 
-        const isMatch = await bcrypt.compare(
-            usuarioDto.password,
-            user.password
-        );
+        const isMatch = await bcrypt.compare(usuarioDto.password, user.password);
 
         if (isMatch) {
             delete user.password;

@@ -8,11 +8,6 @@ import { authSignOutRoutes } from 'app/modules/auth/sign-out/sign-out.routing';
 
 @NgModule({
     declarations: [AuthSignOutComponent],
-    imports: [
-        RouterModule.forChild(authSignOutRoutes),
-        MatButtonModule,
-        FuseCardModule,
-        SharedModule,
-    ],
+    imports: [RouterModule.forChild(authSignOutRoutes), MatButtonModule, FuseCardModule, SharedModule],
 })
 export class AuthSignOutModule {}

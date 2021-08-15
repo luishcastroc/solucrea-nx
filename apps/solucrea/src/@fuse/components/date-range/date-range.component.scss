@@ -106,18 +106,14 @@ fuse-date-range {
                     border-collapse: collapse;
 
                     tbody {
-
                         tr {
-
-                            &[aria-hidden=true] {
+                            &[aria-hidden='true'] {
                                 display: none !important;
                             }
 
                             &:first-child {
-
                                 td:first-child {
-
-                                    &[aria-hidden=true] {
+                                    &[aria-hidden='true'] {
                                         visibility: hidden;
                                         pointer-events: none;
                                         opacity: 0;
@@ -127,9 +123,7 @@ fuse-date-range {
 
                             td,
                             td:hover {
-
                                 &.fuse-date-range {
-
                                     &:before {
                                         @apply bg-primary-200;
                                     }
@@ -141,7 +135,6 @@ fuse-date-range {
 
                                 &.fuse-date-range-start,
                                 &.fuse-date-range-end {
-
                                     .mat-calendar-body-cell-content {
                                         @apply bg-primary text-on-primary;
                                     }
@@ -170,7 +163,6 @@ fuse-date-range {
                                     }
 
                                     &.fuse-date-range-start {
-
                                         &:before {
                                             left: $body-cell-padding;
                                             border-radius: 999px 0 0 999px;
@@ -178,7 +170,6 @@ fuse-date-range {
 
                                         &.fuse-date-range-end,
                                         &:last-child {
-
                                             &:before {
                                                 right: $body-cell-padding;
                                                 border-radius: 999px;
@@ -187,14 +178,12 @@ fuse-date-range {
                                     }
 
                                     &.fuse-date-range-end {
-
                                         &:before {
                                             right: $body-cell-padding;
                                             border-radius: 0 999px 999px 0;
                                         }
 
                                         &:first-child {
-
                                             &:before {
                                                 left: $body-cell-padding;
                                                 border-radius: 999px;
@@ -203,14 +192,12 @@ fuse-date-range {
                                     }
 
                                     &:first-child {
-
                                         &:before {
                                             border-radius: 999px 0 0 999px;
                                         }
                                     }
 
                                     &:last-child {
-
                                         &:before {
                                             border-radius: 0 999px 999px 0;
                                         }
@@ -228,24 +215,19 @@ fuse-date-range {
                             }
 
                             td.mat-calendar-body-label {
-
                                 + td.mat-calendar-body-cell {
-
                                     &.fuse-date-range {
-
                                         &:before {
                                             border-radius: 999px 0 0 999px;
                                         }
 
                                         &.fuse-date-range-start {
-
                                             &.fuse-date-range-end {
                                                 border-radius: 999px;
                                             }
                                         }
 
                                         &.fuse-date-range-end {
-
                                             &:before {
                                                 left: $body-cell-padding;
                                                 border-radius: 999px;
@@ -271,7 +253,6 @@ fuse-date-range {
         margin-right: 20px;
 
         .month {
-
             .month-label {
                 margin-left: 8px;
             }
@@ -283,7 +264,6 @@ fuse-date-range {
         margin-left: 20px;
 
         .month {
-
             .month-label {
                 margin-right: 8px;
             }

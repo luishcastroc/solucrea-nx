@@ -3,18 +3,7 @@ import { Prisma } from '@prisma/client';
 import { Roles } from './../../decorators/roles.decorator';
 import { RolesGuard } from './../../guards/roles.guard';
 import { AvalesService } from './avales.service';
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param,
-    Post,
-    Put,
-    UseGuards,
-    UsePipes,
-    ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Public } from '../../decorators/public.decorator';
 import { Aval, Role } from '.prisma/client';
 
@@ -47,10 +36,7 @@ export class AvalesController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Put('aval/:id')
-    async editAvales(
-        @Param('id') id: string,
-        @Body() data: Prisma.AvalUpdateInput
-    ): Promise<Aval> {
+    async editAvales(@Param('id') id: string, @Body() data: Prisma.AvalUpdateInput): Promise<Aval> {
         return this.avalesService.updateAval({
             where: { id },
             data,

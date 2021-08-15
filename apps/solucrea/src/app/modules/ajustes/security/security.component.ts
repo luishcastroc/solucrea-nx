@@ -1,21 +1,9 @@
 import { HotToastService } from '@ngneat/hot-toast';
 import { createPasswordStrengthValidator } from '../validators/custom-ajustes.validators';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    OnDestroy,
-    OnInit,
-    ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IAlert } from '@fuse/components/alert/alert.model';
-import {
-    Actions,
-    ofActionErrored,
-    ofActionSuccessful,
-    Select,
-    Store,
-} from '@ngxs/store';
+import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { Observable, Subject } from 'rxjs';
@@ -67,14 +55,7 @@ export class AjustesSecurityComponent implements OnInit, OnDestroy {
         // Create the form
         this.securityForm = this._formBuilder.group({
             currentPassword: ['', [Validators.required]],
-            newPassword: [
-                '',
-                [
-                    Validators.required,
-                    Validators.minLength(8),
-                    createPasswordStrengthValidator(),
-                ],
-            ],
+            newPassword: ['', [Validators.required, Validators.minLength(8), createPasswordStrengthValidator()]],
         });
 
         this.user$.pipe(takeUntil(this._unsubscribeAll)).subscribe((user) => {
@@ -83,28 +64,24 @@ export class AjustesSecurityComponent implements OnInit, OnDestroy {
             }
         });
 
-        this._actions$
-            .pipe(takeUntil(this._unsubscribeAll), ofActionErrored(Edit))
-            .subscribe(() => {
-                const message = 'Error al editar contraseña.';
-                this._toast.error(message, {
-                    duration: 5000,
-                    position: 'bottom-center',
-                });
-                this.securityForm.enable();
+        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionErrored(Edit)).subscribe(() => {
+            const message = 'Error al editar contraseña.';
+            this._toast.error(message, {
+                duration: 5000,
+                position: 'bottom-center',
             });
+            this.securityForm.enable();
+        });
 
-        this._actions$
-            .pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(Edit))
-            .subscribe(() => {
-                const message = 'Contraseña modificada exitosamente.';
-                this._toast.success(message, {
-                    duration: 5000,
-                    position: 'bottom-center',
-                });
-                this.securityForm.enable();
-                this.securityForm.reset();
+        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(Edit)).subscribe(() => {
+            const message = 'Contraseña modificada exitosamente.';
+            this._toast.success(message, {
+                duration: 5000,
+                position: 'bottom-center',
             });
+            this.securityForm.enable();
+            this.securityForm.reset();
+        });
     }
 
     /**

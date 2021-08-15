@@ -2,7 +2,6 @@
 $fuse-vertical-navigation-thin-width: 80;
 
 fuse-vertical-navigation {
-
     /* Thin appearance overrides */
     &.fuse-vertical-navigation-appearance-thin {
         width: #{$fuse-vertical-navigation-thin-width}px;
@@ -11,7 +10,6 @@ fuse-vertical-navigation {
 
         /* Left positioned */
         &.fuse-vertical-navigation-position-left {
-
             &.fuse-vertical-navigation-mode-side {
                 margin-left: -#{$fuse-vertical-navigation-thin-width}px;
             }
@@ -23,7 +21,6 @@ fuse-vertical-navigation {
 
         /* Right positioned */
         &.fuse-vertical-navigation-position-right {
-
             &.fuse-vertical-navigation-mode-side {
                 margin-right: -#{$fuse-vertical-navigation-thin-width}px;
             }
@@ -40,10 +37,8 @@ fuse-vertical-navigation {
 
         /* Wrapper */
         .fuse-vertical-navigation-wrapper {
-
             /* Content */
             .fuse-vertical-navigation-content {
-
                 > fuse-vertical-navigation-aside-item,
                 > fuse-vertical-navigation-basic-item {
                     flex-direction: column;
@@ -77,13 +72,12 @@ fuse-vertical-navigation {
                 }
 
                 > fuse-vertical-navigation-collapsable-item {
-                    display: none
+                    display: none;
                 }
 
                 > fuse-vertical-navigation-group-item {
-
                     > .fuse-vertical-navigation-item-wrapper {
-                        display: none
+                        display: none;
                     }
                 }
             }

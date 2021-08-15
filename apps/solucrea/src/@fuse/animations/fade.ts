@@ -1,14 +1,5 @@
-import {
-    animate,
-    state,
-    style,
-    transition,
-    trigger,
-} from '@angular/animations';
-import {
-    FuseAnimationCurves,
-    FuseAnimationDurations,
-} from '@fuse/animations/defaults';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { FuseAnimationCurves, FuseAnimationDurations } from '@fuse/animations/defaults';
 
 // -----------------------------------------------------------------------------------------------------
 // @ Fade in

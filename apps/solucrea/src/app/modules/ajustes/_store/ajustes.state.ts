@@ -20,15 +20,10 @@ import { AjustesStateModel } from './ajustes.model';
 })
 @Injectable()
 export class AjustesState {
-    constructor(
-        private ajustesService: AjustesService,
-        private _store: Store
-    ) {}
+    constructor(private ajustesService: AjustesService, private _store: Store) {}
 
     @Selector()
-    static searchResults({
-        searchResult,
-    }: AjustesStateModel): Usuario[] | null {
+    static searchResults({ searchResult }: AjustesStateModel): Usuario[] | null {
         return searchResult;
     }
 
@@ -43,10 +38,7 @@ export class AjustesState {
     }
 
     @Action(AjustesAction.GetAll)
-    getAllUsuarios(
-        ctx: StateContext<AjustesStateModel>,
-        action: AjustesAction.GetAll
-    ) {
+    getAllUsuarios(ctx: StateContext<AjustesStateModel>, action: AjustesAction.GetAll) {
         const { id } = action;
         return this.ajustesService.getUsuarios().pipe(
             tap((result: Usuario[]) => {
@@ -60,10 +52,7 @@ export class AjustesState {
     }
 
     @Action(AjustesAction.Add)
-    addUsuario(
-        ctx: StateContext<AjustesStateModel>,
-        action: AjustesAction.Add
-    ) {
+    addUsuario(ctx: StateContext<AjustesStateModel>, action: AjustesAction.Add) {
         const { payload } = action;
         return this.ajustesService.addUsuario(payload).pipe(
             tap((user: Usuario) => {
@@ -77,10 +66,7 @@ export class AjustesState {
     }
 
     @Action(AjustesAction.Edit)
-    editUsuario(
-        ctx: StateContext<AjustesStateModel>,
-        action: AjustesAction.Edit
-    ) {
+    editUsuario(ctx: StateContext<AjustesStateModel>, action: AjustesAction.Edit) {
         const { id, payload } = action;
         const authenticatedUser = this._store.selectSnapshot(AuthState.user);
         return this.ajustesService.editUsuario(id, payload).pipe(
@@ -88,9 +74,7 @@ export class AjustesState {
                 const state = ctx.getState();
                 if (state.usuarios) {
                     const usuarios = [...state.usuarios];
-                    const usuarioIdx = usuarios.findIndex(
-                        (usuario) => usuario.id === id
-                    );
+                    const usuarioIdx = usuarios.findIndex((usuario) => usuario.id === id);
                     usuarios[usuarioIdx] = user;
 
                     ctx.patchState({
@@ -105,19 +89,14 @@ export class AjustesState {
     }
 
     @Action(AjustesAction.Delete)
-    deleteUsuario(
-        ctx: StateContext<AjustesStateModel>,
-        action: AjustesAction.Delete
-    ) {
+    deleteUsuario(ctx: StateContext<AjustesStateModel>, action: AjustesAction.Delete) {
         const { id } = action;
         return this.ajustesService.deleteUsuario(id).pipe(
             tap((user: Usuario) => {
                 const state = ctx.getState();
                 if (state.usuarios) {
                     const usuarios = [...state.usuarios];
-                    const usuarioIdx = usuarios.findIndex(
-                        (usuario) => usuario.id === id
-                    );
+                    const usuarioIdx = usuarios.findIndex((usuario) => usuario.id === id);
                     usuarios[usuarioIdx] = user;
                     if (usuarioIdx !== -1) {
                         usuarios.splice(usuarioIdx, 1);
@@ -131,35 +110,24 @@ export class AjustesState {
     }
 
     @Action(AjustesAction.Select)
-    selectUsuario(
-        ctx: StateContext<AjustesStateModel>,
-        action: AjustesAction.Select
-    ) {
+    selectUsuario(ctx: StateContext<AjustesStateModel>, action: AjustesAction.Select) {
         const { usuario: selectedUsuario } = action;
         ctx.patchState({ selectedUsuario });
     }
 
     @Action(AjustesAction.AjustesMode)
-    toggleEditMode(
-        ctx: StateContext<AjustesStateModel>,
-        action: AjustesAction.AjustesMode
-    ) {
+    toggleEditMode(ctx: StateContext<AjustesStateModel>, action: AjustesAction.AjustesMode) {
         const { payload } = action;
         ctx.patchState({ editMode: payload });
     }
 
     @Action(AjustesAction.Search)
-    searchUsuario(
-        ctx: StateContext<AjustesStateModel>,
-        action: AjustesAction.Search
-    ) {
+    searchUsuario(ctx: StateContext<AjustesStateModel>, action: AjustesAction.Search) {
         const { payload } = action;
         const state = ctx.getState();
         const usuarios = [...state.usuarios];
         const searchResult = usuarios.filter(
-            (usuario) =>
-                usuario.nombre &&
-                usuario.nombre.toLowerCase().includes(payload.toLowerCase())
+            (usuario) => usuario.nombre && usuario.nombre.toLowerCase().includes(payload.toLowerCase())
         );
         ctx.patchState({ searchResult });
     }
