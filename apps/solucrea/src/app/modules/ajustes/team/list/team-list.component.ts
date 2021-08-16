@@ -19,7 +19,6 @@ import { ConfirmationDialogComponent } from 'app/shared';
 import { Observable, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
-import { Edit, GetAll, Search } from '../../_store/ajustes.actions';
 import * as UsuarioAction from '../../_store/ajustes.actions';
 import { AjustesState } from '../../_store/ajustes.state';
 import { IRole } from '../../models/roles.model';
@@ -59,7 +58,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-        this._store.dispatch(new GetAll(this.usuario.id));
+        this._store.dispatch(new UsuarioAction.GetAll(this.usuario.id));
 
         this.searchResults$.pipe(takeUntil(this._unsubscribeAll)).subscribe((usuarios: Usuario[]) => {
             this.searchResults = usuarios;
@@ -72,7 +71,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
         this.searchInputControl.valueChanges
             .pipe(
                 takeUntil(this._unsubscribeAll),
-                switchMap((query) => this._store.dispatch(new Search(query)))
+                switchMap((query) => this._store.dispatch(new UsuarioAction.Search(query)))
             )
             .subscribe();
 
@@ -155,7 +154,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
     saveUser(usuario: Usuario, role: Role): void {
         if (usuario.role !== role) {
             const usuarioUpdate = { ...usuario, role };
-            this._store.dispatch(new Edit(usuarioUpdate.id, usuarioUpdate));
+            this._store.dispatch(new UsuarioAction.Edit(usuarioUpdate.id, usuarioUpdate));
         }
     }
 

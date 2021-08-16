@@ -1,3 +1,4 @@
+import { IActividadEconomicaReturnDto } from './../../../../../api/src/app/dtos/actividad-economica-return.dto';
 import { IEstadoCivilReturnDto } from './../../../../../api/src/app/dtos/estado-civil-return.dto';
 import { IEscolaridadReturnDto } from './../../../../../api/src/app/dtos/escolaridad-return.dto';
 import { HttpClient } from '@angular/common/http';
@@ -112,5 +113,13 @@ export class ClientesService {
      */
     getEstadosCiviles(): Observable<IEstadoCivilReturnDto[]> {
         return this._httpClient.get<IEstadoCivilReturnDto[]>(`${this._environment.uri}/estados-civiles/`);
+    }
+
+    /**
+     *  Get Actividades Economicas
+     *
+     */
+    getActividadesEconomicas(): Observable<IActividadEconomicaReturnDto[]> {
+        return this._httpClient.get<IActividadEconomicaReturnDto[]>(`${this._environment.uri}/actividades-economicas/`);
     }
 }

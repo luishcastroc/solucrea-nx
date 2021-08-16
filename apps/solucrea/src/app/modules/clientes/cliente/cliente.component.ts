@@ -1,5 +1,6 @@
+import { RemoveColonia } from './../_store/clientes.actions';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, Select, Store } from '@ngxs/store';
 import { TipoDireccion } from '@prisma/client';
@@ -23,12 +24,26 @@ export class ClienteComponent implements OnInit, OnDestroy {
     @Select(ClientesState.loading) loading$: Observable<boolean>;
     @Select(ClientesState.colonias) colonias$: Observable<IColoniasState[]>;
     ubicacion: IColoniasState[] = [];
+    ubicacionTrabajo: IColoniasState;
 
     clienteForm: FormGroup;
     trabajoForm: FormGroup;
     get direcciones() {
         return this.clienteForm.get('direcciones') as FormArray;
     }
+
+    get cpTrabajo() {
+        return this.trabajoForm.get('direccion').get('codigoPostal') as FormControl;
+    }
+
+    get ciudadTrabajo() {
+        return this.trabajoForm.get('direccion').get('ciudad') as FormControl;
+    }
+
+    get estadoTrabajo() {
+        return this.trabajoForm.get('direccion').get('estado') as FormControl;
+    }
+
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
@@ -45,14 +60,17 @@ export class ClienteComponent implements OnInit, OnDestroy {
         this.trabajoForm = this.createTrabajoForm();
         this.colonias$.pipe(takeUntil(this._unsubscribeAll)).subscribe((ubicacion) => {
             if (ubicacion.length > 0) {
-                (this.clienteForm.get('direcciones') as FormArray).controls.forEach((direccion, i) => {
-                    if (ubicacion[i] && direccion.get('tipo').value === ubicacion[i].tipoDireccion) {
-                        direccion.get('ciudad').patchValue(ubicacion[i].ubicacion.ciudad.descripcion);
-                        direccion.get('estado').patchValue(ubicacion[i].ubicacion.estado.descripcion);
+                ubicacion.forEach((direccion, i) => {
+                    if (direccion.tipoDireccion === 'CLIENTE') {
+                        this.direcciones.controls[i].get('ciudad').patchValue(direccion.ubicacion.ciudad.descripcion);
+                        this.direcciones.controls[i].get('estado').patchValue(direccion.ubicacion.estado.descripcion);
+                        this.ubicacion.push(direccion);
+                    } else if (direccion.tipoDireccion === 'TRABAJO') {
+                        this.ciudadTrabajo.patchValue(direccion.ubicacion.ciudad.descripcion);
+                        this.estadoTrabajo.patchValue(direccion.ubicacion.estado.descripcion);
+                        this.ubicacionTrabajo = direccion;
                     }
                 });
-
-                this.ubicacion = ubicacion;
             }
         });
     }
@@ -86,19 +104,16 @@ export class ClienteComponent implements OnInit, OnDestroy {
     createTrabajoForm(): FormGroup {
         return this._formBuilder.group({
             nombre: ['', Validators.required],
-            direccion: [
-                this._formBuilder.group({
-                    tipo: ['TRABAJO'],
-                    calle: ['', Validators.required],
-                    numero: ['', Validators.required],
-                    cruzamientos: [''],
-                    codigoPostal: ['', Validators.required],
-                    colonia: ['', Validators.required],
-                    ciudad: [{ value: '', disabled: true }, Validators.required],
-                    estado: [{ value: '', disabled: true }, Validators.required],
-                }),
-                Validators.required,
-            ],
+            direccion: this._formBuilder.group({
+                tipo: ['TRABAJO'],
+                calle: ['', Validators.required],
+                numero: ['', Validators.required],
+                cruzamientos: [''],
+                codigoPostal: ['', Validators.required],
+                colonia: ['', Validators.required],
+                ciudad: [{ value: '', disabled: true }, Validators.required],
+                estado: [{ value: '', disabled: true }, Validators.required],
+            }),
             telefono: ['', Validators.required],
             antiguedad: [null, Validators.required],
             actividadEconomica: ['', Validators.required],
@@ -146,6 +161,7 @@ export class ClienteComponent implements OnInit, OnDestroy {
 
         // Remove the phone number field
         direccionesFormArray.removeAt(index);
+        this.removeColonia(index);
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
@@ -168,6 +184,15 @@ export class ClienteComponent implements OnInit, OnDestroy {
      */
     getColonias(cp: string, index: number, tipo: TipoDireccion): void {
         this._store.dispatch(new GetColonias(cp, index, tipo));
+    }
+
+    /**
+     * function to remove colonia from state
+     *
+     * @param index
+     */
+    removeColonia(index: number): void {
+        this._store.dispatch(new RemoveColonia(index));
     }
 
     /**

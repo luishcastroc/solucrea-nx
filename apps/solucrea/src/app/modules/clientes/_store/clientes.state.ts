@@ -6,7 +6,7 @@ import { IColoniaReturnDto } from 'api/dtos';
 import { tap } from 'rxjs/operators';
 
 import { ClientesService } from '../clientes.service';
-import { Add, GetAll, GetColonias, GetConfig, ClearClientesState } from './clientes.actions';
+import { Add, GetAll, GetColonias, GetConfig, ClearClientesState, RemoveColonia } from './clientes.actions';
 import { ClientesStateModel, IColoniasState } from './clientes.model';
 import { forkJoin } from 'rxjs';
 
@@ -92,7 +92,16 @@ export class ClientesState {
                 const state = ctx.getState();
                 if (state.colonias) {
                     const coloniasState = [...state.colonias];
-                    coloniasState[index] = { tipoDireccion: tipo, ubicacion: colonias };
+                    if (index) {
+                        coloniasState[index] = { tipoDireccion: tipo, ubicacion: colonias };
+                    } else {
+                        const idx = coloniasState.findIndex((colonia) => colonia.tipoDireccion === 'TRABAJO');
+                        if (idx === -1) {
+                            coloniasState.push({ tipoDireccion: tipo, ubicacion: colonias });
+                        } else {
+                            coloniasState[idx] = { tipoDireccion: tipo, ubicacion: colonias };
+                        }
+                    }
 
                     ctx.patchState({
                         colonias: coloniasState,
@@ -100,6 +109,14 @@ export class ClientesState {
                 }
             })
         );
+    }
+
+    @Action(RemoveColonia)
+    removeColonia(ctx: StateContext<ClientesStateModel>, { index }: RemoveColonia) {
+        const state = ctx.getState();
+        const colonias = [...state.colonias];
+        colonias.splice(index, 1);
+        ctx.patchState({ colonias });
     }
 
     @Action(GetConfig)
@@ -111,13 +128,15 @@ export class ClientesState {
             estadosCiviles: this.clientesService.getEstadosCiviles(),
             escolaridades: this.clientesService.getEscolaridades(),
             tiposDeVivienda: this.clientesService.getTiposDeVivienda(),
+            actividadesEconomicas: this.clientesService.getActividadesEconomicas(),
         }).pipe(
-            tap(({ generos, estadosCiviles, escolaridades, tiposDeVivienda }) => {
+            tap(({ generos, estadosCiviles, escolaridades, tiposDeVivienda, actividadesEconomicas }) => {
                 const config = {
                     generos,
                     estadosCiviles,
                     escolaridades,
                     tiposDeVivienda,
+                    actividadesEconomicas,
                 };
                 loading = false;
                 ctx.patchState({ config, loading });

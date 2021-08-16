@@ -42,6 +42,11 @@ export class GetColonias {
     constructor(public cp: string, public index: number, public tipo: TipoDireccion) {}
 }
 
+export class RemoveColonia {
+    static readonly type = '[Cliente] Remove Colonia';
+    constructor(public index: number) {}
+}
+
 export class GetConfig {
     static readonly type = '[Cliente] Get Config';
 }

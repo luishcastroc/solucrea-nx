@@ -17,3 +17,4 @@ export * from './genero.return.dto';
 export * from './escolaridad-return.dto';
 export * from './estado-civil-return.dto';
 export * from './tipo-de-vivienda-return.dto';
+export * from './actividad-economica-return.dto';
