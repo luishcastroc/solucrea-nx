@@ -1,17 +1,30 @@
-import { RemoveColonia } from './../_store/clientes.actions';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    HostListener,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
+import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
-import { Actions, Select, Store } from '@ngxs/store';
+import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { TipoDireccion } from '@prisma/client';
+import { IActividadEconomicaReturnDto } from 'api/dtos/';
+import { CanDeactivateComponent } from 'app/core/models/can-deactivate.model';
+import { isEqual } from 'lodash';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { GetColonias, GetConfig } from '../_store/clientes.actions';
+import { Add, GetColonias, GetConfig, RemoveColonia, SelectActividadEconomica } from '../_store/clientes.actions';
+import { IColoniasState } from '../_store/clientes.model';
 import { ClientesState } from '../_store/clientes.state';
+import { ClientesService } from '../clientes.service';
 import { IConfig } from '../models/config.model';
 import { curpValidator, rfcValidator } from '../validators/custom-clientes.validators';
-import { IColoniasState } from './../_store/clientes.model';
 
 @Component({
     selector: 'app-cliente',
@@ -19,10 +32,13 @@ import { IColoniasState } from './../_store/clientes.model';
     styleUrls: ['./cliente.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClienteComponent implements OnInit, OnDestroy {
+export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateComponent {
     @Select(ClientesState.config) config$: Observable<IConfig>;
     @Select(ClientesState.loading) loading$: Observable<boolean>;
     @Select(ClientesState.colonias) colonias$: Observable<IColoniasState[]>;
+    @Select(ClientesState.selectedActividadEconomica)
+    selectedActividadEconomica$: Observable<IActividadEconomicaReturnDto>;
+    @ViewChild('stepper') private myStepper: MatStepper;
     ubicacion: IColoniasState[] = [];
     ubicacionTrabajo: IColoniasState;
 
@@ -30,6 +46,10 @@ export class ClienteComponent implements OnInit, OnDestroy {
     trabajoForm: FormGroup;
     get direcciones() {
         return this.clienteForm.get('direcciones') as FormArray;
+    }
+
+    get actividadEconomica() {
+        return this.trabajoForm.get('actividadEconomica') as FormControl;
     }
 
     get cpTrabajo() {
@@ -50,21 +70,61 @@ export class ClienteComponent implements OnInit, OnDestroy {
         private _store: Store,
         private _formBuilder: FormBuilder,
         private _actions$: Actions,
-        private _changeDetectorRef: ChangeDetectorRef
+        private _changeDetectorRef: ChangeDetectorRef,
+        private _toast: HotToastService,
+        private _clienteService: ClientesService
     ) {}
 
+    @HostListener('window:beforeunload', ['$event'])
+    canDeactivateWindow($event: Event) {
+        if (typeof this.canDeactivate() === 'function' && !this.canDeactivate()) {
+            $event.returnValue = true;
+            return;
+        }
+    }
+
     ngOnInit(): void {
+        // Getting initial configuration
         this._store.dispatch(new GetConfig());
+        // Generate the cliente form
         this.clienteForm = this.createClienteForm();
+        // Add the first address
         this.addDireccionesField();
+        // Generate the Trabajo form
         this.trabajoForm = this.createTrabajoForm();
+        //Subscribe to colonias and actividades
+        this.subscribeToColonias();
+        this.subscribeToSelectedActividadEconomica();
+        this.subscribeToActions();
+    }
+
+    /**
+     * Function to subscribe to colonias
+     *
+     *
+     */
+    subscribeToColonias(): void {
         this.colonias$.pipe(takeUntil(this._unsubscribeAll)).subscribe((ubicacion) => {
             if (ubicacion.length > 0) {
                 ubicacion.forEach((direccion, i) => {
                     if (direccion.tipoDireccion === 'CLIENTE') {
-                        this.direcciones.controls[i].get('ciudad').patchValue(direccion.ubicacion.ciudad.descripcion);
-                        this.direcciones.controls[i].get('estado').patchValue(direccion.ubicacion.estado.descripcion);
-                        this.ubicacion.push(direccion);
+                        if (
+                            this.direcciones.controls[i].get('ciudad').value !== direccion.ubicacion.ciudad.descripcion
+                        ) {
+                            this.direcciones.controls[i]
+                                .get('ciudad')
+                                .patchValue(direccion.ubicacion.ciudad.descripcion);
+                        }
+                        if (
+                            this.direcciones.controls[i].get('estado').value !== direccion.ubicacion.estado.descripcion
+                        ) {
+                            this.direcciones.controls[i]
+                                .get('estado')
+                                .patchValue(direccion.ubicacion.estado.descripcion);
+                        }
+                        if (!isEqual(this.ubicacion[i], direccion)) {
+                            this.ubicacion[i] = direccion;
+                        }
                     } else if (direccion.tipoDireccion === 'TRABAJO') {
                         this.ciudadTrabajo.patchValue(direccion.ubicacion.ciudad.descripcion);
                         this.estadoTrabajo.patchValue(direccion.ubicacion.estado.descripcion);
@@ -72,6 +132,55 @@ export class ClienteComponent implements OnInit, OnDestroy {
                     }
                 });
             }
+        });
+    }
+
+    /**
+     * Function to subscribe to selectedActividadEconomica
+     *
+     *
+     */
+    subscribeToSelectedActividadEconomica(): void {
+        this.selectedActividadEconomica$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((selectedActividadEconomica: IActividadEconomicaReturnDto) => {
+                if (selectedActividadEconomica) {
+                    this.trabajoForm.get('montoMinimo').patchValue(Number(selectedActividadEconomica.montoMin));
+                    this.trabajoForm.get('montoMaximo').patchValue(Number(selectedActividadEconomica.montoMax));
+                }
+            });
+    }
+
+    /**
+     * Function to subscribe to actions
+     *
+     *
+     */
+    subscribeToActions(): void {
+        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(Add)).subscribe((action) => {
+            const { error, successful } = action.result;
+            if (error) {
+                const message = `${error['error'].message}`;
+                this._toast.error(message, {
+                    duration: 5000,
+                    position: 'bottom-center',
+                });
+            }
+            if (successful) {
+                const message = 'Cliente salvado exitosamente.';
+                this._toast.success(message, {
+                    duration: 5000,
+                    position: 'bottom-center',
+                });
+                // we clear the forms
+                this.clienteForm.reset();
+                this.trabajoForm.reset();
+                // we reset the stepper
+                this.myStepper.reset();
+            }
+            // we enable the form
+            this.clienteForm.enable();
+            this.trabajoForm.enable();
         });
     }
 
@@ -117,6 +226,8 @@ export class ClienteComponent implements OnInit, OnDestroy {
             telefono: ['', Validators.required],
             antiguedad: [null, Validators.required],
             actividadEconomica: ['', Validators.required],
+            montoMinimo: [null, Validators.required],
+            montoMaximo: [null, Validators.required],
         });
     }
 
@@ -193,6 +304,40 @@ export class ClienteComponent implements OnInit, OnDestroy {
      */
     removeColonia(index: number): void {
         this._store.dispatch(new RemoveColonia(index));
+    }
+
+    /**
+     *
+     * Function to select one Actividad Economica
+     *
+     * @param id
+     */
+    selectActividadEconomica(id: string): void {
+        this._store.dispatch(new SelectActividadEconomica(id));
+    }
+
+    /**
+     * Fuction to determine if the forms were touch
+     *
+     *
+     */
+    canDeactivate(): boolean {
+        if (this.clienteForm.dirty || this.trabajoForm.dirty) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Function to save cliente into the database
+     *
+     *
+     */
+    saveCliente(): void {
+        this.clienteForm.disable();
+        this.trabajoForm.disable();
+        const cliente = this._clienteService.prepareClienteObject(this.clienteForm, this.trabajoForm);
+        this._store.dispatch(new Add(cliente));
     }
 
     /**

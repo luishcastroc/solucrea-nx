@@ -1,14 +1,22 @@
-import { IConfig } from '../models/config.model';
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { Cliente } from '@prisma/client';
-import { IColoniaReturnDto } from 'api/dtos';
+import { IActividadEconomicaReturnDto, IClienteReturnDto, IColoniaReturnDto } from 'api/dtos';
+import { forkJoin } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { ClientesService } from '../clientes.service';
-import { Add, GetAll, GetColonias, GetConfig, ClearClientesState, RemoveColonia } from './clientes.actions';
+import { IConfig } from '../models/config.model';
+import {
+    Add,
+    ClearClientesState,
+    GetAll,
+    GetColonias,
+    GetConfig,
+    RemoveColonia,
+    SelectActividadEconomica,
+} from './clientes.actions';
 import { ClientesStateModel, IColoniasState } from './clientes.model';
-import { forkJoin } from 'rxjs';
 
 @State<ClientesStateModel>({
     name: 'clientes',
@@ -16,6 +24,7 @@ import { forkJoin } from 'rxjs';
         clientes: [],
         editMode: 'edit',
         selectedCliente: null,
+        selectedActividadEconomica: null,
         searchResult: [],
         colonias: [],
         config: null,
@@ -27,7 +36,7 @@ export class ClientesState {
     constructor(private clientesService: ClientesService, private _store: Store) {}
 
     @Selector()
-    static searchResults({ searchResult }: ClientesStateModel): Cliente[] | [] {
+    static searchResults({ searchResult }: ClientesStateModel): IClienteReturnDto[] | [] {
         return searchResult;
     }
 
@@ -37,7 +46,7 @@ export class ClientesState {
     }
 
     @Selector()
-    static selectedUsuario({ selectedCliente }: ClientesStateModel): Cliente {
+    static selectedUsuario({ selectedCliente }: ClientesStateModel): IClienteReturnDto {
         return selectedCliente;
     }
 
@@ -56,11 +65,18 @@ export class ClientesState {
         return colonias;
     }
 
+    @Selector()
+    static selectedActividadEconomica({
+        selectedActividadEconomica,
+    }: ClientesStateModel): IActividadEconomicaReturnDto {
+        return selectedActividadEconomica;
+    }
+
     @Action(GetAll)
     getAllUsuarios(ctx: StateContext<ClientesStateModel>, action: GetAll) {
         const { id } = action;
         return this.clientesService.getClientes().pipe(
-            tap((clientes: Cliente[]) => {
+            tap((clientes: IClienteReturnDto[]) => {
                 if (clientes) {
                     ctx.patchState({
                         clientes,
@@ -75,7 +91,7 @@ export class ClientesState {
     addUsuario(ctx: StateContext<ClientesStateModel>, action: Add) {
         const { payload } = action;
         return this.clientesService.addCliente(payload).pipe(
-            tap((cliente: Cliente) => {
+            tap((cliente: IClienteReturnDto) => {
                 const state = ctx.getState();
                 const clientes = [...state.clientes];
                 clientes.push(cliente);
@@ -92,7 +108,7 @@ export class ClientesState {
                 const state = ctx.getState();
                 if (state.colonias) {
                     const coloniasState = [...state.colonias];
-                    if (index) {
+                    if (index >= 0) {
                         coloniasState[index] = { tipoDireccion: tipo, ubicacion: colonias };
                     } else {
                         const idx = coloniasState.findIndex((colonia) => colonia.tipoDireccion === 'TRABAJO');
@@ -117,6 +133,15 @@ export class ClientesState {
         const colonias = [...state.colonias];
         colonias.splice(index, 1);
         ctx.patchState({ colonias });
+    }
+
+    @Action(SelectActividadEconomica)
+    selectActividadEconomica(ctx: StateContext<ClientesStateModel>, { id }: SelectActividadEconomica) {
+        const state = ctx.getState();
+        const selectedActividadEconomica = state.config.actividadesEconomicas.filter(
+            (actividad) => actividad.id === id
+        )[0];
+        ctx.patchState({ selectedActividadEconomica });
     }
 
     @Action(GetConfig)

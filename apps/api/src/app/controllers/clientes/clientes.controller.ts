@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Post,
+    Put,
+    Request,
+    UseGuards,
+    UsePipes,
+    ValidationPipe,
+} from '@nestjs/common';
 import { Cliente, Prisma, Role } from '@prisma/client';
 
 import { CreateClienteDto } from '../../dtos/create-cliente.dto';
@@ -6,6 +18,7 @@ import { Public } from '../../decorators/public.decorator';
 import { Roles } from '../../decorators/roles.decorator';
 import { RolesGuard } from '../../guards/roles.guard';
 import { ClientesService } from './clientes.service';
+import { IClienteReturnDto } from 'api/dtos';
 
 @Controller('')
 export class ClientesController {
@@ -14,14 +27,14 @@ export class ClientesController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('clientes')
-    async getClientes(): Promise<Cliente[]> {
+    async getClientes(): Promise<IClienteReturnDto[]> {
         return this.clientesService.clientes();
     }
 
     @UseGuards(RolesGuard)
     @Public()
     @Get('cliente/:id')
-    async getTipoDeVivienda(@Param('id') id: string): Promise<Cliente> {
+    async getTipoDeVivienda(@Param('id') id: string): Promise<IClienteReturnDto> {
         return this.clientesService.cliente({ id });
     }
 
@@ -29,7 +42,9 @@ export class ClientesController {
     @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN)
     @Post('cliente')
-    async createTipoDeVivienda(@Body() data: CreateClienteDto): Promise<Cliente> {
+    async createTipoDeVivienda(@Request() req, @Body() data: CreateClienteDto): Promise<Cliente> {
+        const creadoPor = req.user.username;
+        data.creadoPor = creadoPor;
         return this.clientesService.createCliente(data);
     }
 

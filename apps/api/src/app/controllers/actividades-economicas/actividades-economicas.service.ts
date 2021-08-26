@@ -24,7 +24,7 @@ export class ActividadesEconomicasService {
         });
     }
 
-    async createActividadEconomica(data: CreateActividadEconomicaDto): Promise<ActividadEconomica> {
+    async createActividadEconomica(data: CreateActividadEconomicaDto): Promise<IActividadEconomicaReturnDto> {
         return this.prisma.actividadEconomica.create({
             data,
         });
@@ -33,7 +33,7 @@ export class ActividadesEconomicasService {
     async updateActividadEconomica(params: {
         where: Prisma.ActividadEconomicaWhereUniqueInput;
         data: Prisma.ActividadEconomicaUpdateInput;
-    }): Promise<ActividadEconomica> {
+    }): Promise<IActividadEconomicaReturnDto> {
         const { where, data } = params;
         return this.prisma.actividadEconomica.update({
             data,
@@ -41,7 +41,9 @@ export class ActividadesEconomicasService {
         });
     }
 
-    async deleteActividadEconomica(where: Prisma.ActividadEconomicaWhereUniqueInput): Promise<ActividadEconomica> {
+    async deleteActividadEconomica(
+        where: Prisma.ActividadEconomicaWhereUniqueInput
+    ): Promise<IActividadEconomicaReturnDto> {
         return this.prisma.actividadEconomica.delete({
             where,
         });

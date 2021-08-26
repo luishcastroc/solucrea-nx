@@ -1,16 +1,20 @@
-import { IActividadEconomicaReturnDto } from './../../../../../api/src/app/dtos/actividad-economica-return.dto';
-import { IEstadoCivilReturnDto } from './../../../../../api/src/app/dtos/estado-civil-return.dto';
-import { IEscolaridadReturnDto } from './../../../../../api/src/app/dtos/escolaridad-return.dto';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Cliente } from '@prisma/client';
 import {
     CreateClienteDto,
+    IActividadEconomicaReturnDto,
+    IClienteReturnDto,
     IColoniaReturnDto,
+    IEscolaridadReturnDto,
+    IEstadoCivilReturnDto,
     IGeneroReturnDto,
     ITipoDeViviendaReturnDto,
     UpdateClienteDto,
 } from 'api/dtos';
+import { IDireccion } from 'api/dtos/';
+import { Moment } from 'moment';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
@@ -34,8 +38,8 @@ export class ClientesService {
      *
      *
      */
-    getClientes(): Observable<Cliente[]> {
-        return this._httpClient.get<Cliente[]>(`${this._environment.uri}/clientes`);
+    getClientes(): Observable<IClienteReturnDto[]> {
+        return this._httpClient.get<IClienteReturnDto[]>(`${this._environment.uri}/clientes`);
     }
 
     /**
@@ -52,8 +56,8 @@ export class ClientesService {
      *
      * @param CreateClienteDto
      */
-    addCliente(cliente: CreateClienteDto): Observable<Cliente> {
-        return this._httpClient.post<Cliente>(`${this._environment.uri}/cliente`, cliente);
+    addCliente(cliente: CreateClienteDto): Observable<IClienteReturnDto> {
+        return this._httpClient.post<IClienteReturnDto>(`${this._environment.uri}/cliente`, cliente);
     }
 
     /**
@@ -72,6 +76,90 @@ export class ClientesService {
      */
     deleteCliente(id: string): Observable<Cliente> {
         return this._httpClient.delete<Cliente>(`${this._environment.uri}/cliente/${id}`);
+    }
+
+    /**
+     *
+     * @param clienteForm
+     * @param trabajoForm
+     *
+     * @returns ClienteSaveDto
+     */
+
+    prepareClienteObject(clienteForm: FormGroup, trabajoForm: FormGroup): CreateClienteDto {
+        const {
+            apellidoPaterno,
+            apellidoMaterno,
+            nombre,
+            fechaDeNacimiento: fechaMoment,
+            curp,
+            rfc,
+            escolaridad,
+            estadoCivil,
+            genero,
+            direcciones: direccionesCliente,
+            tipoDeVivienda,
+            telefono1,
+            telefono2,
+        } = clienteForm.value;
+
+        const direcciones: IDireccion[] = direccionesCliente.map((dir) => ({
+            tipo: dir.tipo,
+            calle: dir.calle,
+            numero: dir.numero,
+            cruzamientos: dir.cruzamientos,
+            coloniaId: dir.colonia,
+        }));
+
+        const fechaDeNacimiento: Moment = fechaMoment;
+        const fechaToSend = fechaDeNacimiento.toISOString();
+
+        const {
+            nombre: trabajoNombre,
+            antiguedad,
+            telefono,
+            actividadEconomica,
+            montoMinimo,
+            montoMaximo,
+            direccion: direccionTrabajo,
+        } = trabajoForm.value;
+
+        const direccion: IDireccion = {
+            tipo: direccionTrabajo.tipo,
+            calle: direccionTrabajo.calle,
+            numero: direccionTrabajo.numero,
+            cruzamientos: direccionTrabajo.cruzamientos,
+            coloniaId: direccionTrabajo.colonia,
+        };
+
+        const trabajo = {
+            nombre: trabajoNombre,
+            antiguedad,
+            telefono,
+            actividadEconomica,
+            direccion,
+        };
+
+        const clienteReturn: CreateClienteDto = {
+            apellidoPaterno,
+            apellidoMaterno,
+            nombre,
+            fechaDeNacimiento: fechaToSend,
+            curp,
+            rfc,
+            escolaridad,
+            estadoCivil,
+            genero,
+            direcciones,
+            tipoDeVivienda,
+            telefono1,
+            telefono2,
+            trabajo,
+            montoMinimo,
+            montoMaximo,
+        };
+
+        return clienteReturn;
     }
 
     /**

@@ -1,7 +1,9 @@
-import { IConfig } from '../models/config.model';
-import { Cliente, TipoDireccion } from '@prisma/client';
+import { TipoDireccion } from '@prisma/client';
 import { IColoniaReturnDto } from 'api/dtos';
+import { IActividadEconomicaReturnDto, IClienteReturnDto } from 'api/dtos/';
 import { EditMode } from 'app/core/models/edit-mode.type';
+
+import { IConfig } from '../models/config.model';
 
 export interface IColoniasState {
     tipoDireccion: TipoDireccion;
@@ -9,10 +11,11 @@ export interface IColoniasState {
 }
 
 export interface ClientesStateModel {
-    clientes: Cliente[] | null;
+    clientes: IClienteReturnDto[] | null;
     editMode: EditMode;
-    selectedCliente: Cliente | null;
-    searchResult: Cliente[] | [];
+    selectedCliente: IClienteReturnDto | null;
+    selectedActividadEconomica: IActividadEconomicaReturnDto;
+    searchResult: IClienteReturnDto[] | [];
     colonias: IColoniasState[] | [];
     config: IConfig;
     loading: boolean;

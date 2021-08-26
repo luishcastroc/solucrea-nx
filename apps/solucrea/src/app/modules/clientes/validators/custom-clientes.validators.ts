@@ -2,7 +2,7 @@ import { AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 export const curpValidator =
     (): ValidatorFn =>
     (control: AbstractControl): ValidationErrors | null => {
-        const value = control.value.toUpperCase();
+        const value = control.value?.toUpperCase();
 
         const digitoVerificador = (curp17) => {
             //Fuente https://consultas.curp.gob.mx/CurpSP/
@@ -49,7 +49,7 @@ export const curpValidator =
 export const rfcValidator =
     (): ValidatorFn =>
     (control: AbstractControl): ValidationErrors | null => {
-        const value = control.value.toUpperCase();
+        const value = control.value?.toUpperCase();
 
         const rfcValido = (rfc, aceptarGenerico = true) => {
             const re =
@@ -100,6 +100,10 @@ export const rfcValidator =
             }
             return true;
         };
+
+        if (!value) {
+            return null;
+        }
 
         return !rfcValido(value) ? { rfc: true } : null;
     };

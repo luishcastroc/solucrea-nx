@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { ActividadEconomica, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 import { Public } from '../../decorators/public.decorator';
 import { Roles } from '../../decorators/roles.decorator';
-import { CreateActividadEconomicaDto } from '../../dtos/create-actividad-economica.dto';
 import { RolesGuard } from '../../guards/roles.guard';
 import { ActividadesEconomicasService } from './actividades-economicas.service';
+import { IActividadEconomicaReturnDto, CreateActividadEconomicaDto } from 'api/dtos';
 import { Role } from '.prisma/client';
 
 @Controller()
@@ -15,14 +15,14 @@ export class ActividadesEconomicasController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('actividades-economicas')
-    async getActividadesEconomicas(): Promise<ActividadEconomica[]> {
+    async getActividadesEconomicas(): Promise<IActividadEconomicaReturnDto[]> {
         return this.actividadesEconomicasService.actividadesEconomicas();
     }
 
     @UseGuards(RolesGuard)
     @Public()
     @Get('actividad-economica/:id')
-    async getActividadEconomica(@Param('id') id: string): Promise<ActividadEconomica> {
+    async getActividadEconomica(@Param('id') id: string): Promise<IActividadEconomicaReturnDto> {
         return this.actividadesEconomicasService.actividadEconomica({ id });
     }
 
@@ -30,7 +30,7 @@ export class ActividadesEconomicasController {
     @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN)
     @Post('actividad-economica')
-    async createActividadEconomica(@Body() data: CreateActividadEconomicaDto): Promise<ActividadEconomica> {
+    async createActividadEconomica(@Body() data: CreateActividadEconomicaDto): Promise<IActividadEconomicaReturnDto> {
         return this.actividadesEconomicasService.createActividadEconomica(data);
     }
 
@@ -40,7 +40,7 @@ export class ActividadesEconomicasController {
     async editActividadEconomica(
         @Param('id') id: string,
         @Body() data: Prisma.ActividadEconomicaUpdateInput
-    ): Promise<ActividadEconomica> {
+    ): Promise<IActividadEconomicaReturnDto> {
         return this.actividadesEconomicasService.updateActividadEconomica({
             where: { id },
             data,
@@ -50,7 +50,7 @@ export class ActividadesEconomicasController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Delete('actividad-economica/:id')
-    async deleteActividadEconomica(@Param('id') id: string): Promise<ActividadEconomica> {
+    async deleteActividadEconomica(@Param('id') id: string): Promise<IActividadEconomicaReturnDto> {
         return this.actividadesEconomicasService.deleteActividadEconomica({ id });
     }
 }

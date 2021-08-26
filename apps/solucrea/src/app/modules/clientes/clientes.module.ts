@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -38,6 +38,9 @@ import { clientesRoutes } from './clientes.routing';
         SharedModule,
         NgxsModule.forFeature([ClientesState]),
     ],
-    providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-MX' }],
+    providers: [
+        { provide: MAT_DATE_LOCALE, useValue: 'es-MX' },
+        { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+    ],
 })
 export class ClientesModule {}

@@ -18,3 +18,5 @@ export * from './escolaridad-return.dto';
 export * from './estado-civil-return.dto';
 export * from './tipo-de-vivienda-return.dto';
 export * from './actividad-economica-return.dto';
+export * from './create-actividad-economica.dto';
+export * from './cliente-return.dto';

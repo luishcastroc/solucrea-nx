@@ -47,6 +47,11 @@ export class RemoveColonia {
     constructor(public index: number) {}
 }
 
+export class SelectActividadEconomica {
+    static readonly type = '[Cliente] Select ActividadEconomica';
+    constructor(public id: string) {}
+}
+
 export class GetConfig {
     static readonly type = '[Cliente] Get Config';
 }

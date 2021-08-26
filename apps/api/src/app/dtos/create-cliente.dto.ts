@@ -1,7 +1,39 @@
-import { Prisma } from '@prisma/client';
-import { IsDate, IsNotEmpty } from 'class-validator';
+import { Credito, Direccion, Prisma, TipoDireccion } from '@prisma/client';
+import { IsDateString, IsNotEmpty } from 'class-validator';
 
-export class CreateClienteDto implements Prisma.ClienteCreateInput {
+export class IDireccion {
+    id?: string;
+    tipo: TipoDireccion;
+    calle: string;
+    numero: string;
+    cruzamientos: string | null;
+    creadoPor?: string;
+    fechaCreacion?: Date;
+    actualizadoPor?: string;
+    fechaActualizacion?: Date;
+    clienteId?: string | null;
+    coloniaId: string;
+}
+
+export class ITrabajo {
+    @IsNotEmpty({ message: 'Nombre del trabajo es requerido' })
+    nombre: string;
+    @IsNotEmpty({ message: 'Teléfono del trabajo es requerido' })
+    telefono: string;
+    @IsNotEmpty({ message: 'Antiguedad en el trabajo es requerida' })
+    antiguedad: number;
+    @IsNotEmpty({ message: 'Dirección del trabajo es requerido' })
+    direccion: IDireccion;
+    @IsNotEmpty({ message: 'Actividad económica del trabajo es requerida' })
+    actividadEconomica: string;
+    id?: string;
+    creadoPor?: string;
+    fechaCreacion?: Date;
+    actualizadoPor?: string;
+    fechaActualizacion?: Date;
+}
+
+export class CreateClienteDto {
     @IsNotEmpty({ message: 'Nombre es requerido' })
     nombre: string;
     @IsNotEmpty({ message: 'Apellido paterno es requerido' })
@@ -9,7 +41,7 @@ export class CreateClienteDto implements Prisma.ClienteCreateInput {
     @IsNotEmpty({ message: 'Apellido materno es requerido' })
     apellidoMaterno: string;
     @IsNotEmpty({ message: 'Fecha de nacimiento es requerida' })
-    @IsDate({ message: 'Fecha inválida favor de verificar' })
+    @IsDateString({ strict: true }, { message: 'Fecha inválida favor de verificar' })
     fechaDeNacimiento: string | Date;
     @IsNotEmpty({ message: 'RFC es requerido' })
     rfc: string;
@@ -30,13 +62,13 @@ export class CreateClienteDto implements Prisma.ClienteCreateInput {
     @IsNotEmpty({ message: 'Teléfono es requerido' })
     telefono1: string;
     @IsNotEmpty({ message: 'Trabajo es requerido' })
-    trabajo: Prisma.TrabajoCreateNestedOneWithoutClienteInput;
+    trabajo: ITrabajo;
     telefono2?: string;
     numeroCreditosCrecer?: number;
-    creadoPor: string;
+    creadoPor?: string;
     fechaCreacion?: string | Date;
     actualizadoPor?: string;
     fechaActualizacion?: string | Date;
-    direcciones?: Prisma.DireccionCreateNestedManyWithoutClienteInput;
-    creditos?: Prisma.CreditoCreateNestedManyWithoutClienteInput;
+    direcciones?: IDireccion[];
+    creditos?: Credito[];
 }
