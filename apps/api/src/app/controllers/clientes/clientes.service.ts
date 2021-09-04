@@ -1,4 +1,5 @@
-import { IClienteReturnDto } from './../../dtos/cliente-return.dto';
+/* eslint-disable @typescript-eslint/naming-convention */
+import { IClienteReturnDto } from '../../dtos/cliente-return.dto';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Cliente, Direccion, Prisma } from '@prisma/client';
 import { CreateClienteDto } from 'api/dtos';
@@ -13,6 +14,8 @@ export class ClientesService {
         apellidoPaterno: true,
         apellidoMaterno: true,
         fechaDeNacimiento: true,
+        rfc: true,
+        curp: true,
         generoId: true,
         escolaridadId: true,
         estadoCivilId: true,
@@ -20,8 +23,16 @@ export class ClientesService {
         montoMinimo: true,
         montoMaximo: true,
         numeroCreditosCrecer: true,
+        telefono1: true,
+        telefono2: true,
         direcciones: {
-            select: { id: true, calle: true, numero: true, cruzamientos: true, coloniaId: true },
+            select: {
+                id: true,
+                calle: true,
+                numero: true,
+                cruzamientos: true,
+                colonia: { select: { id: true, descripcion: true, codigoPostal: true } },
+            },
         },
         trabajo: {
             select: {
@@ -29,12 +40,20 @@ export class ClientesService {
                 nombre: true,
                 antiguedad: true,
                 actividadEconomicaId: true,
+                telefono: true,
                 direccion: {
-                    select: { id: true, calle: true, numero: true, cruzamientos: true, coloniaId: true },
+                    select: {
+                        id: true,
+                        calle: true,
+                        numero: true,
+                        cruzamientos: true,
+                        colonia: { select: { id: true, descripcion: true, codigoPostal: true } },
+                    },
                 },
             },
         },
     };
+
     constructor(private prisma: PrismaService) {}
 
     async cliente(where: Prisma.ClienteWhereUniqueInput): Promise<IClienteReturnDto | null> {
@@ -75,7 +94,6 @@ export class ClientesService {
 
     async createCliente(data: CreateClienteDto): Promise<Cliente> {
         const existCliente = await this.prisma.cliente.findMany({
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             where: { curp: data.curp, OR: [{ rfc: data.rfc }] },
         });
         if (existCliente.length > 0) {

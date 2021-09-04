@@ -9,17 +9,26 @@ import {
 } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
+import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { TipoDireccion } from '@prisma/client';
-import { IActividadEconomicaReturnDto } from 'api/dtos/';
+import { IActividadEconomicaReturnDto, IClienteReturnDto } from 'api/dtos/';
 import { CanDeactivateComponent } from 'app/core/models/can-deactivate.model';
 import { isEqual } from 'lodash';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
 
-import { Add, GetColonias, GetConfig, RemoveColonia, SelectActividadEconomica } from '../_store/clientes.actions';
+import { EditMode } from '../../../core/models/edit-mode.type';
+import {
+    Add,
+    GetColonias,
+    GetConfig,
+    RemoveColonia,
+    SelectActividadEconomica,
+    SelectCliente,
+} from '../_store/clientes.actions';
 import { IColoniasState } from '../_store/clientes.model';
 import { ClientesState } from '../_store/clientes.state';
 import { ClientesService } from '../clientes.service';
@@ -35,15 +44,20 @@ import { curpValidator, rfcValidator } from '../validators/custom-clientes.valid
 export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateComponent {
     @Select(ClientesState.config) config$: Observable<IConfig>;
     @Select(ClientesState.loading) loading$: Observable<boolean>;
+    @Select(ClientesState.editMode) editMode$: Observable<EditMode>;
     @Select(ClientesState.colonias) colonias$: Observable<IColoniasState[]>;
+    @Select(ClientesState.selectedCliente) selectedCliente$: Observable<IClienteReturnDto>;
     @Select(ClientesState.selectedActividadEconomica)
     selectedActividadEconomica$: Observable<IActividadEconomicaReturnDto>;
+
     @ViewChild('stepper') private myStepper: MatStepper;
+
     ubicacion: IColoniasState[] = [];
     ubicacionTrabajo: IColoniasState;
-
     clienteForm: FormGroup;
     trabajoForm: FormGroup;
+    editMode: EditMode;
+
     get direcciones() {
         return this.clienteForm.get('direcciones') as FormArray;
     }
@@ -72,18 +86,18 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
         private _actions$: Actions,
         private _changeDetectorRef: ChangeDetectorRef,
         private _toast: HotToastService,
-        private _clienteService: ClientesService
+        private _clienteService: ClientesService,
+        private _route: ActivatedRoute
     ) {}
 
     @HostListener('window:beforeunload', ['$event'])
     canDeactivateWindow($event: Event) {
-        if (typeof this.canDeactivate() === 'function' && !this.canDeactivate()) {
-            $event.returnValue = true;
-            return;
-        }
+        $event.returnValue = true;
+        return;
     }
 
     ngOnInit(): void {
+        const id = this._route.snapshot.paramMap.get('id');
         // Getting initial configuration
         this._store.dispatch(new GetConfig());
         // Generate the cliente form
@@ -96,6 +110,8 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
         this.subscribeToColonias();
         this.subscribeToSelectedActividadEconomica();
         this.subscribeToActions();
+        // Getting the component mode
+        this.subscribeToEditMode(id);
     }
 
     /**
@@ -182,6 +198,65 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
             this.clienteForm.enable();
             this.trabajoForm.enable();
         });
+    }
+
+    /**
+     *
+     * Function to subscribe to editMode
+     *
+     */
+    subscribeToEditMode(id: string): void {
+        this.editMode$
+            .pipe(
+                takeUntil(this._unsubscribeAll),
+                switchMap((editMode) => {
+                    this.editMode = editMode;
+                    if (editMode === 'edit' && id) {
+                        this._store.dispatch(new SelectCliente(id));
+                        return this.selectedCliente$;
+                    }
+                    return of(null);
+                })
+            )
+            .subscribe((selectedCliente: IClienteReturnDto) => {
+                if (selectedCliente) {
+                    const { trabajo } = selectedCliente;
+
+                    // putting values into the Cliente form
+                    this.clienteForm.patchValue({
+                        ...selectedCliente,
+                        genero: selectedCliente.generoId,
+                        estadoCivil: selectedCliente.estadoCivilId,
+                        escolaridad: selectedCliente.escolaridadId,
+                        tipoDeVivienda: selectedCliente.tipoDeViviendaId,
+                    });
+
+                    // Filling the direccion field and calling the codigoPostal service
+                    selectedCliente.direcciones.forEach((direccion, i) => {
+                        this.direcciones.controls[i].get('codigoPostal').setValue(direccion.colonia.codigoPostal);
+                        this.getColonias(direccion.colonia.codigoPostal, i, 'CLIENTE');
+                        this.direcciones.controls[i].get('colonia').setValue(direccion.colonia.id);
+                    });
+
+                    // putting values into the Trabajo
+                    this.trabajoForm.patchValue({
+                        ...selectedCliente.trabajo,
+                        actividadEconomica: trabajo.actividadEconomicaId,
+                        direccion: {
+                            ...trabajo.direccion,
+                            colonia: trabajo.direccion.colonia.id,
+                            codigoPostal: trabajo.direccion.colonia.codigoPostal,
+                        },
+                    });
+
+                    // calling the service to fill the colonia on Trabajo
+                    this.getColonias(
+                        trabajo.direccion.colonia.codigoPostal,
+                        selectedCliente.direcciones.length,
+                        'TRABAJO'
+                    );
+                }
+            });
     }
 
     /**

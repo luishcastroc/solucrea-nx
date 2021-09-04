@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
-import { Cliente } from '@prisma/client';
 import { IActividadEconomicaReturnDto, IClienteReturnDto, IColoniaReturnDto } from 'api/dtos';
 import { forkJoin } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -10,11 +9,13 @@ import { IConfig } from '../models/config.model';
 import {
     Add,
     ClearClientesState,
+    ClientesMode,
     GetAll,
     GetColonias,
     GetConfig,
     RemoveColonia,
     SelectActividadEconomica,
+    SelectCliente,
 } from './clientes.actions';
 import { ClientesStateModel, IColoniasState } from './clientes.model';
 
@@ -25,7 +26,6 @@ import { ClientesStateModel, IColoniasState } from './clientes.model';
         editMode: 'edit',
         selectedCliente: null,
         selectedActividadEconomica: null,
-        searchResult: [],
         colonias: [],
         config: null,
         loading: false,
@@ -36,18 +36,18 @@ export class ClientesState {
     constructor(private clientesService: ClientesService, private _store: Store) {}
 
     @Selector()
-    static searchResults({ searchResult }: ClientesStateModel): IClienteReturnDto[] | [] {
-        return searchResult;
-    }
-
-    @Selector()
     static editMode({ editMode }: ClientesStateModel): string {
         return editMode;
     }
 
     @Selector()
-    static selectedUsuario({ selectedCliente }: ClientesStateModel): IClienteReturnDto {
+    static selectedCliente({ selectedCliente }: ClientesStateModel): IClienteReturnDto {
         return selectedCliente;
+    }
+
+    @Selector()
+    static clientes({ clientes }: ClientesStateModel): IClienteReturnDto[] {
+        return clientes;
     }
 
     @Selector()
@@ -73,14 +73,12 @@ export class ClientesState {
     }
 
     @Action(GetAll)
-    getAllUsuarios(ctx: StateContext<ClientesStateModel>, action: GetAll) {
-        const { id } = action;
+    getAllUsuarios(ctx: StateContext<ClientesStateModel>) {
         return this.clientesService.getClientes().pipe(
             tap((clientes: IClienteReturnDto[]) => {
                 if (clientes) {
                     ctx.patchState({
                         clientes,
-                        searchResult: clientes,
                     });
                 }
             })
@@ -169,13 +167,27 @@ export class ClientesState {
         );
     }
 
+    @Action(ClientesMode)
+    clientesMode(ctx: StateContext<ClientesStateModel>, { payload }: ClientesMode) {
+        const editMode = payload;
+        ctx.patchState({ editMode });
+    }
+
+    @Action(SelectCliente)
+    selectCliente(ctx: StateContext<ClientesStateModel>, { id }: SelectCliente) {
+        return this.clientesService.getCliente(id).pipe(
+            tap((selectedCliente) => {
+                ctx.patchState({ selectedCliente });
+            })
+        );
+    }
+
     @Action(ClearClientesState)
     clearState(ctx: StateContext<ClientesStateModel>) {
         ctx.patchState({
             clientes: [],
             editMode: 'edit',
             selectedCliente: null,
-            searchResult: [],
             colonias: [],
             config: null,
             loading: false,

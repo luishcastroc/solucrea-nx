@@ -47,8 +47,8 @@ export class ClientesService {
      *
      * @param id
      */
-    getCliente(id: string): Observable<Cliente> {
-        return this._httpClient.get<Cliente>(`${this._environment.uri}/cliente/${id}`);
+    getCliente(id: string): Observable<IClienteReturnDto> {
+        return this._httpClient.get<IClienteReturnDto>(`${this._environment.uri}/cliente/${id}`);
     }
 
     /**

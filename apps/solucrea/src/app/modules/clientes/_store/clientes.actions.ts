@@ -9,6 +9,10 @@ export class Add {
 
 export class GetAll {
     static readonly type = '[Cliente] Get All';
+}
+
+export class GetOne {
+    static readonly type = '[Cliente] Get One';
     constructor(public id: string) {}
 }
 
@@ -49,6 +53,11 @@ export class RemoveColonia {
 
 export class SelectActividadEconomica {
     static readonly type = '[Cliente] Select ActividadEconomica';
+    constructor(public id: string) {}
+}
+
+export class SelectCliente {
+    static readonly type = '[Cliente] Select Cliente';
     constructor(public id: string) {}
 }
 

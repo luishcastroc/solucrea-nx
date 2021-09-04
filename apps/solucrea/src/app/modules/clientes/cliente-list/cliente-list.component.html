@@ -8,14 +8,18 @@
             <div>
                 <div class="text-4xl font-extrabold tracking-tight leading-none">Clientes</div>
                 <div class="ml-0.5 font-medium text-secondary">
-                    <!-- <ng-container *ngIf="contactsCount > 0">
-                      {{contactsCount}}
-                  </ng-container>
-                  {{contactsCount | i18nPlural: {
-                  '=0'   : 'No contacts',
-                  '=1'   : 'contact',
-                  'other': 'contacts'
-              } }} -->
+                    <ng-container *ngIf="clientes.length > 0">
+                        {{ clientes.length | number }}
+                    </ng-container>
+                    {{
+                        clientes.length
+                            | i18nPlural
+                                : {
+                                      '=0': 'Sin clientes',
+                                      '=1': 'cliente',
+                                      other: 'clientes'
+                                  }
+                    }}
                 </div>
             </div>
 
@@ -25,7 +29,12 @@
                 <div class="flex-auto">
                     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full min-w-50">
                         <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                        <input matInput [autocomplete]="'off'" [placeholder]="'Buscar cliente'" />
+                        <input
+                            matInput
+                            [formControl]="searchInput"
+                            [autocomplete]="'off'"
+                            [placeholder]="'Buscar cliente'"
+                        />
                     </mat-form-field>
                 </div>
                 <!-- Add contact button -->
@@ -36,6 +45,54 @@
             </div>
         </div>
         <!-- Content -->
-        <div class="flex-auto"></div>
+        <div class="flex-auto">
+            <ng-container *ngFor="let cliente of searchResults$ | async">
+                <div class="z-20 flex px-8 py-4 md:px-10 border-b justify-between">
+                    <div class="flex gap-6 xsm:flex-wrap sm:flex-wrap">
+                        <div class="flex flex-col">
+                            <div class="font-bold">Nombre:</div>
+                            <div class="mt-2">{{ cliente.nombre }}</div>
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="font-bold">Apellido Paterno:</div>
+                            <div class="mt-2">{{ cliente.apellidoPaterno }}</div>
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="font-bold">Apellido Materno:</div>
+                            <div class="mt-2">{{ cliente.apellidoMaterno }}</div>
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="font-bold">CURP:</div>
+                            <div class="mt-2">{{ cliente.curp }}</div>
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="font-bold">RFC:</div>
+                            <div class="mt-2">{{ cliente.rfc }}</div>
+                        </div>
+                    </div>
+                    <div class="order-1 sm:order-2 sm:ml-3 xsm:flex-col flex justify-center items-center">
+                        <button
+                            mat-icon-button
+                            aria-label="Editar cliente"
+                            #tooltip="matTooltip"
+                            (click)="editCliente(cliente.id)"
+                            matTooltip="Editar cliente"
+                            [matTooltipPosition]="'below'"
+                        >
+                            <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:clipboard-list'"></mat-icon>
+                        </button>
+                        <button
+                            mat-icon-button
+                            aria-label="Inactivar cliente"
+                            #tooltip="matTooltip"
+                            matTooltip="Inactivar cliente"
+                            [matTooltipPosition]="'below'"
+                        >
+                            <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
     </div>
 </div>
