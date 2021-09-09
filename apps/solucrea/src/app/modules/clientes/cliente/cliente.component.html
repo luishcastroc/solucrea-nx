@@ -331,7 +331,10 @@
                                                         [svgIcon]="'heroicons_solid:location-marker'"
                                                         matPrefix
                                                     ></mat-icon>
-                                                    <mat-select [formControl]="direccion.get('colonia')">
+                                                    <mat-select
+                                                        [formControl]="direccion.get('colonia')"
+                                                        [compareWith]="compareColonias"
+                                                    >
                                                         <mat-option
                                                             *ngFor="let colonia of ubicacion[i]?.ubicacion.colonias"
                                                             [value]="colonia.id"
@@ -593,19 +596,26 @@
                                                 </mat-form-field>
                                             </div>
                                         </div>
-                                        <button mat-stroked-button type="button" matStepperPrevious>Anterior</button>
-                                        <button
-                                            mat-flat-button
-                                            type="button"
-                                            [color]="'primary'"
-                                            (click)="saveCliente()"
-                                            [disabled]="
-                                                (editMode === 'new' && !trabajoForm.touched && trabajoForm.invalid) ||
-                                                (clienteForm.disabled && trabajoForm.disabled)
-                                            "
-                                        >
-                                            {{ editMode === 'edit' ? 'Actualizar' : 'Guardar' }}
-                                        </button>
+                                        <div class="mt-2 w-full flex-auto">
+                                            <button mat-stroked-button type="button" matStepperPrevious>
+                                                Anterior
+                                            </button>
+                                            <button
+                                                mat-flat-button
+                                                type="button"
+                                                [color]="'primary'"
+                                                (click)="saveCliente()"
+                                                class="ml-2"
+                                                [disabled]="
+                                                    (editMode === 'new' &&
+                                                        !trabajoForm.touched &&
+                                                        trabajoForm.invalid) ||
+                                                    (clienteForm.disabled && trabajoForm.disabled)
+                                                "
+                                            >
+                                                {{ editMode === 'edit' ? 'Actualizar' : 'Guardar' }}
+                                            </button>
+                                        </div>
                                     </div>
                                 </form>
                             </ng-template>

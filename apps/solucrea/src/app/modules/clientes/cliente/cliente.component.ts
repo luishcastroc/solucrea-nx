@@ -14,7 +14,7 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { TipoDireccion } from '@prisma/client';
-import { IActividadEconomicaReturnDto, IClienteReturnDto, IDireccionesReturnDto } from 'api/dtos/';
+import { IActividadEconomicaReturnDto, IClienteReturnDto, IColonias, IDireccionesReturnDto } from 'api/dtos/';
 import { CanDeactivateComponent } from 'app/core/models/can-deactivate.model';
 import { isEqual } from 'lodash';
 import { Observable, of, Subject } from 'rxjs';
@@ -268,6 +268,8 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                     );
 
                     this.selectActividadEconomica(this.actividadEconomica.value);
+
+                    this._changeDetectorRef.markForCheck();
                 }
             });
     }
@@ -402,6 +404,17 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
      */
     selectActividadEconomica(id: string): void {
         this._store.dispatch(new SelectActividadEconomica(id));
+    }
+
+    /**
+     *
+     * Function to compare objects inside select
+     *
+     * @param colonia1
+     * @param colonia2
+     */
+    compareColonias(id: string, colonia2: IColonias) {
+        return id && colonia2 && id === colonia2.id;
     }
 
     /**

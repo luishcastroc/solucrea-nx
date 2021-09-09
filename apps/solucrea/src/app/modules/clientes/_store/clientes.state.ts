@@ -188,6 +188,7 @@ export class ClientesState {
             clientes: [],
             editMode: 'edit',
             selectedCliente: null,
+            selectedActividadEconomica: null,
             colonias: [],
             config: null,
             loading: false,

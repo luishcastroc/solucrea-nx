@@ -63,7 +63,7 @@
     "@ngxs/store": "^3.7.2",
     "@nrwl/angular": "12.8.0",
     "@nrwl/workspace": "^12.3.4",
-    "@prisma/client": "^2.29.0",
+    "@prisma/client": "^3.0.1",
     "apexcharts": "3.27.1",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.4.0",
@@ -136,7 +136,7 @@
     "lodash": "4.17.21",
     "postcss": "8.3.5",
     "prettier": "2.3.2",
-    "prisma": "^2.29.0",
+    "prisma": "^3.0.1",
     "protractor": "7.0.0",
     "tailwindcss": "2.2.4",
     "ts-jest": "27.0.3",
@@ -146,4 +146,3 @@
     "webpack-node-externals": "^3.0.0"
   }
 }
-
