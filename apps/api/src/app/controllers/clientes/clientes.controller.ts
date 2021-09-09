@@ -18,7 +18,7 @@ import { Public } from '../../decorators/public.decorator';
 import { Roles } from '../../decorators/roles.decorator';
 import { RolesGuard } from '../../guards/roles.guard';
 import { ClientesService } from './clientes.service';
-import { IClienteReturnDto } from 'api/dtos';
+import { IClienteReturnDto, UpdateClienteDto } from 'api/dtos';
 
 @Controller('')
 export class ClientesController {
@@ -34,7 +34,7 @@ export class ClientesController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('cliente/:id')
-    async getTipoDeVivienda(@Param('id') id: string): Promise<IClienteReturnDto> {
+    async getCliente(@Param('id') id: string): Promise<IClienteReturnDto> {
         return this.clientesService.cliente({ id });
     }
 
@@ -42,7 +42,7 @@ export class ClientesController {
     @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN)
     @Post('cliente')
-    async createTipoDeVivienda(@Request() req, @Body() data: CreateClienteDto): Promise<Cliente> {
+    async createCliente(@Request() req, @Body() data: CreateClienteDto): Promise<Cliente> {
         const creadoPor = req.user.username;
         data.creadoPor = creadoPor;
         return this.clientesService.createCliente(data);
@@ -51,7 +51,13 @@ export class ClientesController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Put('cliente/:id')
-    async editTipoDeVivienda(@Param('id') id: string, @Body() data: Prisma.ClienteUpdateInput): Promise<Cliente> {
+    async editCliente(
+        @Request() req,
+        @Param('id') id: string,
+        @Body() data: UpdateClienteDto
+    ): Promise<IClienteReturnDto> {
+        const actualizadoPor = req.user.username;
+        data.actualizadoPor = actualizadoPor;
         return this.clientesService.updateCliente({
             where: { id },
             data,
@@ -61,7 +67,7 @@ export class ClientesController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Delete('cliente/:id')
-    async deleteTipoDeVivienda(@Param('id') id: string): Promise<Cliente> {
+    async deleteCliente(@Param('id') id: string): Promise<Cliente> {
         return this.clientesService.deleteCliente({ id });
     }
 }

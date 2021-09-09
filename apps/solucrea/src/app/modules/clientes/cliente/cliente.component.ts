@@ -14,7 +14,7 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { TipoDireccion } from '@prisma/client';
-import { IActividadEconomicaReturnDto, IClienteReturnDto } from 'api/dtos/';
+import { IActividadEconomicaReturnDto, IClienteReturnDto, IDireccionesReturnDto } from 'api/dtos/';
 import { CanDeactivateComponent } from 'app/core/models/can-deactivate.model';
 import { isEqual } from 'lodash';
 import { Observable, of, Subject } from 'rxjs';
@@ -23,6 +23,7 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 import { EditMode } from '../../../core/models/edit-mode.type';
 import {
     Add,
+    ClearClientesState,
     GetColonias,
     GetConfig,
     RemoveColonia,
@@ -57,6 +58,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
     clienteForm: FormGroup;
     trabajoForm: FormGroup;
     editMode: EditMode;
+    savedDirecciones: IDireccionesReturnDto[];
 
     get direcciones() {
         return this.clienteForm.get('direcciones') as FormArray;
@@ -190,6 +192,11 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                 });
                 // we clear the forms
                 this.clienteForm.reset();
+                if (this.direcciones.length > 1) {
+                    for (let i = 1; i < this.direcciones.length; i++) {
+                        this.direcciones.removeAt(i);
+                    }
+                }
                 this.trabajoForm.reset();
                 // we reset the stepper
                 this.myStepper.reset();
@@ -220,7 +227,18 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
             )
             .subscribe((selectedCliente: IClienteReturnDto) => {
                 if (selectedCliente) {
-                    const { trabajo } = selectedCliente;
+                    const { direcciones, trabajo } = selectedCliente;
+
+                    this.savedDirecciones = direcciones;
+                    // Filling the direccion field and calling the codigoPostal service
+                    direcciones.forEach((direccion, i) => {
+                        if (i > 0) {
+                            this.addDireccionesField();
+                        }
+                        this.direcciones.controls[i].get('codigoPostal').setValue(direccion.colonia.codigoPostal);
+                        this.getColonias(direccion.colonia.codigoPostal, i, 'CLIENTE');
+                        this.direcciones.controls[i].get('colonia').setValue(direccion.colonia.id);
+                    });
 
                     // putting values into the Cliente form
                     this.clienteForm.patchValue({
@@ -229,13 +247,6 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                         estadoCivil: selectedCliente.estadoCivilId,
                         escolaridad: selectedCliente.escolaridadId,
                         tipoDeVivienda: selectedCliente.tipoDeViviendaId,
-                    });
-
-                    // Filling the direccion field and calling the codigoPostal service
-                    selectedCliente.direcciones.forEach((direccion, i) => {
-                        this.direcciones.controls[i].get('codigoPostal').setValue(direccion.colonia.codigoPostal);
-                        this.getColonias(direccion.colonia.codigoPostal, i, 'CLIENTE');
-                        this.direcciones.controls[i].get('colonia').setValue(direccion.colonia.id);
                     });
 
                     // putting values into the Trabajo
@@ -255,6 +266,8 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                         selectedCliente.direcciones.length,
                         'TRABAJO'
                     );
+
+                    this.selectActividadEconomica(this.actividadEconomica.value);
                 }
             });
     }
@@ -330,7 +343,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
         });
 
         // agregar direcciones form group tal array direcciones
-        (this.clienteForm.get('direcciones') as FormArray).push(direccionesFormGroup);
+        this.direcciones.push(direccionesFormGroup);
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
@@ -409,10 +422,14 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
      *
      */
     saveCliente(): void {
-        this.clienteForm.disable();
-        this.trabajoForm.disable();
-        const cliente = this._clienteService.prepareClienteObject(this.clienteForm, this.trabajoForm);
-        this._store.dispatch(new Add(cliente));
+        if (this.editMode === 'new') {
+            this.clienteForm.disable();
+            this.trabajoForm.disable();
+            const cliente = this._clienteService.prepareClienteObject(this.clienteForm, this.trabajoForm);
+            this._store.dispatch(new Add(cliente));
+        } else {
+            console.log('update: ', this.clienteForm.value);
+        }
     }
 
     /**
@@ -422,5 +439,6 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
+        this._store.dispatch(new ClearClientesState());
     }
 }

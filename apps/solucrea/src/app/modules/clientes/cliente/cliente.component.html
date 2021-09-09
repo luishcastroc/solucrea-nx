@@ -429,7 +429,7 @@
                                                 [svgIcon]="'heroicons_solid:clock'"
                                                 matPrefix
                                             ></mat-icon>
-                                            <input [formControlName]="'antiguedad'" matInput />
+                                            <input [formControlName]="'antiguedad'" matInput type="number" />
                                         </mat-form-field>
                                         <!-- Actividad Económica -->
                                         <mat-form-field class="fuse-mat-no-subscript w-full md:max-w-2/12">
@@ -600,7 +600,7 @@
                                             [color]="'primary'"
                                             (click)="saveCliente()"
                                             [disabled]="
-                                                (!trabajoForm.touched && trabajoForm.invalid) ||
+                                                (editMode === 'new' && !trabajoForm.touched && trabajoForm.invalid) ||
                                                 (clienteForm.disabled && trabajoForm.disabled)
                                             "
                                         >

@@ -1,6 +1,23 @@
 import { IColonias } from './colonia-return.dto';
 import { Decimal } from '@prisma/client/runtime';
 
+export interface IDireccionesReturnDto {
+    id: string;
+    calle: string;
+    numero: string;
+    cruzamientos: string;
+    colonia: IColonias;
+}
+
+export interface ITrabajoReturn {
+    id: string;
+    nombre: string;
+    antiguedad: number;
+    actividadEconomicaId: string;
+    telefono: string;
+    direccion: IDireccionesReturnDto;
+}
+
 export interface IClienteReturnDto {
     id: string;
     nombre: string;
@@ -18,25 +35,6 @@ export interface IClienteReturnDto {
     telefono1: string;
     telefono2: string;
     numeroCreditosCrecer: number;
-    direcciones: {
-        id: string;
-        calle: string;
-        numero: string;
-        cruzamientos: string;
-        colonia: IColonias;
-    }[];
-    trabajo: {
-        id: string;
-        nombre: string;
-        antiguedad: number;
-        actividadEconomicaId: string;
-        telefono: string;
-        direccion: {
-            id: string;
-            calle: string;
-            numero: string;
-            cruzamientos: string;
-            colonia: IColonias;
-        };
-    };
+    direcciones: IDireccionesReturnDto[];
+    trabajo: ITrabajoReturn;
 }

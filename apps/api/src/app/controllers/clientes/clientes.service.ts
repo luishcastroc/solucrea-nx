@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-import { IClienteReturnDto } from '../../dtos/cliente-return.dto';
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Cliente, Direccion, Prisma } from '@prisma/client';
-import { CreateClienteDto } from 'api/dtos';
+import { CreateClienteDto, IClienteReturnDto, UpdateClienteDto } from 'api/dtos';
 
 import { PrismaService } from '../../prisma/prisma.service';
+import { IDireccionUpdateDto, ITrabajoDto } from './../../dtos/update-cliente.dto';
 
+/* eslint-disable @typescript-eslint/naming-convention */
 @Injectable()
 export class ClientesService {
     select = {
@@ -168,14 +168,52 @@ export class ClientesService {
 
     async updateCliente(params: {
         where: Prisma.ClienteWhereUniqueInput;
-        data: Prisma.ClienteUpdateInput;
-    }): Promise<Cliente> {
+        data: UpdateClienteDto;
+    }): Promise<IClienteReturnDto> {
         const { where, data } = params;
+
+        let dataToUpdate: Prisma.ClienteUpdateInput;
+
+        for (const field of Object.keys(data)) {
+            if (field === 'direcciones' && data[field]) {
+                const direcciones = this.getDirecciones(data.direcciones, data.actualizadoPor);
+                dataToUpdate = { ...dataToUpdate, direcciones };
+            }
+
+            if (field === 'trabajo' && data[field]) {
+                const trabajo = this.getTrabajo(data.trabajo);
+                dataToUpdate = { ...dataToUpdate, trabajo };
+            }
+
+            if (field === 'estadoCivil' && data[field]) {
+                const estadoCivil = { connect: { id: data.estadoCivil } };
+                dataToUpdate = { ...dataToUpdate, estadoCivil };
+            }
+
+            if (field === 'genero' && data[field]) {
+                const genero = { connect: { id: data.genero } };
+                dataToUpdate = { ...dataToUpdate, genero };
+            }
+
+            if (field === 'escolaridad' && data[field]) {
+                const escolaridad = { connect: { id: data.estadoCivil } };
+                dataToUpdate = { ...dataToUpdate, escolaridad };
+            }
+
+            if (field === 'tipoDeVivienda' && data[field]) {
+                const tipoDeVivienda = { connect: { id: data.tipoDeVivienda } };
+                dataToUpdate = { ...dataToUpdate, tipoDeVivienda };
+            }
+        }
+
         try {
-            return await this.prisma.cliente.update({
-                data,
+            const updateStatement = await this.prisma.cliente.update({
+                data: dataToUpdate,
                 where,
+                select: this.select,
             });
+
+            return updateStatement;
         } catch {
             throw new HttpException(
                 { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al actualizar el cliente' },
@@ -216,5 +254,84 @@ export class ClientesService {
             );
         }
         return clienteSearch;
+    }
+
+    private getDirecciones(
+        data: IDireccionUpdateDto,
+        actualizadoPor: string
+    ): Prisma.DireccionUpdateManyWithoutClienteInput {
+        let direcciones: Prisma.DireccionUpdateManyWithoutClienteInput;
+        const { deleteDireccion, create, update } = data;
+        if (update && update.length > 0) {
+            direcciones = {
+                update: update.map(({ id, calle, numero, cruzamientos, coloniaId }) => {
+                    const updateReturn = { where: { id }, data: {} };
+                    if (calle) {
+                        updateReturn.data = { ...updateReturn.data, calle };
+                    }
+                    if (numero) {
+                        updateReturn.data = { ...updateReturn.data, numero };
+                    }
+                    if (cruzamientos) {
+                        updateReturn.data = { ...updateReturn.data, cruzamientos };
+                    }
+                    if (coloniaId) {
+                        updateReturn.data = { ...updateReturn.data, colonia: { connect: { id: coloniaId } } };
+                    }
+                    return updateReturn;
+                }),
+            };
+        }
+        if (create && create) {
+            direcciones = {
+                ...direcciones,
+                createMany: {
+                    data: create.map(({ numero, calle, cruzamientos, coloniaId, tipo }: Direccion) => ({
+                        tipo,
+                        numero,
+                        calle,
+                        cruzamientos,
+                        coloniaId,
+                        creadoPor: actualizadoPor,
+                    })),
+                },
+            };
+        }
+        if (deleteDireccion && deleteDireccion.length > 0) {
+            direcciones = { ...direcciones, delete: deleteDireccion as Prisma.DireccionWhereUniqueInput };
+        }
+
+        return direcciones;
+    }
+
+    private getTrabajo(trabajo: ITrabajoDto): Prisma.TrabajoUpdateOneRequiredWithoutClienteInput {
+        let trabajoReturn: Prisma.TrabajoUpdateOneRequiredWithoutClienteInput;
+        const { nombre, telefono, antiguedad, direccion, actividadEconomica } = trabajo;
+        let update: Prisma.TrabajoUpdateWithoutClienteInput;
+
+        if (nombre) {
+            update = { ...update, nombre };
+            trabajoReturn = { ...trabajoReturn, update };
+        }
+        if (telefono) {
+            update = { ...update, telefono };
+            trabajoReturn = { ...trabajoReturn, update };
+        }
+        if (antiguedad) {
+            update = { ...update, antiguedad };
+            trabajoReturn = { ...trabajoReturn, update };
+        }
+        if (actividadEconomica) {
+            update = { ...update, actividadEconomica: { connect: { id: actividadEconomica } } };
+            trabajoReturn = { ...trabajoReturn, update };
+        }
+
+        if (direccion) {
+            const direccionTrabajo = { update: direccion };
+            update = { ...update, direccion: direccionTrabajo };
+            trabajoReturn = { ...trabajoReturn, update };
+        }
+
+        return trabajoReturn;
     }
 }

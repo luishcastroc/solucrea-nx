@@ -4,15 +4,15 @@ import { IsDateString, IsNotEmpty } from 'class-validator';
 export class IDireccion {
     id?: string;
     tipo: TipoDireccion;
-    calle: string;
-    numero: string;
-    cruzamientos: string | null;
+    calle?: string;
+    numero?: string;
+    cruzamientos?: string | null;
     creadoPor?: string;
     fechaCreacion?: Date;
     actualizadoPor?: string;
     fechaActualizacion?: Date;
     clienteId?: string | null;
-    coloniaId: string;
+    coloniaId?: string;
 }
 
 export class ITrabajo {
