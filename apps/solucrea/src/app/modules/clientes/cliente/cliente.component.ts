@@ -200,16 +200,24 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                     duration: 5000,
                     position: 'bottom-center',
                 });
-                // we clear the forms
-                this.clienteForm.reset();
-                if (this.direcciones.length > 1) {
-                    for (let i = 1; i < this.direcciones.length; i++) {
-                        this.direcciones.removeAt(i);
+
+                if (action instanceof Add) {
+                    // we clear the forms
+                    this.clienteForm.reset();
+                    if (this.direcciones.length > 1) {
+                        for (let i = 1; i < this.direcciones.length; i++) {
+                            this.direcciones.removeAt(i);
+                        }
                     }
+                    this.trabajoForm.reset();
+
+                    // we reset the stepper
+                    this.myStepper.reset();
+                } else {
+                    this.myStepper.previous();
+                    this.clienteForm.markAsPristine();
+                    this.trabajoForm.markAsPristine();
                 }
-                this.trabajoForm.reset();
-                // we reset the stepper
-                this.myStepper.reset();
             }
             // we enable the form
             this.clienteForm.enable();

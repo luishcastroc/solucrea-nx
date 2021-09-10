@@ -175,34 +175,45 @@ export class ClientesService {
         let dataToUpdate: Prisma.ClienteUpdateInput;
 
         for (const field of Object.keys(data)) {
-            if (field === 'direcciones' && data[field]) {
-                const direcciones = this.getDirecciones(data.direcciones, data.actualizadoPor);
-                dataToUpdate = { ...dataToUpdate, direcciones };
-            }
-
-            if (field === 'trabajo' && data[field]) {
-                const trabajo = this.getTrabajo(data.trabajo);
-                dataToUpdate = { ...dataToUpdate, trabajo };
-            }
-
-            if (field === 'estadoCivil' && data[field]) {
-                const estadoCivil = { connect: { id: data.estadoCivil } };
-                dataToUpdate = { ...dataToUpdate, estadoCivil };
-            }
-
-            if (field === 'genero' && data[field]) {
-                const genero = { connect: { id: data.genero } };
-                dataToUpdate = { ...dataToUpdate, genero };
-            }
-
-            if (field === 'escolaridad' && data[field]) {
-                const escolaridad = { connect: { id: data.estadoCivil } };
-                dataToUpdate = { ...dataToUpdate, escolaridad };
-            }
-
-            if (field === 'tipoDeVivienda' && data[field]) {
-                const tipoDeVivienda = { connect: { id: data.tipoDeVivienda } };
-                dataToUpdate = { ...dataToUpdate, tipoDeVivienda };
+            switch (field) {
+                case 'direcciones':
+                    if (data[field]) {
+                        const direcciones = this.getDirecciones(data.direcciones, data.actualizadoPor);
+                        dataToUpdate = { ...dataToUpdate, direcciones };
+                    }
+                    break;
+                case 'trabajo':
+                    if (data[field]) {
+                        const trabajo = this.getTrabajo(data.trabajo);
+                        dataToUpdate = { ...dataToUpdate, trabajo };
+                    }
+                    break;
+                case 'estadoCivil':
+                    if (data[field]) {
+                        const estadoCivil = { connect: { id: data.estadoCivil } };
+                        dataToUpdate = { ...dataToUpdate, estadoCivil };
+                    }
+                    break;
+                case 'genero':
+                    if (data[field]) {
+                        const genero = { connect: { id: data.genero } };
+                        dataToUpdate = { ...dataToUpdate, genero };
+                    }
+                    break;
+                case 'escolaridad':
+                    if (data[field]) {
+                        const escolaridad = { connect: { id: data.estadoCivil } };
+                        dataToUpdate = { ...dataToUpdate, escolaridad };
+                    }
+                    break;
+                case 'tipoDeVivienda':
+                    if (data[field]) {
+                        const tipoDeVivienda = { connect: { id: data.tipoDeVivienda } };
+                        dataToUpdate = { ...dataToUpdate, tipoDeVivienda };
+                    }
+                    break;
+                default:
+                    dataToUpdate = { ...dataToUpdate, [field]: data[field] };
             }
         }
 
@@ -215,6 +226,7 @@ export class ClientesService {
 
             return updateStatement;
         } catch (err) {
+            //console.log(err);
             throw new HttpException(
                 { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al actualizar el cliente' },
                 HttpStatus.INTERNAL_SERVER_ERROR
@@ -264,6 +276,7 @@ export class ClientesService {
         const { deleteDireccion, create, update } = data;
         if (update && update.length > 0) {
             direcciones = {
+                ...direcciones,
                 update: update.map(({ id, calle, numero, cruzamientos, coloniaId }) => {
                     const updateReturn = { where: { id }, data: {} };
                     if (calle) {
@@ -282,6 +295,7 @@ export class ClientesService {
                 }),
             };
         }
+
         if (create && create) {
             const dataCreate: Prisma.DireccionCreateManyClienteInput[] = create.map(
                 ({ numero, calle, cruzamientos, colonia, tipo }: CreateDireccionDto) =>

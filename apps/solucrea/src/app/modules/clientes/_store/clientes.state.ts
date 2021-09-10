@@ -105,11 +105,12 @@ export class ClientesState {
         return this.clientesService.editCliente(id, payload).pipe(
             tap((cliente: IClienteReturnDto) => {
                 const state = ctx.getState();
+                const selectedCliente = cliente;
                 const clientes = [...state.clientes];
                 const idx = clientes.findIndex((clienteBuscar) => clienteBuscar.id === id);
                 clientes[idx] = cliente;
 
-                ctx.patchState({ clientes });
+                ctx.patchState({ clientes, selectedCliente });
             })
         );
     }

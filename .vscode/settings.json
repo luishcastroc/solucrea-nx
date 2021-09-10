@@ -1,20 +1,4 @@
 {
-    "workbench.colorCustomizations": {
-        "titleBar.activeForeground": "#e7e7e7",
-        "titleBar.inactiveForeground": "#e7e7e799",
-        "titleBar.activeBackground": "#4a4a4a",
-        "titleBar.inactiveBackground": "#4a4a4a99",
-        "activityBar.activeBackground": "#636363",
-        "activityBar.activeBorder": "#103010",
-        "activityBar.background": "#636363",
-        "activityBar.foreground": "#e7e7e7",
-        "activityBar.inactiveForeground": "#e7e7e799",
-        "activityBarBadge.background": "#103010",
-        "activityBarBadge.foreground": "#e7e7e7",
-        "statusBar.background": "#4a4a4a",
-        "statusBar.foreground": "#e7e7e7",
-        "statusBarItem.hoverBackground": "#636363"
-    },
     "[prisma]": {
         "editor.defaultFormatter": "Prisma.prisma"
     },
