@@ -1,17 +1,17 @@
-import { IDireccion } from 'api/dtos/';
+import { CreateDireccionDto, IDireccion } from 'api/dtos/';
 export class IDireccionUpdateDto {
     deleteDireccion?: string[];
-    create?: IDireccion[];
+    create?: CreateDireccionDto[];
     update?: IDireccion[];
 }
 
 export interface ITrabajoDto {
     id?: string;
-    nombre: string;
-    telefono: string;
-    antiguedad: number;
-    direccion: IDireccion;
-    actividadEconomica: string;
+    nombre?: string;
+    telefono?: string;
+    antiguedad?: number;
+    direccion?: IDireccion;
+    actividadEconomica?: string;
 }
 
 export class UpdateClienteDto {
@@ -33,5 +33,5 @@ export class UpdateClienteDto {
     escolaridad?: string;
     genero?: string;
     direcciones?: IDireccionUpdateDto;
-    actualizadoPor: string;
+    actualizadoPor?: string;
 }

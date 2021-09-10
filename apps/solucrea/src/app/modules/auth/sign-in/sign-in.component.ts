@@ -1,14 +1,14 @@
-import { takeUntil } from 'rxjs/operators';
-import { IAlert } from './../../../../@fuse/components/alert/alert.model';
-import { FuseAlertService } from '@fuse/components/alert/alert.service';
 import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
-import { FuseAlertType } from '@fuse/components/alert';
+import { FuseAlertService } from '@fuse/components/alert/alert.service';
 import { Actions, ofActionErrored, Store } from '@ngxs/store';
 import { Login } from 'app/core/auth/store/auth.actions';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import { IAlert } from '../../../../@fuse/components/alert/alert.model';
 
 @Component({
     selector: 'auth-sign-in',

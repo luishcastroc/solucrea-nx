@@ -1,4 +1,4 @@
-import { Credito, Direccion, Prisma, TipoDireccion } from '@prisma/client';
+import { Credito, Prisma, TipoDireccion } from '@prisma/client';
 import { IsDateString, IsNotEmpty } from 'class-validator';
 
 export class IDireccion {
@@ -11,8 +11,9 @@ export class IDireccion {
     fechaCreacion?: Date;
     actualizadoPor?: string;
     fechaActualizacion?: Date;
-    clienteId?: string | null;
+    clienteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     coloniaId?: string;
+    colonia?: string;
 }
 
 export class ITrabajo {

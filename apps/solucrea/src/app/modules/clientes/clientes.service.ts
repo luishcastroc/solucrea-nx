@@ -65,8 +65,8 @@ export class ClientesService {
      *
      * @param UpdateClienteDto
      */
-    editCliente(id: string, cliente: UpdateClienteDto): Observable<Cliente> {
-        return this._httpClient.put<Cliente>(`${this._environment.uri}/cliente/${id}`, cliente);
+    editCliente(id: string, cliente: UpdateClienteDto): Observable<IClienteReturnDto> {
+        return this._httpClient.put<IClienteReturnDto>(`${this._environment.uri}/cliente/${id}`, cliente);
     }
 
     /**
@@ -86,7 +86,7 @@ export class ClientesService {
      * @returns ClienteSaveDto
      */
 
-    prepareClienteObject(clienteForm: FormGroup, trabajoForm: FormGroup): CreateClienteDto {
+    prepareClienteCreateObject(clienteForm: FormGroup, trabajoForm: FormGroup): CreateClienteDto {
         const {
             apellidoPaterno,
             apellidoMaterno,

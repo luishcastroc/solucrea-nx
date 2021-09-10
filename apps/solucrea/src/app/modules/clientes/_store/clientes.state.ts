@@ -10,6 +10,7 @@ import {
     Add,
     ClearClientesState,
     ClientesMode,
+    Edit,
     GetAll,
     GetColonias,
     GetConfig,
@@ -24,10 +25,10 @@ import { ClientesStateModel, IColoniasState } from './clientes.model';
     defaults: {
         clientes: [],
         editMode: 'edit',
-        selectedCliente: null,
-        selectedActividadEconomica: null,
+        selectedCliente: undefined,
+        selectedActividadEconomica: undefined,
         colonias: [],
-        config: null,
+        config: undefined,
         loading: false,
     },
 })
@@ -86,13 +87,27 @@ export class ClientesState {
     }
 
     @Action(Add)
-    addUsuario(ctx: StateContext<ClientesStateModel>, action: Add) {
+    addCliente(ctx: StateContext<ClientesStateModel>, action: Add) {
         const { payload } = action;
         return this.clientesService.addCliente(payload).pipe(
             tap((cliente: IClienteReturnDto) => {
                 const state = ctx.getState();
                 const clientes = [...state.clientes];
                 clientes.push(cliente);
+
+                ctx.patchState({ clientes });
+            })
+        );
+    }
+
+    @Action(Edit)
+    editClient(ctx: StateContext<ClientesStateModel>, { id, payload }: Edit) {
+        return this.clientesService.editCliente(id, payload).pipe(
+            tap((cliente: IClienteReturnDto) => {
+                const state = ctx.getState();
+                const clientes = [...state.clientes];
+                const idx = clientes.findIndex((clienteBuscar) => clienteBuscar.id === id);
+                clientes[idx] = cliente;
 
                 ctx.patchState({ clientes });
             })
@@ -135,11 +150,16 @@ export class ClientesState {
 
     @Action(SelectActividadEconomica)
     selectActividadEconomica(ctx: StateContext<ClientesStateModel>, { id }: SelectActividadEconomica) {
-        const state = ctx.getState();
-        const selectedActividadEconomica = state.config.actividadesEconomicas.filter(
-            (actividad) => actividad.id === id
-        )[0];
-        ctx.patchState({ selectedActividadEconomica });
+        const { config } = ctx.getState();
+        if (config) {
+            if (config.actividadesEconomicas && config.actividadesEconomicas.length > 0) {
+                const selectedActividadEconomica = config.actividadesEconomicas.filter(
+                    (actividad) => actividad.id === id
+                )[0];
+
+                ctx.patchState({ selectedActividadEconomica });
+            }
+        }
     }
 
     @Action(GetConfig)
@@ -187,10 +207,10 @@ export class ClientesState {
         ctx.patchState({
             clientes: [],
             editMode: 'edit',
-            selectedCliente: null,
-            selectedActividadEconomica: null,
+            selectedCliente: undefined,
+            selectedActividadEconomica: undefined,
             colonias: [],
-            config: null,
+            config: undefined,
             loading: false,
         });
     }

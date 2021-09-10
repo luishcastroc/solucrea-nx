@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Cliente, Direccion, Prisma } from '@prisma/client';
-import { CreateClienteDto, IClienteReturnDto, UpdateClienteDto } from 'api/dtos';
+import { CreateClienteDto, CreateDireccionDto, IClienteReturnDto, UpdateClienteDto } from 'api/dtos';
 
 import { PrismaService } from '../../prisma/prisma.service';
 import { IDireccionUpdateDto, ITrabajoDto } from './../../dtos/update-cliente.dto';
@@ -214,7 +214,7 @@ export class ClientesService {
             });
 
             return updateStatement;
-        } catch {
+        } catch (err) {
             throw new HttpException(
                 { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al actualizar el cliente' },
                 HttpStatus.INTERNAL_SERVER_ERROR
@@ -283,17 +283,22 @@ export class ClientesService {
             };
         }
         if (create && create) {
-            direcciones = {
-                ...direcciones,
-                createMany: {
-                    data: create.map(({ numero, calle, cruzamientos, coloniaId, tipo }: Direccion) => ({
+            const dataCreate: Prisma.DireccionCreateManyClienteInput[] = create.map(
+                ({ numero, calle, cruzamientos, colonia, tipo }: CreateDireccionDto) =>
+                    ({
                         tipo,
                         numero,
                         calle,
                         cruzamientos,
-                        coloniaId,
+                        coloniaId: colonia,
                         creadoPor: actualizadoPor,
-                    })),
+                    } as Prisma.DireccionCreateManyClienteInput)
+            );
+
+            direcciones = {
+                ...direcciones,
+                createMany: {
+                    data: dataCreate,
                 },
             };
         }
@@ -327,7 +332,9 @@ export class ClientesService {
         }
 
         if (direccion) {
-            const direccionTrabajo = { update: direccion };
+            const direccionTrabajo: Prisma.DireccionUpdateOneRequiredWithoutTrabajoInput = {
+                update: direccion as Prisma.DireccionUncheckedUpdateWithoutTrabajoInput,
+            };
             update = { ...update, direccion: direccionTrabajo };
             trabajoReturn = { ...trabajoReturn, update };
         }

@@ -14,7 +14,16 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { TipoDireccion } from '@prisma/client';
-import { IActividadEconomicaReturnDto, IClienteReturnDto, IColonias, IDireccionesReturnDto } from 'api/dtos/';
+import {
+    IActividadEconomicaReturnDto,
+    IClienteReturnDto,
+    IColonias,
+    IDireccion,
+    IDireccionUpdateDto,
+    ITrabajoDto,
+    UpdateClienteDto,
+    CreateDireccionDto,
+} from 'api/dtos/';
 import { CanDeactivateComponent } from 'app/core/models/can-deactivate.model';
 import { isEqual } from 'lodash';
 import { Observable, of, Subject } from 'rxjs';
@@ -23,6 +32,7 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 import { EditMode } from '../../../core/models/edit-mode.type';
 import {
     Add,
+    Edit,
     ClearClientesState,
     GetColonias,
     GetConfig,
@@ -58,7 +68,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
     clienteForm: FormGroup;
     trabajoForm: FormGroup;
     editMode: EditMode;
-    savedDirecciones: IDireccionesReturnDto[];
+    deletedAddresses = [];
 
     get direcciones() {
         return this.clienteForm.get('direcciones') as FormArray;
@@ -175,7 +185,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
      *
      */
     subscribeToActions(): void {
-        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(Add)).subscribe((action) => {
+        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(Add, Edit)).subscribe((action) => {
             const { error, successful } = action.result;
             if (error) {
                 const message = `${error['error'].message}`;
@@ -229,12 +239,12 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                 if (selectedCliente) {
                     const { direcciones, trabajo } = selectedCliente;
 
-                    this.savedDirecciones = direcciones;
                     // Filling the direccion field and calling the codigoPostal service
                     direcciones.forEach((direccion, i) => {
                         if (i > 0) {
                             this.addDireccionesField();
                         }
+                        this.direcciones.controls[i].get('id').setValue(direccion.id);
                         this.direcciones.controls[i].get('codigoPostal').setValue(direccion.colonia.codigoPostal);
                         this.getColonias(direccion.colonia.codigoPostal, i, 'CLIENTE');
                         this.direcciones.controls[i].get('colonia').setValue(direccion.colonia.id);
@@ -267,7 +277,9 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                         'TRABAJO'
                     );
 
-                    this.selectActividadEconomica(this.actividadEconomica.value);
+                    if (this.actividadEconomica.value) {
+                        this.selectActividadEconomica(this.actividadEconomica.value);
+                    }
 
                     this._changeDetectorRef.markForCheck();
                 }
@@ -280,6 +292,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
      */
     createClienteForm(): FormGroup {
         return this._formBuilder.group({
+            id: [''],
             nombre: ['', Validators.required],
             apellidoPaterno: ['', Validators.required],
             apellidoMaterno: ['', Validators.required],
@@ -304,6 +317,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
         return this._formBuilder.group({
             nombre: ['', Validators.required],
             direccion: this._formBuilder.group({
+                id: [''],
                 tipo: ['TRABAJO'],
                 calle: ['', Validators.required],
                 numero: ['', Validators.required],
@@ -334,6 +348,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
     addDireccionesField(): void {
         // Create an empty address form group
         const direccionesFormGroup = this._formBuilder.group({
+            id: [''],
             tipo: ['CLIENTE'],
             calle: ['', Validators.required],
             numero: ['', Validators.required],
@@ -355,14 +370,16 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
      * Remover el campo direcciones
      *
      * @param index
+     * @param id
      */
-    removeDireccionesField(index: number): void {
+    removeDireccionesField(index: number, id: string): void {
         // obtener form array para direcciones
         const direccionesFormArray = this.clienteForm.get('direcciones') as FormArray;
 
         // Remove the phone number field
         direccionesFormArray.removeAt(index);
         this.removeColonia(index);
+        this.deletedAddresses.push({ id });
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
@@ -438,10 +455,50 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
         if (this.editMode === 'new') {
             this.clienteForm.disable();
             this.trabajoForm.disable();
-            const cliente = this._clienteService.prepareClienteObject(this.clienteForm, this.trabajoForm);
+            const cliente = this._clienteService.prepareClienteCreateObject(this.clienteForm, this.trabajoForm);
             this._store.dispatch(new Add(cliente));
         } else {
-            console.log('update: ', this.clienteForm.value);
+            let cliente = this.getDirtyValues(this.clienteForm);
+            const trabajo: ITrabajoDto = this.getDirtyValues(this.trabajoForm);
+            let direcciones: IDireccionUpdateDto;
+
+            if (trabajo) {
+                cliente = { ...cliente, trabajo };
+            }
+
+            if (cliente.direcciones && Object.values(cliente.direcciones).length > 0) {
+                const create = Object.values(cliente.direcciones)
+                    .filter((direccion: IDireccion) => !direccion.id)
+                    .map((direccion: CreateDireccionDto) => {
+                        const { id, ...rest } = direccion;
+                        const direccionReturn: CreateDireccionDto = { tipo: 'CLIENTE', ...rest };
+                        return direccionReturn;
+                    });
+                const update = Object.values(cliente.direcciones).filter((direccion: IDireccion) => direccion.id);
+
+                // if there's a record that needs to be created add it to the object
+                if (create.length > 0) {
+                    direcciones = { ...direcciones, create };
+                }
+
+                // // if there's a records that needs to be updated add it to the object
+                if (update.length > 0) {
+                    direcciones = { ...direcciones, update: update as IDireccion[] };
+                }
+
+                // if there are deleted items add them so they can be updated
+                if (this.deletedAddresses.length > 0) {
+                    direcciones = { ...direcciones, deleteDireccion: this.deletedAddresses };
+                }
+                cliente = { ...cliente, direcciones };
+            } else if (this.deletedAddresses.length > 0) {
+                // if the object direcciones doesn't exist in the update but there are addressess to be deleted,
+                // create the array and add the elements to delete
+                direcciones = { ...direcciones, deleteDireccion: this.deletedAddresses };
+                cliente = { ...cliente, direcciones };
+            }
+
+            this._store.dispatch(new Edit(cliente.id, cliente));
         }
     }
 
@@ -453,5 +510,30 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
         this._store.dispatch(new ClearClientesState());
+    }
+
+    private getDirtyValues(form: any): UpdateClienteDto | ITrabajoDto | any {
+        const dirtyValues = {};
+        let prevId: string = null;
+
+        Object.keys(form.controls).forEach((key) => {
+            const currentControl = form.controls[key];
+            if (key === 'id') {
+                dirtyValues[key] = currentControl.value;
+            }
+
+            if (currentControl.dirty) {
+                if (currentControl.controls) {
+                    dirtyValues[key] = this.getDirtyValues(currentControl);
+                } else {
+                    dirtyValues[key] = currentControl.value;
+                }
+            }
+            if (key === 'direcciones') {
+                prevId = key;
+            }
+        });
+
+        return Object.keys(dirtyValues).length > 0 ? dirtyValues : null;
     }
 }

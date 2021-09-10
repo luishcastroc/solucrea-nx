@@ -349,7 +349,7 @@
                                                     <button
                                                         class="w-8 h-8 min-h-8"
                                                         mat-icon-button
-                                                        (click)="removeDireccionesField(i)"
+                                                        (click)="removeDireccionesField(i, direccion.get('id').value)"
                                                         matTooltip="Borrar"
                                                     >
                                                         <mat-icon
@@ -610,7 +610,12 @@
                                                     (editMode === 'new' &&
                                                         !trabajoForm.touched &&
                                                         trabajoForm.invalid) ||
-                                                    (clienteForm.disabled && trabajoForm.disabled)
+                                                    (clienteForm.disabled && trabajoForm.disabled) ||
+                                                    (editMode === 'edit' &&
+                                                        !trabajoForm.touched &&
+                                                        trabajoForm.invalid &&
+                                                        !clienteForm.touched &&
+                                                        clienteForm.invalid)
                                                 "
                                             >
                                                 {{ editMode === 'edit' ? 'Actualizar' : 'Guardar' }}
