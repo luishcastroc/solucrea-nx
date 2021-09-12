@@ -21,6 +21,9 @@ import { AjustesSecurityComponent } from './security/security.component';
 import { TeamDetailsComponent } from './team/details/team-details.component';
 import { TeamListComponent } from './team/list/team-list.component';
 import { AjustesTeamComponent } from './team/team.component';
+import { SucursalesComponent } from './sucursales/sucursales.component';
+import { SucusalesListComponent } from './sucursales/sucusales-list/sucusales-list.component';
+import { SucursalesDetailsComponent } from './sucursales/sucursales-details/sucursales-details.component';
 
 @NgModule({
     declarations: [
@@ -30,6 +33,9 @@ import { AjustesTeamComponent } from './team/team.component';
         AjustesTeamComponent,
         TeamDetailsComponent,
         TeamListComponent,
+        SucursalesComponent,
+        SucusalesListComponent,
+        SucursalesDetailsComponent,
     ],
     imports: [
         RouterModule.forChild(ajustesRoutes),

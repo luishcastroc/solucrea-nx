@@ -2,37 +2,37 @@ import { Usuario } from '@prisma/client';
 import { CreateUsuarioDto, UpdateUsuarioDto } from 'api/dtos';
 import { EditMode } from 'app/core/models/edit-mode.type';
 
-export class Add {
+export class AddUsuario {
     static readonly type = '[Usuario] Add';
     constructor(public payload: CreateUsuarioDto) {}
 }
 
-export class GetAll {
+export class GetAllUsuarios {
     static readonly type = '[Usuario] Get All';
     constructor(public id: string) {}
 }
 
-export class Edit {
+export class EditUsuario {
     static readonly type = '[Usuario] Edit';
     constructor(public id: string, public payload: UpdateUsuarioDto) {}
 }
 
-export class Delete {
+export class DeleteUsuario {
     static readonly type = '[Usuario] Delete';
     constructor(public id: string) {}
 }
 
-export class Select {
+export class SelectUsuario {
     static readonly type = '[Usuario] Select';
     constructor(public usuario: Usuario) {}
 }
 
-export class AjustesMode {
-    static readonly type = '[Ajustes] Edit Mode';
+export class AjustesModeUsuario {
+    static readonly type = '[Usuario] Edit Mode';
     constructor(public payload: EditMode) {}
 }
 
-export class Search {
+export class SearchUsuario {
     static readonly type = '[Usuario] Search';
     constructor(public payload: string) {}
 }

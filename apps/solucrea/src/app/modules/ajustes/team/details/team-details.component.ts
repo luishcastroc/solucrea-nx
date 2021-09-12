@@ -11,7 +11,7 @@ import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
-import { Add, Edit } from '../../_store/ajustes.actions';
+import { AddUsuario, EditUsuario } from '../../_store/ajustes-usuarios.actions';
 import { createPasswordStrengthValidator } from '../../validators/custom-ajustes.validators';
 
 @Component({
@@ -80,7 +80,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionErrored(Edit, Add)).subscribe(() => {
+        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionErrored(EditUsuario, AddUsuario)).subscribe(() => {
             const message = this.errorMessage;
             this._toast.error(message, {
                 duration: 5000,
@@ -89,22 +89,24 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
             this.usuarioForm.enable();
         });
 
-        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(Edit, Add)).subscribe((action) => {
-            const message = this.successMessage;
-            this._toast.success(message, {
-                duration: 5000,
-                position: 'bottom-center',
+        this._actions$
+            .pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(EditUsuario, AddUsuario))
+            .subscribe((action) => {
+                const message = this.successMessage;
+                this._toast.success(message, {
+                    duration: 5000,
+                    position: 'bottom-center',
+                });
+                this.usuarioForm.enable();
+                if (this.mode === 'password') {
+                    this.usuarioForm.reset();
+                }
+                if (action instanceof AddUsuario) {
+                    setTimeout(() => {
+                        this._store.dispatch(new Navigate(['/ajustes/usuarios/']));
+                    }, 4000);
+                }
             });
-            this.usuarioForm.enable();
-            if (this.mode === 'password') {
-                this.usuarioForm.reset();
-            }
-            if (action instanceof Add) {
-                setTimeout(() => {
-                    this._store.dispatch(new Navigate(['/ajustes/usuarios/']));
-                }, 4000);
-            }
-        });
     }
 
     /**
@@ -147,7 +149,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
             usuario = { ...this.selectedUsuario, password };
         }
 
-        this._store.dispatch(new Edit(this.selectedUsuario.id, usuario));
+        this._store.dispatch(new EditUsuario(this.selectedUsuario.id, usuario));
     }
 
     /**
@@ -157,7 +159,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
     saveUsuario(): void {
         const id = this._route.snapshot.paramMap.get('id');
         const usuario = { id, ...this.usuarioForm.value };
-        this._store.dispatch(new Add(usuario));
+        this._store.dispatch(new AddUsuario(usuario));
     }
 
     /**

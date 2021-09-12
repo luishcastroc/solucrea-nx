@@ -5,7 +5,7 @@ import { AuthState } from 'app/core/auth/store/auth.state';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { Select as SelectUsuario } from '../_store/ajustes.actions';
+import { SelectUsuario } from '../_store/ajustes-usuarios.actions';
 
 @Component({
     selector: 'settings-team',

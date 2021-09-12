@@ -1,0 +1,21 @@
+<div class="w-full max-w-3xl flex flex-col">
+    <!-- Add team member -->
+    <div class="w-full">
+        <mat-form-field class="fuse-mat-no-subscript w-full" [floatLabel]="'always'">
+            <mat-label>Buscar Sucursal</mat-label>
+            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:office-building'" matPrefix></mat-icon>
+            <input matInput [autocomplete]="'off'" [placeholder]="'Nombre'" />
+            <button
+                mat-icon-button
+                matSuffix
+                aria-label="Crear sucursal"
+                #tooltip="matTooltip"
+                matTooltip="Crear sucursal"
+                [matTooltipPosition]="'below'"
+                (click)="openNewSucursal()"
+            >
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+            </button>
+        </mat-form-field>
+    </div>
+</div>

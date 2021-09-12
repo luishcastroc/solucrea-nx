@@ -6,7 +6,16 @@ import { AuthState } from 'app/core/auth/store/auth.state';
 import { tap } from 'rxjs/operators';
 
 import { AjustesService } from './../ajustes.service';
-import * as AjustesAction from './ajustes.actions';
+import {
+    AddUsuario,
+    AjustesModeUsuario,
+    ClearAjustesState,
+    DeleteUsuario,
+    EditUsuario,
+    GetAllUsuarios,
+    SearchUsuario,
+    SelectUsuario,
+} from './ajustes-usuarios.actions';
 import { AjustesStateModel } from './ajustes.model';
 
 @State<AjustesStateModel>({
@@ -37,8 +46,8 @@ export class AjustesState {
         return selectedUsuario;
     }
 
-    @Action(AjustesAction.GetAll)
-    getAllUsuarios(ctx: StateContext<AjustesStateModel>, action: AjustesAction.GetAll) {
+    @Action(GetAllUsuarios)
+    getAllUsuarios(ctx: StateContext<AjustesStateModel>, action: GetAllUsuarios) {
         const { id } = action;
         return this.ajustesService.getUsuarios().pipe(
             tap((result: Usuario[]) => {
@@ -51,8 +60,8 @@ export class AjustesState {
         );
     }
 
-    @Action(AjustesAction.Add)
-    addUsuario(ctx: StateContext<AjustesStateModel>, action: AjustesAction.Add) {
+    @Action(AddUsuario)
+    addUsuario(ctx: StateContext<AjustesStateModel>, action: AddUsuario) {
         const { payload } = action;
         return this.ajustesService.addUsuario(payload).pipe(
             tap((user: Usuario) => {
@@ -65,8 +74,8 @@ export class AjustesState {
         );
     }
 
-    @Action(AjustesAction.Edit)
-    editUsuario(ctx: StateContext<AjustesStateModel>, action: AjustesAction.Edit) {
+    @Action(EditUsuario)
+    editUsuario(ctx: StateContext<AjustesStateModel>, action: EditUsuario) {
         const { id, payload } = action;
         const authenticatedUser = this._store.selectSnapshot(AuthState.user);
         return this.ajustesService.editUsuario(id, payload).pipe(
@@ -88,8 +97,8 @@ export class AjustesState {
         );
     }
 
-    @Action(AjustesAction.Delete)
-    deleteUsuario(ctx: StateContext<AjustesStateModel>, action: AjustesAction.Delete) {
+    @Action(DeleteUsuario)
+    deleteUsuario(ctx: StateContext<AjustesStateModel>, action: DeleteUsuario) {
         const { id } = action;
         return this.ajustesService.deleteUsuario(id).pipe(
             tap((user: Usuario) => {
@@ -109,20 +118,20 @@ export class AjustesState {
         );
     }
 
-    @Action(AjustesAction.Select)
-    selectUsuario(ctx: StateContext<AjustesStateModel>, action: AjustesAction.Select) {
+    @Action(SelectUsuario)
+    selectUsuario(ctx: StateContext<AjustesStateModel>, action: SelectUsuario) {
         const { usuario: selectedUsuario } = action;
         ctx.patchState({ selectedUsuario });
     }
 
-    @Action(AjustesAction.AjustesMode)
-    toggleEditMode(ctx: StateContext<AjustesStateModel>, action: AjustesAction.AjustesMode) {
+    @Action(AjustesModeUsuario)
+    toggleEditMode(ctx: StateContext<AjustesStateModel>, action: AjustesModeUsuario) {
         const { payload } = action;
         ctx.patchState({ editMode: payload });
     }
 
-    @Action(AjustesAction.Search)
-    searchUsuario(ctx: StateContext<AjustesStateModel>, action: AjustesAction.Search) {
+    @Action(SearchUsuario)
+    searchUsuario(ctx: StateContext<AjustesStateModel>, action: SearchUsuario) {
         const { payload } = action;
         const state = ctx.getState();
         const usuarios = [...state.usuarios];
@@ -132,7 +141,7 @@ export class AjustesState {
         ctx.patchState({ searchResult });
     }
 
-    @Action(AjustesAction.ClearAjustesState)
+    @Action(ClearAjustesState)
     clearState(ctx: StateContext<AjustesStateModel>) {
         ctx.patchState({
             usuarios: [],

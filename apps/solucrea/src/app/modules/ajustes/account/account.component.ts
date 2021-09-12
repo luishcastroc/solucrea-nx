@@ -8,7 +8,7 @@ import { isEqual } from 'lodash';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { Edit } from '../_store/ajustes.actions';
+import { EditUsuario } from '../_store/ajustes-usuarios.actions';
 import { AjustesState } from '../_store/ajustes.state';
 
 @Component({
@@ -59,7 +59,7 @@ export class AjustesAccountComponent implements OnInit, OnDestroy {
             }
         });
 
-        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionErrored(Edit)).subscribe(() => {
+        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionErrored(EditUsuario)).subscribe(() => {
             const message = 'Error al editar usuario.';
             this._toast.error(message, {
                 duration: 5000,
@@ -68,7 +68,7 @@ export class AjustesAccountComponent implements OnInit, OnDestroy {
             this.accountForm.enable();
         });
 
-        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(Edit)).subscribe(() => {
+        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(EditUsuario)).subscribe(() => {
             const message = 'Usuario modificado exitosamente.';
             this._toast.success(message, {
                 duration: 5000,
@@ -93,7 +93,7 @@ export class AjustesAccountComponent implements OnInit, OnDestroy {
 
         if (!isEqual(prevUser, this.accountForm.value)) {
             this.accountForm.disable();
-            this._store.dispatch(new Edit(this.defaultUser.id, this.accountForm.value));
+            this._store.dispatch(new EditUsuario(this.defaultUser.id, this.accountForm.value));
         }
     }
 

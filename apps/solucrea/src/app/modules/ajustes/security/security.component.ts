@@ -10,7 +10,7 @@ import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { fuseAnimations } from '@fuse/animations/public-api';
-import { Edit } from './../_store/ajustes.actions';
+import { EditUsuario } from '../_store/ajustes-usuarios.actions';
 
 @Component({
     selector: 'settings-security',
@@ -64,7 +64,7 @@ export class AjustesSecurityComponent implements OnInit, OnDestroy {
             }
         });
 
-        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionErrored(Edit)).subscribe(() => {
+        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionErrored(EditUsuario)).subscribe(() => {
             const message = 'Error al editar contraseña.';
             this._toast.error(message, {
                 duration: 5000,
@@ -73,7 +73,7 @@ export class AjustesSecurityComponent implements OnInit, OnDestroy {
             this.securityForm.enable();
         });
 
-        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(Edit)).subscribe(() => {
+        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(EditUsuario)).subscribe(() => {
             const message = 'Contraseña modificada exitosamente.';
             this._toast.success(message, {
                 duration: 5000,
@@ -91,7 +91,7 @@ export class AjustesSecurityComponent implements OnInit, OnDestroy {
     submitNewPassword(): void {
         this.securityForm.disable();
         this._store.dispatch(
-            new Edit(this.usuario.id, {
+            new EditUsuario(this.usuario.id, {
                 password: this.newPassword.value,
                 oldPassword: this.currentPassword.value,
             })

@@ -19,7 +19,14 @@ import { ConfirmationDialogComponent } from 'app/shared';
 import { Observable, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
-import * as UsuarioAction from '../../_store/ajustes.actions';
+import {
+    AjustesModeUsuario,
+    DeleteUsuario,
+    EditUsuario,
+    GetAllUsuarios,
+    SearchUsuario,
+    SelectUsuario,
+} from '../../_store/ajustes-usuarios.actions';
 import { AjustesState } from '../../_store/ajustes.state';
 import { IRole } from '../../models/roles.model';
 import { defaultRoles } from '../../roles';
@@ -58,7 +65,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-        this._store.dispatch(new UsuarioAction.GetAll(this.usuario.id));
+        this._store.dispatch(new GetAllUsuarios(this.usuario.id));
 
         this.searchResults$.pipe(takeUntil(this._unsubscribeAll)).subscribe((usuarios: Usuario[]) => {
             this.searchResults = usuarios;
@@ -71,15 +78,15 @@ export class TeamListComponent implements OnInit, OnDestroy {
         this.searchInputControl.valueChanges
             .pipe(
                 takeUntil(this._unsubscribeAll),
-                switchMap((query) => this._store.dispatch(new UsuarioAction.Search(query)))
+                switchMap((query) => this._store.dispatch(new SearchUsuario(query)))
             )
             .subscribe();
 
         this._actions$
-            .pipe(takeUntil(this._unsubscribeAll), ofActionErrored(UsuarioAction.Delete, UsuarioAction.Edit))
+            .pipe(takeUntil(this._unsubscribeAll), ofActionErrored(DeleteUsuario, EditUsuario))
             .subscribe((action) => {
                 let message = 'Error al modificar rol de usuario.';
-                if (action instanceof UsuarioAction.Delete) {
+                if (action instanceof DeleteUsuario) {
                     message = 'Error al borrar usuario.';
                 }
 
@@ -90,10 +97,10 @@ export class TeamListComponent implements OnInit, OnDestroy {
             });
 
         this._actions$
-            .pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(UsuarioAction.Delete, UsuarioAction.Edit))
+            .pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(DeleteUsuario, EditUsuario))
             .subscribe((action) => {
                 let message = 'Rol de usuario modificado exitosamente';
-                if (action instanceof UsuarioAction.Delete) {
+                if (action instanceof DeleteUsuario) {
                     message = 'Usuario eliminado exitosamente.';
                 }
 
@@ -125,10 +132,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
      *
      */
     openNewUser(): void {
-        this._store.dispatch([
-            new Navigate([`ajustes/usuarios/${AuthUtils.guid()}`]),
-            new UsuarioAction.AjustesMode('new'),
-        ]);
+        this._store.dispatch([new Navigate([`ajustes/usuarios/${AuthUtils.guid()}`]), new AjustesModeUsuario('new')]);
     }
 
     /**
@@ -140,8 +144,8 @@ export class TeamListComponent implements OnInit, OnDestroy {
     editUser(usuario: Usuario, mode: EditMode): void {
         this._store.dispatch([
             new Navigate([`ajustes/usuarios/${usuario.id}`]),
-            new UsuarioAction.Select(usuario),
-            new UsuarioAction.AjustesMode(mode),
+            new SelectUsuario(usuario),
+            new AjustesModeUsuario(mode),
         ]);
     }
 
@@ -154,7 +158,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
     saveUser(usuario: Usuario, role: Role): void {
         if (usuario.role !== role) {
             const usuarioUpdate = { ...usuario, role };
-            this._store.dispatch(new UsuarioAction.Edit(usuarioUpdate.id, usuarioUpdate));
+            this._store.dispatch(new EditUsuario(usuarioUpdate.id, usuarioUpdate));
         }
     }
 
@@ -173,7 +177,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
         });
         confirmDialog.afterClosed().subscribe((result) => {
             if (result === true) {
-                this._store.dispatch(new UsuarioAction.Delete(usuario.id));
+                this._store.dispatch(new DeleteUsuario(usuario.id));
             }
         });
     }

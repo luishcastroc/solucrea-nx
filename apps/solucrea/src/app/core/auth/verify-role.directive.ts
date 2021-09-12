@@ -33,10 +33,12 @@ export class VerifyRoleDirective implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.user = this._store.selectSnapshot(AuthState.user);
 
-        if (this.roles && this._authService.checkAuthorization(this.user.role, this.roles)) {
-            this.viewContainer.createEmbeddedView(this.templateRef);
-        } else {
-            this.viewContainer.clear();
+        if (this.user) {
+            if (this.roles && this._authService.checkAuthorization(this.user.role, this.roles)) {
+                this.viewContainer.createEmbeddedView(this.templateRef);
+            } else {
+                this.viewContainer.clear();
+            }
         }
     }
 

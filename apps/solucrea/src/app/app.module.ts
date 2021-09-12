@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ExtraOptions, PreloadAllModules, RouterModule } from '@angular/router';
 import { FuseConfigModule } from '@fuse/services/config';
+import { HotToastModule } from '@ngneat/hot-toast';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
@@ -17,7 +18,6 @@ import { MarkdownModule } from 'ngx-markdown';
 import { FuseModule } from '../@fuse';
 import { environment } from '../environments/environment';
 import { AuthState } from './core/auth/store/auth.state';
-import { HotToastModule } from '@ngneat/hot-toast';
 
 const routerConfig: ExtraOptions = {
     scrollPositionRestoration: 'enabled',

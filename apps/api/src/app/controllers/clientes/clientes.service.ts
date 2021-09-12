@@ -346,7 +346,7 @@ export class ClientesService {
         }
 
         if (direccion) {
-            const direccionTrabajo: Prisma.DireccionUpdateOneRequiredWithoutTrabajoInput = {
+            const direccionTrabajo = {
                 update: direccion as Prisma.DireccionUncheckedUpdateWithoutTrabajoInput,
             };
             update = { ...update, direccion: direccionTrabajo };

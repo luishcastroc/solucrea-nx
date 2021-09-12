@@ -214,7 +214,6 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                     // we reset the stepper
                     this.myStepper.reset();
                 } else {
-                    this.myStepper.previous();
                     this.clienteForm.markAsPristine();
                     this.trabajoForm.markAsPristine();
                 }

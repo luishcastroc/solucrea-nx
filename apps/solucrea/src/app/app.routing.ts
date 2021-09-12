@@ -94,6 +94,10 @@ export const appRoutes: Route[] = [
                 loadChildren: () => import('app/modules/creditos/creditos.module').then((m) => m.CreditosModule),
             },
             {
+                path: 'mutualcrea',
+                loadChildren: () => import('app/modules/mutualcrea/mutualcrea.module').then((m) => m.MutualcreaModule),
+            },
+            {
                 path: 'reportes',
                 loadChildren: () => import('app/modules/reportes/reportes.module').then((m) => m.ReportesModule),
             },
