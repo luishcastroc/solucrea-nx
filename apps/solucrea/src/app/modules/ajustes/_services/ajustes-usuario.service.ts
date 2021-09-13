@@ -4,12 +4,12 @@ import { Usuario } from '@prisma/client';
 import { CreateUsuarioDto, UpdateUsuarioDto } from 'api/dtos';
 import { Observable } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
     providedIn: 'root',
 })
-export class AjustesService {
+export class AjustesUsuarioService {
     private _environment = environment;
 
     /**

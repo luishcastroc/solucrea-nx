@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
-import { Usuario } from '@prisma/client';
+import { Usuario, Sucursal } from '@prisma/client';
 import { UpdateUsuario } from 'app/core/auth/store/auth.actions';
 import { AuthState } from 'app/core/auth/store/auth.state';
 import { tap } from 'rxjs/operators';
 
-import { AjustesService } from './../ajustes.service';
+import { AjustesUsuarioService, AjustesSucursalService } from '../_services/';
 import {
     AddUsuario,
     AjustesModeUsuario,
@@ -16,23 +16,29 @@ import {
     SearchUsuario,
     SelectUsuario,
 } from './ajustes-usuarios.actions';
+import { GetAllSucursales } from './ajustes-sucursales.actions';
 import { AjustesStateModel } from './ajustes.model';
 
 @State<AjustesStateModel>({
     name: 'ajustes',
     defaults: {
         usuarios: [],
+        sucursales: [],
         editMode: 'edit',
-        selectedUsuario: null,
+        selectedUsuario: [],
         searchResult: [],
     },
 })
 @Injectable()
 export class AjustesState {
-    constructor(private ajustesService: AjustesService, private _store: Store) {}
+    constructor(
+        private _ajustesUsuarioService: AjustesUsuarioService,
+        private _ajustesSucursalesService: AjustesSucursalService,
+        private _store: Store
+    ) {}
 
     @Selector()
-    static searchResults({ searchResult }: AjustesStateModel): Usuario[] | null {
+    static searchResults({ searchResult }: AjustesStateModel): Usuario[] | Sucursal[] | [] {
         return searchResult;
     }
 
@@ -42,14 +48,14 @@ export class AjustesState {
     }
 
     @Selector()
-    static selectedUsuario({ selectedUsuario }: AjustesStateModel): Usuario {
+    static selectedUsuario({ selectedUsuario }: AjustesStateModel): Usuario | [] {
         return selectedUsuario;
     }
 
     @Action(GetAllUsuarios)
     getAllUsuarios(ctx: StateContext<AjustesStateModel>, action: GetAllUsuarios) {
         const { id } = action;
-        return this.ajustesService.getUsuarios().pipe(
+        return this._ajustesUsuarioService.getUsuarios().pipe(
             tap((result: Usuario[]) => {
                 const usuarios = result.filter((user) => user.id !== id);
                 ctx.patchState({
@@ -63,7 +69,7 @@ export class AjustesState {
     @Action(AddUsuario)
     addUsuario(ctx: StateContext<AjustesStateModel>, action: AddUsuario) {
         const { payload } = action;
-        return this.ajustesService.addUsuario(payload).pipe(
+        return this._ajustesUsuarioService.addUsuario(payload).pipe(
             tap((user: Usuario) => {
                 const state = ctx.getState();
                 const usuarios = [...state.usuarios];
@@ -78,7 +84,7 @@ export class AjustesState {
     editUsuario(ctx: StateContext<AjustesStateModel>, action: EditUsuario) {
         const { id, payload } = action;
         const authenticatedUser = this._store.selectSnapshot(AuthState.user);
-        return this.ajustesService.editUsuario(id, payload).pipe(
+        return this._ajustesUsuarioService.editUsuario(id, payload).pipe(
             tap((user: Usuario) => {
                 const state = ctx.getState();
                 if (state.usuarios) {
@@ -100,7 +106,7 @@ export class AjustesState {
     @Action(DeleteUsuario)
     deleteUsuario(ctx: StateContext<AjustesStateModel>, action: DeleteUsuario) {
         const { id } = action;
-        return this.ajustesService.deleteUsuario(id).pipe(
+        return this._ajustesUsuarioService.deleteUsuario(id).pipe(
             tap((user: Usuario) => {
                 const state = ctx.getState();
                 if (state.usuarios) {
@@ -141,10 +147,24 @@ export class AjustesState {
         ctx.patchState({ searchResult });
     }
 
+    @Action(GetAllSucursales)
+    getAllSucursales(ctx: StateContext<AjustesStateModel>, action: GetAllSucursales) {
+        const { id } = action;
+        return this._ajustesSucursalesService.getSucursales().pipe(
+            tap((sucursales: Sucursal[]) => {
+                ctx.patchState({
+                    sucursales,
+                    searchResult: sucursales,
+                });
+            })
+        );
+    }
+
     @Action(ClearAjustesState)
     clearState(ctx: StateContext<AjustesStateModel>) {
         ctx.patchState({
             usuarios: [],
+            sucursales: [],
             editMode: 'edit',
             selectedUsuario: null,
             searchResult: [],

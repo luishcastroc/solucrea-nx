@@ -6,7 +6,7 @@ export class AddSucursal {
     constructor(public payload: any) {}
 }
 
-export class GetAllSucursals {
+export class GetAllSucursales {
     static readonly type = '[Sucursal] Get All';
     constructor(public id: string) {}
 }
