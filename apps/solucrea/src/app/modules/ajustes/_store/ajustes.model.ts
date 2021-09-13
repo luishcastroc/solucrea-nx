@@ -6,7 +6,8 @@ export interface AjustesStateModel {
     usuarios: Usuario[] | [];
     sucursales: Sucursal[] | [];
     editMode: EditMode;
-    selectedUsuario: Usuario | [];
+    selectedUsuario: Usuario | undefined;
+    selectedSucursal: Sucursal | undefined;
     searchResult: Usuario[] | Sucursal[] | [];
     loading: boolean;
     colonias: IColoniaReturnDto;

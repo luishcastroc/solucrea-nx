@@ -1,5 +1,7 @@
+import { ClearSucursalState } from './../../_store/ajustes-usuarios.actions';
+import { Navigate } from '@ngxs/router-plugin';
 import { tap } from 'rxjs/operators';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -7,7 +9,7 @@ import { Actions, Select, Store } from '@ngxs/store';
 import { IColoniaReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models/edit-mode.type';
 import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 import { GetColonias } from '../../_store/ajustes-sucursales.actions';
 import { AjustesSucursalService } from './../../_services/ajustes-sucursal.service';
@@ -18,7 +20,7 @@ import { AjustesSucursalService } from './../../_services/ajustes-sucursal.servi
     styleUrls: ['./sucursales-details.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SucursalesDetailsComponent implements OnInit {
+export class SucursalesDetailsComponent implements OnInit, OnDestroy {
     @Select(AjustesState.loading) loading$: Observable<boolean>;
     @Select(AjustesState.editMode) editMode$: Observable<EditMode>;
     @Select(AjustesState.colonias) colonias$: Observable<IColoniaReturnDto>;
@@ -39,6 +41,8 @@ export class SucursalesDetailsComponent implements OnInit {
         return this.sucursalForm.get('direccion').get('estado') as FormControl;
     }
 
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
+
     constructor(
         private _store: Store,
         private _formBuilder: FormBuilder,
@@ -53,10 +57,10 @@ export class SucursalesDetailsComponent implements OnInit {
         const id = this._route.snapshot.paramMap.get('id');
         this.sucursalForm = this.createSucursalForm();
         this.coloniasTemp$ = this.colonias$.pipe(
-            tap(({ ciudad, estado }: IColoniaReturnDto) => {
-                if (ciudad && estado) {
-                    this.ciudad.patchValue(ciudad.descripcion);
-                    this.estado.patchValue(estado.descripcion);
+            tap((colonias: IColoniaReturnDto) => {
+                if (colonias) {
+                    this.ciudad.patchValue(colonias.ciudad.descripcion);
+                    this.estado.patchValue(colonias.estado.descripcion);
                 }
             })
         );
@@ -101,5 +105,18 @@ export class SucursalesDetailsComponent implements OnInit {
      */
     saveSucursal(): void {
         console.log(this.sucursalForm.value);
+    }
+
+    /**
+     * Volver a Clientes
+     */
+    back(): void {
+        this._store.dispatch(new Navigate(['/ajustes/sucursales']));
+    }
+
+    ngOnDestroy(): void {
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
+        this._store.dispatch(new ClearSucursalState());
     }
 }

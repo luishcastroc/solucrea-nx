@@ -37,6 +37,10 @@ export class SearchUsuario {
     constructor(public payload: string) {}
 }
 
+export class ClearSucursalState {
+    static readonly type = '[Sucursal] Clear Sucursal State';
+}
+
 export class ClearAjustesState {
     static readonly type = '[Ajustes] Clear State';
 }

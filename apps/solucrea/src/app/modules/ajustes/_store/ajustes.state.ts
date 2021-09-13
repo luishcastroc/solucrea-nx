@@ -11,6 +11,7 @@ import {
     AddUsuario,
     AjustesModeUsuario,
     ClearAjustesState,
+    ClearSucursalState,
     DeleteUsuario,
     EditUsuario,
     GetAllUsuarios,
@@ -27,7 +28,8 @@ import { ClientesService } from 'app/modules/clientes';
         usuarios: [],
         sucursales: [],
         editMode: 'edit',
-        selectedUsuario: [],
+        selectedUsuario: undefined,
+        selectedSucursal: undefined,
         searchResult: [],
         loading: false,
         colonias: undefined,
@@ -53,8 +55,13 @@ export class AjustesState {
     }
 
     @Selector()
-    static selectedUsuario({ selectedUsuario }: AjustesStateModel): Usuario | [] {
+    static selectedUsuario({ selectedUsuario }: AjustesStateModel): Usuario | undefined {
         return selectedUsuario;
+    }
+
+    @Selector()
+    static selectedSucursal({ selectedSucursal }: AjustesStateModel): Sucursal | undefined {
+        return selectedSucursal;
     }
 
     @Selector()
@@ -193,13 +200,25 @@ export class AjustesState {
         );
     }
 
+    @Action(ClearSucursalState)
+    clearSucursalState(ctx: StateContext<AjustesStateModel>) {
+        ctx.patchState({
+            editMode: 'edit',
+            selectedSucursal: undefined,
+            searchResult: [],
+            loading: false,
+            colonias: undefined,
+        });
+    }
+
     @Action(ClearAjustesState)
     clearState(ctx: StateContext<AjustesStateModel>) {
         ctx.patchState({
             usuarios: [],
             sucursales: [],
             editMode: 'edit',
-            selectedUsuario: null,
+            selectedUsuario: undefined,
+            selectedSucursal: undefined,
             searchResult: [],
             loading: false,
             colonias: undefined,
