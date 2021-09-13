@@ -1,5 +1,17 @@
 import { CreateSucursalDto } from '../../dtos/create-sucursal.dto';
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Post,
+    Put,
+    Request,
+    UseGuards,
+    UsePipes,
+    ValidationPipe,
+} from '@nestjs/common';
 import { Prisma, Role, Sucursal as SucursalModel } from '@prisma/client';
 
 import { Roles } from '../../decorators/roles.decorator';
@@ -29,7 +41,9 @@ export class SucursalesController {
     @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN)
     @Post('sucursal')
-    async createSucursal(@Body() data: CreateSucursalDto): Promise<SucursalModel> {
+    async createSucursal(@Request() req, @Body() data: CreateSucursalDto): Promise<SucursalModel> {
+        const creadoPor = req.user.username;
+        data.creadoPor = creadoPor;
         return this.sucursalesService.createSucursal(data);
     }
 

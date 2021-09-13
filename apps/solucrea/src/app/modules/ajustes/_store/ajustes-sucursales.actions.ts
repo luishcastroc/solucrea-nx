@@ -31,6 +31,11 @@ export class AjustesModeSucursal {
     constructor(public payload: EditMode) {}
 }
 
+export class GetColonias {
+    static readonly type = '[Sucursal] Get Colonias';
+    constructor(public cp: string) {}
+}
+
 export class SearchSucursal {
     static readonly type = '[Sucursal] Search';
     constructor(public payload: string) {}

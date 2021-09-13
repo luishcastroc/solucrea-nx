@@ -1,12 +1,13 @@
+import { IDireccion } from 'api/dtos';
 import { IsNotEmpty } from 'class-validator';
 import { Prisma } from '@prisma/client';
-export class CreateSucursalDto implements Prisma.SucursalCreateInput {
+export class CreateSucursalDto {
     @IsNotEmpty({ message: 'Nombre es requerido.' })
     nombre: string;
     @IsNotEmpty({ message: 'Teléfono es requerido.' })
     telefono: string;
     @IsNotEmpty({ message: 'Dirección es requerida.' })
-    direccion: Prisma.DireccionCreateNestedOneWithoutSucursalesInput;
+    direccion: IDireccion;
     creadoPor?: string;
     fechaCreacion?: string | Date;
     actualizadoPor?: string;

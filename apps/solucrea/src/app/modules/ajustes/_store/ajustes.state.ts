@@ -1,3 +1,4 @@
+import { IColoniaReturnDto } from 'api/dtos';
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { Usuario, Sucursal } from '@prisma/client';
@@ -16,8 +17,9 @@ import {
     SearchUsuario,
     SelectUsuario,
 } from './ajustes-usuarios.actions';
-import { GetAllSucursales } from './ajustes-sucursales.actions';
+import { AjustesModeSucursal, GetAllSucursales, GetColonias } from './ajustes-sucursales.actions';
 import { AjustesStateModel } from './ajustes.model';
+import { ClientesService } from 'app/modules/clientes';
 
 @State<AjustesStateModel>({
     name: 'ajustes',
@@ -27,6 +29,8 @@ import { AjustesStateModel } from './ajustes.model';
         editMode: 'edit',
         selectedUsuario: [],
         searchResult: [],
+        loading: false,
+        colonias: undefined,
     },
 })
 @Injectable()
@@ -34,6 +38,7 @@ export class AjustesState {
     constructor(
         private _ajustesUsuarioService: AjustesUsuarioService,
         private _ajustesSucursalesService: AjustesSucursalService,
+        private _clientesService: ClientesService,
         private _store: Store
     ) {}
 
@@ -50,6 +55,16 @@ export class AjustesState {
     @Selector()
     static selectedUsuario({ selectedUsuario }: AjustesStateModel): Usuario | [] {
         return selectedUsuario;
+    }
+
+    @Selector()
+    static loading({ loading }: AjustesStateModel): boolean {
+        return loading;
+    }
+
+    @Selector()
+    static colonias({ colonias }: AjustesStateModel): IColoniaReturnDto | [] {
+        return colonias;
     }
 
     @Action(GetAllUsuarios)
@@ -131,7 +146,13 @@ export class AjustesState {
     }
 
     @Action(AjustesModeUsuario)
-    toggleEditMode(ctx: StateContext<AjustesStateModel>, action: AjustesModeUsuario) {
+    toggleEditModeUsuario(ctx: StateContext<AjustesStateModel>, action: AjustesModeUsuario) {
+        const { payload } = action;
+        ctx.patchState({ editMode: payload });
+    }
+
+    @Action(AjustesModeSucursal)
+    toggleEditModeSucursal(ctx: StateContext<AjustesStateModel>, action: AjustesModeSucursal) {
         const { payload } = action;
         ctx.patchState({ editMode: payload });
     }
@@ -160,6 +181,18 @@ export class AjustesState {
         );
     }
 
+    @Action(GetColonias)
+    getColonias(ctx: StateContext<AjustesStateModel>, { cp }: GetColonias) {
+        return this._clientesService.getColoniasByCp(cp).pipe(
+            tap((colonias: IColoniaReturnDto) => {
+                const state = ctx.getState();
+                ctx.patchState({
+                    colonias,
+                });
+            })
+        );
+    }
+
     @Action(ClearAjustesState)
     clearState(ctx: StateContext<AjustesStateModel>) {
         ctx.patchState({
@@ -168,6 +201,8 @@ export class AjustesState {
             editMode: 'edit',
             selectedUsuario: null,
             searchResult: [],
+            loading: false,
+            colonias: undefined,
         });
     }
 }

@@ -3,7 +3,7 @@ import { Cliente, Direccion, Prisma } from '@prisma/client';
 import { CreateClienteDto, CreateDireccionDto, IClienteReturnDto, UpdateClienteDto } from 'api/dtos';
 
 import { PrismaService } from '../../prisma/prisma.service';
-import { IDireccionUpdateDto, ITrabajoDto } from './../../dtos/update-cliente.dto';
+import { IDireccionUpdateDto, ITrabajoDto } from '../../dtos/update-cliente.dto';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 @Injectable()

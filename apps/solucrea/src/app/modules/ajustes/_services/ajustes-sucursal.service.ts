@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Sucursal } from '@prisma/client';
+import { CreateSucursalDto } from 'api/dtos';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -42,7 +43,7 @@ export class AjustesSucursalService {
      *
      * @param CreateSucursalDto
      */
-    addSucursal(sucursal: any): Observable<any> {
+    addSucursal(sucursal: CreateSucursalDto): Observable<Sucursal> {
         return this._httpClient.post<Sucursal>(`${this._environment.uri}/sucursal`, sucursal);
     }
 

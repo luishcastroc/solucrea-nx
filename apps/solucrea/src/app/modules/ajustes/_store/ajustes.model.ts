@@ -1,3 +1,4 @@
+import { IColoniaReturnDto } from 'api/dtos';
 import { Usuario, Sucursal } from '@prisma/client';
 import { EditMode } from 'app/core/models/edit-mode.type';
 
@@ -7,4 +8,6 @@ export interface AjustesStateModel {
     editMode: EditMode;
     selectedUsuario: Usuario | [];
     searchResult: Usuario[] | Sucursal[] | [];
+    loading: boolean;
+    colonias: IColoniaReturnDto;
 }
