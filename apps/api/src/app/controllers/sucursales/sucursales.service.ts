@@ -49,7 +49,7 @@ export class SucursalesService {
                 calle: direccionDto.calle,
                 numero: direccionDto.numero,
                 cruzamientos: direccionDto.cruzamientos,
-                colonia: { connect: { id: direccionDto.coloniaId } },
+                colonia: { connect: { id: direccionDto.colonia } },
                 creadoPor,
             },
         };

@@ -17,5 +17,43 @@
                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
             </button>
         </mat-form-field>
+        <!-- Content -->
+        <div class="flex-auto">
+            <ng-container *ngFor="let sucursal of sucursales$ | async">
+                <div class="z-20 flex px-8 py-4 md:px-10 border-b justify-between">
+                    <div class="flex gap-6 xsm:flex-wrap sm:flex-wrap">
+                        <div class="flex flex-col">
+                            <div class="font-bold">Nombre:</div>
+                            <div class="mt-2">{{ sucursal.nombre }}</div>
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="font-bold">Telefono:</div>
+                            <div class="mt-2">{{ sucursal.telefono }}</div>
+                        </div>
+                    </div>
+                    <div class="order-1 sm:order-2 sm:ml-3 xsm:flex-col flex justify-center items-center">
+                        <button
+                            mat-icon-button
+                            aria-label="Editar sucursal"
+                            #tooltip="matTooltip"
+                            matTooltip="Editar sucursal"
+                            [matTooltipPosition]="'below'"
+                            (click)="editSucursal(sucursal.id)"
+                        >
+                            <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:clipboard-list'"></mat-icon>
+                        </button>
+                        <button
+                            mat-icon-button
+                            aria-label="Borrar sucursal"
+                            #tooltip="matTooltip"
+                            matTooltip="Borrar sucursal"
+                            [matTooltipPosition]="'below'"
+                        >
+                            <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
     </div>
 </div>

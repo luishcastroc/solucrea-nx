@@ -1,14 +1,14 @@
 import { Sucursal } from '@prisma/client';
+import { CreateSucursalDto } from 'api/dtos';
 import { EditMode } from 'app/core/models/edit-mode.type';
 
 export class AddSucursal {
     static readonly type = '[Sucursal] Add';
-    constructor(public payload: any) {}
+    constructor(public payload: CreateSucursalDto) {}
 }
 
 export class GetAllSucursales {
     static readonly type = '[Sucursal] Get All';
-    constructor(public id: string) {}
 }
 
 export class EditSucursal {

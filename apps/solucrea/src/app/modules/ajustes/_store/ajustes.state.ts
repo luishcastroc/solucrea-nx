@@ -1,12 +1,21 @@
-import { IColoniaReturnDto } from 'api/dtos';
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
-import { Usuario, Sucursal } from '@prisma/client';
+import { Sucursal, Usuario } from '@prisma/client';
+import { IColoniaReturnDto } from 'api/dtos';
 import { UpdateUsuario } from 'app/core/auth/store/auth.actions';
 import { AuthState } from 'app/core/auth/store/auth.state';
+import { EditMode } from 'app/core/models/edit-mode.type';
+import { ClientesService } from 'app/modules/clientes';
 import { tap } from 'rxjs/operators';
 
-import { AjustesUsuarioService, AjustesSucursalService } from '../_services/';
+import { AjustesSucursalService, AjustesUsuarioService } from '../_services/';
+import {
+    AjustesModeSucursal,
+    GetAllSucursales,
+    GetColonias,
+    AddSucursal,
+    EditSucursal,
+} from './ajustes-sucursales.actions';
 import {
     AddUsuario,
     AjustesModeUsuario,
@@ -18,9 +27,7 @@ import {
     SearchUsuario,
     SelectUsuario,
 } from './ajustes-usuarios.actions';
-import { AjustesModeSucursal, GetAllSucursales, GetColonias } from './ajustes-sucursales.actions';
 import { AjustesStateModel } from './ajustes.model';
-import { ClientesService } from 'app/modules/clientes';
 
 @State<AjustesStateModel>({
     name: 'ajustes',
@@ -50,7 +57,7 @@ export class AjustesState {
     }
 
     @Selector()
-    static editMode({ editMode }: AjustesStateModel): string {
+    static editMode({ editMode }: AjustesStateModel): EditMode {
         return editMode;
     }
 
@@ -67,6 +74,11 @@ export class AjustesState {
     @Selector()
     static loading({ loading }: AjustesStateModel): boolean {
         return loading;
+    }
+
+    @Selector()
+    static sucursales({ sucursales }: AjustesStateModel): Sucursal[] {
+        return sucursales;
     }
 
     @Selector()
@@ -176,14 +188,46 @@ export class AjustesState {
     }
 
     @Action(GetAllSucursales)
-    getAllSucursales(ctx: StateContext<AjustesStateModel>, action: GetAllSucursales) {
-        const { id } = action;
+    getAllSucursales(ctx: StateContext<AjustesStateModel>) {
         return this._ajustesSucursalesService.getSucursales().pipe(
             tap((sucursales: Sucursal[]) => {
                 ctx.patchState({
                     sucursales,
                     searchResult: sucursales,
                 });
+            })
+        );
+    }
+
+    @Action(AddSucursal)
+    addSucursal(ctx: StateContext<AjustesStateModel>, action: AddSucursal) {
+        const { payload } = action;
+        return this._ajustesSucursalesService.addSucursal(payload).pipe(
+            tap((sucursal: Sucursal) => {
+                const state = ctx.getState();
+                const sucursales = [...state.sucursales];
+                sucursales.push(sucursal);
+
+                ctx.patchState({ sucursales });
+            })
+        );
+    }
+
+    @Action(EditSucursal)
+    editSucursal(ctx: StateContext<AjustesStateModel>, action: EditUsuario) {
+        const { id, payload } = action;
+        return this._ajustesSucursalesService.editSucursal(id, payload).pipe(
+            tap((sucursal: Sucursal) => {
+                const state = ctx.getState();
+                if (state.sucursales) {
+                    const sucursales = [...state.sucursales];
+                    const idx = sucursales.findIndex((suc) => suc.id === id);
+                    sucursales[idx] = sucursal;
+
+                    ctx.patchState({
+                        sucursales,
+                    });
+                }
             })
         );
     }

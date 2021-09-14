@@ -29,7 +29,7 @@ import { isEqual } from 'lodash';
 import { Observable, of, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
-import { EditMode } from '../../../core/models/edit-mode.type';
+import { EditMode } from 'app/core/models/edit-mode.type';
 import {
     Add,
     Edit,

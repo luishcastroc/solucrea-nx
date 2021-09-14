@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { IActividadEconomicaReturnDto, IClienteReturnDto, IColoniaReturnDto } from 'api/dtos';
+import { EditMode } from 'app/core/models/edit-mode.type';
 import { forkJoin } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -37,7 +38,7 @@ export class ClientesState {
     constructor(private clientesService: ClientesService, private _store: Store) {}
 
     @Selector()
-    static editMode({ editMode }: ClientesStateModel): string {
+    static editMode({ editMode }: ClientesStateModel): EditMode {
         return editMode;
     }
 

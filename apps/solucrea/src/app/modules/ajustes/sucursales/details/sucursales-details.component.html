@@ -103,7 +103,7 @@
                             ></mat-icon>
                             <mat-select formControlName="colonia">
                                 <mat-option
-                                    *ngFor="let colonia of (coloniasTemp$ | async)?.colonias"
+                                    *ngFor="let colonia of (colonias$ | async)?.colonias"
                                     [value]="colonia.id"
                                     >{{ colonia.descripcion }}</mat-option
                                 >

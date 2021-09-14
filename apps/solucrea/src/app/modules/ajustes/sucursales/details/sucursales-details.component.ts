@@ -1,19 +1,19 @@
-import { ClearSucursalState } from './../../_store/ajustes-usuarios.actions';
-import { Navigate } from '@ngxs/router-plugin';
-import { tap } from 'rxjs/operators';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
-import { Actions, Select, Store } from '@ngxs/store';
+import { Navigate } from '@ngxs/router-plugin';
+import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { IColoniaReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models/edit-mode.type';
 import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { Observable, Subject } from 'rxjs';
+import { takeUntil, tap } from 'rxjs/operators';
 
 import { GetColonias } from '../../_store/ajustes-sucursales.actions';
-import { AjustesSucursalService } from './../../_services/ajustes-sucursal.service';
-import { Prisma, TipoDireccion } from '.prisma/client';
+import { AddSucursal, EditSucursal } from './../../_store/ajustes-sucursales.actions';
+import { ClearSucursalState } from './../../_store/ajustes-usuarios.actions';
+import { TipoDireccion } from '.prisma/client';
 
 @Component({
     selector: 'app-sucursales-details',
@@ -23,9 +23,9 @@ import { Prisma, TipoDireccion } from '.prisma/client';
 })
 export class SucursalesDetailsComponent implements OnInit, OnDestroy {
     @Select(AjustesState.loading) loading$: Observable<boolean>;
-    @Select(AjustesState.editMode) editMode$: Observable<EditMode>;
-    @Select(AjustesState.colonias) colonias$: Observable<IColoniaReturnDto>;
 
+    editMode$: Observable<EditMode>;
+    colonias$: Observable<IColoniaReturnDto>;
     sucursalForm: FormGroup;
     editMode: EditMode;
     coloniasTemp$: Observable<IColoniaReturnDto>;
@@ -50,19 +50,76 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
         private _actions$: Actions,
         private _changeDetectorRef: ChangeDetectorRef,
         private _toast: HotToastService,
-        private _sucursalesService: AjustesSucursalService,
         private _route: ActivatedRoute
-    ) {}
+    ) {
+        this.initializeData();
+    }
 
     ngOnInit(): void {
         const id = this._route.snapshot.paramMap.get('id');
         this.sucursalForm = this.createSucursalForm();
-        this.coloniasTemp$ = this.colonias$.pipe(
+        this.subscribeToActions();
+    }
+
+    /**
+     * Function to subscribe to actions
+     *
+     *
+     */
+    subscribeToActions(): void {
+        this._actions$
+            .pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(AddSucursal, EditSucursal))
+            .subscribe((action) => {
+                const { error, successful } = action.result;
+                if (error) {
+                    const message = `${error['error'].message}`;
+                    this._toast.error(message, {
+                        duration: 5000,
+                        position: 'bottom-center',
+                    });
+                }
+                if (successful) {
+                    const message = 'Sucursal salvada exitosamente.';
+                    this._toast.success(message, {
+                        duration: 5000,
+                        position: 'bottom-center',
+                    });
+
+                    if (action instanceof AddSucursal) {
+                        // we clear the forms
+                        this.sucursalForm.reset();
+                        this.sucursalForm.reset();
+                    } else {
+                        this.sucursalForm.markAsPristine();
+                    }
+                }
+                // we enable the form
+                this.sucursalForm.enable();
+            });
+    }
+
+    /**
+     *
+     * Initialize the selectors for the mode and colonias
+     *
+     */
+    initializeData(): void {
+        this.editMode$ = this._store.select(AjustesState.editMode).pipe(
+            tap((edit) => {
+                this.editMode = edit;
+
+                this._changeDetectorRef.markForCheck();
+            })
+        );
+
+        this.colonias$ = this._store.select(AjustesState.colonias).pipe(
             tap((colonias: IColoniaReturnDto) => {
                 if (colonias) {
                     this.ciudad.patchValue(colonias.ciudad.descripcion);
                     this.estado.patchValue(colonias.estado.descripcion);
                 }
+
+                this._changeDetectorRef.markForCheck();
             })
         );
     }
@@ -103,7 +160,11 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
      *
      */
     saveSucursal(): void {
-        console.log(this.sucursalForm.value);
+        if (this.editMode === 'new') {
+            this._store.dispatch(new AddSucursal(this.sucursalForm.value));
+        } else if (this.editMode === 'edit') {
+            console.log('Edit: ', this.sucursalForm.value);
+        }
     }
 
     /**
