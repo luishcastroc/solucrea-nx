@@ -120,7 +120,8 @@
                         (click)="saveSucursal()"
                         class="ml-2"
                         [disabled]="
-                            (editMode === 'new' && !sucursalForm.touched && sucursalForm.invalid) ||
+                            (editMode === 'new' && !sucursalForm.touched) ||
+                            sucursalForm.invalid ||
                             sucursalForm.disabled ||
                             (editMode === 'edit' && !sucursalForm.touched && sucursalForm.invalid)
                         "

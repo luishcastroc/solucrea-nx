@@ -13,6 +13,7 @@ import { Observable, Subject } from 'rxjs';
 
 import { GetColonias } from '../../_store/ajustes-sucursales.actions';
 import { AjustesSucursalService } from './../../_services/ajustes-sucursal.service';
+import { Prisma, TipoDireccion } from '.prisma/client';
 
 @Component({
     selector: 'app-sucursales-details',
@@ -72,12 +73,10 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
      */
     createSucursalForm(): FormGroup {
         return this._formBuilder.group({
-            id: [''],
             nombre: ['', Validators.required],
             telefono: ['', Validators.required],
             direccion: this._formBuilder.group({
-                id: [''],
-                tipo: ['TRABAJO'],
+                tipo: [TipoDireccion.SUCURSAL],
                 calle: ['', Validators.required],
                 numero: ['', Validators.required],
                 cruzamientos: [''],
