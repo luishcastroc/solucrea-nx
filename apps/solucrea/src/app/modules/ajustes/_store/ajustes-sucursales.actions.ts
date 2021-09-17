@@ -23,7 +23,7 @@ export class DeleteSucursal {
 
 export class SelectSucursal {
     static readonly type = '[Sucursal] Select';
-    constructor(public sucursal: Sucursal) {}
+    constructor(public id: string) {}
 }
 
 export class AjustesModeSucursal {

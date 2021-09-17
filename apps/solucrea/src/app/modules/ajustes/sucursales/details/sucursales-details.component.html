@@ -6,7 +6,13 @@
     <div class="flex-auto flex flex-col">
         <div class="w-full">
             <!-- Form -->
-            <form [formGroup]="sucursalForm" *ngIf="editMode$ | async as editMode">
+            <form
+                [formGroup]="sucursalForm"
+                *ngIf="
+                    ((editMode$ | async) === 'edit' && (selectedSucursal$ | async)) ||
+                    (editMode$ | async) === 'new' as editMode
+                "
+            >
                 <ng-template matStepLabel>Datos Generales</ng-template>
                 <div class="flex flex-wrap gap-3 w-full mt-8">
                     <!-- Nombre -->

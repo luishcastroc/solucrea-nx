@@ -16,6 +16,7 @@ import {
     AddSucursal,
     EditSucursal,
     DeleteSucursal,
+    SelectSucursal,
 } from './ajustes-sucursales.actions';
 import {
     AddUsuario,
@@ -229,6 +230,15 @@ export class AjustesState {
                         sucursales,
                     });
                 }
+            })
+        );
+    }
+
+    @Action(SelectSucursal)
+    selectSucursal(ctx: StateContext<AjustesStateModel>, { id }: SelectSucursal) {
+        return this._ajustesSucursalesService.getSucursal(id).pipe(
+            tap((selectedSucursal) => {
+                ctx.patchState({ selectedSucursal });
             })
         );
     }

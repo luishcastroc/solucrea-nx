@@ -10,10 +10,10 @@ import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 
-import { GetColonias } from '../../_store/ajustes-sucursales.actions';
-import { AddSucursal, EditSucursal } from './../../_store/ajustes-sucursales.actions';
+import { GetColonias, SelectSucursal } from '../../_store/ajustes-sucursales.actions';
+import { AddSucursal, EditSucursal } from '../../_store/ajustes-sucursales.actions';
 import { ClearSucursalState } from '../../_store/ajustes-usuarios.actions';
-import { TipoDireccion } from '.prisma/client';
+import { Sucursal, TipoDireccion } from '.prisma/client';
 
 @Component({
     selector: 'app-sucursales-details',
@@ -26,9 +26,11 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
 
     editMode$: Observable<EditMode>;
     colonias$: Observable<IColoniaReturnDto>;
+    selectedSucursal$: Observable<Sucursal>;
     sucursalForm: FormGroup;
     editMode: EditMode;
     coloniasTemp$: Observable<IColoniaReturnDto>;
+    id: string;
 
     get cp() {
         return this.sucursalForm.get('direccion').get('codigoPostal') as FormControl;
@@ -52,11 +54,11 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
         private _toast: HotToastService,
         private _route: ActivatedRoute
     ) {
-        this.initializeData();
+        this.initializeData(this.id);
     }
 
     ngOnInit(): void {
-        const id = this._route.snapshot.paramMap.get('id');
+        this.id = this._route.snapshot.paramMap.get('id');
         this.sucursalForm = this.createSucursalForm();
         this.subscribeToActions();
     }
@@ -107,10 +109,14 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
      * Initialize the selectors for the mode and colonias
      *
      */
-    initializeData(): void {
+    initializeData(id: string): void {
         this.editMode$ = this._store.select(AjustesState.editMode).pipe(
             tap((edit) => {
                 this.editMode = edit;
+
+                if (edit === 'edit') {
+                    this._store.dispatch(new SelectSucursal(id));
+                }
 
                 this._changeDetectorRef.markForCheck();
             })
@@ -124,6 +130,14 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
                 }
 
                 this._changeDetectorRef.markForCheck();
+            })
+        );
+
+        this.selectedSucursal$ = this._store.select(AjustesState.selectedSucursal).pipe(
+            tap((sucursal: Sucursal) => {
+                if (sucursal) {
+                    this.sucursalForm.patchValue(sucursal);
+                }
             })
         );
     }

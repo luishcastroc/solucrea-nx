@@ -75,7 +75,7 @@ export class ClientesState {
     }
 
     @Action(GetAll)
-    getAllUsuarios(ctx: StateContext<ClientesStateModel>) {
+    getAllClientes(ctx: StateContext<ClientesStateModel>) {
         return this.clientesService.getClientes().pipe(
             tap((clientes: IClienteReturnDto[]) => {
                 if (clientes) {
