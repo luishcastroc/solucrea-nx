@@ -61,7 +61,7 @@ export class AjustesSucursalService {
      *
      * @param id
      */
-    deleteUsuario(id: string): Observable<Sucursal> {
+    deleteSucursal(id: string): Observable<Sucursal> {
         return this._httpClient.delete<Sucursal>(`${this._environment.uri}/sucursal/${id}`);
     }
 }

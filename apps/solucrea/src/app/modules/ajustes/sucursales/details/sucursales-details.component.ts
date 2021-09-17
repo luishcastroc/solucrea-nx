@@ -12,7 +12,7 @@ import { takeUntil, tap } from 'rxjs/operators';
 
 import { GetColonias } from '../../_store/ajustes-sucursales.actions';
 import { AddSucursal, EditSucursal } from './../../_store/ajustes-sucursales.actions';
-import { ClearSucursalState } from './../../_store/ajustes-usuarios.actions';
+import { ClearSucursalState } from '../../_store/ajustes-usuarios.actions';
 import { TipoDireccion } from '.prisma/client';
 
 @Component({
@@ -69,19 +69,20 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
     subscribeToActions(): void {
         this._actions$
             .pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(AddSucursal, EditSucursal))
-            .subscribe((action) => {
-                const { error, successful } = action.result;
+            .subscribe((result) => {
+                const { error, successful } = result.result;
+                const { action } = result;
                 if (error) {
                     const message = `${error['error'].message}`;
                     this._toast.error(message, {
-                        duration: 5000,
+                        duration: 4000,
                         position: 'bottom-center',
                     });
                 }
                 if (successful) {
                     const message = 'Sucursal salvada exitosamente.';
                     this._toast.success(message, {
-                        duration: 5000,
+                        duration: 4000,
                         position: 'bottom-center',
                     });
 
@@ -89,6 +90,9 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
                         // we clear the forms
                         this.sucursalForm.reset();
                         this.sucursalForm.reset();
+                        setTimeout(() => {
+                            this._store.dispatch(new Navigate(['/ajustes/sucursales/']));
+                        }, 2000);
                     } else {
                         this.sucursalForm.markAsPristine();
                     }
@@ -161,6 +165,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
      */
     saveSucursal(): void {
         if (this.editMode === 'new') {
+            this.sucursalForm.disable();
             this._store.dispatch(new AddSucursal(this.sucursalForm.value));
         } else if (this.editMode === 'edit') {
             console.log('Edit: ', this.sucursalForm.value);

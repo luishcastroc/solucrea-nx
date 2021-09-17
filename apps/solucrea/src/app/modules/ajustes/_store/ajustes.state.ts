@@ -15,6 +15,7 @@ import {
     GetColonias,
     AddSucursal,
     EditSucursal,
+    DeleteSucursal,
 } from './ajustes-sucursales.actions';
 import {
     AddUsuario,
@@ -224,6 +225,24 @@ export class AjustesState {
                     const idx = sucursales.findIndex((suc) => suc.id === id);
                     sucursales[idx] = sucursal;
 
+                    ctx.patchState({
+                        sucursales,
+                    });
+                }
+            })
+        );
+    }
+
+    @Action(DeleteSucursal)
+    deleteSucursal(ctx: StateContext<AjustesStateModel>, action: DeleteSucursal) {
+        const { id } = action;
+        return this._ajustesSucursalesService.deleteSucursal(id).pipe(
+            tap((sucursal: Sucursal) => {
+                const state = ctx.getState();
+                if (sucursal) {
+                    const sucursales = [...state.sucursales];
+                    const idx = sucursales.findIndex((suc) => suc.id === id);
+                    sucursales.splice(idx, 1);
                     ctx.patchState({
                         sucursales,
                     });

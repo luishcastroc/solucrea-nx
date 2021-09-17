@@ -67,7 +67,7 @@ export class AjustesSecurityComponent implements OnInit, OnDestroy {
         this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionErrored(EditUsuario)).subscribe(() => {
             const message = 'Error al editar contraseña.';
             this._toast.error(message, {
-                duration: 5000,
+                duration: 4000,
                 position: 'bottom-center',
             });
             this.securityForm.enable();
@@ -76,7 +76,7 @@ export class AjustesSecurityComponent implements OnInit, OnDestroy {
         this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(EditUsuario)).subscribe(() => {
             const message = 'Contraseña modificada exitosamente.';
             this._toast.success(message, {
-                duration: 5000,
+                duration: 4000,
                 position: 'bottom-center',
             });
             this.securityForm.enable();

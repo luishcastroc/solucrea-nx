@@ -83,7 +83,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
         this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionErrored(EditUsuario, AddUsuario)).subscribe(() => {
             const message = this.errorMessage;
             this._toast.error(message, {
-                duration: 5000,
+                duration: 4000,
                 position: 'bottom-center',
             });
             this.usuarioForm.enable();
@@ -94,7 +94,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
             .subscribe((action) => {
                 const message = this.successMessage;
                 this._toast.success(message, {
-                    duration: 5000,
+                    duration: 4000,
                     position: 'bottom-center',
                 });
                 this.usuarioForm.enable();
@@ -104,7 +104,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
                 if (action instanceof AddUsuario) {
                     setTimeout(() => {
                         this._store.dispatch(new Navigate(['/ajustes/usuarios/']));
-                    }, 4000);
+                    }, 2000);
                 }
             });
     }

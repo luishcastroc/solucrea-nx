@@ -80,9 +80,26 @@ export class SucursalesService {
 
     async deleteSucursal(where: Prisma.SucursalWhereUniqueInput): Promise<Sucursal> {
         try {
-            return this.prisma.sucursal.delete({
-                where,
-            });
+            //get sucursal
+            const sucursal: Sucursal = await this.prisma.sucursal.findUnique({ where });
+
+            if (!sucursal) {
+                throw new HttpException(
+                    { status: HttpStatus.NOT_FOUND, message: 'la dirección de la sucursal no existe' },
+                    HttpStatus.NOT_FOUND
+                );
+            }
+            //delete the sucursal address first
+            const deleteDireccionSucursal = await this.prisma.direccion.delete({ where: { id: sucursal.direccionId } });
+
+            if (!deleteDireccionSucursal) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error borrando la sucursal' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
+            //delete the actual sucursal
+            return sucursal;
         } catch {
             throw new HttpException(
                 { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error borrando la sucursal' },

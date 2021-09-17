@@ -91,7 +91,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
                 }
 
                 this._toast.error(message, {
-                    duration: 5000,
+                    duration: 4000,
                     position: 'bottom-center',
                 });
             });
@@ -105,7 +105,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
                 }
 
                 this._toast.success(message, {
-                    duration: 5000,
+                    duration: 4000,
                     position: 'bottom-center',
                 });
             });

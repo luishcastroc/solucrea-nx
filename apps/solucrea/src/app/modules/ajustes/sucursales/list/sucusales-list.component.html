@@ -18,7 +18,7 @@
             </button>
         </mat-form-field>
         <!-- Content -->
-        <div class="flex-auto">
+        <div class="flex-auto mt-8">
             <ng-container *ngFor="let sucursal of sucursales$ | async">
                 <div class="z-20 flex px-8 py-4 md:px-10 border-b justify-between">
                     <div class="flex gap-6 xsm:flex-wrap sm:flex-wrap">
@@ -48,6 +48,7 @@
                             #tooltip="matTooltip"
                             matTooltip="Borrar sucursal"
                             [matTooltipPosition]="'below'"
+                            (click)="deleteSucursal(sucursal)"
                         >
                             <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                         </button>

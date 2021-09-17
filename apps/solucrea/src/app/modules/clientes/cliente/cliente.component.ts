@@ -190,14 +190,14 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
             if (error) {
                 const message = `${error['error'].message}`;
                 this._toast.error(message, {
-                    duration: 5000,
+                    duration: 4000,
                     position: 'bottom-center',
                 });
             }
             if (successful) {
                 const message = 'Cliente salvado exitosamente.';
                 this._toast.success(message, {
-                    duration: 5000,
+                    duration: 4000,
                     position: 'bottom-center',
                 });
 

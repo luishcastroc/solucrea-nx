@@ -62,7 +62,7 @@ export class AjustesAccountComponent implements OnInit, OnDestroy {
         this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionErrored(EditUsuario)).subscribe(() => {
             const message = 'Error al editar usuario.';
             this._toast.error(message, {
-                duration: 5000,
+                duration: 4000,
                 position: 'bottom-center',
             });
             this.accountForm.enable();
@@ -71,7 +71,7 @@ export class AjustesAccountComponent implements OnInit, OnDestroy {
         this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(EditUsuario)).subscribe(() => {
             const message = 'Usuario modificado exitosamente.';
             this._toast.success(message, {
-                duration: 5000,
+                duration: 4000,
                 position: 'bottom-center',
             });
             this.accountForm.enable();
