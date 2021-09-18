@@ -1,17 +1,33 @@
 import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { Prisma, Sucursal } from '@prisma/client';
 import { CreateSucursalDto } from 'api/dtos';
+import { ISucursalReturnDto } from 'api/dtos/sucursal-return.dto';
 
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class SucursalesService {
+    select = {
+        id: true,
+        nombre: true,
+        telefono: true,
+        direccion: {
+            select: {
+                id: true,
+                calle: true,
+                numero: true,
+                cruzamientos: true,
+                colonia: { select: { id: true, descripcion: true, codigoPostal: true } },
+            },
+        },
+    };
     constructor(private prisma: PrismaService) {}
 
-    async sucursal(sucursalWhereUniqueInput: Prisma.SucursalWhereUniqueInput): Promise<Sucursal | null> {
+    async sucursal(sucursalWhereUniqueInput: Prisma.SucursalWhereUniqueInput): Promise<ISucursalReturnDto | null> {
         try {
             const sucursalReturn = this.prisma.sucursal.findUnique({
                 where: sucursalWhereUniqueInput,
+                select: this.select,
             });
 
             if (!sucursalReturn) {
@@ -30,9 +46,9 @@ export class SucursalesService {
         }
     }
 
-    async sucursales(): Promise<Sucursal[]> {
+    async sucursales(): Promise<ISucursalReturnDto[]> {
         try {
-            return this.prisma.sucursal.findMany();
+            return this.prisma.sucursal.findMany({ select: this.select });
         } catch {
             throw new HttpException(
                 { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error consultando las sucursales' },
@@ -41,7 +57,7 @@ export class SucursalesService {
         }
     }
 
-    async createSucursal(sucursal: CreateSucursalDto): Promise<Sucursal> {
+    async createSucursal(sucursal: CreateSucursalDto): Promise<ISucursalReturnDto> {
         const { nombre, telefono, direccion: direccionDto, creadoPor } = sucursal;
         const direccion: Prisma.DireccionCreateNestedOneWithoutSucursalesInput = {
             create: {
@@ -58,6 +74,7 @@ export class SucursalesService {
         try {
             return this.prisma.sucursal.create({
                 data,
+                select: this.select,
             });
         } catch {
             throw new HttpException(
@@ -70,18 +87,19 @@ export class SucursalesService {
     async updateSucursal(params: {
         where: Prisma.SucursalWhereUniqueInput;
         data: Prisma.SucursalUpdateInput;
-    }): Promise<Sucursal> {
+    }): Promise<ISucursalReturnDto> {
         const { where, data } = params;
         return this.prisma.sucursal.update({
             data,
             where,
+            select: this.select,
         });
     }
 
-    async deleteSucursal(where: Prisma.SucursalWhereUniqueInput): Promise<Sucursal> {
+    async deleteSucursal(where: Prisma.SucursalWhereUniqueInput): Promise<ISucursalReturnDto> {
         try {
             //get sucursal
-            const sucursal: Sucursal = await this.prisma.sucursal.findUnique({ where });
+            const sucursal: ISucursalReturnDto = await this.prisma.sucursal.findUnique({ where, select: this.select });
 
             if (!sucursal) {
                 throw new HttpException(
@@ -90,7 +108,9 @@ export class SucursalesService {
                 );
             }
             //delete the sucursal address first
-            const deleteDireccionSucursal = await this.prisma.direccion.delete({ where: { id: sucursal.direccionId } });
+            const deleteDireccionSucursal = await this.prisma.direccion.delete({
+                where: { id: sucursal.direccion.id },
+            });
 
             if (!deleteDireccionSucursal) {
                 throw new HttpException(

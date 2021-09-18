@@ -40,3 +40,7 @@ export class SearchSucursal {
     static readonly type = '[Sucursal] Search';
     constructor(public payload: string) {}
 }
+
+export class ClearSucursalState {
+    static readonly type = '[Sucursal] Clear Sucursal State';
+}

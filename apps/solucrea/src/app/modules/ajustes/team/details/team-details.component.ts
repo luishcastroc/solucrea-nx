@@ -11,7 +11,7 @@ import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
-import { AddUsuario, EditUsuario } from '../../_store/ajustes-usuarios.actions';
+import { AddUsuario, ClearUsuarioState, EditUsuario } from '../../_store/ajustes-usuarios.actions';
 import { createPasswordStrengthValidator } from '../../validators/custom-ajustes.validators';
 
 @Component({
@@ -166,6 +166,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
      * On destroy
      */
     ngOnDestroy(): void {
+        this._store.dispatch(new ClearUsuarioState());
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();

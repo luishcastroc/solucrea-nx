@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Sucursal } from '@prisma/client';
 import { CreateSucursalDto } from 'api/dtos';
+import { ISucursalReturnDto } from 'api/dtos/sucursal-return.dto';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -25,8 +25,8 @@ export class AjustesSucursalService {
      *
      *
      */
-    getSucursales(): Observable<Sucursal[]> {
-        return this._httpClient.get<Sucursal[]>(`${this._environment.uri}/sucursales`);
+    getSucursales(): Observable<ISucursalReturnDto[]> {
+        return this._httpClient.get<ISucursalReturnDto[]>(`${this._environment.uri}/sucursales`);
     }
 
     /**
@@ -34,8 +34,8 @@ export class AjustesSucursalService {
      *
      * @param id
      */
-    getSucursal(id: string): Observable<Sucursal> {
-        return this._httpClient.get<Sucursal>(`${this._environment.uri}/sucursal/${id}`);
+    getSucursal(id: string): Observable<ISucursalReturnDto> {
+        return this._httpClient.get<ISucursalReturnDto>(`${this._environment.uri}/sucursal/${id}`);
     }
 
     /**
@@ -43,8 +43,8 @@ export class AjustesSucursalService {
      *
      * @param CreateSucursalDto
      */
-    addSucursal(sucursal: CreateSucursalDto): Observable<Sucursal> {
-        return this._httpClient.post<Sucursal>(`${this._environment.uri}/sucursal`, sucursal);
+    addSucursal(sucursal: CreateSucursalDto): Observable<ISucursalReturnDto> {
+        return this._httpClient.post<ISucursalReturnDto>(`${this._environment.uri}/sucursal`, sucursal);
     }
 
     /**
@@ -52,8 +52,8 @@ export class AjustesSucursalService {
      *
      * @param UpdateSucursalDto
      */
-    editSucursal(id: string, sucursal: any): Observable<Sucursal> {
-        return this._httpClient.put<Sucursal>(`${this._environment.uri}/sucursal/${id}`, sucursal);
+    editSucursal(id: string, sucursal: any): Observable<ISucursalReturnDto> {
+        return this._httpClient.put<ISucursalReturnDto>(`${this._environment.uri}/sucursal/${id}`, sucursal);
     }
 
     /**
@@ -61,7 +61,7 @@ export class AjustesSucursalService {
      *
      * @param id
      */
-    deleteSucursal(id: string): Observable<Sucursal> {
-        return this._httpClient.delete<Sucursal>(`${this._environment.uri}/sucursal/${id}`);
+    deleteSucursal(id: string): Observable<ISucursalReturnDto> {
+        return this._httpClient.delete<ISucursalReturnDto>(`${this._environment.uri}/sucursal/${id}`);
     }
 }

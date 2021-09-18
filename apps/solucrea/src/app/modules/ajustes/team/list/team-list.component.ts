@@ -21,6 +21,7 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 
 import {
     AjustesModeUsuario,
+    ClearUsuarioState,
     DeleteUsuario,
     EditUsuario,
     GetAllUsuarios,

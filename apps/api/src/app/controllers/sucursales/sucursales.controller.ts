@@ -1,4 +1,3 @@
-import { CreateSucursalDto } from '../../dtos/create-sucursal.dto';
 import {
     Body,
     Controller,
@@ -12,12 +11,14 @@ import {
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
-import { Prisma, Role, Sucursal as SucursalModel } from '@prisma/client';
+import { Prisma, Role } from '@prisma/client';
 
-import { Roles } from '../../decorators/roles.decorator';
-import { RolesGuard } from '../../guards/roles.guard';
-import { SucursalesService } from './sucursales.service';
 import { Public } from '../../decorators/public.decorator';
+import { Roles } from '../../decorators/roles.decorator';
+import { CreateSucursalDto } from '../../dtos/create-sucursal.dto';
+import { RolesGuard } from '../../guards/roles.guard';
+import { ISucursalReturnDto } from './../../dtos/sucursal-return.dto';
+import { SucursalesService } from './sucursales.service';
 
 @Controller()
 export class SucursalesController {
@@ -26,14 +27,14 @@ export class SucursalesController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('sucursales')
-    async obtenerSucursales(): Promise<SucursalModel[]> {
+    async obtenerSucursales(): Promise<ISucursalReturnDto[]> {
         return this.sucursalesService.sucursales();
     }
 
     @UseGuards(RolesGuard)
     @Public()
     @Get('sucursal/:id')
-    async obtenerSucursal(@Param('id') id: string): Promise<SucursalModel> {
+    async obtenerSucursal(@Param('id') id: string): Promise<ISucursalReturnDto> {
         return this.sucursalesService.sucursal({ id });
     }
 
@@ -41,7 +42,7 @@ export class SucursalesController {
     @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN)
     @Post('sucursal')
-    async createSucursal(@Request() req, @Body() data: CreateSucursalDto): Promise<SucursalModel> {
+    async createSucursal(@Request() req, @Body() data: CreateSucursalDto): Promise<ISucursalReturnDto> {
         const creadoPor = req.user.username;
         data.creadoPor = creadoPor;
         return this.sucursalesService.createSucursal(data);
@@ -50,7 +51,7 @@ export class SucursalesController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Put('sucursal/:id')
-    async editSucursal(@Param('id') id: string, @Body() data: Prisma.SucursalUpdateInput): Promise<SucursalModel> {
+    async editSucursal(@Param('id') id: string, @Body() data: Prisma.SucursalUpdateInput): Promise<ISucursalReturnDto> {
         return this.sucursalesService.updateSucursal({
             where: { id },
             data,
@@ -60,7 +61,7 @@ export class SucursalesController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Delete('sucursal/:id')
-    async deleteSucursal(@Param('id') id: string): Promise<SucursalModel> {
+    async deleteSucursal(@Param('id') id: string): Promise<ISucursalReturnDto> {
         return this.sucursalesService.deleteSucursal({ id });
     }
 }

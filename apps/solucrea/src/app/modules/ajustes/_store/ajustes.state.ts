@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
-import { Sucursal, Usuario } from '@prisma/client';
+import { Usuario } from '@prisma/client';
 import { IColoniaReturnDto } from 'api/dtos';
+import { ISucursalReturnDto } from 'api/dtos/sucursal-return.dto';
 import { UpdateUsuario } from 'app/core/auth/store/auth.actions';
 import { AuthState } from 'app/core/auth/store/auth.state';
 import { EditMode } from 'app/core/models/edit-mode.type';
@@ -10,19 +11,20 @@ import { tap } from 'rxjs/operators';
 
 import { AjustesSucursalService, AjustesUsuarioService } from '../_services/';
 import {
+    AddSucursal,
     AjustesModeSucursal,
+    ClearSucursalState,
+    DeleteSucursal,
+    EditSucursal,
     GetAllSucursales,
     GetColonias,
-    AddSucursal,
-    EditSucursal,
-    DeleteSucursal,
     SelectSucursal,
 } from './ajustes-sucursales.actions';
 import {
     AddUsuario,
     AjustesModeUsuario,
     ClearAjustesState,
-    ClearSucursalState,
+    ClearUsuarioState,
     DeleteUsuario,
     EditUsuario,
     GetAllUsuarios,
@@ -54,7 +56,7 @@ export class AjustesState {
     ) {}
 
     @Selector()
-    static searchResults({ searchResult }: AjustesStateModel): Usuario[] | Sucursal[] | [] {
+    static searchResults({ searchResult }: AjustesStateModel): Usuario[] | ISucursalReturnDto[] | [] {
         return searchResult;
     }
 
@@ -69,7 +71,7 @@ export class AjustesState {
     }
 
     @Selector()
-    static selectedSucursal({ selectedSucursal }: AjustesStateModel): Sucursal | undefined {
+    static selectedSucursal({ selectedSucursal }: AjustesStateModel): ISucursalReturnDto | undefined {
         return selectedSucursal;
     }
 
@@ -79,7 +81,7 @@ export class AjustesState {
     }
 
     @Selector()
-    static sucursales({ sucursales }: AjustesStateModel): Sucursal[] {
+    static sucursales({ sucursales }: AjustesStateModel): ISucursalReturnDto[] {
         return sucursales;
     }
 
@@ -192,7 +194,7 @@ export class AjustesState {
     @Action(GetAllSucursales)
     getAllSucursales(ctx: StateContext<AjustesStateModel>) {
         return this._ajustesSucursalesService.getSucursales().pipe(
-            tap((sucursales: Sucursal[]) => {
+            tap((sucursales: ISucursalReturnDto[]) => {
                 ctx.patchState({
                     sucursales,
                     searchResult: sucursales,
@@ -205,7 +207,7 @@ export class AjustesState {
     addSucursal(ctx: StateContext<AjustesStateModel>, action: AddSucursal) {
         const { payload } = action;
         return this._ajustesSucursalesService.addSucursal(payload).pipe(
-            tap((sucursal: Sucursal) => {
+            tap((sucursal: ISucursalReturnDto) => {
                 const state = ctx.getState();
                 const sucursales = [...state.sucursales];
                 sucursales.push(sucursal);
@@ -219,7 +221,7 @@ export class AjustesState {
     editSucursal(ctx: StateContext<AjustesStateModel>, action: EditUsuario) {
         const { id, payload } = action;
         return this._ajustesSucursalesService.editSucursal(id, payload).pipe(
-            tap((sucursal: Sucursal) => {
+            tap((sucursal: ISucursalReturnDto) => {
                 const state = ctx.getState();
                 if (state.sucursales) {
                     const sucursales = [...state.sucursales];
@@ -247,7 +249,7 @@ export class AjustesState {
     deleteSucursal(ctx: StateContext<AjustesStateModel>, action: DeleteSucursal) {
         const { id } = action;
         return this._ajustesSucursalesService.deleteSucursal(id).pipe(
-            tap((sucursal: Sucursal) => {
+            tap((sucursal: ISucursalReturnDto) => {
                 const state = ctx.getState();
                 if (sucursal) {
                     const sucursales = [...state.sucursales];
@@ -278,6 +280,17 @@ export class AjustesState {
         ctx.patchState({
             editMode: 'edit',
             selectedSucursal: undefined,
+            searchResult: [],
+            loading: false,
+            colonias: undefined,
+        });
+    }
+
+    @Action(ClearUsuarioState)
+    clearUsuarioState(ctx: StateContext<AjustesStateModel>) {
+        ctx.patchState({
+            editMode: 'edit',
+            selectedUsuario: undefined,
             searchResult: [],
             loading: false,
             colonias: undefined,

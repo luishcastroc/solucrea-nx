@@ -25,7 +25,6 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
      */
     constructor(
         private _activatedRoute: ActivatedRoute,
-        private _router: Router,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _fuseNavigationService: FuseNavigationService
     ) {}

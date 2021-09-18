@@ -1,3 +1,4 @@
+import { ISucursalReturnDto } from './../../../../../../../api/src/app/dtos/sucursal-return.dto';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -10,9 +11,13 @@ import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 
-import { GetColonias, SelectSucursal } from '../../_store/ajustes-sucursales.actions';
-import { AddSucursal, EditSucursal } from '../../_store/ajustes-sucursales.actions';
-import { ClearSucursalState } from '../../_store/ajustes-usuarios.actions';
+import {
+    GetColonias,
+    SelectSucursal,
+    ClearSucursalState,
+    AddSucursal,
+    EditSucursal,
+} from '../../_store/ajustes-sucursales.actions';
 import { Sucursal, TipoDireccion } from '.prisma/client';
 
 @Component({
@@ -26,11 +31,10 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
 
     editMode$: Observable<EditMode>;
     colonias$: Observable<IColoniaReturnDto>;
-    selectedSucursal$: Observable<Sucursal>;
+    selectedSucursal$: Observable<ISucursalReturnDto>;
     sucursalForm: FormGroup;
     editMode: EditMode;
     coloniasTemp$: Observable<IColoniaReturnDto>;
-    id: string;
 
     get cp() {
         return this.sucursalForm.get('direccion').get('codigoPostal') as FormControl;
@@ -53,14 +57,12 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private _toast: HotToastService,
         private _route: ActivatedRoute
-    ) {
-        this.initializeData(this.id);
-    }
+    ) {}
 
     ngOnInit(): void {
-        this.id = this._route.snapshot.paramMap.get('id');
         this.sucursalForm = this.createSucursalForm();
         this.subscribeToActions();
+        this.initializeData(this._route.snapshot.paramMap.get('id'));
     }
 
     /**
@@ -117,8 +119,6 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
                 if (edit === 'edit') {
                     this._store.dispatch(new SelectSucursal(id));
                 }
-
-                this._changeDetectorRef.markForCheck();
             })
         );
 
@@ -128,15 +128,22 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
                     this.ciudad.patchValue(colonias.ciudad.descripcion);
                     this.estado.patchValue(colonias.estado.descripcion);
                 }
-
-                this._changeDetectorRef.markForCheck();
             })
         );
 
         this.selectedSucursal$ = this._store.select(AjustesState.selectedSucursal).pipe(
-            tap((sucursal: Sucursal) => {
+            tap((sucursal: ISucursalReturnDto) => {
                 if (sucursal) {
-                    this.sucursalForm.patchValue(sucursal);
+                    this.sucursalForm.patchValue({
+                        ...sucursal,
+                        direccion: {
+                            ...sucursal.direccion,
+                            colonia: sucursal.direccion.colonia.id,
+                            codigoPostal: sucursal.direccion.colonia.codigoPostal,
+                        },
+                    });
+
+                    this.getColonias(sucursal.direccion.colonia.codigoPostal);
                 }
             })
         );

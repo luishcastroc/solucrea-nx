@@ -5,137 +5,145 @@
 <ng-template #formTemplate>
     <div class="flex-auto flex flex-col">
         <div class="w-full">
-            <!-- Form -->
-            <form
-                [formGroup]="sucursalForm"
-                *ngIf="
-                    ((editMode$ | async) === 'edit' && (selectedSucursal$ | async)) ||
-                    (editMode$ | async) === 'new' as editMode
-                "
-            >
-                <ng-template matStepLabel>Datos Generales</ng-template>
-                <div class="flex flex-wrap gap-3 w-full mt-8">
-                    <!-- Nombre -->
-                    <mat-form-field class="fuse-mat-no-subscript md:max-w-3/12 w-full">
-                        <mat-label>Nombre</mat-label>
-                        <mat-icon
-                            class="icon-size-5"
-                            [svgIcon]="'heroicons_outline:office-building'"
-                            matPrefix
-                        ></mat-icon>
-                        <input [formControlName]="'nombre'" matInput />
-                    </mat-form-field>
-                    <!-- Teléfono -->
-                    <mat-form-field class="fuse-mat-no-subscript w-full md:max-w-64">
-                        <mat-label>Teléfono</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:phone'" matPrefix></mat-icon>
-                        <input [formControlName]="'telefono'" matInput />
-                    </mat-form-field>
-                    <h3 class="text-3xl font-extrabold tracking-tight leading-none flex-auto w-full">Dirección</h3>
-                    <!-- Dirección -->
-                    <div class="flex flex-wrap gap-3 w-full" formGroupName="direccion">
-                        <!-- Calle -->
-                        <mat-form-field class="fuse-mat-no-subscript w-full xsm:max-w-60 sm:max-w-7/12 md:max-w-3/12">
-                            <mat-label>Calle</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:location-marker'"
-                            ></mat-icon>
-                            <input matInput formControlName="calle" [placeholder]="'Calle'" [spellcheck]="false" />
-                        </mat-form-field>
-                        <!-- Número -->
-                        <mat-form-field class="fuse-mat-no-subscript w-full xsm:max-w-50 sm:max-w-4/12 md:max-w-2/12">
-                            <mat-label>Número</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:location-marker'"
-                            ></mat-icon>
-                            <input matInput formControlName="numero" [placeholder]="'Número'" />
-                        </mat-form-field>
-                        <!-- Cruzamientos -->
-                        <mat-form-field class="fuse-mat-no-subscript w-full xsm:max-w-60 sm: max-w-7/12 md:max-w-3/12">
-                            <mat-label>Cruzamientos</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:location-marker'"
-                            ></mat-icon>
-                            <input matInput formControlName="cruzamientos" [placeholder]="'Cruzamientos'" />
-                        </mat-form-field>
-                        <!-- Código Postal -->
-                        <mat-form-field class="fuse-mat-no-subscript w-full xsm:max-w-50 sm:max-w-4/12 md:max-w-2/12">
-                            <mat-label>Código Postal</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:location-marker'"
-                            ></mat-icon>
-                            <input
-                                matInput
-                                formControlName="codigoPostal"
-                                [placeholder]="'Código Postal'"
-                                (change)="getColonias(cp.value)"
-                            />
-                        </mat-form-field>
-                        <!-- Estado -->
-                        <mat-form-field class="fuse-mat-no-subscript w-full sm:max-w-2/5 md:max-w-3/12">
-                            <mat-label>Estado</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:location-marker'"
-                            ></mat-icon>
-                            <input matInput formControlName="estado" [placeholder]="'Estado'" />
-                        </mat-form-field>
-                        <!-- Ciudad -->
-                        <mat-form-field class="fuse-mat-no-subscript w-full sm:max-w-2/5 md:max-w-3/12">
-                            <mat-label>Ciudad</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:location-marker'"
-                            ></mat-icon>
-                            <input matInput formControlName="ciudad" [placeholder]="'ciudad'" />
-                        </mat-form-field>
-                        <!-- Colonia -->
-                        <mat-form-field class="fuse-mat-no-subscript w-full sm:max-w-2/5 md:max-w-3/12">
-                            <mat-label>Colonia</mat-label>
+            <ng-container *ngIf="editMode$ | async as editMode">
+                <!-- Form -->
+                <form
+                    [formGroup]="sucursalForm"
+                    *ngIf="(editMode === 'edit' && (selectedSucursal$ | async)) || editMode === 'new'"
+                >
+                    <ng-template matStepLabel>Datos Generales</ng-template>
+                    <div class="flex flex-wrap gap-3 w-full mt-8">
+                        <!-- Nombre -->
+                        <mat-form-field class="fuse-mat-no-subscript md:max-w-3/12 w-full">
+                            <mat-label>Nombre</mat-label>
                             <mat-icon
                                 class="icon-size-5"
-                                [svgIcon]="'heroicons_solid:location-marker'"
+                                [svgIcon]="'heroicons_outline:office-building'"
                                 matPrefix
                             ></mat-icon>
-                            <mat-select formControlName="colonia">
-                                <mat-option
-                                    *ngFor="let colonia of (colonias$ | async)?.colonias"
-                                    [value]="colonia.id"
-                                    >{{ colonia.descripcion }}</mat-option
-                                >
-                            </mat-select>
+                            <input [formControlName]="'nombre'" matInput />
                         </mat-form-field>
+                        <!-- Teléfono -->
+                        <mat-form-field class="fuse-mat-no-subscript w-full md:max-w-64">
+                            <mat-label>Teléfono</mat-label>
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:phone'" matPrefix></mat-icon>
+                            <input [formControlName]="'telefono'" matInput />
+                        </mat-form-field>
+                        <h3 class="text-3xl font-extrabold tracking-tight leading-none flex-auto w-full">Dirección</h3>
+                        <!-- Dirección -->
+                        <div class="flex flex-wrap gap-3 w-full" formGroupName="direccion">
+                            <!-- Calle -->
+                            <mat-form-field
+                                class="fuse-mat-no-subscript w-full xsm:max-w-60 sm:max-w-7/12 md:max-w-3/12"
+                            >
+                                <mat-label>Calle</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:location-marker'"
+                                ></mat-icon>
+                                <input matInput formControlName="calle" [placeholder]="'Calle'" [spellcheck]="false" />
+                            </mat-form-field>
+                            <!-- Número -->
+                            <mat-form-field
+                                class="fuse-mat-no-subscript w-full xsm:max-w-50 sm:max-w-4/12 md:max-w-2/12"
+                            >
+                                <mat-label>Número</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:location-marker'"
+                                ></mat-icon>
+                                <input matInput formControlName="numero" [placeholder]="'Número'" />
+                            </mat-form-field>
+                            <!-- Cruzamientos -->
+                            <mat-form-field
+                                class="fuse-mat-no-subscript w-full xsm:max-w-60 sm: max-w-7/12 md:max-w-3/12"
+                            >
+                                <mat-label>Cruzamientos</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:location-marker'"
+                                ></mat-icon>
+                                <input matInput formControlName="cruzamientos" [placeholder]="'Cruzamientos'" />
+                            </mat-form-field>
+                            <!-- Código Postal -->
+                            <mat-form-field
+                                class="fuse-mat-no-subscript w-full xsm:max-w-50 sm:max-w-4/12 md:max-w-2/12"
+                            >
+                                <mat-label>Código Postal</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:location-marker'"
+                                ></mat-icon>
+                                <input
+                                    matInput
+                                    formControlName="codigoPostal"
+                                    [placeholder]="'Código Postal'"
+                                    (change)="getColonias(cp.value)"
+                                />
+                            </mat-form-field>
+                            <!-- Estado -->
+                            <mat-form-field class="fuse-mat-no-subscript w-full sm:max-w-2/5 md:max-w-3/12">
+                                <mat-label>Estado</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:location-marker'"
+                                ></mat-icon>
+                                <input matInput formControlName="estado" [placeholder]="'Estado'" />
+                            </mat-form-field>
+                            <!-- Ciudad -->
+                            <mat-form-field class="fuse-mat-no-subscript w-full sm:max-w-2/5 md:max-w-3/12">
+                                <mat-label>Ciudad</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:location-marker'"
+                                ></mat-icon>
+                                <input matInput formControlName="ciudad" [placeholder]="'ciudad'" />
+                            </mat-form-field>
+                            <!-- Colonia -->
+                            <mat-form-field class="fuse-mat-no-subscript w-full sm:max-w-2/5 md:max-w-3/12">
+                                <mat-label>Colonia</mat-label>
+                                <mat-icon
+                                    class="icon-size-5"
+                                    [svgIcon]="'heroicons_solid:location-marker'"
+                                    matPrefix
+                                ></mat-icon>
+                                <mat-select formControlName="colonia">
+                                    <mat-option
+                                        *ngFor="let colonia of (colonias$ | async)?.colonias"
+                                        [value]="colonia.id"
+                                        >{{ colonia.descripcion }}</mat-option
+                                    >
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
                     </div>
-                </div>
-                <div class="mt-4 w-full flex-auto">
-                    <button mat-stroked-button type="button" (click)="back()" matStepperPrevious>Regresar</button>
-                    <button
-                        mat-flat-button
-                        type="button"
-                        [color]="'primary'"
-                        (click)="saveSucursal()"
-                        class="ml-2"
-                        [disabled]="
-                            (editMode === 'new' && !sucursalForm.touched) ||
-                            sucursalForm.invalid ||
-                            sucursalForm.disabled ||
-                            (editMode === 'edit' && !sucursalForm.touched && sucursalForm.invalid)
-                        "
-                    >
-                        {{ editMode === 'edit' ? 'Actualizar' : 'Guardar' }}
-                    </button>
-                </div>
-            </form>
+                    <div class="mt-4 w-full flex-auto">
+                        <button mat-stroked-button type="button" (click)="back()" matStepperPrevious>Regresar</button>
+                        <button
+                            mat-flat-button
+                            type="button"
+                            [color]="'primary'"
+                            (click)="saveSucursal()"
+                            class="ml-2"
+                            [disabled]="
+                                (editMode === 'new' && !sucursalForm.touched) ||
+                                sucursalForm.invalid ||
+                                sucursalForm.disabled ||
+                                (editMode === 'edit' && !sucursalForm.touched) ||
+                                sucursalForm.invalid
+                            "
+                        >
+                            {{ editMode === 'edit' ? 'Actualizar' : 'Guardar' }}
+                        </button>
+                    </div>
+                </form></ng-container
+            >
         </div>
     </div>
 </ng-template>

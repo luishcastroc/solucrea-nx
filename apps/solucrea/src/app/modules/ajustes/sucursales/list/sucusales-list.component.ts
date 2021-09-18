@@ -1,24 +1,29 @@
-import { HotToastService } from '@ngneat/hot-toast';
-import { takeUntil } from 'rxjs/operators';
-import { DeleteSucursal } from './../../_store/ajustes-sucursales.actions';
-import { ConfirmationDialogComponent } from 'app/shared';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
-import { Sucursal } from '@prisma/client';
-import { Observable, Subject } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
-import { Select, Store, Actions, ofActionCompleted } from '@ngxs/store';
+import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
+import { Sucursal } from '@prisma/client';
 import { AuthUtils } from 'app/core/auth/auth.utils';
-import { AjustesModeSucursal, GetAllSucursales } from '../../_store/ajustes-sucursales.actions';
+import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
+import { ConfirmationDialogComponent } from 'app/shared';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import {
+    AjustesModeSucursal,
+    ClearSucursalState,
+    DeleteSucursal,
+    GetAllSucursales,
+} from '../../_store/ajustes-sucursales.actions';
 
 @Component({
     selector: 'app-sucusales-list',
     templateUrl: './sucusales-list.component.html',
     styleUrls: ['./sucusales-list.component.scss'],
 })
-export class SucusalesListComponent implements OnInit {
+export class SucusalesListComponent implements OnInit, OnDestroy {
     @Select(AjustesState.sucursales)
     sucursales$: Observable<Sucursal[]>;
 
@@ -107,6 +112,18 @@ export class SucusalesListComponent implements OnInit {
                 this._store.dispatch(new DeleteSucursal(id));
             }
         });
+    }
+
+    /**
+     * On destroy
+     */
+    ngOnDestroy(): void {
+        // Deregister the navigation component from the registry
+        this._store.dispatch(new ClearSucursalState());
+
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
     }
 
     /**
