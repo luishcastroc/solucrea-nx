@@ -88,7 +88,16 @@ export class SucursalesService {
         where: Prisma.SucursalWhereUniqueInput;
         data: Prisma.SucursalUpdateInput;
     }): Promise<ISucursalReturnDto> {
-        const { where, data } = params;
+        const { where } = params;
+        let { data } = params;
+
+        if (data.direccion) {
+            const direccion = {
+                update: data.direccion as Prisma.DireccionUncheckedUpdateWithoutSucursalesInput,
+            };
+            data = { ...data, direccion };
+        }
+
         return this.prisma.sucursal.update({
             data,
             where,

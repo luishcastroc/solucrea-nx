@@ -73,6 +73,15 @@
                     <div class="order-1 sm:order-2 sm:ml-3 xsm:flex-col flex justify-center items-center">
                         <button
                             mat-icon-button
+                            aria-label="Créditos"
+                            #tooltip="matTooltip"
+                            matTooltip="Créditos"
+                            [matTooltipPosition]="'below'"
+                        >
+                            <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:cash'"></mat-icon>
+                        </button>
+                        <button
+                            mat-icon-button
                             aria-label="Editar cliente"
                             #tooltip="matTooltip"
                             (click)="editCliente(cliente.id)"

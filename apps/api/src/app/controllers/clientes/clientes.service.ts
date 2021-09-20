@@ -218,6 +218,7 @@ export class ClientesService {
         }
 
         try {
+            console.log('data:', JSON.stringify(dataToUpdate));
             const updateStatement = await this.prisma.cliente.update({
                 data: dataToUpdate,
                 where,
@@ -226,7 +227,7 @@ export class ClientesService {
 
             return updateStatement;
         } catch (err) {
-            //console.log(err);
+            console.log(err);
             throw new HttpException(
                 { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al actualizar el cliente' },
                 HttpStatus.INTERNAL_SERVER_ERROR
@@ -327,6 +328,7 @@ export class ClientesService {
         let trabajoReturn: Prisma.TrabajoUpdateOneRequiredWithoutClienteInput;
         const { nombre, telefono, antiguedad, direccion, actividadEconomica } = trabajo;
         let update: Prisma.TrabajoUpdateWithoutClienteInput;
+        let direccionUpdate: Prisma.DireccionUpdateWithoutTrabajoInput;
 
         if (nombre) {
             update = { ...update, nombre };
@@ -346,9 +348,26 @@ export class ClientesService {
         }
 
         if (direccion) {
+            const { codigoPostal, colonia, ...rest } = direccion;
+            if (direccion?.calle) {
+                const { calle } = direccion;
+                direccionUpdate = { ...rest, calle };
+            }
+            if (direccion?.numero) {
+                const { numero } = direccion;
+                direccionUpdate = { ...rest, numero };
+            }
+            if (direccion?.cruzamientos) {
+                const { cruzamientos } = direccion;
+                direccionUpdate = { ...rest, cruzamientos };
+            }
+            if (direccion?.colonia) {
+                direccionUpdate = { ...rest, colonia: { connect: { id: colonia } } };
+            }
             const direccionTrabajo = {
-                update: direccion as Prisma.DireccionUncheckedUpdateWithoutTrabajoInput,
+                update: direccionUpdate,
             };
+
             update = { ...update, direccion: direccionTrabajo };
             trabajoReturn = { ...trabajoReturn, update };
         }

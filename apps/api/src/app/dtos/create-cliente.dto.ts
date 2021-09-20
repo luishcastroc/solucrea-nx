@@ -12,6 +12,7 @@ export class IDireccion {
     actualizadoPor?: string;
     fechaActualizacion?: Date;
     clienteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    codigoPostal?: string;
     coloniaId?: string;
     colonia?: string;
 }

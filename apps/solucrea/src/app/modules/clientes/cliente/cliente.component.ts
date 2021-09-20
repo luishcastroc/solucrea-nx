@@ -15,25 +15,25 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { TipoDireccion } from '@prisma/client';
 import {
+    CreateDireccionDto,
     IActividadEconomicaReturnDto,
     IClienteReturnDto,
     IColonias,
     IDireccion,
     IDireccionUpdateDto,
     ITrabajoDto,
-    UpdateClienteDto,
-    CreateDireccionDto,
 } from 'api/dtos/';
 import { CanDeactivateComponent } from 'app/core/models/can-deactivate.model';
+import { EditMode } from 'app/core/models/edit-mode.type';
+import { SharedService } from 'app/shared';
 import { isEqual } from 'lodash';
 import { Observable, of, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
-import { EditMode } from 'app/core/models/edit-mode.type';
 import {
     Add,
-    Edit,
     ClearClientesState,
+    Edit,
     GetColonias,
     GetConfig,
     RemoveColonia,
@@ -99,7 +99,8 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
         private _changeDetectorRef: ChangeDetectorRef,
         private _toast: HotToastService,
         private _clienteService: ClientesService,
-        private _route: ActivatedRoute
+        private _route: ActivatedRoute,
+        private _sharedService: SharedService
     ) {}
 
     @HostListener('window:beforeunload', ['$event'])
@@ -465,8 +466,8 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
             const cliente = this._clienteService.prepareClienteCreateObject(this.clienteForm, this.trabajoForm);
             this._store.dispatch(new Add(cliente));
         } else {
-            let cliente = this.getDirtyValues(this.clienteForm);
-            const trabajo: ITrabajoDto = this.getDirtyValues(this.trabajoForm);
+            let cliente = this._sharedService.getDirtyValues(this.clienteForm);
+            const trabajo: ITrabajoDto = this._sharedService.getDirtyValues(this.trabajoForm);
             let direcciones: IDireccionUpdateDto;
 
             if (trabajo) {
@@ -517,30 +518,5 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
         this._store.dispatch(new ClearClientesState());
-    }
-
-    private getDirtyValues(form: any): UpdateClienteDto | ITrabajoDto | any {
-        const dirtyValues = {};
-        let prevId: string = null;
-
-        Object.keys(form.controls).forEach((key) => {
-            const currentControl = form.controls[key];
-            if (key === 'id') {
-                dirtyValues[key] = currentControl.value;
-            }
-
-            if (currentControl.dirty) {
-                if (currentControl.controls) {
-                    dirtyValues[key] = this.getDirtyValues(currentControl);
-                } else {
-                    dirtyValues[key] = currentControl.value;
-                }
-            }
-            if (key === 'direcciones') {
-                prevId = key;
-            }
-        });
-
-        return Object.keys(dirtyValues).length > 0 ? dirtyValues : null;
     }
 }

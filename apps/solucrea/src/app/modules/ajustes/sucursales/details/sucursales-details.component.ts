@@ -19,6 +19,7 @@ import {
     EditSucursal,
 } from '../../_store/ajustes-sucursales.actions';
 import { Sucursal, TipoDireccion } from '.prisma/client';
+import { SharedService } from 'app/shared';
 
 @Component({
     selector: 'app-sucursales-details',
@@ -54,7 +55,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
         private _store: Store,
         private _formBuilder: FormBuilder,
         private _actions$: Actions,
-        private _changeDetectorRef: ChangeDetectorRef,
+        private _sharedService: SharedService,
         private _toast: HotToastService,
         private _route: ActivatedRoute
     ) {}
@@ -189,7 +190,8 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
             this.sucursalForm.disable();
             this._store.dispatch(new AddSucursal(this.sucursalForm.value));
         } else if (this.editMode === 'edit') {
-            console.log('Edit: ', this.sucursalForm.value);
+            const sucursalEdit = this._sharedService.getDirtyValues(this.sucursalForm);
+            console.log('Edit: ', sucursalEdit);
         }
     }
 
