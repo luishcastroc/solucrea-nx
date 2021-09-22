@@ -64,6 +64,16 @@ export class ClienteListComponent implements OnInit, OnDestroy {
     }
 
     /**
+     *
+     * Function to go to creditos
+     *
+     * @param id string
+     */
+    goToCreditos(id: string) {
+        this._store.dispatch(new Navigate([`creditos/cliente/${id}`]));
+    }
+
+    /**
      * On destroy
      */
     ngOnDestroy(): void {
