@@ -24,7 +24,7 @@ export class RolesGuard implements CanActivate {
             if (user.role === role) {
                 switch (user.role) {
                     case Role.CAJERO:
-                    case Role.SECRE:
+                    case Role.SECRETARIO:
                     case Role.USUARIO:
                         if (user.userId !== params.id) {
                             throw new UnauthorizedException();

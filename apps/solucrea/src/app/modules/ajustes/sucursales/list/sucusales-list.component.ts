@@ -118,9 +118,6 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
      * On destroy
      */
     ngOnDestroy(): void {
-        // Deregister the navigation component from the registry
-        this._store.dispatch(new ClearSucursalState());
-
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();

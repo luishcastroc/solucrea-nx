@@ -41,7 +41,7 @@ export class UsuariosController {
     }
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN, Role.CAJERO, Role.SECRE, Role.USUARIO)
+    @Roles(Role.ADMIN, Role.CAJERO, Role.SECRETARIO, Role.USUARIO)
     @Get('usuario/:id')
     async getUsuario(@Param('id') id: string): Promise<UsersModel> {
         return this.usuariosService.usuario({ id });
@@ -58,7 +58,7 @@ export class UsuariosController {
     }
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN, Role.CAJERO, Role.SECRE, Role.USUARIO)
+    @Roles(Role.ADMIN, Role.CAJERO, Role.SECRETARIO, Role.USUARIO)
     @Put('usuario/:id')
     async editUsuario(@Param('id') id: string, @Body() data: UpdateUsuarioDto, @Request() req): Promise<UsersModel> {
         const role = req.user.role;

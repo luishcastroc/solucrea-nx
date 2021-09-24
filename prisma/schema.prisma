@@ -265,7 +265,9 @@ enum Role {
     DIRECTOR
     CAJERO
     MANAGER
-    SECRE
+    SECRETARIO
+    COLOCADOR
+    COBRADOR
     ALL
 }
 
@@ -305,21 +307,21 @@ model Usuario {
     fechaActualizacion DateTime @default(now()) @updatedAt
 
     @@map(name: "Usuarios")
+    Comision Comision[]
 }
 
 model Sucursal {
-    id                 String         @id @default(uuid())
-    nombre             String         @unique
-    direccion          Direccion      @relation(fields: [direccionId], references: [id])
+    id                 String     @id @default(uuid())
+    nombre             String     @unique
+    direccion          Direccion  @relation(fields: [direccionId], references: [id])
     telefono           String
-    comisionistas      Comisionista[]
     creditos           Credito[]
     comisiones         Comision[]
     cajas              Caja[]
-    creadoPor          String         @default("ADMIN")
-    fechaCreacion      DateTime       @default(now())
-    actualizadoPor     String         @default("ADMIN")
-    fechaActualizacion DateTime       @default(now()) @updatedAt
+    creadoPor          String     @default("ADMIN")
+    fechaCreacion      DateTime   @default(now())
+    actualizadoPor     String     @default("ADMIN")
+    fechaActualizacion DateTime   @default(now()) @updatedAt
     direccionId        String
 
     @@map(name: "Sucursales")
@@ -464,26 +466,6 @@ model Aval {
     @@map(name: "Avales")
 }
 
-model Comisionista {
-    id                 String     @id @default(uuid())
-    nombre             String
-    apellidoPaterno    String
-    apellidoMaterno    String
-    descripcion        String
-    posicion           Posicion
-    sucursal           Sucursal?  @relation(fields: [sucursalId], references: [id])
-    creditos           Credito?   @relation(fields: [creditoId], references: [id])
-    comisiones         Comision[]
-    creadoPor          String     @default("ADMIN")
-    fechaCreacion      DateTime   @default(now())
-    actualizadoPor     String     @default("ADMIN")
-    fechaActualizacion DateTime   @default(now()) @updatedAt
-    creditoId          String?
-    sucursalId         String?
-
-    @@map(name: "Comisionistas")
-}
-
 model Producto {
     id                 String           @id @default(uuid())
     nombre             String
@@ -510,7 +492,6 @@ model Credito {
     id                  String            @id @default(uuid())
     cliente             Cliente           @relation(fields: [clienteId], references: [id])
     sucursal            Sucursal          @relation(fields: [sucursalId], references: [id])
-    comisionistas       Comisionista[]
     estado              EstadoDeCredito   @relation(fields: [estadoDeCreditoId], references: [id])
     fechaInicio         DateTime          @default(now())
     fechaFinal          DateTime
@@ -540,17 +521,17 @@ model Credito {
 }
 
 model Comision {
-    id                 String       @id @default(uuid())
-    credito            Credito      @relation(fields: [creditoId], references: [id])
-    sucursal           Sucursal     @relation(fields: [sucursalId], references: [id])
-    comisionista       Comisionista @relation(fields: [comisionistaId], references: [id])
+    id                 String   @id @default(uuid())
+    credito            Credito  @relation(fields: [creditoId], references: [id])
+    sucursal           Sucursal @relation(fields: [sucursalId], references: [id])
+    usuario            Usuario  @relation(fields: [usuarioId], references: [id])
     creadoPor          String
-    fechaCreacion      DateTime     @default(now())
-    actualizadoPor     String       @default("ADMIN")
-    fechaActualizacion DateTime     @default(now()) @updatedAt
+    fechaCreacion      DateTime @default(now())
+    actualizadoPor     String   @default("ADMIN")
+    fechaActualizacion DateTime @default(now()) @updatedAt
     creditoId          String
     sucursalId         String
-    comisionistaId     String
 
     @@map(name: "Comisiones")
+    usuarioId String
 }

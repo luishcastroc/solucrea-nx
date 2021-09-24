@@ -25,4 +25,19 @@ export const defaultRoles = [
         value: Role.USUARIO,
         description: 'Usuario general con permisos mínimos.',
     },
+    {
+        label: 'Cobrador',
+        value: Role.COBRADOR,
+        description: 'Encargado de cobros a clientes.',
+    },
+    {
+        label: 'Colocador',
+        value: Role.COLOCADOR,
+        description: 'Promociona el uso de los créditos entre clientes.',
+    },
+    {
+        label: 'Secretario',
+        value: Role.SECRETARIO,
+        description: 'Encargado/a de actividades generales.',
+    },
 ];
