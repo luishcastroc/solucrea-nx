@@ -306,8 +306,8 @@ model Usuario {
     actualizadoPor     String   @default("ADMIN")
     fechaActualizacion DateTime @default(now()) @updatedAt
 
-    @@map(name: "Usuarios")
     Comision Comision[]
+    @@map(name: "Usuarios")
 }
 
 model Sucursal {
@@ -366,6 +366,9 @@ model Caja {
     id                 String             @id @default(uuid())
     sucursal           Sucursal           @relation(fields: [sucursalId], references: [id])
     saldoInicial       Decimal            @db.Decimal(15, 2)
+    fechaApertura      DateTime           @default(now())
+    saldoFinal         Decimal?           @db.Decimal(15, 2)
+    fechaCierre        DateTime?
     observaciones      String?
     creadoPor          String
     fechaCreacion      DateTime           @default(now())
@@ -532,6 +535,6 @@ model Comision {
     creditoId          String
     sucursalId         String
 
-    @@map(name: "Comisiones")
     usuarioId String
+    @@map(name: "Comisiones")
 }

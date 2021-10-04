@@ -12,8 +12,8 @@ export class CajaController {
 
     @UseGuards(RolesGuard)
     @Public()
-    @Get('caja')
-    async getCajaes(): Promise<Caja[]> {
+    @Get('cajas')
+    async getCajas(): Promise<Caja[]> {
         return this.cajaService.cajas();
     }
 
@@ -26,14 +26,14 @@ export class CajaController {
 
     @UseGuards(RolesGuard)
     @UsePipes(new ValidationPipe())
-    @Roles(Role.ADMIN)
+    @Roles(Role.ADMIN, Role.CAJERO, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
     @Post('caja')
     async createCaja(@Body() data: CreateCajaDto): Promise<Caja> {
         return this.cajaService.createCaja(data);
     }
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN)
+    @Roles(Role.ADMIN, Role.CAJERO, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
     @Put('caja/:id')
     async editCaja(@Param('id') id: string, @Body() data: Caja): Promise<Caja> {
         return this.cajaService.updateCaja({
@@ -43,7 +43,7 @@ export class CajaController {
     }
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN)
+    @Roles(Role.ADMIN, Role.MANAGER)
     @Delete('caja/:id')
     async deleteCaja(@Param('id') id: string): Promise<Caja> {
         return this.cajaService.deleteCaja({ id });

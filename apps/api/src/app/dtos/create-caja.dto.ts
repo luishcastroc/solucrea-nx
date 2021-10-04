@@ -1,10 +1,10 @@
 import { IsNotEmpty } from 'class-validator';
 import { Prisma } from '@prisma/client';
-export class CreateCajaDto implements Prisma.CajaCreateInput {
+export class CreateCajaDto {
     @IsNotEmpty({ message: 'Saldo inicial es requerido.' })
     saldoInicial: string | number | Prisma.Decimal;
     @IsNotEmpty({ message: 'Sucursal es requerida.' })
-    sucursal: Prisma.SucursalCreateNestedOneWithoutCajasInput;
+    sucursal: string;
     observaciones?: string;
     creadoPor: string;
     fechaCreacion?: string | Date;

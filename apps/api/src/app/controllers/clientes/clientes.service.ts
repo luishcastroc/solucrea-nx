@@ -218,7 +218,6 @@ export class ClientesService {
         }
 
         try {
-            console.log('data:', JSON.stringify(dataToUpdate));
             const updateStatement = await this.prisma.cliente.update({
                 data: dataToUpdate,
                 where,

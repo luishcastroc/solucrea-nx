@@ -4,13 +4,13 @@ import * as bcrypt from 'bcrypt';
 
 import { UsuariosService } from '../controllers/usuarios/usuarios.service';
 import { IUsuarioDto } from '../dtos/usuario-login.dto';
-import { IUsuarioRespuestaDto } from '../dtos/usuario-respuesta.dto';
+import { IUsuarioReturnDto } from '../dtos/usuario-return.dto';
 
 @Injectable()
 export class AuthService {
     constructor(private usuariosService: UsuariosService, private jwtService: JwtService) {}
 
-    async validarUsuario(usuarioDto: IUsuarioDto): Promise<IUsuarioRespuestaDto> {
+    async validarUsuario(usuarioDto: IUsuarioDto): Promise<IUsuarioReturnDto> {
         const user = await this.usuariosService.searchUsuarioByName({
             nombreUsuario: usuarioDto.nombreUsuario,
         });
@@ -28,7 +28,7 @@ export class AuthService {
         return null;
     }
 
-    async login(user: IUsuarioRespuestaDto) {
+    async login(user: IUsuarioReturnDto) {
         const { nombreUsuario, id, sucursales, role } = user;
         const payload = {
             username: nombreUsuario,
