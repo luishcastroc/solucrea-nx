@@ -17,7 +17,7 @@ import { IDireccion } from 'api/dtos/';
 import { Moment } from 'moment';
 import { Observable } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
     providedIn: 'root',

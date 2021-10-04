@@ -5,7 +5,7 @@ import { EditMode } from 'app/core/models/edit-mode.type';
 import { forkJoin } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { ClientesService } from '../clientes.service';
+import { ClientesService } from '../_services/clientes.service';
 import { IConfig } from '../models/config.model';
 import {
     Add,

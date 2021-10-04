@@ -42,7 +42,7 @@ import {
 } from '../_store/clientes.actions';
 import { IColoniasState } from '../_store/clientes.model';
 import { ClientesState } from '../_store/clientes.state';
-import { ClientesService } from '../clientes.service';
+import { ClientesService } from '../_services/clientes.service';
 import { IConfig } from '../models/config.model';
 import { curpValidator, rfcValidator } from '../validators/custom-clientes.validators';
 
