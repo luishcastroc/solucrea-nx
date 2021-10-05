@@ -5,7 +5,7 @@ import { IColoniaReturnDto } from 'api/dtos';
 import { ISucursalReturnDto } from 'api/dtos/sucursal-return.dto';
 import { UpdateUsuario } from 'app/core/auth/store/auth.actions';
 import { AuthState } from 'app/core/auth/store/auth.state';
-import { EditMode } from 'app/core/models/edit-mode.type';
+import { EditMode } from 'app/core/models';
 import { ClientesService } from 'app/modules/clientes';
 import { tap } from 'rxjs/operators';
 

@@ -14,7 +14,7 @@ import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ng
 import { Role, Usuario } from '@prisma/client';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { AuthState } from 'app/core/auth/store/auth.state';
-import { EditMode } from 'app/core/models/edit-mode.type';
+import { EditMode } from 'app/core/models';
 import { ConfirmationDialogComponent } from 'app/shared';
 import { Observable, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';

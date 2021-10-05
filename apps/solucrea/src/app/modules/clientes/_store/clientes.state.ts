@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { IActividadEconomicaReturnDto, IClienteReturnDto, IColoniaReturnDto } from 'api/dtos';
-import { EditMode } from 'app/core/models/edit-mode.type';
+import { EditMode } from 'app/core/models';
 import { forkJoin } from 'rxjs';
 import { tap } from 'rxjs/operators';
 

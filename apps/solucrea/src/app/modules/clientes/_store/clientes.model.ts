@@ -1,7 +1,7 @@
 import { TipoDireccion } from '@prisma/client';
 import { IColoniaReturnDto } from 'api/dtos';
 import { IActividadEconomicaReturnDto, IClienteReturnDto } from 'api/dtos/';
-import { EditMode } from 'app/core/models/edit-mode.type';
+import { EditMode } from 'app/core/models';
 
 import { IConfig } from '../models/config.model';
 

@@ -6,7 +6,7 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
-import { EditMode } from 'app/core/models/edit-mode.type';
+import { EditMode } from 'app/core/models';
 import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';

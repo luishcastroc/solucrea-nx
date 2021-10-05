@@ -24,7 +24,7 @@ import {
     ITrabajoDto,
 } from 'api/dtos/';
 import { CanDeactivateComponent } from 'app/core/models/can-deactivate.model';
-import { EditMode } from 'app/core/models/edit-mode.type';
+import { EditMode } from 'app/core/models';
 import { SharedService } from 'app/shared';
 import { isEqual } from 'lodash';
 import { Observable, of, Subject } from 'rxjs';

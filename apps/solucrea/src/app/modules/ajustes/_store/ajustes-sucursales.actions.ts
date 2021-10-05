@@ -1,6 +1,5 @@
-import { Sucursal } from '@prisma/client';
 import { CreateSucursalDto } from 'api/dtos';
-import { EditMode } from 'app/core/models/edit-mode.type';
+import { EditMode } from 'app/core/models';
 
 export class AddSucursal {
     static readonly type = '[Sucursal] Add';

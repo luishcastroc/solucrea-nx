@@ -1,6 +1,6 @@
 import { CreateClienteDto, IDireccion, UpdateClienteDto } from 'api/dtos';
 import { Cliente, TipoDireccion } from '@prisma/client';
-import { EditMode } from 'app/core/models/edit-mode.type';
+import { EditMode } from 'app/core/models';
 
 export class Add {
     static readonly type = '[Cliente] Add';

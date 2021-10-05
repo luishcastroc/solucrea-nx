@@ -3,7 +3,7 @@ import { State } from '@ngxs/store';
 import { CajaStateModel } from './caja.model';
 
 @State<CajaStateModel>({
-    name: 'ajustes',
+    name: 'caja',
     defaults: {
         cajas: [],
         editMode: 'edit',

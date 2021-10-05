@@ -1,9 +1,9 @@
-import { EditMode } from './../../../core/models/edit-mode.type';
-import { Caja } from '.prisma/client';
+import { ICajaReturnDto } from 'api/dtos';
+import { EditMode } from 'app/core/models';
 
 export interface CajaStateModel {
-    cajas: Caja[] | [];
-    selectedCaja: Caja;
+    cajas: ICajaReturnDto[] | [];
+    selectedCaja: ICajaReturnDto;
     editMode: EditMode;
     loading: boolean;
 }
