@@ -43,8 +43,8 @@ export class CajaService {
      *
      * @param CreateCajaDto
      */
-    addCaja(cliente: CreateCajaDto): Observable<ICajaReturnDto> {
-        return this._httpClient.post<ICajaReturnDto>(`${this._environment.uri}/caja`, cliente);
+    addCaja(caja: CreateCajaDto): Observable<ICajaReturnDto> {
+        return this._httpClient.post<ICajaReturnDto>(`${this._environment.uri}/caja`, caja);
     }
 
     /**
@@ -52,8 +52,8 @@ export class CajaService {
      *
      * @param CajaUncheckedUpdateInput
      */
-    editCaja(id: string, cliente: Prisma.CajaUncheckedUpdateInput): Observable<ICajaReturnDto> {
-        return this._httpClient.put<ICajaReturnDto>(`${this._environment.uri}/caja/${id}`, cliente);
+    editCaja(id: string, caja: Prisma.CajaUncheckedUpdateInput): Observable<ICajaReturnDto> {
+        return this._httpClient.put<ICajaReturnDto>(`${this._environment.uri}/caja/${id}`, caja);
     }
 
     /**

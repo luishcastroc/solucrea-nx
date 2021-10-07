@@ -76,11 +76,13 @@ export class ClientesState {
 
     @Action(GetAll)
     getAllClientes(ctx: StateContext<ClientesStateModel>) {
+        ctx.patchState({ loading: true });
         return this.clientesService.getClientes().pipe(
             tap((clientes: IClienteReturnDto[]) => {
                 if (clientes) {
                     ctx.patchState({
                         clientes,
+                        loading: false,
                     });
                 }
             })

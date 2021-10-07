@@ -1,3 +1,5 @@
+import { defaultRoles } from '../../roles';
+import { IRole } from '../../models/roles.model';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -29,6 +31,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
     successMessage: string;
     errorMessage: string;
     mode: EditMode;
+    roles: IRole[] = defaultRoles;
 
     alert: IAlert = {
         appearance: 'soft',
@@ -71,8 +74,8 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
             .subscribe(({ selectedUsuario, editMode }) => {
                 this.mode = editMode;
                 this.setMessage(editMode);
+                this.createUsuarioForm();
                 if (selectedUsuario) {
-                    this.createUsuarioForm();
                     this.selectedUsuario = selectedUsuario;
                     if (editMode === 'edit') {
                         this.usuarioForm.patchValue(this.selectedUsuario);
@@ -118,6 +121,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
             nombre: [''],
             apellido: [''],
             nombreUsuario: [''],
+            role: [''],
             password: ['', [Validators.minLength(8), createPasswordStrengthValidator()]],
         });
     }
@@ -136,7 +140,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
      * @param mode
      */
     updateUsuario(): void {
-        const { nombre, apellido, nombreUsuario, password } = this.usuarioForm.value;
+        const { nombre, apellido, nombreUsuario, password, role } = this.usuarioForm.value;
         let usuario;
         if (!password) {
             usuario = {
@@ -144,6 +148,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
                 nombre,
                 apellido,
                 nombreUsuario,
+                role,
             };
         } else {
             usuario = { ...this.selectedUsuario, password };

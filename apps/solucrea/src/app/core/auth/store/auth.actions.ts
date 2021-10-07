@@ -6,6 +6,7 @@ export class Login {
             username: string;
             password: string;
             redirectURL: string;
+            rememberMe: boolean;
         }
     ) {}
 }

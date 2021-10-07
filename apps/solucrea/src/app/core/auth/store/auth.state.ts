@@ -39,7 +39,7 @@ export class AuthState {
 
     @Action(Login)
     login(ctx: StateContext<AuthStateModel>, { payload }: Login) {
-        const { username, password, redirectURL } = payload;
+        const { username, password, redirectURL, rememberMe } = payload;
         const state = ctx.getState();
         if (state.accessToken) {
             return throwError('El usuario ya ingresó al sistema.');
@@ -51,6 +51,9 @@ export class AuthState {
                     accessToken,
                     user,
                 });
+                if (rememberMe) {
+                    localStorage.setItem('usuario', username);
+                }
                 ctx.dispatch([new Navigate([redirectURL]), new SelectUsuario(user)]);
             })
         );

@@ -95,7 +95,7 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
      * Sign in
      */
     signIn(): void {
-        const { username, password } = this.signInForm.value;
+        const { username, password, rememberMe } = this.signInForm.value;
         // Return if the form is invalid
         if (this.signInForm.invalid) {
             return;
@@ -110,7 +110,7 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
         const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
 
         // Sign in
-        this._store.dispatch(new Login({ username, password, redirectURL }));
+        this._store.dispatch(new Login({ username, password, redirectURL, rememberMe }));
     }
 
     /**
@@ -121,10 +121,7 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
      */
     recordarme(e): void {
         const { checked } = e;
-        const { username } = this.signInForm.value;
-        if (checked && username) {
-            localStorage.setItem('usuario', username);
-        } else {
+        if (!checked) {
             localStorage.removeItem('usuario');
         }
     }
