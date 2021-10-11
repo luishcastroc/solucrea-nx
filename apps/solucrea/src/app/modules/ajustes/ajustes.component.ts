@@ -80,7 +80,7 @@ export class AjustesComponent implements OnInit, OnDestroy {
                 icon: 'heroicons_outline:office-building',
                 title: 'Sucursales',
                 description: 'Manejo de sucursales y ubicaciones',
-                roles: [Role.ADMIN, Role.DIRECTOR, Role.MANAGER],
+                roles: [Role.ADMIN, Role.DIRECTOR],
             },
         ];
 

@@ -1,9 +1,12 @@
+import { CajasMode } from './../_store/caja.actions';
+import { Navigate } from '@ngxs/router-plugin';
 import { ICajaReturnDto } from 'api/dtos';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CajasState } from '../_store/caja.state';
 import { GetAll } from '../_store/caja.actions';
+import { AuthUtils } from 'app/core/auth/auth.utils';
 
 @Component({
     selector: 'app-caja-list',
@@ -18,5 +21,13 @@ export class CajaListComponent implements OnInit {
 
     ngOnInit(): void {
         this._store.dispatch(new GetAll());
+    }
+
+    /**
+     * new Caja
+     *
+     */
+    newCaja(): void {
+        this._store.dispatch([new Navigate([`caja/${AuthUtils.guid()}`]), new CajasMode('new')]);
     }
 }

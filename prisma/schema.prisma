@@ -523,18 +523,40 @@ model Credito {
     @@map(name: "Creditos")
 }
 
-model Comision {
-    id                 String   @id @default(uuid())
-    credito            Credito  @relation(fields: [creditoId], references: [id])
-    sucursal           Sucursal @relation(fields: [sucursalId], references: [id])
-    usuario            Usuario  @relation(fields: [usuarioId], references: [id])
+enum TipoDeEsquema {
+    PORCENTAJE
+    MONTO
+}
+
+model EsquemaComision {
+    id                 String        @id @default(uuid())
+    tipo               TipoDeEsquema
+    descripcion        String
+    monto              String
     creadoPor          String
-    fechaCreacion      DateTime @default(now())
-    actualizadoPor     String   @default("ADMIN")
-    fechaActualizacion DateTime @default(now()) @updatedAt
+    fechaCreacion      DateTime      @default(now())
+    actualizadoPor     String        @default("ADMIN")
+    fechaActualizacion DateTime      @default(now()) @updatedAt
+    Comision           Comision[]
+
+    @@map(name: "EsquemasComision")
+}
+
+model Comision {
+    id                 String          @id @default(uuid())
+    credito            Credito         @relation(fields: [creditoId], references: [id])
+    sucursal           Sucursal        @relation(fields: [sucursalId], references: [id])
+    usuario            Usuario         @relation(fields: [usuarioId], references: [id])
+    esquema            EsquemaComision @relation(fields: [esquemaComisionId], references: [id])
+    monto              Decimal         @db.Decimal(15, 2)
+    creadoPor          String
+    fechaCreacion      DateTime        @default(now())
+    actualizadoPor     String          @default("ADMIN")
+    fechaActualizacion DateTime        @default(now()) @updatedAt
     creditoId          String
     sucursalId         String
+    usuarioId          String
+    esquemaComisionId  String
 
-    usuarioId String
     @@map(name: "Comisiones")
 }
