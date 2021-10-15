@@ -17,38 +17,57 @@
     <form [formGroup]="cajaForm" class="flex-auto flex flex-col max-w-3xl mt-8">
         <div class="grid md:grid-cols-3 grid-cols-1 gap-6">
             <!-- Fecha de Apertura -->
-            <mat-form-field class="fuse-mat-no-subscript w-full">
-                <mat-label>Fecha de Apertura</mat-label>
-                <mat-icon
-                    matPrefix
-                    class="hidden sm:flex icon-size-5"
-                    [svgIcon]="'heroicons_outline:book-open'"
-                ></mat-icon>
-                <input
-                    matInput
-                    [matDatepicker]="openDatepicker"
-                    [formControlName]="'saldoInicial'"
-                    [placeholder]="'Fecha de Apertura'"
-                />
-                <mat-datepicker-toggle matSuffix [for]="openDatepicker"> </mat-datepicker-toggle>
-                <mat-datepicker #openDatepicker></mat-datepicker>
-            </mat-form-field>
+            <div>
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Fecha de Apertura</mat-label>
+                    <mat-icon
+                        matPrefix
+                        class="hidden sm:flex icon-size-5"
+                        [svgIcon]="'heroicons_outline:book-open'"
+                    ></mat-icon>
+                    <input
+                        matInput
+                        [matDatepicker]="openDatepicker"
+                        [formControlName]="'fechaApertura'"
+                        [placeholder]="'Fecha de Apertura'"
+                    />
+                    <mat-datepicker-toggle matSuffix [for]="openDatepicker"> </mat-datepicker-toggle>
+                    <mat-datepicker #openDatepicker></mat-datepicker>
+                </mat-form-field>
+                <ng-container *ngIf="cajaForm.get('fechaApertura').touched">
+                    <mat-error *ngIf="cajaForm.get('fechaApertura').errors?.required">
+                        La fecha de apertura es requerida.
+                    </mat-error>
+                </ng-container>
+            </div>
             <!-- Sucursal -->
-            <mat-form-field class="fuse-mat-no-subscript w-full">
-                <mat-label>Sucursal</mat-label>
-                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:library'" matPrefix></mat-icon>
-                <mat-select [formControlName]="'sucursal'">
-                    <mat-option *ngFor="let sucursal of sucursales$ | async" [value]="sucursal.id">{{
-                        sucursal.nombre
-                    }}</mat-option>
-                </mat-select>
-            </mat-form-field>
-            <!-- Nombre -->
-            <mat-form-field class="fuse-mat-no-subscript w-full">
-                <mat-label>Saldo Inicial</mat-label>
-                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:currency-dollar'" matPrefix></mat-icon>
-                <input [formControlName]="'saldoInicial'" matInput [inputMask]="currencyInputMask" />
-            </mat-form-field>
+            <div>
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Sucursal</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:library'" matPrefix></mat-icon>
+                    <mat-select [formControlName]="'sucursal'">
+                        <mat-option *ngFor="let sucursal of sucursales$ | async" [value]="sucursal.id">{{
+                            sucursal.nombre
+                        }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <ng-container *ngIf="cajaForm.get('sucursal').touched">
+                    <mat-error *ngIf="cajaForm.get('sucursal').errors?.required"> La sucursal es requerida. </mat-error>
+                </ng-container>
+            </div>
+            <!-- Saldo Inicial -->
+            <div>
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Saldo Inicial</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:currency-dollar'" matPrefix></mat-icon>
+                    <input [formControlName]="'saldoInicial'" matInput [inputMask]="currencyInputMask" />
+                </mat-form-field>
+                <ng-container *ngIf="cajaForm.get('saldoInicial').touched">
+                    <mat-error *ngIf="cajaForm.get('saldoInicial').errors?.required">
+                        El saldo inicial es requerido.
+                    </mat-error>
+                </ng-container>
+            </div>
         </div>
         <div class="grid grid-cols-1">
             <!-- Observaciones -->
@@ -66,6 +85,7 @@
                 [color]="'primary'"
                 class="ml-2"
                 [disabled]="!cajaForm.touched && cajaForm.invalid"
+                (click)="saveCaja()"
             >
                 Guardar
             </button>

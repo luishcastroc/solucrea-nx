@@ -6,7 +6,7 @@ import { Selector, State, Store, Action, StateContext } from '@ngxs/store';
 import { EditMode } from 'app/core/models';
 import { CajaService } from '../_services/caja.service';
 import { CajaStateModel } from './caja.model';
-import { GetAll, GetAllSucursales } from './caja.actions';
+import { Add, GetAll, GetAllSucursales } from './caja.actions';
 import { AjustesSucursalService } from 'app/modules/ajustes/_services';
 
 @State<CajaStateModel>({
@@ -62,6 +62,20 @@ export class CajasState {
                 if (sucursales) {
                     ctx.patchState({ sucursales });
                 }
+            })
+        );
+    }
+
+    @Action(Add)
+    addCaja(ctx: StateContext<CajaStateModel>, action: Add) {
+        const { payload } = action;
+        return this._cajasService.addCaja(payload).pipe(
+            tap((caja: ICajaReturnDto) => {
+                const state = ctx.getState();
+                const cajas = [...state.cajas];
+                cajas.push(caja);
+
+                ctx.patchState({ cajas });
             })
         );
     }
