@@ -120,6 +120,14 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Go Ajuste
+     *
+     */
+    goAjustes() {
+        this._store.dispatch(new Navigate(['/ajustes/sucursales']));
+    }
+
+    /**
      * On destroy
      */
     ngOnDestroy(): void {
