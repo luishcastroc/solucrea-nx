@@ -18,7 +18,8 @@ import { CajasState } from './_store/caja.state';
 import { CajaDetailComponent } from './caja-detail/caja-detail.component';
 import { CajaListComponent } from './caja-list/caja-list.component';
 import { CajaComponent } from './caja.component';
-import { cajaRoutes } from './creditos.routing';
+import { cajaRoutes } from './caja.routing';
+import { InputMaskModule } from '@ngneat/input-mask';
 
 @NgModule({
     declarations: [CajaComponent, CajaListComponent, CajaDetailComponent],
@@ -37,6 +38,7 @@ import { cajaRoutes } from './creditos.routing';
         MatProgressSpinnerModule,
         MatStepperModule,
         SharedModule,
+        InputMaskModule,
     ],
 })
 export class CajaModule {}

@@ -1,3 +1,4 @@
+import { ISucursalReturnDto } from 'api/dtos/sucursal-return.dto';
 import { tap } from 'rxjs/operators';
 import { ICajaReturnDto } from 'api/dtos';
 import { Injectable } from '@angular/core';
@@ -5,12 +6,14 @@ import { Selector, State, Store, Action, StateContext } from '@ngxs/store';
 import { EditMode } from 'app/core/models';
 import { CajaService } from '../_services/caja.service';
 import { CajaStateModel } from './caja.model';
-import { GetAll } from './caja.actions';
+import { GetAll, GetAllSucursales } from './caja.actions';
+import { AjustesSucursalService } from 'app/modules/ajustes/_services';
 
 @State<CajaStateModel>({
     name: 'caja',
     defaults: {
         cajas: undefined,
+        sucursales: undefined,
         editMode: 'edit',
         selectedCaja: undefined,
         loading: false,
@@ -18,7 +21,11 @@ import { GetAll } from './caja.actions';
 })
 @Injectable()
 export class CajasState {
-    constructor(private _cajasService: CajaService, private _store: Store) {}
+    constructor(
+        private _cajasService: CajaService,
+        private _store: Store,
+        private _sucursalesService: AjustesSucursalService
+    ) {}
 
     @Selector()
     static editMode({ editMode }: CajaStateModel): EditMode {
@@ -30,6 +37,11 @@ export class CajasState {
         return cajas;
     }
 
+    @Selector()
+    static sucursales({ sucursales }: CajaStateModel): ISucursalReturnDto[] {
+        return sucursales;
+    }
+
     @Action(GetAll)
     getAllCajas(ctx: StateContext<CajaStateModel>) {
         return this._cajasService.getCajas().pipe(
@@ -38,6 +50,17 @@ export class CajasState {
                     ctx.patchState({
                         cajas,
                     });
+                }
+            })
+        );
+    }
+
+    @Action(GetAllSucursales)
+    getAllSucursales(ctx: StateContext<CajaStateModel>) {
+        return this._sucursalesService.getSucursales().pipe(
+            tap((sucursales: ISucursalReturnDto[]) => {
+                if (sucursales) {
+                    ctx.patchState({ sucursales });
                 }
             })
         );

@@ -103,6 +103,8 @@ export const appRoutes: Route[] = [
             },
             {
                 path: 'caja',
+                canLoad: [AuthGuard],
+                data: { roles: [Role.ADMIN, Role.CAJERO, Role.DIRECTOR, Role.MANAGER] },
                 loadChildren: () => import('app/modules/caja/caja.module').then((m) => m.CajaModule),
             },
             {

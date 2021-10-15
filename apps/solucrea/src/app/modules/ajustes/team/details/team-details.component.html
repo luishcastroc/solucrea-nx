@@ -22,6 +22,9 @@
                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
                         <input [formControlName]="'nombre'" matInput />
                     </mat-form-field>
+                    <ng-container *ngIf="nombre.touched">
+                        <mat-error *ngIf="nombre.errors?.required"> El nombre es requerido. </mat-error>
+                    </ng-container>
                 </div>
                 <!-- Apellido -->
                 <div class="sm:col-span-4">
@@ -30,38 +33,55 @@
                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
                         <input [formControlName]="'apellido'" matInput />
                     </mat-form-field>
+                    <ng-container *ngIf="apellido.touched">
+                        <mat-error *ngIf="apellido.errors?.required"> El apellido es requerido. </mat-error>
+                    </ng-container>
                 </div>
-                <!-- Nombre de Usuario -->
                 <div class="sm:col-span-4">
-                    <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full max-w-1/2">
-                        <mat-label>Nombre de Usuario</mat-label>
-                        <div class="text-secondary" matPrefix>solucrea/</div>
-                        <input [formControlName]="'nombreUsuario'" matInput />
-                    </mat-form-field>
-                    <!-- Role -->
-                    <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix ml-4 w-1/3">
-                        <mat-label>Rol</mat-label>
-                        <mat-select
-                            [panelClass]="'w-72 min-w-72 max-w-72 h-auto'"
-                            [formControlName]="'role'"
-                            disableOptionCentering
-                            #roleSelect="matSelect"
-                        >
-                            <mat-select-trigger class="text-md">
-                                <span class="ml-1 font-medium">{{ roleSelect.value | titlecase }}</span>
-                            </mat-select-trigger>
-                            <ng-container *ngFor="let role of roles">
-                                <mat-option class="h-auto py-4 leading-none" [value]="role.value">
-                                    <div class="font-medium">
-                                        {{ role.label }}
-                                    </div>
-                                    <div class="mt-1.5 text-sm whitespace-normal leading-normal text-secondary">
-                                        {{ role.description }}
-                                    </div>
-                                </mat-option>
+                    <div class="grid gap-6 grid-cols-2">
+                        <div>
+                            <!-- Nombre de Usuario -->
+                            <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
+                                <mat-label>Nombre de Usuario</mat-label>
+                                <div class="text-secondary" matPrefix>solucrea/</div>
+                                <input [formControlName]="'nombreUsuario'" matInput />
+                            </mat-form-field>
+                            <ng-container *ngIf="nombreUsuario.touched">
+                                <mat-error *ngIf="nombreUsuario.errors?.required">
+                                    El nombre de usuario es requerido.
+                                </mat-error>
                             </ng-container>
-                        </mat-select>
-                    </mat-form-field>
+                        </div>
+                        <!-- Role -->
+                        <div>
+                            <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
+                                <mat-label>Rol</mat-label>
+                                <mat-select
+                                    [panelClass]="'w-72 min-w-72 max-w-72 h-auto'"
+                                    [formControlName]="'role'"
+                                    disableOptionCentering
+                                    #roleSelect="matSelect"
+                                >
+                                    <mat-select-trigger class="text-md">
+                                        <span class="ml-1 font-medium">{{ roleSelect.value | titlecase }}</span>
+                                    </mat-select-trigger>
+                                    <ng-container *ngFor="let role of roles">
+                                        <mat-option class="h-auto py-4 leading-none" [value]="role.value">
+                                            <div class="font-medium">
+                                                {{ role.label }}
+                                            </div>
+                                            <div class="mt-1.5 text-sm whitespace-normal leading-normal text-secondary">
+                                                {{ role.description }}
+                                            </div>
+                                        </mat-option>
+                                    </ng-container>
+                                </mat-select>
+                            </mat-form-field>
+                            <ng-container *ngIf="role.touched">
+                                <mat-error *ngIf="role.errors?.required"> El Rol es requerido. </mat-error>
+                            </ng-container>
+                        </div>
+                    </div>
                 </div>
                 <!-- password -->
                 <div class="sm:col-span-4" *ngIf="mode === 'new'">
@@ -75,6 +95,7 @@
                         (#?!@$%^&*-).
                     </div>
                     <ng-container *ngIf="password.touched">
+                        <mat-error *ngIf="password.errors?.required"> La contraseña es requerida. </mat-error>
                         <mat-error *ngIf="password.errors?.minlength">
                             La nueva contraseña debe tener mínimo 8 caracteres.
                         </mat-error>

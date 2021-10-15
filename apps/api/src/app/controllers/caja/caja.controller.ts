@@ -43,7 +43,7 @@ export class CajaController {
     }
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN, Role.MANAGER)
+    @Roles(Role.ADMIN, Role.MANAGER, Role.DIRECTOR)
     @Delete('caja/:id')
     async deleteCaja(@Param('id') id: string): Promise<Caja> {
         return this.cajaService.deleteCaja({ id });

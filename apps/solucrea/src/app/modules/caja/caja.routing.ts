@@ -1,4 +1,6 @@
+import { Role } from '@prisma/client';
 import { Route } from '@angular/router';
+import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { DataCheckGuard } from 'app/core/auth/guards/data-check.guard';
 
 import { CajaDetailComponent } from './caja-detail/caja-detail.component';

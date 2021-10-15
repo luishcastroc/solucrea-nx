@@ -39,3 +39,7 @@ export class CajasMode {
 export class ClearCajasState {
     static readonly type = '[Caja] Clear State';
 }
+
+export class GetAllSucursales {
+    static readonly type = '[Caja] Get All Sucursales';
+}

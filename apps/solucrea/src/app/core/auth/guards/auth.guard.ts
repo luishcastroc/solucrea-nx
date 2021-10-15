@@ -1,4 +1,3 @@
-import { Role } from '@prisma/client';
 import { Injectable } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
@@ -12,8 +11,9 @@ import {
 } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Select, Store } from '@ngxs/store';
+import { Role, Usuario } from '@prisma/client';
 import { AuthService } from 'app/core/auth/auth.service';
-import { Observable, of } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { AuthState } from '../store/auth.state';
@@ -23,7 +23,7 @@ import { AuthState } from '../store/auth.state';
 })
 export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
     @Select(AuthState.isAuthenticated) isAuthenticated$: Observable<boolean>;
-    user = this._store.selectSnapshot(AuthState.user);
+    @Select(AuthState.user) user$: Observable<Usuario>;
     /**
      * Constructor
      */
@@ -83,8 +83,8 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
      */
     private _check(redirectURL: string, roles: Role[]): Observable<boolean> {
         // Check the authentication status
-        return this.isAuthenticated$.pipe(
-            switchMap((authenticated) => {
+        return combineLatest([this.isAuthenticated$, this.user$]).pipe(
+            switchMap(([authenticated, user]) => {
                 // If the user is not authenticated...
                 if (!authenticated) {
                     // Redirect to the sign-in page
@@ -94,7 +94,8 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
                     return of(false);
                 }
 
-                if (this.user && roles && !this._authService.checkAuthorization(this.user.role, roles)) {
+                if (user && roles && !this._authService.checkAuthorization(user.role, roles)) {
+                    this._store.dispatch(new Navigate(['main']));
                     return of(false);
                 }
 

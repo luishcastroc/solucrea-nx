@@ -62,6 +62,22 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
         return this.usuarioForm.controls['password'];
     }
 
+    get nombre() {
+        return this.usuarioForm.controls['nombre'];
+    }
+
+    get apellido() {
+        return this.usuarioForm.controls['apellido'];
+    }
+
+    get nombreUsuario() {
+        return this.usuarioForm.controls['nombreUsuario'];
+    }
+
+    get role() {
+        return this.usuarioForm.controls['role'];
+    }
+
     ngOnInit(): void {
         combineLatest([this.selectedUsuario$, this.editMode$])
             .pipe(
@@ -74,7 +90,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
             .subscribe(({ selectedUsuario, editMode }) => {
                 this.mode = editMode;
                 this.setMessage(editMode);
-                this.createUsuarioForm();
+                this.createUsuarioForm(editMode);
                 if (selectedUsuario) {
                     this.selectedUsuario = selectedUsuario;
                     if (editMode === 'edit') {
@@ -116,13 +132,18 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
      * Generate user form
      *
      */
-    createUsuarioForm(): void {
+    createUsuarioForm(editMode: EditMode): void {
+        const passwordValidators =
+            editMode === 'new'
+                ? [Validators.required, Validators.minLength(8), createPasswordStrengthValidator()]
+                : [Validators.minLength(8), createPasswordStrengthValidator()];
+
         this.usuarioForm = this._formBuilder.group({
-            nombre: [''],
-            apellido: [''],
-            nombreUsuario: [''],
-            role: [''],
-            password: ['', [Validators.minLength(8), createPasswordStrengthValidator()]],
+            nombre: ['', Validators.required],
+            apellido: ['', Validators.required],
+            nombreUsuario: ['', Validators.required],
+            role: ['', Validators.required],
+            password: ['', passwordValidators],
         });
     }
 

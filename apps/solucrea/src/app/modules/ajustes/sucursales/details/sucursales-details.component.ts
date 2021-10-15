@@ -37,8 +37,28 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
     editMode: EditMode;
     coloniasTemp$: Observable<IColoniaReturnDto>;
 
+    get nombre() {
+        return this.sucursalForm.get('nombre');
+    }
+
+    get telefono() {
+        return this.sucursalForm.get('telefono');
+    }
+
     get cp() {
         return this.sucursalForm.get('direccion').get('codigoPostal') as FormControl;
+    }
+
+    get colonia() {
+        return this.sucursalForm.get('direccion').get('colonia') as FormControl;
+    }
+
+    get calle() {
+        return this.sucursalForm.get('direccion').get('calle') as FormControl;
+    }
+
+    get numero() {
+        return this.sucursalForm.get('direccion').get('numero') as FormControl;
     }
 
     get ciudad() {

@@ -87,7 +87,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:cash',
                 link: '/caja',
-                roles: [Role.ALL],
+                roles: [Role.ADMIN, Role.CAJERO, Role.DIRECTOR, Role.MANAGER],
             },
             {
                 id: 'menu.ajustes',
