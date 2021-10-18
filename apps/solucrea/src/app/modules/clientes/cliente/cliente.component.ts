@@ -186,8 +186,9 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
      *
      */
     subscribeToActions(): void {
-        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(Add, Edit)).subscribe((action) => {
-            const { error, successful } = action.result;
+        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(Add, Edit)).subscribe((result) => {
+            const { error, successful } = result.result;
+            const { action } = result;
             if (error) {
                 const message = `${error['error'].message}`;
                 this._toast.error(message, {

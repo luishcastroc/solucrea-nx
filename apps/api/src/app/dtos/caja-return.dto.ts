@@ -1,11 +1,11 @@
+import { Decimal } from '@prisma/client/runtime';
 import { Sucursal } from '@prisma/client';
 export interface ICajaReturnDto {
     id: string;
-    saldoInicial: number;
+    saldoInicial: Decimal;
     fechaApertura: string | Date;
-    saldoFinal: number;
-    fechaDeCierre: string | Date;
+    saldoFinal: Decimal;
+    fechaCierre: string | Date;
     creadoPor: string;
-    fechaCreacion: string | Date;
     sucursal: Partial<Sucursal>;
 }

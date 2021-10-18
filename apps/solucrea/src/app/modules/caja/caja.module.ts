@@ -33,7 +33,6 @@ import { InputMaskModule } from '@ngneat/input-mask';
         MatTooltipModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        MatMomentDateModule,
         MatSelectModule,
         MatProgressSpinnerModule,
         MatStepperModule,

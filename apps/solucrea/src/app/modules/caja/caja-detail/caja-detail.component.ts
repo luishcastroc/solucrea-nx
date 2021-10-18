@@ -65,8 +65,9 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
      *
      */
     subscribeToActions(): void {
-        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(Add)).subscribe((action) => {
-            const { error, successful } = action.result;
+        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(Add)).subscribe((result) => {
+            const { error, successful } = result.result;
+            const { action } = result;
             if (error) {
                 const message = `${error['error'].message}`;
                 this._toast.error(message, {
@@ -85,12 +86,12 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
                     // we clear the forms
                     this.cajaForm.reset();
                     setTimeout(() => {
+                        // we enable the form
+                        this.cajaForm.enable();
                         this._store.dispatch(new Navigate(['/caja']));
-                    }, 4000);
+                    }, 3000);
                 }
             }
-            // we enable the form
-            this.cajaForm.enable();
         });
     }
 
