@@ -1,9 +1,5 @@
 {
     "version": 1,
-    "cli": {
-        "defaultCollection": "@angular-eslint/schematics"
-    },
-    "defaultProject": "solucrea",
     "projects": {
         "api": {
             "root": "apps/api",
@@ -54,7 +50,8 @@
                         "passWithNoTests": true
                     }
                 }
-            }
+            },
+            "tags": []
         },
         "solucrea": {
             "projectType": "application",
@@ -177,7 +174,8 @@
                         "tsConfig": ["apps/solucrea/tsconfig.app.json", "apps/solucrea/tsconfig.spec.json"]
                     }
                 }
-            }
+            },
+            "tags": []
         }
     }
 }

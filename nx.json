@@ -11,12 +11,8 @@
         "defaultBase": "master"
     },
     "npmScope": "solucrea",
-    "projects": {
-        "api": {
-            "tags": []
-        },
-        "solucrea": {
-            "tags": []
-        }
-    }
+    "cli": {
+        "defaultCollection": "@angular-eslint/schematics"
+    },
+    "defaultProject": "solucrea"
 }
