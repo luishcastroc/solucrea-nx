@@ -21,8 +21,64 @@
         <!-- Content -->
         <div class="flex-auto">
             <ng-container *ngIf="cajas$ | async as cajas; else loadingTemplate">
-                <div class="z-20 flex px-8 py-4 md:px-10 border-b justify-between">
-                    <div *ngIf="cajas.length > 0; else noCajas">Contenido</div>
+                <div
+                    class="z-20 flex px-8 py-4 md:px-10 border-b justify-between w-full"
+                    *ngIf="cajas.length > 0; else noCajas"
+                >
+                    <ng-container *ngFor="let caja of cajas">
+                        <div class="z-20 flex px-8 py-4 md:px-10 border-b justify-between w-full max-w-5/6">
+                            <div class="flex gap-6 xsm:flex-wrap sm:flex-wrap">
+                                <div class="flex flex-col">
+                                    <div class="font-bold">Fecha Apertura:</div>
+                                    <div class="mt-2">{{ caja.fechaApertura | date }}</div>
+                                </div>
+                                <div class="flex flex-col">
+                                    <div class="font-bold">Saldo Inicial:</div>
+                                    <div class="mt-2">{{ caja.saldoInicial | currency: 'MXN':'symbol':'4.2-2' }}</div>
+                                </div>
+                                <div class="flex flex-col">
+                                    <div class="font-bold">Sucursal:</div>
+                                    <div class="mt-2">{{ caja.sucursal?.nombre }}</div>
+                                </div>
+                                <div class="flex flex-col">
+                                    <div class="font-bold">Observaciones:</div>
+                                    <div class="mt-2">{{ caja.observaciones ? caja.observaciones : 'Ninguna' }}</div>
+                                </div>
+                            </div>
+                            <div class="order-1 sm:order-2 sm:ml-3 xsm:flex-col flex justify-center items-center">
+                                <button
+                                    mat-icon-button
+                                    aria-label="Movimientos"
+                                    #tooltip="matTooltip"
+                                    matTooltip="Movimientos"
+                                    [matTooltipPosition]="'below'"
+                                >
+                                    <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:cash'"></mat-icon>
+                                </button>
+                                <button
+                                    mat-icon-button
+                                    aria-label="Editar Turno"
+                                    #tooltip="matTooltip"
+                                    matTooltip="Editar Turno"
+                                    [matTooltipPosition]="'below'"
+                                >
+                                    <mat-icon
+                                        class="text-hint"
+                                        [svgIcon]="'heroicons_outline:clipboard-list'"
+                                    ></mat-icon>
+                                </button>
+                                <button
+                                    mat-icon-button
+                                    aria-label="Cerrar Turno"
+                                    #tooltip="matTooltip"
+                                    matTooltip="Cerrar Turno"
+                                    [matTooltipPosition]="'below'"
+                                >
+                                    <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:lock-closed'"></mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </ng-container>
                     <ng-template #noCajas><div class="font-extrabold">No Hay Turnos abiertos.</div> </ng-template>
                 </div>
             </ng-container>

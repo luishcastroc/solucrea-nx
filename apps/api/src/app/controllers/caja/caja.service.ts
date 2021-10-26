@@ -35,7 +35,12 @@ export class CajaService {
 
     async cajas(): Promise<ICajaReturnDto[]> {
         try {
-            return this.prisma.caja.findMany({ select: this.select });
+            return this.prisma.caja.findMany({
+                select: this.select,
+                where: {
+                    fechaCierre: { equals: null },
+                },
+            });
         } catch {
             throw new HttpException(
                 { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error consultando las cajas' },
@@ -49,9 +54,9 @@ export class CajaService {
             ...data,
             sucursal: { connect: { id: data.sucursal } },
         };
+
         const checkCaja = await this.prisma.caja.findFirst({
             where: {
-                fechaApertura: { equals: data.fechaApertura },
                 fechaCierre: { equals: null },
                 sucursal: { id: { equals: data.sucursal } },
             },

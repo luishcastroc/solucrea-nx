@@ -12,8 +12,8 @@ import { AjustesSucursalService } from 'app/modules/ajustes/_services';
 @State<CajaStateModel>({
     name: 'caja',
     defaults: {
-        cajas: undefined,
-        sucursales: undefined,
+        cajas: [],
+        sucursales: [],
         editMode: 'edit',
         selectedCaja: undefined,
         loading: false,

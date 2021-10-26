@@ -240,7 +240,11 @@
                                                     [svgIcon]="'heroicons_solid:phone'"
                                                     matPrefix
                                                 ></mat-icon>
-                                                <input [formControlName]="'telefono1'" matInput />
+                                                <input
+                                                    [formControlName]="'telefono1'"
+                                                    matInput
+                                                    [inputMask]="phoneInputMask"
+                                                />
                                             </mat-form-field>
                                             <ng-container *ngIf="clienteForm.get('telefono1').touched">
                                                 <mat-error *ngIf="clienteForm.get('telefono1').errors?.required">
@@ -256,7 +260,11 @@
                                                 [svgIcon]="'heroicons_solid:phone'"
                                                 matPrefix
                                             ></mat-icon>
-                                            <input [formControlName]="'telefono2'" matInput />
+                                            <input
+                                                [formControlName]="'telefono2'"
+                                                matInput
+                                                [inputMask]="phoneInputMask"
+                                            />
                                         </mat-form-field>
                                     </div>
                                     <h3
@@ -519,7 +527,11 @@
                                                         [svgIcon]="'heroicons_solid:phone'"
                                                         matPrefix
                                                     ></mat-icon>
-                                                    <input [formControlName]="'telefono'" matInput />
+                                                    <input
+                                                        [formControlName]="'telefono'"
+                                                        matInput
+                                                        [inputMask]="phoneInputMask"
+                                                    />
                                                 </mat-form-field>
                                                 <ng-container *ngIf="trabajoForm.get('telefono').touched">
                                                     <mat-error *ngIf="trabajoForm.get('telefono').errors?.required">

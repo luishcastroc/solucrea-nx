@@ -1,6 +1,6 @@
 import { ClearCajasState } from './../_store/caja.actions';
 import { takeUntil } from 'rxjs/operators';
-import { Moment } from 'moment';
+import moment, { Moment } from 'moment';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { ISucursalReturnDto } from 'api/dtos/sucursal-return.dto';
@@ -13,6 +13,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestro
 import { Add, GetAllSucursales } from '../_store/caja.actions';
 import { createMask } from '@ngneat/input-mask';
 import { CreateCajaDto } from 'api/dtos';
+import { futureDateValidator } from '../validators/custom-caja.validators';
 
 @Component({
     selector: 'app-caja-detail',
@@ -103,7 +104,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
         return this._formBuilder.group({
             id: [this._route.snapshot.paramMap.get('id')],
             saldoInicial: ['', Validators.required],
-            fechaApertura: ['', Validators.required],
+            fechaApertura: ['', Validators.required, futureDateValidator()],
             sucursal: ['', Validators.required],
             observaciones: [''],
         });

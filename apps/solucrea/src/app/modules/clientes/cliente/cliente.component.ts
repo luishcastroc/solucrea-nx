@@ -45,6 +45,7 @@ import { ClientesState } from '../_store/clientes.state';
 import { ClientesService } from '../_services/clientes.service';
 import { IConfig } from '../models/config.model';
 import { curpValidator, rfcValidator } from '../validators/custom-clientes.validators';
+import { createMask } from '@ngneat/input-mask';
 
 @Component({
     selector: 'app-cliente',
@@ -69,6 +70,10 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
     trabajoForm: FormGroup;
     editMode: EditMode;
     deletedAddresses = [];
+    phoneInputMask = createMask({
+        mask: '999-999-9999',
+        autoUnmask: true,
+    });
 
     get direcciones() {
         return this.clienteForm.get('direcciones') as FormArray;

@@ -49,6 +49,9 @@
                         <mat-error *ngIf="cajaForm.get('fechaApertura').errors?.required">
                             La fecha de apertura es requerida.
                         </mat-error>
+                        <mat-error *ngIf="cajaForm.get('fechaApertura').errors?.futureDateValidator">
+                            La fecha de apertura no puede ser mayor a hoy.
+                        </mat-error>
                     </ng-container>
                 </div>
                 <!-- Sucursal -->
