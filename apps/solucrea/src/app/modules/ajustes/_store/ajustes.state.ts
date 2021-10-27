@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
-import { IColoniaReturnDto } from 'api/dtos';
-import { ISucursalReturnDto } from 'api/dtos/sucursal-return.dto';
+import { IColoniaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { UpdateUsuario } from 'app/core/auth/store/auth.actions';
 import { AuthState } from 'app/core/auth/store/auth.state';
 import { EditMode } from 'app/core/models';

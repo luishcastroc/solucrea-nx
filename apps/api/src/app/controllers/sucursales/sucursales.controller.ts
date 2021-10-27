@@ -12,12 +12,11 @@ import {
     ValidationPipe,
 } from '@nestjs/common';
 import { Prisma, Role } from '@prisma/client';
+import { CreateSucursalDto, ISucursalReturnDto } from 'api/dtos';
 
 import { Public } from '../../decorators/public.decorator';
 import { Roles } from '../../decorators/roles.decorator';
-import { CreateSucursalDto } from '../../dtos/create-sucursal.dto';
 import { RolesGuard } from '../../guards/roles.guard';
-import { ISucursalReturnDto } from './../../dtos/sucursal-return.dto';
 import { SucursalesService } from './sucursales.service';
 
 @Controller()

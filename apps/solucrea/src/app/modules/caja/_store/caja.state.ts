@@ -1,13 +1,13 @@
-import { ISucursalReturnDto } from 'api/dtos/sucursal-return.dto';
-import { tap } from 'rxjs/operators';
-import { ICajaReturnDto } from 'api/dtos';
 import { Injectable } from '@angular/core';
-import { Selector, State, Store, Action, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { ICajaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
-import { CajaService } from '../_services/caja.service';
-import { CajaStateModel } from './caja.model';
-import { Add, GetAll, GetAllSucursales } from './caja.actions';
 import { AjustesSucursalService } from 'app/modules/ajustes/_services';
+import { tap } from 'rxjs/operators';
+
+import { CajaService } from '../_services/caja.service';
+import { Add, GetAll, GetAllSucursales, SelectCaja, CajasMode } from './caja.actions';
+import { CajaStateModel } from './caja.model';
 
 @State<CajaStateModel>({
     name: 'caja',
@@ -40,6 +40,11 @@ export class CajasState {
     @Selector()
     static sucursales({ sucursales }: CajaStateModel): ISucursalReturnDto[] {
         return sucursales;
+    }
+
+    @Selector()
+    static selectedCaja({ selectedCaja }: CajaStateModel): ICajaReturnDto {
+        return selectedCaja;
     }
 
     @Action(GetAll)
@@ -78,5 +83,24 @@ export class CajasState {
                 ctx.patchState({ cajas });
             })
         );
+    }
+
+    @Action(SelectCaja)
+    selectCaja(ctx: StateContext<CajaStateModel>, { id }: SelectCaja) {
+        return this._cajasService.getCaja(id).pipe(
+            tap((selectedCaja: ICajaReturnDto) => {
+                if (selectedCaja) {
+                    ctx.patchState({
+                        selectedCaja,
+                    });
+                }
+            })
+        );
+    }
+
+    @Action(CajasMode)
+    toggleEditModeSucursal(ctx: StateContext<CajaStateModel>, action: CajasMode) {
+        const { payload } = action;
+        ctx.patchState({ editMode: payload });
     }
 }

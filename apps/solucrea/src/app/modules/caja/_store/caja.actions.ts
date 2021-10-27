@@ -26,9 +26,9 @@ export class Delete {
     constructor(public id: string) {}
 }
 
-export class Select {
+export class SelectCaja {
     static readonly type = '[Caja] Select';
-    constructor(public usuario: Caja) {}
+    constructor(public id: string) {}
 }
 
 export class CajasMode {

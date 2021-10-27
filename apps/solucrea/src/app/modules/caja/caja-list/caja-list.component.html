@@ -61,6 +61,7 @@
                                     #tooltip="matTooltip"
                                     matTooltip="Editar Turno"
                                     [matTooltipPosition]="'below'"
+                                    (click)="editCaja(caja.id)"
                                 >
                                     <mat-icon
                                         class="text-hint"
@@ -73,6 +74,7 @@
                                     #tooltip="matTooltip"
                                     matTooltip="Cerrar Turno"
                                     [matTooltipPosition]="'below'"
+                                    (click)="cerrarCaja(caja.id)"
                                 >
                                     <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:lock-closed'"></mat-icon>
                                 </button>

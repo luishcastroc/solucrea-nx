@@ -143,7 +143,7 @@
                 type="button"
                 [color]="'primary'"
                 (click)="mode !== 'new' ? updateUsuario() : saveUsuario()"
-                [disabled]="!usuarioForm.touched || (mode === 'password' && !password.value) || usuarioForm.invalid"
+                [disabled]="!usuarioForm.touched || usuarioForm.invalid"
             >
                 Guardar
             </button>

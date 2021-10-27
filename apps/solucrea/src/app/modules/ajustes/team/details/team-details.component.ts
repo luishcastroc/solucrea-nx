@@ -138,11 +138,13 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
                 ? [Validators.required, Validators.minLength(8), createPasswordStrengthValidator()]
                 : [Validators.minLength(8), createPasswordStrengthValidator()];
 
+        const requiredValue = editMode === 'new' ? Validators.required : null;
+
         this.usuarioForm = this._formBuilder.group({
-            nombre: ['', Validators.required],
-            apellido: ['', Validators.required],
-            nombreUsuario: ['', Validators.required],
-            role: ['', Validators.required],
+            nombre: ['', requiredValue],
+            apellido: ['', requiredValue],
+            nombreUsuario: ['', requiredValue],
+            role: ['', requiredValue],
             password: ['', passwordValidators],
         });
     }

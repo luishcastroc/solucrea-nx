@@ -1,19 +1,20 @@
-import { ClearCajasState } from './../_store/caja.actions';
-import { takeUntil } from 'rxjs/operators';
-import moment, { Moment } from 'moment';
-import { ActivatedRoute } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
-import { ISucursalReturnDto } from 'api/dtos/sucursal-return.dto';
-import { CajasState } from '../_store/caja.state';
-import { HotToastService } from '@ngneat/hot-toast';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Navigate } from '@ngxs/router-plugin';
-import { Store, Actions, Select, ofActionCompleted } from '@ngxs/store';
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { Add, GetAllSucursales } from '../_store/caja.actions';
+import { ActivatedRoute } from '@angular/router';
+import { HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
-import { CreateCajaDto } from 'api/dtos';
+import { Navigate } from '@ngxs/router-plugin';
+import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
+import { CreateCajaDto, ICajaReturnDto, ISucursalReturnDto } from 'api/dtos';
+import { EditMode } from 'app/core/models';
+import { Moment } from 'moment';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil, tap } from 'rxjs/operators';
+
+import { Add, GetAllSucursales } from '../_store/caja.actions';
+import { CajasState } from '../_store/caja.state';
 import { futureDateValidator } from '../validators/custom-caja.validators';
+import { ClearCajasState, SelectCaja } from '../_store/caja.actions';
 
 @Component({
     selector: 'app-caja-detail',
@@ -23,6 +24,9 @@ import { futureDateValidator } from '../validators/custom-caja.validators';
 })
 export class CajaDetailComponent implements OnInit, OnDestroy {
     @Select(CajasState.sucursales) sucursales$: Observable<ISucursalReturnDto[]>;
+    editMode$: Observable<EditMode>;
+    selectedCaja$: Observable<ICajaReturnDto>;
+    editMode: EditMode;
     cajaForm: FormGroup;
     currencyInputMask = createMask({
         alias: 'numeric',
@@ -45,10 +49,63 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
         private _route: ActivatedRoute
     ) {}
 
+    get saldoInicial() {
+        return this.cajaForm.controls['saldoInicial'];
+    }
+
+    get fechaApertura() {
+        return this.cajaForm.controls['fechaApertura'];
+    }
+
+    get sucursal() {
+        return this.cajaForm.controls['sucursal'];
+    }
+
+    get observaciones() {
+        return this.cajaForm.controls['observaciones'];
+    }
+
     ngOnInit(): void {
         this.subscribeToActions();
-        this._store.dispatch(new GetAllSucursales());
-        this.cajaForm = this.createCajaForm();
+        this.initializeData(this._route.snapshot.paramMap.get('id'));
+    }
+
+    /**
+     *
+     * Initialize the selectors for the mode and colonias
+     *
+     */
+    initializeData(id: string): void {
+        this.editMode$ = this._store.select(CajasState.editMode).pipe(
+            tap((edit) => {
+                this.editMode = edit;
+
+                this._store.dispatch(new GetAllSucursales());
+                this.cajaForm = this.createCajaForm(edit);
+
+                if (edit === 'edit' || edit === 'cierre') {
+                    this._store.dispatch(new SelectCaja(id));
+                }
+
+                if (edit === 'cierre') {
+                    this.saldoInicial.disable();
+                    this.observaciones.disable();
+                    this.sucursal.disable();
+                    this.fechaApertura.disable();
+                }
+
+                this.selectedCaja$ = this._store.select(CajasState.selectedCaja).pipe(
+                    tap((caja: ICajaReturnDto) => {
+                        if (caja) {
+                            this.cajaForm.patchValue({
+                                ...caja,
+                                sucursal: caja.sucursal.id,
+                            });
+                        }
+                    })
+                );
+            })
+        );
     }
 
     /**
@@ -99,15 +156,28 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
     /**
      * Create CajaForm
      *
+     * @param editMode
      */
-    createCajaForm(): FormGroup {
-        return this._formBuilder.group({
-            id: [this._route.snapshot.paramMap.get('id')],
-            saldoInicial: ['', Validators.required],
-            fechaApertura: ['', Validators.required, futureDateValidator()],
-            sucursal: ['', Validators.required],
-            observaciones: [''],
-        });
+    createCajaForm(editMode: EditMode): FormGroup {
+        if (editMode === 'new' || editMode === 'edit') {
+            return this._formBuilder.group({
+                id: [this._route.snapshot.paramMap.get('id')],
+                saldoInicial: ['', Validators.required],
+                fechaApertura: ['', Validators.required, futureDateValidator()],
+                sucursal: ['', Validators.required],
+                observaciones: [''],
+            });
+        } else {
+            return this._formBuilder.group({
+                id: [this._route.snapshot.paramMap.get('id')],
+                saldoInicial: ['', Validators.required],
+                fechaApertura: ['', Validators.required, futureDateValidator()],
+                sucursal: ['', Validators.required],
+                observaciones: [''],
+                fechaCierre: ['', Validators.required],
+                saldoFinal: ['', Validators.required],
+            });
+        }
     }
 
     /**

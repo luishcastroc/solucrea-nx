@@ -22,3 +22,4 @@ export * from './create-actividad-economica.dto';
 export * from './cliente-return.dto';
 export * from './update-cliente.dto';
 export * from './caja-return.dto';
+export * from './sucursal-return.dto';

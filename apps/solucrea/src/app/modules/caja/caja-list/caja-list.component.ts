@@ -30,4 +30,24 @@ export class CajaListComponent implements OnInit {
     newCaja(): void {
         this._store.dispatch([new Navigate([`caja/${AuthUtils.guid()}`]), new CajasMode('new')]);
     }
+
+    /**
+     *
+     * Function to edit Caja
+     *
+     * @param id string
+     */
+    editCaja(id: string): void {
+        this._store.dispatch([new Navigate([`caja/${id}`]), new CajasMode('edit')]);
+    }
+
+    /**
+     *
+     * Function to close Caja
+     *
+     * @param id string
+     */
+    cerrarCaja(id: string): void {
+        this._store.dispatch([new Navigate([`caja/${id}`]), new CajasMode('cierre')]);
+    }
 }

@@ -1,7 +1,6 @@
-import { IColoniaReturnDto } from 'api/dtos';
 import { Usuario } from '@prisma/client';
+import { IColoniaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
-import { ISucursalReturnDto } from 'api/dtos/sucursal-return.dto';
 
 export interface AjustesStateModel {
     usuarios: Usuario[] | [];

@@ -1,7 +1,6 @@
-import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
-import { Prisma, Sucursal } from '@prisma/client';
-import { CreateSucursalDto } from 'api/dtos';
-import { ISucursalReturnDto } from 'api/dtos/sucursal-return.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { CreateSucursalDto, ISucursalReturnDto } from 'api/dtos';
 
 import { PrismaService } from '../../prisma/prisma.service';
 

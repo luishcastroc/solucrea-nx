@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CreateSucursalDto } from 'api/dtos';
-import { ISucursalReturnDto } from 'api/dtos/sucursal-return.dto';
+import { CreateSucursalDto, ISucursalReturnDto } from 'api/dtos';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';

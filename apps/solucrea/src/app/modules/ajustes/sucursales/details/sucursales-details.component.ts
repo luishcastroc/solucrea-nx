@@ -1,25 +1,24 @@
-import { ISucursalReturnDto } from './../../../../../../../api/src/app/dtos/sucursal-return.dto';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
-import { IColoniaReturnDto } from 'api/dtos';
+import { IColoniaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
+import { SharedService } from 'app/shared';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 
 import {
+    AddSucursal,
+    ClearSucursalState,
+    EditSucursal,
     GetColonias,
     SelectSucursal,
-    ClearSucursalState,
-    AddSucursal,
-    EditSucursal,
 } from '../../_store/ajustes-sucursales.actions';
-import { Sucursal, TipoDireccion } from '.prisma/client';
-import { SharedService } from 'app/shared';
+import { TipoDireccion } from '.prisma/client';
 
 @Component({
     selector: 'app-sucursales-details',
