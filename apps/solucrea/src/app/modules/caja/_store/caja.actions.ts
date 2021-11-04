@@ -1,8 +1,8 @@
-import { Prisma, Caja } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { CreateCajaDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 
-export class Add {
+export class AddCaja {
     static readonly type = '[Caja] Add';
     constructor(public payload: CreateCajaDto) {}
 }
@@ -16,7 +16,7 @@ export class GetOne {
     constructor(public id: string) {}
 }
 
-export class Edit {
+export class EditCaja {
     static readonly type = '[Caja] Edit';
     constructor(public id: string, public payload: Prisma.CajaUncheckedUpdateInput) {}
 }

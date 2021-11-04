@@ -1,3 +1,4 @@
+import { Prisma } from '.prisma/client';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateSucursalDto, ISucursalReturnDto } from 'api/dtos';
@@ -51,7 +52,7 @@ export class AjustesSucursalService {
      *
      * @param UpdateSucursalDto
      */
-    editSucursal(id: string, sucursal: any): Observable<ISucursalReturnDto> {
+    editSucursal(id: string, sucursal: Prisma.SucursalUpdateInput): Observable<ISucursalReturnDto> {
         return this._httpClient.put<ISucursalReturnDto>(`${this._environment.uri}/sucursal/${id}`, sucursal);
     }
 

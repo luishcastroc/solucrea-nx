@@ -3,7 +3,7 @@ import { IsDateString, IsNotEmpty } from 'class-validator';
 
 export class IDireccion {
     id?: string;
-    tipo: TipoDireccion;
+    tipo?: TipoDireccion;
     calle?: string;
     numero?: string;
     cruzamientos?: string | null;

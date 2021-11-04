@@ -117,8 +117,8 @@
                                 <mat-error *ngIf="cajaForm.get('fechaCierre').errors?.required">
                                     La fecha de cierre es requerida.
                                 </mat-error>
-                                <mat-error *ngIf="cajaForm.get('fechaCierre').errors?.pastDateValidator">
-                                    La fecha de cierre no puede ser menor a la fecha de apertura.
+                                <mat-error *ngIf="cajaForm.errors?.checkIfEndDateBeforeStartDate">
+                                    La fecha de cierre no puede ser menor a la fecha de apertura o en el futuro.
                                 </mat-error>
                             </ng-container>
                         </div>
@@ -154,14 +154,14 @@
                     </mat-form-field>
                 </div>
                 <div class="mt-8 w-full flex-auto">
-                    <button mat-stroked-button type="button" (click)="cajaForm.reset()">Cancelar</button>
+                    <button mat-stroked-button type="button" (click)="cancelCaja(editMode)">Cancelar</button>
                     <button
                         mat-flat-button
                         type="button"
                         [color]="'primary'"
                         class="ml-2"
-                        [disabled]="!cajaForm.touched && cajaForm.invalid"
-                        (click)="saveCaja()"
+                        [disabled]="!cajaForm.touched || cajaForm.invalid"
+                        (click)="saveCaja(editMode)"
                     >
                         Guardar
                     </button>

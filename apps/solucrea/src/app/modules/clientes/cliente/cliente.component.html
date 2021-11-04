@@ -491,6 +491,23 @@
                                     >
                                         Siguiente
                                     </button>
+                                    <button
+                                        *ngIf="editMode === 'edit'"
+                                        mat-flat-button
+                                        type="button"
+                                        [color]="'primary'"
+                                        (click)="saveCliente()"
+                                        class="ml-2"
+                                        [disabled]="
+                                            editMode === 'edit' &&
+                                            !trabajoForm.touched &&
+                                            trabajoForm.invalid &&
+                                            !clienteForm.touched &&
+                                            clienteForm.invalid
+                                        "
+                                    >
+                                        {{ editMode === 'edit' ? 'Actualizar' : 'Guardar' }}
+                                    </button>
                                 </div>
                             </form>
                         </mat-step>

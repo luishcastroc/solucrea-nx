@@ -11,6 +11,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
+import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { TipoDireccion } from '@prisma/client';
@@ -23,13 +24,14 @@ import {
     IDireccionUpdateDto,
     ITrabajoDto,
 } from 'api/dtos/';
-import { CanDeactivateComponent } from 'app/core/models/can-deactivate.model';
 import { EditMode } from 'app/core/models';
+import { CanDeactivateComponent } from 'app/core/models/can-deactivate.model';
 import { SharedService } from 'app/shared';
 import { isEqual } from 'lodash';
 import { Observable, of, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
+import { ClientesService } from '../_services/clientes.service';
 import {
     Add,
     ClearClientesState,
@@ -42,10 +44,8 @@ import {
 } from '../_store/clientes.actions';
 import { IColoniasState } from '../_store/clientes.model';
 import { ClientesState } from '../_store/clientes.state';
-import { ClientesService } from '../_services/clientes.service';
 import { IConfig } from '../models/config.model';
 import { curpValidator, rfcValidator } from '../validators/custom-clientes.validators';
-import { createMask } from '@ngneat/input-mask';
 
 @Component({
     selector: 'app-cliente',
@@ -71,7 +71,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
     editMode: EditMode;
     deletedAddresses = [];
     phoneInputMask = createMask({
-        mask: '999-999-9999',
+        mask: '(999)-999-99-99',
         autoUnmask: true,
     });
 
@@ -223,6 +223,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                 } else {
                     this.clienteForm.markAsPristine();
                     this.trabajoForm.markAsPristine();
+                    this.disableCiudadAndEstado();
                 }
             }
             // we enable the form
@@ -514,6 +515,20 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
 
             this._store.dispatch(new Edit(cliente.id, cliente));
         }
+    }
+
+    /**
+     * disableCiudadAndEstado:
+     *
+     * function to disable Estado and Ciudad form elements
+     */
+    disableCiudadAndEstado(): void {
+        this.direcciones.controls.forEach((element) => {
+            element.get('ciudad').disable();
+            element.get('estado').disable();
+        });
+        (this.trabajoForm.get('direccion') as FormGroup).get('ciudad').disable();
+        (this.trabajoForm.get('direccion') as FormGroup).get('estado').disable();
     }
 
     /**

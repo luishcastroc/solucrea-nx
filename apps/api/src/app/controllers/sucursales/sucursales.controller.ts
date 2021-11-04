@@ -1,3 +1,4 @@
+import { UpdateSucursalDto } from './../../dtos/update-sucursal.dto';
 import {
     Body,
     Controller,
@@ -50,7 +51,7 @@ export class SucursalesController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Put('sucursal/:id')
-    async editSucursal(@Param('id') id: string, @Body() data: Prisma.SucursalUpdateInput): Promise<ISucursalReturnDto> {
+    async editSucursal(@Param('id') id: string, @Body() data: UpdateSucursalDto): Promise<ISucursalReturnDto> {
         return this.sucursalesService.updateSucursal({
             where: { id },
             data,

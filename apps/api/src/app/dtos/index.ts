@@ -23,3 +23,4 @@ export * from './cliente-return.dto';
 export * from './update-cliente.dto';
 export * from './caja-return.dto';
 export * from './sucursal-return.dto';
+export * from './update-sucursal.dto';

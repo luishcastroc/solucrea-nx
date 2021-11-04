@@ -3,6 +3,7 @@ import { Caja } from '.prisma/client';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateCajaDto, ICajaReturnDto } from 'api/dtos';
+import { isEmpty } from 'lodash';
 
 @Injectable()
 export class CajaService {
@@ -85,11 +86,30 @@ export class CajaService {
         data: Prisma.CajaUpdateInput;
     }): Promise<ICajaReturnDto> {
         const { where, data } = params;
-        return this.prisma.caja.update({
-            data,
-            where,
-            select: this.select,
-        });
+        const cajaUpdate: Prisma.CajaUpdateInput = { ...(data as Prisma.CajaUpdateInput) };
+
+        if (isEmpty(data)) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.BAD_REQUEST,
+                    message: 'Error actualizando el turno, al menos un elemento a actualizar debe ser provisto',
+                },
+                HttpStatus.BAD_REQUEST
+            );
+        }
+
+        try {
+            return this.prisma.caja.update({
+                data: cajaUpdate,
+                where,
+                select: this.select,
+            });
+        } catch (e) {
+            throw new HttpException(
+                { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error actualizando el turno' },
+                HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     async deleteCaja(where: Prisma.CajaWhereUniqueInput): Promise<ICajaReturnDto> {

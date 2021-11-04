@@ -22,7 +22,7 @@
         <div class="flex-auto">
             <ng-container *ngIf="cajas$ | async as cajas; else loadingTemplate">
                 <div
-                    class="z-20 flex px-8 py-4 md:px-10 border-b justify-between w-full"
+                    class="z-20 flex flex-col px-8 py-4 md:px-10 border-b justify-between w-full"
                     *ngIf="cajas.length > 0; else noCajas"
                 >
                     <ng-container *ngFor="let caja of cajas">
@@ -32,7 +32,7 @@
                                     <div class="font-bold">Fecha Apertura:</div>
                                     <div class="mt-2">{{ caja.fechaApertura | date }}</div>
                                 </div>
-                                <div class="flex flex-col">
+                                <div class="flex flex-col flex-auto">
                                     <div class="font-bold">Saldo Inicial:</div>
                                     <div class="mt-2">{{ caja.saldoInicial | currency: 'MXN':'symbol':'4.2-2' }}</div>
                                 </div>

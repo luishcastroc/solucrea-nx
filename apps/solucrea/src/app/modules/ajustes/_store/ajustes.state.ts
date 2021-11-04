@@ -217,7 +217,7 @@ export class AjustesState {
     }
 
     @Action(EditSucursal)
-    editSucursal(ctx: StateContext<AjustesStateModel>, action: EditUsuario) {
+    editSucursal(ctx: StateContext<AjustesStateModel>, action: EditSucursal) {
         const { id, payload } = action;
         return this._ajustesSucursalesService.editSucursal(id, payload).pipe(
             tap((sucursal: ISucursalReturnDto) => {

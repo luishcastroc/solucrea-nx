@@ -19,6 +19,7 @@ import {
     SelectSucursal,
 } from '../../_store/ajustes-sucursales.actions';
 import { TipoDireccion } from '.prisma/client';
+import { createMask } from '@ngneat/input-mask';
 
 @Component({
     selector: 'app-sucursales-details',
@@ -35,13 +36,21 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
     sucursalForm: FormGroup;
     editMode: EditMode;
     coloniasTemp$: Observable<IColoniaReturnDto>;
+    phoneInputMask = createMask({
+        mask: '(999)-999-99-99',
+        autoUnmask: true,
+    });
+
+    get id() {
+        return this.sucursalForm.get('id') as FormControl;
+    }
 
     get nombre() {
-        return this.sucursalForm.get('nombre');
+        return this.sucursalForm.get('nombre') as FormControl;
     }
 
     get telefono() {
-        return this.sucursalForm.get('telefono');
+        return this.sucursalForm.get('telefono') as FormControl;
     }
 
     get cp() {
@@ -175,6 +184,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
      */
     createSucursalForm(): FormGroup {
         return this._formBuilder.group({
+            id: [''],
             nombre: ['', Validators.required],
             telefono: ['', Validators.required],
             direccion: this._formBuilder.group({
@@ -210,7 +220,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
             this._store.dispatch(new AddSucursal(this.sucursalForm.value));
         } else if (this.editMode === 'edit') {
             const sucursalEdit = this._sharedService.getDirtyValues(this.sucursalForm);
-            console.log('Edit: ', sucursalEdit);
+            this._store.dispatch(new EditSucursal(this.id.value, sucursalEdit));
         }
     }
 

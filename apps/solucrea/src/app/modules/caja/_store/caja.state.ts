@@ -6,7 +6,7 @@ import { AjustesSucursalService } from 'app/modules/ajustes/_services';
 import { tap } from 'rxjs/operators';
 
 import { CajaService } from '../_services/caja.service';
-import { Add, GetAll, GetAllSucursales, SelectCaja, CajasMode } from './caja.actions';
+import { AddCaja, GetAll, GetAllSucursales, SelectCaja, CajasMode, EditCaja } from './caja.actions';
 import { CajaStateModel } from './caja.model';
 
 @State<CajaStateModel>({
@@ -71,8 +71,8 @@ export class CajasState {
         );
     }
 
-    @Action(Add)
-    addCaja(ctx: StateContext<CajaStateModel>, action: Add) {
+    @Action(AddCaja)
+    addCaja(ctx: StateContext<CajaStateModel>, action: AddCaja) {
         const { payload } = action;
         return this._cajasService.addCaja(payload).pipe(
             tap((caja: ICajaReturnDto) => {
@@ -81,6 +81,25 @@ export class CajasState {
                 cajas.push(caja);
 
                 ctx.patchState({ cajas });
+            })
+        );
+    }
+
+    @Action(EditCaja)
+    editSucursal(ctx: StateContext<CajaStateModel>, action: EditCaja) {
+        const { id, payload } = action;
+        return this._cajasService.editCaja(id, payload).pipe(
+            tap((caja: ICajaReturnDto) => {
+                const state = ctx.getState();
+                if (state.cajas) {
+                    const cajas = [...state.cajas];
+                    const idx = cajas.findIndex((caj) => caj.id === id);
+                    cajas[idx] = caja;
+
+                    ctx.patchState({
+                        cajas,
+                    });
+                }
             })
         );
     }

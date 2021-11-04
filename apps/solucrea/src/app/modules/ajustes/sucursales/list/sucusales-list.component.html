@@ -28,7 +28,11 @@
                         </div>
                         <div class="flex flex-col">
                             <div class="font-bold">Telefono:</div>
-                            <div class="mt-2">{{ sucursal.telefono }}</div>
+                            <div class="mt-2">
+                                ({{ sucursal.telefono | slice: 0:3 }})-{{ sucursal.telefono | slice: 3:6 }}-{{
+                                    sucursal.telefono | slice: 6:8
+                                }}-{{ sucursal.telefono | slice: 8:10 }}
+                            </div>
                         </div>
                     </div>
                     <div class="order-1 sm:order-2 sm:ml-3 xsm:flex-col flex justify-center items-center">

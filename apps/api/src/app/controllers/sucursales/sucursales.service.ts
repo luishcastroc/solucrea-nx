@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { CreateSucursalDto, ISucursalReturnDto } from 'api/dtos';
+import { CreateSucursalDto, ISucursalReturnDto, UpdateSucursalDto } from 'api/dtos';
+import { isEmpty } from 'lodash';
 
 import { PrismaService } from '../../prisma/prisma.service';
 
@@ -58,6 +59,7 @@ export class SucursalesService {
 
     async createSucursal(sucursal: CreateSucursalDto): Promise<ISucursalReturnDto> {
         const { nombre, telefono, direccion: direccionDto, creadoPor } = sucursal;
+        console.log(sucursal);
         const direccion: Prisma.DireccionCreateNestedOneWithoutSucursalesInput = {
             create: {
                 tipo: 'SUCURSAL',
@@ -85,23 +87,48 @@ export class SucursalesService {
 
     async updateSucursal(params: {
         where: Prisma.SucursalWhereUniqueInput;
-        data: Prisma.SucursalUpdateInput;
+        data: UpdateSucursalDto;
     }): Promise<ISucursalReturnDto> {
         const { where } = params;
-        let { data } = params;
+        const { data } = params;
+        let sucursalUpdate: Prisma.SucursalUpdateInput = { ...(data as Prisma.SucursalUpdateInput) };
 
-        if (data.direccion) {
-            const direccion = {
-                update: data.direccion as Prisma.DireccionUncheckedUpdateWithoutSucursalesInput,
-            };
-            data = { ...data, direccion };
+        if (isEmpty(data)) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.BAD_REQUEST,
+                    message: 'Error actualizando la sucursal, al menos un elemento a actualizar debe ser provisto',
+                },
+                HttpStatus.BAD_REQUEST
+            );
         }
 
-        return this.prisma.sucursal.update({
-            data,
-            where,
-            select: this.select,
-        });
+        if (data.direccion) {
+            if (data.direccion.colonia) {
+                const coloniaId = data.direccion.colonia;
+                data.direccion = { ...data.direccion, coloniaId };
+                delete data.direccion.colonia;
+                delete data.direccion.codigoPostal;
+            }
+            const update: Prisma.DireccionUncheckedUpdateWithoutSucursalesInput = { ...data.direccion };
+            const direccion: Prisma.DireccionUpdateOneRequiredWithoutSucursalesInput = {
+                update,
+            };
+            sucursalUpdate = { ...data, direccion };
+        }
+
+        try {
+            return this.prisma.sucursal.update({
+                data: sucursalUpdate,
+                where,
+                select: this.select,
+            });
+        } catch (e) {
+            throw new HttpException(
+                { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error actualizando la sucursal' },
+                HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     async deleteSucursal(where: Prisma.SucursalWhereUniqueInput): Promise<ISucursalReturnDto> {

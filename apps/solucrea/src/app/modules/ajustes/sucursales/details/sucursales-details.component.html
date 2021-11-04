@@ -38,7 +38,7 @@
                                         [svgIcon]="'heroicons_solid:phone'"
                                         matPrefix
                                     ></mat-icon>
-                                    <input [formControlName]="'telefono'" matInput />
+                                    <input [formControlName]="'telefono'" matInput [inputMask]="phoneInputMask" />
                                 </mat-form-field>
                                 <ng-container *ngIf="telefono.touched">
                                     <mat-error *ngIf="telefono.errors?.required"> El telefono es requerido. </mat-error>

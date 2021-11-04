@@ -4,6 +4,7 @@ import { CreateClienteDto, CreateDireccionDto, IClienteReturnDto, UpdateClienteD
 
 import { PrismaService } from '../../prisma/prisma.service';
 import { IDireccionUpdateDto, ITrabajoDto } from '../../dtos/update-cliente.dto';
+import { isEmpty } from 'lodash';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 @Injectable()
@@ -174,6 +175,16 @@ export class ClientesService {
 
         let dataToUpdate: Prisma.ClienteUpdateInput;
 
+        if (isEmpty(data)) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.BAD_REQUEST,
+                    message: 'Error actualizando cliente, al menos un elemento a actualizar debe ser provisto',
+                },
+                HttpStatus.BAD_REQUEST
+            );
+        }
+
         for (const field of Object.keys(data)) {
             switch (field) {
                 case 'direcciones':
@@ -202,7 +213,7 @@ export class ClientesService {
                     break;
                 case 'escolaridad':
                     if (data[field]) {
-                        const escolaridad = { connect: { id: data.estadoCivil } };
+                        const escolaridad = { connect: { id: data.escolaridad } };
                         dataToUpdate = { ...dataToUpdate, escolaridad };
                     }
                     break;
