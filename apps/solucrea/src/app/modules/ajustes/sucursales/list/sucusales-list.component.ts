@@ -5,18 +5,14 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { Sucursal } from '@prisma/client';
+import { ISucursalReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { ConfirmationDialogComponent } from 'app/shared';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { map, startWith, takeUntil, tap } from 'rxjs/operators';
 
-import {
-    AjustesModeSucursal,
-    ClearSucursalState,
-    DeleteSucursal,
-    GetAllSucursales,
-} from '../../_store/ajustes-sucursales.actions';
+import { AjustesModeSucursal, DeleteSucursal, GetAllSucursales } from '../../_store/ajustes-sucursales.actions';
 
 @Component({
     selector: 'app-sucusales-list',
@@ -24,11 +20,10 @@ import {
     styleUrls: ['./sucusales-list.component.scss'],
 })
 export class SucusalesListComponent implements OnInit, OnDestroy {
-    @Select(AjustesState.sucursales)
-    sucursales$: Observable<Sucursal[]>;
+    sucursales$: Observable<ISucursalReturnDto[]>;
 
-    sucursales: Sucursal[];
-    searchResults$: Observable<Sucursal>;
+    sucursales: ISucursalReturnDto[];
+    searchResults$: Observable<ISucursalReturnDto[]>;
     searchInput = new FormControl();
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -42,6 +37,21 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this._store.dispatch(new GetAllSucursales());
+
+        this.sucursales$ = this._store.select(AjustesState.sucursales).pipe(
+            tap((sucursales: ISucursalReturnDto[]) => {
+                if (sucursales.length > 0) {
+                    this.sucursales = sucursales;
+                }
+            })
+        );
+
+        // generating a new observable from the searchInput based on the criteria
+        this.searchResults$ = this.searchInput.valueChanges.pipe(
+            takeUntil(this._unsubscribeAll),
+            startWith(''),
+            map((value) => this._filter(value))
+        );
     }
 
     /**
@@ -129,11 +139,11 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
      * Function to filter results on sucursales
      *
      */
-    private _filter(value: string): Sucursal[] {
+    private _filter(value: string): ISucursalReturnDto[] {
         //getting the value from the input
         const filterValue = value.toLowerCase();
         if (filterValue === '') {
-            return [];
+            return this.sucursales;
         }
 
         // returning the filtered array

@@ -10,6 +10,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { FuseAutogrowModule } from '@fuse/directives/autogrow';
+import { InputMaskModule } from '@ngneat/input-mask';
 import { NgxsModule } from '@ngxs/store';
 import { SharedModule } from 'app/shared/shared.module';
 
@@ -17,14 +18,16 @@ import { AjustesState } from './_store/ajustes.state';
 import { AjustesAccountComponent } from './account/account.component';
 import { AjustesComponent } from './ajustes.component';
 import { ajustesRoutes } from './ajustes.routing';
+import { ProductosDetailsComponent } from './productos/details/productos-details.component';
+import { ProductosListComponent } from './productos/list/productos-list.component';
+import { ProductosComponent } from './productos/productos.component';
 import { AjustesSecurityComponent } from './security/security.component';
+import { SucursalesDetailsComponent } from './sucursales/details/sucursales-details.component';
+import { SucusalesListComponent } from './sucursales/list/sucusales-list.component';
+import { SucursalesComponent } from './sucursales/sucursales.component';
 import { TeamDetailsComponent } from './team/details/team-details.component';
 import { TeamListComponent } from './team/list/team-list.component';
 import { AjustesTeamComponent } from './team/team.component';
-import { SucursalesComponent } from './sucursales/sucursales.component';
-import { SucusalesListComponent } from './sucursales/list/sucusales-list.component';
-import { SucursalesDetailsComponent } from './sucursales/details/sucursales-details.component';
-import { InputMaskModule } from '@ngneat/input-mask';
 
 @NgModule({
     declarations: [
@@ -37,6 +40,9 @@ import { InputMaskModule } from '@ngneat/input-mask';
         SucursalesComponent,
         SucusalesListComponent,
         SucursalesDetailsComponent,
+        ProductosComponent,
+        ProductosDetailsComponent,
+        ProductosListComponent,
     ],
     imports: [
         RouterModule.forChild(ajustesRoutes),

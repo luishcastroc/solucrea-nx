@@ -82,6 +82,13 @@ export class AjustesComponent implements OnInit, OnDestroy {
                 description: 'Manejo de sucursales y ubicaciones',
                 roles: [Role.ADMIN, Role.DIRECTOR],
             },
+            {
+                id: 'productos',
+                icon: 'heroicons_outline:library',
+                title: 'Productos',
+                description: 'Catálogo de productos',
+                roles: [Role.ADMIN, Role.DIRECTOR],
+            },
         ];
 
         // Subscribe to media changes

@@ -1,3 +1,6 @@
+import { ProductosDetailsComponent } from './productos/details/productos-details.component';
+import { ProductosListComponent } from './productos/list/productos-list.component';
+import { ProductosComponent } from './productos/productos.component';
 import { Route } from '@angular/router';
 
 import { AjustesAccountComponent } from './account/account.component';
@@ -45,6 +48,17 @@ export const ajustesRoutes: Route[] = [
                     {
                         path: ':id',
                         component: SucursalesDetailsComponent,
+                    },
+                ],
+            },
+            {
+                path: 'productos',
+                component: ProductosComponent,
+                children: [
+                    { path: '', component: ProductosListComponent },
+                    {
+                        path: ':id',
+                        component: ProductosDetailsComponent,
                     },
                 ],
             },
