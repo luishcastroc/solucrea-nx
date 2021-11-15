@@ -40,7 +40,6 @@ import { AjustesStateModel } from './ajustes.model';
         editMode: 'edit',
         selectedUsuario: undefined,
         selectedSucursal: undefined,
-        searchResult: [],
         loading: false,
         colonias: undefined,
     },
@@ -53,11 +52,6 @@ export class AjustesState {
         private _clientesService: ClientesService,
         private _store: Store
     ) {}
-
-    @Selector()
-    static searchResults({ searchResult }: AjustesStateModel): Usuario[] | ISucursalReturnDto[] | [] {
-        return searchResult;
-    }
 
     @Selector()
     static usuarios({ usuarios }: AjustesStateModel): Usuario[] | [] {
@@ -102,7 +96,6 @@ export class AjustesState {
                 const usuarios = result.filter((user) => user.id !== id);
                 ctx.patchState({
                     usuarios,
-                    searchResult: usuarios,
                 });
             })
         );
@@ -184,24 +177,12 @@ export class AjustesState {
         ctx.patchState({ editMode: payload });
     }
 
-    @Action(SearchUsuario)
-    searchUsuario(ctx: StateContext<AjustesStateModel>, action: SearchUsuario) {
-        const { payload } = action;
-        const state = ctx.getState();
-        const usuarios = [...state.usuarios];
-        const searchResult = usuarios.filter(
-            (usuario) => usuario.nombre && usuario.nombre.toLowerCase().includes(payload.toLowerCase())
-        );
-        ctx.patchState({ searchResult });
-    }
-
     @Action(GetAllSucursales)
     getAllSucursales(ctx: StateContext<AjustesStateModel>) {
         return this._ajustesSucursalesService.getSucursales().pipe(
             tap((sucursales: ISucursalReturnDto[]) => {
                 ctx.patchState({
                     sucursales,
-                    searchResult: sucursales,
                 });
             })
         );
@@ -284,7 +265,6 @@ export class AjustesState {
         ctx.patchState({
             editMode: 'edit',
             selectedSucursal: undefined,
-            searchResult: [],
             loading: false,
             colonias: undefined,
         });
@@ -295,7 +275,6 @@ export class AjustesState {
         ctx.patchState({
             editMode: 'edit',
             selectedUsuario: undefined,
-            searchResult: [],
             loading: false,
             colonias: undefined,
         });
@@ -309,7 +288,6 @@ export class AjustesState {
             editMode: 'edit',
             selectedUsuario: undefined,
             selectedSucursal: undefined,
-            searchResult: [],
             loading: false,
             colonias: undefined,
         });

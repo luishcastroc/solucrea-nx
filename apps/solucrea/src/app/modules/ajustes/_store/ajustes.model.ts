@@ -8,7 +8,6 @@ export interface AjustesStateModel {
     editMode: EditMode;
     selectedUsuario: Usuario | undefined;
     selectedSucursal: ISucursalReturnDto | undefined;
-    searchResult: Usuario[] | ISucursalReturnDto[] | [];
     loading: boolean;
     colonias: IColoniaReturnDto;
 }
