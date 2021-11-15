@@ -6,7 +6,7 @@ import { UpdateUsuario } from 'app/core/auth/store/auth.actions';
 import { AuthState } from 'app/core/auth/store/auth.state';
 import { EditMode } from 'app/core/models';
 import { ClientesService } from 'app/modules/clientes';
-import { tap } from 'rxjs/operators';
+import { tap } from 'rxjs';
 
 import { AjustesSucursalService, AjustesUsuarioService } from '../_services/';
 import {
@@ -57,6 +57,11 @@ export class AjustesState {
     @Selector()
     static searchResults({ searchResult }: AjustesStateModel): Usuario[] | ISucursalReturnDto[] | [] {
         return searchResult;
+    }
+
+    @Selector()
+    static usuarios({ usuarios }: AjustesStateModel): Usuario[] | [] {
+        return usuarios;
     }
 
     @Selector()

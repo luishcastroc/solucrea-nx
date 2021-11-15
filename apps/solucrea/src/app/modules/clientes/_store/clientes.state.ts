@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { IActividadEconomicaReturnDto, IClienteReturnDto, IColoniaReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
-import { forkJoin } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { forkJoin, tap } from 'rxjs';
 
 import { ClientesService } from '../_services/clientes.service';
 import { IConfig } from '../models/config.model';
@@ -15,6 +14,7 @@ import {
     GetAll,
     GetColonias,
     GetConfig,
+    Inactivate,
     RemoveColonia,
     SelectActividadEconomica,
     SelectCliente,
@@ -201,6 +201,20 @@ export class ClientesState {
         return this.clientesService.getCliente(id).pipe(
             tap((selectedCliente) => {
                 ctx.patchState({ selectedCliente });
+            })
+        );
+    }
+
+    @Action(Inactivate)
+    inactivateCliente(ctx: StateContext<ClientesStateModel>, { id }: Inactivate) {
+        return this.clientesService.inactivateCliente(id).pipe(
+            tap((cliente: IClienteReturnDto) => {
+                const state = ctx.getState();
+                const clientes = [...state.clientes];
+                const idx = clientes.findIndex((clienteBuscar) => clienteBuscar.id === id);
+                clientes[idx] = cliente;
+
+                ctx.patchState({ clientes });
             })
         );
     }

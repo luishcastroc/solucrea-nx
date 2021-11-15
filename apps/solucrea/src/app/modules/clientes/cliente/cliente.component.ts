@@ -28,8 +28,7 @@ import { EditMode } from 'app/core/models';
 import { CanDeactivateComponent } from 'app/core/models/can-deactivate.model';
 import { SharedService } from 'app/shared';
 import { isEqual } from 'lodash';
-import { Observable, of, Subject } from 'rxjs';
-import { switchMap, takeUntil } from 'rxjs/operators';
+import { Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
 
 import { ClientesService } from '../_services/clientes.service';
 import {
@@ -75,6 +74,19 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
         autoUnmask: true,
     });
 
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
+
+    constructor(
+        private _store: Store,
+        private _formBuilder: FormBuilder,
+        private _actions$: Actions,
+        private _changeDetectorRef: ChangeDetectorRef,
+        private _toast: HotToastService,
+        private _clienteService: ClientesService,
+        private _route: ActivatedRoute,
+        private _sharedService: SharedService
+    ) {}
+
     get direcciones() {
         return this.clienteForm.get('direcciones') as FormArray;
     }
@@ -94,19 +106,6 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
     get estadoTrabajo() {
         return this.trabajoForm.get('direccion').get('estado') as FormControl;
     }
-
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
-
-    constructor(
-        private _store: Store,
-        private _formBuilder: FormBuilder,
-        private _actions$: Actions,
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _toast: HotToastService,
-        private _clienteService: ClientesService,
-        private _route: ActivatedRoute,
-        private _sharedService: SharedService
-    ) {}
 
     @HostListener('window:beforeunload', ['$event'])
     canDeactivateWindow($event: Event) {
@@ -207,6 +206,8 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                 this.trabajoForm.enable();
                 this.clienteForm.markAsPristine();
                 this.trabajoForm.markAsPristine();
+                this.clienteForm.markAsUntouched();
+                this.trabajoForm.markAsUntouched();
 
                 const message = 'Cliente salvado exitosamente.';
                 this._toast.success(message, {
@@ -539,7 +540,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
      */
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
         this._store.dispatch(new ClearClientesState());
     }

@@ -11,8 +11,7 @@ import {
 } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Select, Store } from '@ngxs/store';
-import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable, of, switchMap } from 'rxjs';
 
 import { AuthState } from './../store/auth.state';
 

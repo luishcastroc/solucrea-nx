@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import {
     Component,
     ElementRef,
@@ -14,10 +15,8 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { Subject } from 'rxjs';
-import { debounceTime, filter, map, takeUntil } from 'rxjs/operators';
 import { fuseAnimations } from '@fuse/animations/public-api';
+import { debounceTime, filter, map, Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'search',
@@ -133,7 +132,7 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy {
      */
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

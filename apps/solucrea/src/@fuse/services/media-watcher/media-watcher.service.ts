@@ -1,9 +1,8 @@
 /* eslint-disable arrow-parens */
-import { Injectable } from '@angular/core';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { Observable, ReplaySubject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 import { FuseTailwindService } from '@fuse/services/tailwind/tailwind.service';
+import { map, Observable, ReplaySubject, switchMap } from 'rxjs';
 
 @Injectable()
 export class FuseMediaWatcherService {

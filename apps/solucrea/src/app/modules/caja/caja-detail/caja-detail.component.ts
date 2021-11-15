@@ -9,8 +9,7 @@ import { CreateCajaDto, ICajaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 import { SharedService } from 'app/shared';
 import { Moment } from 'moment';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { AddCaja, ClearCajasState, GetAllSucursales, SelectCaja } from '../_store/caja.actions';
 import { CajasState } from '../_store/caja.state';
@@ -264,7 +263,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
      */
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
         this._store.dispatch(new ClearCajasState());
     }

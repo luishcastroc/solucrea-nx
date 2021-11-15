@@ -23,8 +23,7 @@ import {
 import { animate, AnimationBuilder, AnimationPlayer, style } from '@angular/animations';
 import { NavigationEnd, Router } from '@angular/router';
 import { ScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
-import { merge, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { delay, filter, takeUntil } from 'rxjs/operators';
+import { merge, ReplaySubject, Subject, Subscription, delay, filter, takeUntil } from 'rxjs';
 import { fuseAnimations } from '@fuse/animations';
 import {
     FuseNavigationItem,
@@ -370,7 +369,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
         this._fuseNavigationService.deregisterComponent(this.name);
 
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

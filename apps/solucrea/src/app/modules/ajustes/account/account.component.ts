@@ -5,8 +5,7 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { isEqual } from 'lodash';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 import { EditUsuario } from '../_store/ajustes-usuarios.actions';
 import { AjustesState } from '../_store/ajustes.state';
@@ -98,7 +97,7 @@ export class AjustesAccountComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 }

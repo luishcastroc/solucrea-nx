@@ -53,6 +53,7 @@ export class ClientesService {
                 },
             },
         },
+        activo: true,
     };
 
     constructor(private prisma: PrismaService) {}
@@ -244,11 +245,30 @@ export class ClientesService {
         }
     }
 
-    async deleteCliente(where: Prisma.ClienteWhereUniqueInput): Promise<Cliente> {
+    async deleteCliente(params: {
+        where: Prisma.ClienteWhereUniqueInput;
+        data: Prisma.ClienteUpdateInput;
+    }): Promise<IClienteReturnDto> {
+        const { where, data } = params;
+        data.activo = false;
         try {
-            return this.prisma.cliente.delete({
+            const cliente = await this.prisma.cliente.findUnique({ where });
+            if (!cliente) {
+                throw new HttpException(
+                    {
+                        status: HttpStatus.NOT_FOUND,
+                        message: 'Error inhabilitando al cliente, el cliente no existe',
+                    },
+                    HttpStatus.NOT_FOUND
+                );
+            }
+            const updateStatement = await this.prisma.cliente.update({
+                data,
                 where,
+                select: this.select,
             });
+
+            return updateStatement;
         } catch {
             throw new HttpException(
                 { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al borrar el cliente' },

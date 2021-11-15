@@ -487,7 +487,7 @@
                                         type="button"
                                         [color]="'primary'"
                                         matStepperNext
-                                        [disabled]="clienteForm.touched && clienteForm.invalid"
+                                        [disabled]="editMode === 'new' && clienteForm.touched && clienteForm.invalid"
                                     >
                                         Siguiente
                                     </button>
@@ -500,13 +500,12 @@
                                         class="ml-2"
                                         [disabled]="
                                             editMode === 'edit' &&
-                                            !trabajoForm.touched &&
-                                            trabajoForm.invalid &&
-                                            !clienteForm.touched &&
-                                            clienteForm.invalid
+                                            ((!clienteForm.touched && !trabajoForm.touched) ||
+                                                clienteForm.invalid ||
+                                                trabajoForm.invalid)
                                         "
                                     >
-                                        {{ editMode === 'edit' ? 'Actualizar' : 'Guardar' }}
+                                        {{ 'Actualizar' }}
                                     </button>
                                 </div>
                             </form>
@@ -789,10 +788,9 @@
                                                         trabajoForm.invalid) ||
                                                     (clienteForm.disabled && trabajoForm.disabled) ||
                                                     (editMode === 'edit' &&
-                                                        !trabajoForm.touched &&
-                                                        trabajoForm.invalid &&
-                                                        !clienteForm.touched &&
-                                                        clienteForm.invalid)
+                                                        !clienteForm.touched && !trabajoForm.touched) ||
+                                                        clienteForm.invalid ||
+                                                        trabajoForm.invalid
                                                 "
                                             >
                                                 {{ editMode === 'edit' ? 'Actualizar' : 'Guardar' }}

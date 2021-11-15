@@ -1,3 +1,4 @@
+import { startWith, map } from 'rxjs/operators';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -10,27 +11,25 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
-import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { Actions, ofActionErrored, ofActionSuccessful, Store, Select } from '@ngxs/store';
 import { Role, Usuario } from '@prisma/client';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { AuthState } from 'app/core/auth/store/auth.state';
 import { EditMode } from 'app/core/models';
 import { ConfirmationDialogComponent } from 'app/shared';
-import { Observable, Subject } from 'rxjs';
-import { switchMap, takeUntil } from 'rxjs/operators';
+import { Observable, Subject, switchMap, takeUntil, withLatestFrom } from 'rxjs';
 
 import {
     AjustesModeUsuario,
-    ClearUsuarioState,
     DeleteUsuario,
     EditUsuario,
     GetAllUsuarios,
     SearchUsuario,
     SelectUsuario,
 } from '../../_store/ajustes-usuarios.actions';
-import { AjustesState } from '../../_store/ajustes.state';
 import { IRole } from '../../models/roles.model';
 import { defaultRoles } from '../../roles';
+import { AjustesState } from '../../_store/ajustes.state';
 
 @Component({
     selector: 'team-list',
@@ -40,11 +39,13 @@ import { defaultRoles } from '../../roles';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TeamListComponent implements OnInit, OnDestroy {
-    @Select(AjustesState.searchResults) searchResults$: Observable<Usuario[]>;
+    @Select(AjustesState.usuarios) usuarios$: Observable<Usuario[]>;
+
+    searchResults$: Observable<Usuario[]>;
     usuario = this._store.selectSnapshot(AuthState.user);
     searchResults: Usuario[];
     roles: IRole[] = defaultRoles;
-    searchInputControl: FormControl = new FormControl();
+    searchInput: FormControl = new FormControl();
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -68,20 +69,13 @@ export class TeamListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this._store.dispatch(new GetAllUsuarios(this.usuario.id));
 
-        this.searchResults$.pipe(takeUntil(this._unsubscribeAll)).subscribe((usuarios: Usuario[]) => {
-            this.searchResults = usuarios;
-
-            // Mark for check
-            this._changeDetectorRef.markForCheck();
-        });
-
-        // Subscribe to search input field value changes
-        this.searchInputControl.valueChanges
-            .pipe(
-                takeUntil(this._unsubscribeAll),
-                switchMap((query) => this._store.dispatch(new SearchUsuario(query)))
-            )
-            .subscribe();
+        // generating a new observable from the searchInput based on the criteria
+        this.searchResults$ = this.searchInput.valueChanges.pipe(
+            takeUntil(this._unsubscribeAll),
+            startWith(''),
+            withLatestFrom(this.usuarios$),
+            map(([value, usuarios]) => this._filter(value, usuarios))
+        );
 
         this._actions$
             .pipe(takeUntil(this._unsubscribeAll), ofActionErrored(DeleteUsuario, EditUsuario))
@@ -188,7 +182,29 @@ export class TeamListComponent implements OnInit, OnDestroy {
      */
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
+    }
+
+    /**
+     *
+     * @param value
+     * Function to filter results on usuarios
+     *
+     */
+    private _filter(value: string, usuarios: Usuario[]): Usuario[] {
+        //getting the value from the input
+        const filterValue = value.toLowerCase();
+        if (filterValue === '') {
+            return usuarios;
+        }
+
+        // returning the filtered array
+        return usuarios.filter(
+            (usuario) =>
+                usuario.nombre.toLowerCase().includes(filterValue) ||
+                usuario.apellido.toLowerCase().includes(filterValue) ||
+                usuario.nombreUsuario.toLowerCase().includes(filterValue)
+        );
     }
 }

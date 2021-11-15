@@ -13,8 +13,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Select, Store } from '@ngxs/store';
 import { Role, Usuario } from '@prisma/client';
 import { AuthService } from 'app/core/auth/auth.service';
-import { combineLatest, Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, of, switchMap } from 'rxjs';
 
 import { AuthState } from '../store/auth.state';
 

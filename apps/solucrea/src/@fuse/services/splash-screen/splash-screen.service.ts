@@ -1,8 +1,8 @@
 /* eslint-disable arrow-parens */
-import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter, take } from 'rxjs/operators';
+import { filter, take } from 'rxjs';
 
 @Injectable()
 export class FuseSplashScreenService {

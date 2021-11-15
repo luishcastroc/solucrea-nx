@@ -1,16 +1,13 @@
-import { HotToastService } from '@ngneat/hot-toast';
-import { createPasswordStrengthValidator } from '../validators/custom-ajustes.validators';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IAlert } from '@fuse/components/alert/alert.model';
+import { HotToastService } from '@ngneat/hot-toast';
 import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
-import { fuseAnimations } from '@fuse/animations/public-api';
 import { EditUsuario } from '../_store/ajustes-usuarios.actions';
+import { createPasswordStrengthValidator } from '../validators/custom-ajustes.validators';
 
 @Component({
     selector: 'settings-security',
@@ -103,7 +100,7 @@ export class AjustesSecurityComponent implements OnInit, OnDestroy {
      */
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 }

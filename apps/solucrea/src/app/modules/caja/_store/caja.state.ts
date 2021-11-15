@@ -3,7 +3,7 @@ import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { ICajaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 import { AjustesSucursalService } from 'app/modules/ajustes/_services';
-import { tap } from 'rxjs/operators';
+import { tap } from 'rxjs';
 
 import { CajaService } from '../_services/caja.service';
 import { AddCaja, GetAll, GetAllSucursales, SelectCaja, CajasMode, EditCaja } from './caja.actions';

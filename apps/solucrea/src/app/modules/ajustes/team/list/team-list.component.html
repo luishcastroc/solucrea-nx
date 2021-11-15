@@ -4,7 +4,7 @@
         <mat-form-field class="fuse-mat-no-subscript w-full" [floatLabel]="'always'">
             <mat-label>Buscar Usuario</mat-label>
             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
-            <input matInput [formControl]="searchInputControl" [autocomplete]="'off'" [placeholder]="'Nombre'" />
+            <input matInput [formControl]="searchInput" [autocomplete]="'off'" [placeholder]="'Nombre'" />
             <button
                 mat-icon-button
                 matSuffix
@@ -21,7 +21,7 @@
 
     <!-- Team members -->
     <div class="mt-8 divide-y border-t border-b flex-auto">
-        <ng-container *ngFor="let usuario of searchResults; trackBy: trackByFn">
+        <ng-container *ngFor="let usuario of searchResults$ | async; trackBy: trackByFn">
             <div class="flex flex-col sm:flex-row sm:items-center py-6 flex-auto">
                 <div class="flex items-center">
                     <div class="flex flex-0 items-center justify-center w-10 h-10 rounded-full overflow-hidden"></div>

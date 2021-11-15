@@ -37,4 +37,5 @@ export interface IClienteReturnDto {
     numeroCreditosCrecer: number;
     direcciones: IDireccionesReturnDto[];
     trabajo: ITrabajoReturn;
+    activo: boolean;
 }

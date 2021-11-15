@@ -5,8 +5,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertService } from '@fuse/components/alert/alert.service';
 import { Actions, ofActionErrored, Store } from '@ngxs/store';
 import { Login } from 'app/core/auth/store/auth.actions';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, takeUntil } from 'rxjs';
 
 import { IAlert } from '../../../../@fuse/components/alert/alert.model';
 
@@ -127,7 +126,7 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.destroy$.next();
+        this.destroy$.next(null);
         this.destroy$.complete();
     }
 }

@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { AuthUtils } from 'app/core/auth/auth.utils';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, Observable, throwError } from 'rxjs';
 
 import { Logout } from './store/auth.actions';
 import { AuthState } from './store/auth.state';

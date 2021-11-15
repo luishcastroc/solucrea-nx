@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
-import { Select, Store } from '@ngxs/store';
+import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { IClienteReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth/auth.utils';
-import { Observable, Subject } from 'rxjs';
-import { map, startWith, takeUntil } from 'rxjs/operators';
+import { map, Observable, startWith, Subject, takeUntil, withLatestFrom } from 'rxjs';
 
-import { ClientesMode, GetAll } from '../_store/clientes.actions';
+import { ClientesMode, Edit, GetAll, Inactivate } from '../_store/clientes.actions';
 import { ClientesState } from '../_store/clientes.state';
 
 @Component({
@@ -25,24 +25,54 @@ export class ClienteListComponent implements OnInit, OnDestroy {
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    constructor(private _store: Store, private _changeDetectorRef: ChangeDetectorRef) {}
+    constructor(private _store: Store, private _actions$: Actions, private _toast: HotToastService) {}
 
     ngOnInit(): void {
         this._store.dispatch(new GetAll());
 
-        this.clientes$.pipe(takeUntil(this._unsubscribeAll)).subscribe((clientes: IClienteReturnDto[]) => {
-            this.clientes = clientes;
-
-            // Mark for check
-            this._changeDetectorRef.markForCheck();
-        });
+        this.subscribeToActions();
 
         // generating a new observable from the searchInput based on the criteria
         this.searchResults$ = this.searchInput.valueChanges.pipe(
             takeUntil(this._unsubscribeAll),
             startWith(''),
-            map((value) => this._filter(value))
+            withLatestFrom(this.clientes$),
+            map(([value, clientes]) => this._filter(value, clientes))
         );
+    }
+
+    /**
+     * Function to subscribe to actions
+     *
+     *
+     */
+    subscribeToActions(): void {
+        this._actions$
+            .pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(Inactivate, Edit))
+            .subscribe((result) => {
+                const { error, successful } = result.result;
+                const { action } = result;
+                if (error) {
+                    const message = `${error['error'].message}`;
+                    this._toast.error(message, {
+                        duration: 4000,
+                        position: 'bottom-center',
+                    });
+                }
+                if (successful) {
+                    let message;
+                    if (action instanceof Inactivate) {
+                        message = 'Cliente Inhabilitado exitosamente.';
+                    } else {
+                        message = 'Cliente habilitado exitosamente.';
+                    }
+                    this._toast.success(message, {
+                        duration: 4000,
+                        position: 'bottom-center',
+                    });
+                    this.searchInput.updateValueAndValidity({ onlySelf: false, emitEvent: true });
+                }
+            });
     }
 
     /**
@@ -74,11 +104,31 @@ export class ClienteListComponent implements OnInit, OnDestroy {
     }
 
     /**
+     *
+     * Function to inactivate a client
+     *
+     * @param id string
+     */
+    inactivateClient(id: string) {
+        this._store.dispatch(new Inactivate(id));
+    }
+
+    /**
+     *
+     * Function to activate a client
+     *
+     * @param id string
+     */
+    activateClient(id: string) {
+        this._store.dispatch(new Edit(id, { activo: true }));
+    }
+
+    /**
      * On destroy
      */
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
@@ -88,7 +138,7 @@ export class ClienteListComponent implements OnInit, OnDestroy {
      * Function to filter results on clientes
      *
      */
-    private _filter(value: string): IClienteReturnDto[] {
+    private _filter(value: string, clientes: IClienteReturnDto[]): IClienteReturnDto[] {
         //getting the value from the input
         const filterValue = value.toLowerCase();
         if (filterValue === '') {
@@ -96,7 +146,7 @@ export class ClienteListComponent implements OnInit, OnDestroy {
         }
 
         // returning the filtered array
-        return this.clientes.filter(
+        return clientes.filter(
             (cliente) =>
                 cliente.nombre.toLowerCase().includes(filterValue) ||
                 cliente.apellidoPaterno.toLowerCase().includes(filterValue) ||

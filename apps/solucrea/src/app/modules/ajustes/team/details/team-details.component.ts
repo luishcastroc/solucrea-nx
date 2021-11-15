@@ -1,5 +1,3 @@
-import { defaultRoles } from '../../roles';
-import { IRole } from '../../models/roles.model';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -10,10 +8,11 @@ import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ng
 import { Usuario } from '@prisma/client';
 import { EditMode } from 'app/core/models';
 import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
-import { combineLatest, Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { combineLatest, map, Observable, Subject, takeUntil } from 'rxjs';
 
 import { AddUsuario, ClearUsuarioState, EditUsuario } from '../../_store/ajustes-usuarios.actions';
+import { IRole } from '../../models/roles.model';
+import { defaultRoles } from '../../roles';
 import { createPasswordStrengthValidator } from '../../validators/custom-ajustes.validators';
 
 @Component({
@@ -196,7 +195,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this._store.dispatch(new ClearUsuarioState());
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

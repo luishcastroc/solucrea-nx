@@ -2,14 +2,14 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
+import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { IColoniaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { SharedService } from 'app/shared';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import {
     AddSucursal,
@@ -19,7 +19,6 @@ import {
     SelectSucursal,
 } from '../../_store/ajustes-sucursales.actions';
 import { TipoDireccion } from '.prisma/client';
-import { createMask } from '@ngneat/input-mask';
 
 @Component({
     selector: 'app-sucursales-details',
@@ -232,7 +231,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
         this._store.dispatch(new ClearSucursalState());
     }

@@ -1,9 +1,8 @@
-import { Usuario } from '@prisma/client';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
+import { Usuario } from '@prisma/client';
 import { AuthState } from 'app/core/auth/store/auth.state';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 import { SelectUsuario } from '../_store/ajustes-usuarios.actions';
 
@@ -41,7 +40,7 @@ export class AjustesTeamComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this._store.dispatch(new SelectUsuario(this.usuario));
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 }

@@ -1,10 +1,9 @@
-import { Usuario } from '@prisma/client';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { Select } from '@ngxs/store';
+import { Usuario } from '@prisma/client';
 import { InitialData } from 'app/app.types';
-import { forkJoin, Observable, of } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { forkJoin, map, Observable, of } from 'rxjs';
 
 import { AuthState } from './core/auth/store/auth.state';
 import { defaultNavigation } from './core/config/app.config';

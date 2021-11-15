@@ -21,8 +21,8 @@ export class Edit {
     constructor(public id: string, public payload: UpdateClienteDto) {}
 }
 
-export class Delete {
-    static readonly type = '[Cliente] Delete';
+export class Inactivate {
+    static readonly type = '[Cliente] Inactivate';
     constructor(public id: string) {}
 }
 

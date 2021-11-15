@@ -7,7 +7,7 @@
             <!-- Title -->
             <div>
                 <div class="text-4xl font-extrabold tracking-tight leading-none">Clientes</div>
-                <div class="ml-0.5 font-medium text-secondary">
+                <div class="ml-0.5 font-medium text-secondary" *ngIf="clientes$ | async as clientes">
                     <ng-container *ngIf="clientes.length > 0">
                         {{ clientes.length | number }}
                     </ng-container>
@@ -69,6 +69,10 @@
                             <div class="font-bold">RFC:</div>
                             <div class="mt-2">{{ cliente.rfc }}</div>
                         </div>
+                        <div class="flex flex-col">
+                            <div class="font-bold">Estatus:</div>
+                            <div class="mt-2">{{ cliente.activo ? 'Activo' : 'Inactivo' }}</div>
+                        </div>
                     </div>
                     <div class="order-1 sm:order-2 sm:ml-3 xsm:flex-col flex justify-center items-center">
                         <button
@@ -94,11 +98,15 @@
                         <button
                             mat-icon-button
                             aria-label="Inactivar cliente"
+                            (click)="cliente.activo ? inactivateClient(cliente.id) : activateClient(cliente.id)"
                             #tooltip="matTooltip"
-                            matTooltip="Inactivar cliente"
+                            matTooltip="{{ cliente.activo ? 'Inactivar cliente' : 'Activar cliente' }}"
                             [matTooltipPosition]="'below'"
                         >
-                            <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                            <mat-icon
+                                class="text-hint"
+                                [svgIcon]="cliente.activo ? 'heroicons_outline:trash' : 'heroicons_outline:badge-check'"
+                            ></mat-icon>
                         </button>
                     </div>
                 </div>

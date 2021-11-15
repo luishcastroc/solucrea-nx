@@ -18,8 +18,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertService } from '@fuse/components/alert/alert.service';
 import { FuseAlertAppearance, FuseAlertType } from '@fuse/components/alert/alert.types';
 import { FuseUtilsService } from '@fuse/services/utils/utils.service';
-import { Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { Subject, filter, takeUntil } from 'rxjs';
 
 /* eslint-disable arrow-parens */
 @Component({
@@ -167,7 +166,7 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy {
      */
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

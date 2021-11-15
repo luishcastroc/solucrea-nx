@@ -12,8 +12,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Select, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { AuthState } from 'app/core/auth/store/auth.state';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'user-menu',
@@ -63,7 +62,7 @@ export class UserMenuComponent implements OnInit, OnDestroy {
      */
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

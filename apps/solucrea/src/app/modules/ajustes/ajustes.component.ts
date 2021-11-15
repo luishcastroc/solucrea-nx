@@ -13,8 +13,7 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Role } from '@prisma/client';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, takeUntil } from 'rxjs';
 
 import { IPanel } from './models/panel.model';
 
@@ -114,7 +113,7 @@ export class AjustesComponent implements OnInit, OnDestroy {
      */
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

@@ -67,7 +67,16 @@ export class ClientesController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Delete('cliente/:id')
-    async deleteCliente(@Param('id') id: string): Promise<Cliente> {
-        return this.clientesService.deleteCliente({ id });
+    async deleteCliente(
+        @Request() req,
+        @Param('id') id: string,
+        @Body() data: Prisma.ClienteUpdateInput
+    ): Promise<IClienteReturnDto> {
+        const actualizadoPor = req.user.username;
+        data.actualizadoPor = actualizadoPor;
+        return this.clientesService.deleteCliente({
+            where: { id },
+            data,
+        });
     }
 }

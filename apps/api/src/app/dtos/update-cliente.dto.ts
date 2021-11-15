@@ -34,4 +34,5 @@ export class UpdateClienteDto {
     genero?: string;
     direcciones?: IDireccionUpdateDto;
     actualizadoPor?: string;
+    activo?: boolean;
 }

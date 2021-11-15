@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Cliente } from '@prisma/client';
+import { Cliente, Prisma } from '@prisma/client';
 import {
     CreateClienteDto,
     IActividadEconomicaReturnDto,
@@ -70,12 +70,12 @@ export class ClientesService {
     }
 
     /**
-     *  Edit Cliente
+     *  Inactivate Cliente
      *
      * @param id
      */
-    deleteCliente(id: string): Observable<Cliente> {
-        return this._httpClient.delete<Cliente>(`${this._environment.uri}/cliente/${id}`);
+    inactivateCliente(id: string): Observable<IClienteReturnDto> {
+        return this._httpClient.delete<IClienteReturnDto>(`${this._environment.uri}/cliente/${id}`);
     }
 
     /**

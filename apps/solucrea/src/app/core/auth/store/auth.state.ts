@@ -4,8 +4,7 @@ import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { ClearAjustesState, SelectUsuario } from 'app/modules/ajustes/_store/ajustes-usuarios.actions';
 import { ClearClientesState } from 'app/modules/clientes/_store/clientes.actions';
-import { throwError } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, throwError } from 'rxjs';
 
 import { AuthService } from '../auth.service';
 import { ClearAuthState, Login, Logout, UpdateUsuario } from './auth.actions';
