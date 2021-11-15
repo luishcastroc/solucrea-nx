@@ -40,6 +40,7 @@ import { AjustesState } from '../../_store/ajustes.state';
 })
 export class TeamListComponent implements OnInit, OnDestroy {
     @Select(AjustesState.usuarios) usuarios$: Observable<Usuario[]>;
+    @Select(AjustesState.loading) loading$: Observable<boolean>;
 
     searchResults$: Observable<Usuario[]>;
     usuario = this._store.selectSnapshot(AuthState.user);

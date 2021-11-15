@@ -9,7 +9,7 @@ import { ISucursalReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { ConfirmationDialogComponent } from 'app/shared';
-import { map, Observable, startWith, Subject, takeUntil, tap, withLatestFrom } from 'rxjs';
+import { map, Observable, startWith, Subject, takeUntil, tap, filter, withLatestFrom, combineLatest } from 'rxjs';
 
 import { AjustesModeSucursal, DeleteSucursal, GetAllSucursales } from '../../_store/ajustes-sucursales.actions';
 
@@ -20,6 +20,7 @@ import { AjustesModeSucursal, DeleteSucursal, GetAllSucursales } from '../../_st
 })
 export class SucusalesListComponent implements OnInit, OnDestroy {
     @Select(AjustesState.sucursales) sucursales$: Observable<ISucursalReturnDto[]>;
+    @Select(AjustesState.loading) loading$: Observable<boolean>;
     searchResults$: Observable<ISucursalReturnDto[]>;
     searchInput = new FormControl();
 

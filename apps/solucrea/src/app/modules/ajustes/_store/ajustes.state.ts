@@ -91,11 +91,13 @@ export class AjustesState {
     @Action(GetAllUsuarios)
     getAllUsuarios(ctx: StateContext<AjustesStateModel>, action: GetAllUsuarios) {
         const { id } = action;
+        ctx.patchState({ loading: true });
         return this._ajustesUsuarioService.getUsuarios().pipe(
             tap((result: Usuario[]) => {
                 const usuarios = result.filter((user) => user.id !== id);
                 ctx.patchState({
                     usuarios,
+                    loading: false,
                 });
             })
         );
@@ -179,10 +181,12 @@ export class AjustesState {
 
     @Action(GetAllSucursales)
     getAllSucursales(ctx: StateContext<AjustesStateModel>) {
+        ctx.patchState({ loading: true });
         return this._ajustesSucursalesService.getSucursales().pipe(
             tap((sucursales: ISucursalReturnDto[]) => {
                 ctx.patchState({
                     sucursales,
+                    loading: false,
                 });
             })
         );
