@@ -4,6 +4,7 @@
 datasource db {
     provider = "mysql"
     url      = env("DATABASE_URL")
+    output   = "../node_modules/.prisma/client"
 }
 
 generator client {
@@ -417,6 +418,7 @@ model Cliente {
     montoMinimo          Decimal        @db.Decimal(15, 2)
     montoMaximo          Decimal        @db.Decimal(15, 2)
     numeroCreditosCrecer Int            @default(3)
+    activo               Boolean        @default(true)
     estadoCivilId        String
     tipoDeViviendaId     String
     escolaridadId        String

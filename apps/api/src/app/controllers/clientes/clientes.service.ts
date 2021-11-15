@@ -237,7 +237,6 @@ export class ClientesService {
 
             return updateStatement;
         } catch (err) {
-            console.log(err);
             throw new HttpException(
                 { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al actualizar el cliente' },
                 HttpStatus.INTERNAL_SERVER_ERROR

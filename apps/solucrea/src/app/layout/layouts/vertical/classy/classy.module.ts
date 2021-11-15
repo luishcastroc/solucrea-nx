@@ -5,7 +5,6 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
-import { FuseFullscreenModule } from '@fuse/components/fullscreen/fullscreen.module';
 import { FuseNavigationModule } from '@fuse/components/navigation';
 import { SearchModule } from 'app/layout/common/search/search.module';
 import { UserMenuModule } from 'app/layout/common/user-menu/user-menu.module';
@@ -21,7 +20,6 @@ import { SharedModule } from 'app/shared/shared.module';
         MatDividerModule,
         MatIconModule,
         MatMenuModule,
-        FuseFullscreenModule,
         FuseNavigationModule,
         SearchModule,
         UserMenuModule,

@@ -202,6 +202,12 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                 });
             }
             if (successful) {
+                // we enable the form
+                this.clienteForm.enable();
+                this.trabajoForm.enable();
+                this.clienteForm.markAsPristine();
+                this.trabajoForm.markAsPristine();
+
                 const message = 'Cliente salvado exitosamente.';
                 this._toast.success(message, {
                     duration: 4000,
@@ -221,14 +227,9 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                     // we reset the stepper
                     this.myStepper.reset();
                 } else {
-                    this.clienteForm.markAsPristine();
-                    this.trabajoForm.markAsPristine();
                     this.disableCiudadAndEstado();
                 }
             }
-            // we enable the form
-            this.clienteForm.enable();
-            this.trabajoForm.enable();
         });
     }
 
@@ -394,7 +395,9 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
         // Remove the phone number field
         direccionesFormArray.removeAt(index);
         this.removeColonia(index);
-        this.deletedAddresses.push({ id });
+        if (id) {
+            this.deletedAddresses.push({ id });
+        }
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
