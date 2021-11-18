@@ -12,12 +12,11 @@ import { Router } from '@angular/router';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { Role } from '@prisma/client';
 import { Subject, takeUntil } from 'rxjs';
 
+import { ajustesPanels } from './_config/panels';
 import { IPanel } from './models/panel.model';
 
-/* eslint-disable arrow-parens */
 @Component({
     selector: 'settings',
     templateUrl: './ajustes.component.html',
@@ -52,43 +51,7 @@ export class AjustesComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.getPanelFromUrl(this._router.url, this.selectedPanel);
         // Setup available panels
-        this.panels = [
-            {
-                id: 'perfil',
-                icon: 'heroicons_outline:user-circle',
-                title: 'Perfil',
-                description: 'Maneja tu perfil e información pública',
-                roles: [Role.ALL],
-            },
-            {
-                id: 'seguridad',
-                icon: 'heroicons_outline:lock-closed',
-                title: 'Seguridad',
-                description: 'Maneja tu contraseña',
-                roles: [Role.ALL],
-            },
-            {
-                id: 'usuarios',
-                icon: 'heroicons_outline:user-group',
-                title: 'Usuarios',
-                description: 'Manejo de los usuarios y sus permisos',
-                roles: [Role.ADMIN],
-            },
-            {
-                id: 'sucursales',
-                icon: 'heroicons_outline:office-building',
-                title: 'Sucursales',
-                description: 'Manejo de sucursales y ubicaciones',
-                roles: [Role.ADMIN, Role.DIRECTOR],
-            },
-            {
-                id: 'productos',
-                icon: 'heroicons_outline:library',
-                title: 'Productos',
-                description: 'Catálogo de productos',
-                roles: [Role.ADMIN, Role.DIRECTOR],
-            },
-        ];
+        this.panels = ajustesPanels;
 
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$

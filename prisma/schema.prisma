@@ -24,20 +24,6 @@ model TipoDePago {
     @@map(name: "TiposDePago")
 }
 
-model TipoDeInteres {
-    id                 String    @id @default(uuid())
-    descripcion        String
-    valor              Int
-    creadoPor          String    @default("ADMIN")
-    fechaCreacion      DateTime  @default(now())
-    actualizadoPor     String    @default("ADMIN")
-    fechaActualizacion DateTime  @default(now()) @updatedAt
-    productos          Producto? @relation(fields: [productoId], references: [id])
-    productoId         String?
-
-    @@map(name: "TiposDeInteres")
-}
-
 model PeriodoDePago {
     id                 String   @id @default(uuid())
     descripcion        String
@@ -65,21 +51,6 @@ model FrecuenciaDePago {
     productos          Producto[]
 
     @@map(name: "FrecuenciasDePago")
-}
-
-model Tarifa {
-    id                 String    @id @default(uuid())
-    descripcion        String
-    tipo               String    @db.TinyText
-    valor              Decimal   @db.Decimal(15, 2)
-    creadoPor          String    @default("ADMIN")
-    fechaCreacion      DateTime  @default(now())
-    actualizadoPor     String    @default("ADMIN")
-    fechaActualizacion DateTime  @default(now()) @updatedAt
-    productos          Producto? @relation(fields: [productoId], references: [id])
-    productoId         String?
-
-    @@map(name: "Tarifas")
 }
 
 model ActividadEconomica {
@@ -224,28 +195,29 @@ model EstadoDeCredito {
 }
 
 model Seguro {
-    id                 String    @id @default(uuid())
+    id                 String            @id @default(uuid())
     nombre             String
-    monto              Decimal   @db.Decimal(15, 2)
-    creadoPor          String    @default("ADMIN")
-    fechaCreacion      DateTime  @default(now())
-    actualizadoPor     String    @default("ADMIN")
-    fechaActualizacion DateTime  @default(now()) @updatedAt
+    monto              Decimal           @db.Decimal(15, 2)
+    modalidad          ModalidadDeSeguro @relation(fields: [modalidadDeSeguroId], references: [id])
+    creadoPor          String            @default("ADMIN")
+    fechaCreacion      DateTime          @default(now())
+    actualizadoPor     String            @default("ADMIN")
+    fechaActualizacion DateTime          @default(now()) @updatedAt
     creditos           Credito[]
 
+    modalidadDeSeguroId String
     @@map(name: "Seguros")
 }
 
 model ModalidadDeSeguro {
-    id                 String    @id @default(uuid())
-    nombre             String
+    id                 String   @id @default(uuid())
     descripcion        String
-    creadoPor          String    @default("ADMIN")
-    fechaCreacion      DateTime  @default(now())
-    actualizadoPor     String    @default("ADMIN")
-    fechaActualizacion DateTime  @default(now()) @updatedAt
-    creditos           Credito[]
+    creadoPor          String   @default("ADMIN")
+    fechaCreacion      DateTime @default(now())
+    actualizadoPor     String   @default("ADMIN")
+    fechaActualizacion DateTime @default(now()) @updatedAt
 
+    Seguro Seguro[]
     @@map(name: "ModalidadesDeSeguro")
 }
 
@@ -446,7 +418,6 @@ model Trabajo {
     actualizadoPor       String             @default("ADMIN")
     fechaActualizacion   DateTime           @default(now()) @updatedAt
 
-    Credito Credito[]
     Cliente Cliente[]
     @@map(name: "Trabajos")
 }
@@ -478,12 +449,15 @@ model Producto {
     montoMinimo        Decimal          @db.Decimal(15, 2)
     montoMaximo        Decimal          @db.Decimal(15, 2)
     multiplos          Decimal          @db.Decimal(15, 2)
+    interes            Decimal          @db.Decimal(15, 2)
+    interesMoratorio   Decimal          @db.Decimal(15, 2)
+    penalizacion       Decimal          @default(0) @db.Decimal(15, 2)
+    comision           Decimal          @default(0) @db.Decimal(15, 2)
+    cargos             Decimal          @default(0) @db.Decimal(15, 2)
     duracion           Int
     numeroDePagos      Int
     frecuencia         FrecuenciaDePago @relation(fields: [frecuenciaDePagoId], references: [id])
     frecuenciaDePagoId String
-    intereses          TipoDeInteres[]
-    tarifas            Tarifa[]
     creditos           Credito[]
     creadoPor          String           @default("ADMIN")
     fechaCreacion      DateTime         @default(now())
@@ -494,34 +468,30 @@ model Producto {
 }
 
 model Credito {
-    id                  String            @id @default(uuid())
-    cliente             Cliente           @relation(fields: [clienteId], references: [id])
-    sucursal            Sucursal          @relation(fields: [sucursalId], references: [id])
-    estado              EstadoDeCredito   @relation(fields: [estadoDeCreditoId], references: [id])
-    fechaInicio         DateTime          @default(now())
-    fechaFinal          DateTime
-    fechaLiquidacion    DateTime
-    monto               Decimal           @db.Decimal(15, 2)
-    producto            Producto          @relation(fields: [productosId], references: [id])
-    seguro              Seguro            @relation(fields: [segurosId], references: [id])
-    modalidadSeguro     ModalidadDeSeguro @relation(fields: [modalidadDeSeguroId], references: [id])
-    aval                Aval              @relation(fields: [avalId], references: [id])
-    comisiones          Comision[]
-    pagos               Pago[]
-    creadoPor           String
-    fechaCreacion       DateTime          @default(now())
-    actualizadoPor      String            @default("ADMIN")
-    fechaActualizacion  DateTime          @default(now()) @updatedAt
-    clienteId           String
-    sucursalId          String
-    estadoDeCreditoId   String
-    productosId         String
-    segurosId           String
-    modalidadDeSeguroId String
-    avalId              String
+    id                 String          @id @default(uuid())
+    cliente            Cliente         @relation(fields: [clienteId], references: [id])
+    sucursal           Sucursal        @relation(fields: [sucursalId], references: [id])
+    estado             EstadoDeCredito @relation(fields: [estadoDeCreditoId], references: [id])
+    fechaInicio        DateTime        @default(now())
+    fechaFinal         DateTime
+    fechaLiquidacion   DateTime
+    monto              Decimal         @db.Decimal(15, 2)
+    producto           Producto        @relation(fields: [productosId], references: [id])
+    seguro             Seguro          @relation(fields: [segurosId], references: [id])
+    aval               Aval            @relation(fields: [avalId], references: [id])
+    comisiones         Comision[]
+    pagos              Pago[]
+    creadoPor          String
+    fechaCreacion      DateTime        @default(now())
+    actualizadoPor     String          @default("ADMIN")
+    fechaActualizacion DateTime        @default(now()) @updatedAt
+    clienteId          String
+    sucursalId         String
+    estadoDeCreditoId  String
+    productosId        String
+    segurosId          String
+    avalId             String
 
-    Trabajo   Trabajo? @relation(fields: [trabajoId], references: [id])
-    trabajoId String?
     @@map(name: "Creditos")
 }
 

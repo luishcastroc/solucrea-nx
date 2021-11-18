@@ -1,4 +1,3 @@
-import { startWith, map } from 'rxjs/operators';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -11,25 +10,25 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
-import { Actions, ofActionErrored, ofActionSuccessful, Store, Select } from '@ngxs/store';
+import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Role, Usuario } from '@prisma/client';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { AuthState } from 'app/core/auth/store/auth.state';
 import { EditMode } from 'app/core/models';
 import { ConfirmationDialogComponent } from 'app/shared';
-import { Observable, Subject, switchMap, takeUntil, withLatestFrom } from 'rxjs';
+import { Observable, Subject, takeUntil, withLatestFrom } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
+import { defaultRoles } from '../../_config/roles';
 import {
     AjustesModeUsuario,
     DeleteUsuario,
     EditUsuario,
     GetAllUsuarios,
-    SearchUsuario,
     SelectUsuario,
 } from '../../_store/ajustes-usuarios.actions';
-import { IRole } from '../../models/roles.model';
-import { defaultRoles } from '../../roles';
 import { AjustesState } from '../../_store/ajustes.state';
+import { IRole } from '../../models/roles.model';
 
 @Component({
     selector: 'team-list',

@@ -12,7 +12,7 @@ import { combineLatest, map, Observable, Subject, takeUntil } from 'rxjs';
 
 import { AddUsuario, ClearUsuarioState, EditUsuario } from '../../_store/ajustes-usuarios.actions';
 import { IRole } from '../../models/roles.model';
-import { defaultRoles } from '../../roles';
+import { defaultRoles } from '../../_config/roles';
 import { createPasswordStrengthValidator } from '../../validators/custom-ajustes.validators';
 
 @Component({

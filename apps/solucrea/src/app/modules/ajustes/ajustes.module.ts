@@ -28,6 +28,10 @@ import { SucursalesComponent } from './sucursales/sucursales.component';
 import { TeamDetailsComponent } from './team/details/team-details.component';
 import { TeamListComponent } from './team/list/team-list.component';
 import { AjustesTeamComponent } from './team/team.component';
+import { OcupacionesDetailComponent } from './ocupaciones/detail/ocupaciones-detail.component';
+import { OcupacionesListComponent } from './ocupaciones/list/ocupaciones-list.component';
+import { ModalidadesDeSeguroListComponent } from './modalidades-de-seguro/list/modalidades-de-seguro-list.component';
+import { ModalidadesDeSeguroDetailComponent } from './modalidades-de-seguro/detail/modalidades-de-seguro-detail.component';
 
 @NgModule({
     declarations: [
@@ -43,6 +47,10 @@ import { AjustesTeamComponent } from './team/team.component';
         ProductosComponent,
         ProductosDetailsComponent,
         ProductosListComponent,
+        OcupacionesDetailComponent,
+        OcupacionesListComponent,
+        ModalidadesDeSeguroListComponent,
+        ModalidadesDeSeguroDetailComponent,
     ],
     imports: [
         RouterModule.forChild(ajustesRoutes),
