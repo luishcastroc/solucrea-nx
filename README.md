@@ -1,27 +1,25 @@
-# Fuse - Admin template and Starter project for Angular
+# Solucrea - Aplicación
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli)
+Proyecto de aplicación financiera para manejo de créditos
 
-## Development server
+## Servidor de Desarrollo
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+En la terminal correr el comando `nx serve api` y `nx serve solucre`, el primero correra el backend que maneja la base de datos y el segundo correrá la interfaz.
 
-## Code scaffolding
+Run in terminal `nx serve api` y `nx serve solucre`, the first one will run the backend and second one will run the front-end which displays the user interface
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Build y Deployment
 
-## Build
+Para hacer el "Deployment" a producción correr `nx build api --prod` y `nx build solucrea --prod` estos generaran sus respectivos directorios en `dist/`
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Posteriormente se debera iniciar sesion en AWS usando SSH `ssh -i "solucrea-backend.pem" ec2-user@ec2-18-188-146-210.us-east-2.compute.amazonaws.com` esto con el certificado SSL proporcionado (archivo.pem).
 
-## Running unit tests
+En la consola de AWS `rm -rf /opt/front-end/*` y `rm -rf /opt/api/*` para borrar el contenido de los directorios.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+copiar el contenido de dist a AWS utilizando el comando `scp -i "solucrea-backend.pem" -r <folder raiz del proyecto>/dist/apps/solucrea/* ec2-user@ec2-18-188-146-210.us-east-2.compute.amazonaws.com:/opt/front-end` para el front end, `scp -i "solucrea-backend.pem" -r <folder raiz del proyecto>/dist/apps/api/* ec2-user@ec2-18-188-146-210.us-east-2.compute.amazonaws.com:/opt/api` para el backend y `scp -i "solucrea-backend.pem" -r <folder raiz del proyecto>/prisma/* ec2-user@ec2-18-188-146-210.us-east-2.compute.amazonaws.com:/opt/api` para el cliente PRisma (este se encarga del manejo de la base de datos junto con el backend).
 
-## Running end-to-end tests
+despues se debera detener la instancia de PM2 para reiniciarla usando `pm2 delete main`.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice.
+despues debemos hacer el deployment de prisma iremos al directorio de la api `cd opt/api` y haremos `npm i --legacy-peer-deps` posteriormente generaremos el cliente Prisma usando el comando `npx prisma generate` despues iniciaremos la instancia de PM2 usando `pm2 start main.js`.
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+debemos poder navegar por la aplicacion usando [http://ec2-18-188-146-210.us-east-2.compute.amazonaws.com/sign-in] (http://ec2-18-188-146-210.us-east-2.compute.amazonaws.com/sign-in)
