@@ -3,10 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
-import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
-import { EditUsuario } from '../_store/ajustes-usuarios.actions';
+import { EditUsuario } from '../_store/usuarios/ajustes-usuarios.actions';
+import { AjustesUsuariosState } from '../_store/usuarios/ajustes-usuarios.state';
 import { createPasswordStrengthValidator } from '../validators/custom-ajustes.validators';
 
 @Component({
@@ -16,7 +16,7 @@ import { createPasswordStrengthValidator } from '../validators/custom-ajustes.va
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AjustesSecurityComponent implements OnInit, OnDestroy {
-    @Select(AjustesState.selectedUsuario) user$: Observable<Usuario>;
+    @Select(AjustesUsuariosState.selectedUsuario) user$: Observable<Usuario>;
     securityForm: FormGroup;
     usuario: Usuario;
     private _unsubscribeAll: Subject<any>;

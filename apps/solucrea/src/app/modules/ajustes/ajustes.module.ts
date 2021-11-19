@@ -14,7 +14,9 @@ import { InputMaskModule } from '@ngneat/input-mask';
 import { NgxsModule } from '@ngxs/store';
 import { SharedModule } from 'app/shared/shared.module';
 
-import { AjustesState } from './_store/ajustes.state';
+import { AjustesCreditosState } from './_store/creditos/ajustes-creditos.state';
+import { AjustesSucursalesState } from './_store/sucursales/ajustes-sucursales.state';
+import { AjustesUsuariosState } from './_store/usuarios/ajustes-usuarios.state';
 import { AjustesAccountComponent } from './account/account.component';
 import { AjustesComponent } from './ajustes.component';
 import { ajustesRoutes } from './ajustes.routing';
@@ -70,7 +72,7 @@ import { AjustesTeamComponent } from './team/team.component';
         FuseAutogrowModule,
         SharedModule,
         InputMaskModule,
-        NgxsModule.forFeature([AjustesState]),
+        NgxsModule.forFeature([AjustesSucursalesState, AjustesUsuariosState, AjustesCreditosState]),
     ],
 })
 export class AjustesModule {}

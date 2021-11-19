@@ -26,9 +26,9 @@ import {
     EditUsuario,
     GetAllUsuarios,
     SelectUsuario,
-} from '../../_store/ajustes-usuarios.actions';
-import { AjustesState } from '../../_store/ajustes.state';
+} from '../../_store/usuarios/ajustes-usuarios.actions';
 import { IRole } from '../../models/roles.model';
+import { AjustesUsuariosState } from './../../_store/usuarios/ajustes-usuarios.state';
 
 @Component({
     selector: 'team-list',
@@ -38,8 +38,8 @@ import { IRole } from '../../models/roles.model';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TeamListComponent implements OnInit, OnDestroy {
-    @Select(AjustesState.usuarios) usuarios$: Observable<Usuario[]>;
-    @Select(AjustesState.loading) loading$: Observable<boolean>;
+    @Select(AjustesUsuariosState.usuarios) usuarios$: Observable<Usuario[]>;
+    @Select(AjustesUsuariosState.loading) loading$: Observable<boolean>;
 
     searchResults$: Observable<Usuario[]>;
     usuario = this._store.selectSnapshot(AuthState.user);
@@ -52,7 +52,6 @@ export class TeamListComponent implements OnInit, OnDestroy {
      * Constructor
      */
     constructor(
-        private _changeDetectorRef: ChangeDetectorRef,
         private _store: Store,
         private _dialog: MatDialog,
         private _actions$: Actions,

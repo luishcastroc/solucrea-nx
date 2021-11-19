@@ -3,15 +3,19 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
-import { Actions, ofActionCompleted, Store, Select } from '@ngxs/store';
+import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { Sucursal } from '@prisma/client';
 import { ISucursalReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth/auth.utils';
-import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { ConfirmationDialogComponent } from 'app/shared';
-import { map, Observable, startWith, Subject, takeUntil, tap, filter, withLatestFrom, combineLatest } from 'rxjs';
+import { map, Observable, startWith, Subject, takeUntil, withLatestFrom } from 'rxjs';
 
-import { AjustesModeSucursal, DeleteSucursal, GetAllSucursales } from '../../_store/ajustes-sucursales.actions';
+import {
+    AjustesModeSucursal,
+    DeleteSucursal,
+    GetAllSucursales,
+} from '../../_store/sucursales/ajustes-sucursales.actions';
+import { AjustesSucursalesState } from '../../_store/sucursales/ajustes-sucursales.state';
 
 @Component({
     selector: 'app-sucusales-list',
@@ -19,8 +23,8 @@ import { AjustesModeSucursal, DeleteSucursal, GetAllSucursales } from '../../_st
     styleUrls: ['./sucusales-list.component.scss'],
 })
 export class SucusalesListComponent implements OnInit, OnDestroy {
-    @Select(AjustesState.sucursales) sucursales$: Observable<ISucursalReturnDto[]>;
-    @Select(AjustesState.loading) loading$: Observable<boolean>;
+    @Select(AjustesSucursalesState.sucursales) sucursales$: Observable<ISucursalReturnDto[]>;
+    @Select(AjustesSucursalesState.loading) loading$: Observable<boolean>;
     searchResults$: Observable<ISucursalReturnDto[]>;
     searchInput = new FormControl();
 

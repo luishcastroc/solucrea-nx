@@ -7,8 +7,8 @@ import { Usuario } from '@prisma/client';
 import { isEqual } from 'lodash';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
-import { EditUsuario } from '../_store/ajustes-usuarios.actions';
-import { AjustesState } from '../_store/ajustes.state';
+import { EditUsuario } from '../_store/usuarios/ajustes-usuarios.actions';
+import { AjustesUsuariosState } from '../_store/usuarios/ajustes-usuarios.state';
 
 @Component({
     selector: 'settings-account',
@@ -18,7 +18,7 @@ import { AjustesState } from '../_store/ajustes.state';
     animations: fuseAnimations,
 })
 export class AjustesAccountComponent implements OnInit, OnDestroy {
-    @Select(AjustesState.selectedUsuario) user$: Observable<Usuario>;
+    @Select(AjustesUsuariosState.selectedUsuario) user$: Observable<Usuario>;
 
     accountForm: FormGroup;
     defaultUser: Usuario;

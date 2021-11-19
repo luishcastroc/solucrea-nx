@@ -7,7 +7,6 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { IColoniaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
-import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { SharedService } from 'app/shared';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
@@ -17,7 +16,8 @@ import {
     EditSucursal,
     GetColonias,
     SelectSucursal,
-} from '../../_store/ajustes-sucursales.actions';
+} from '../../_store/sucursales/ajustes-sucursales.actions';
+import { AjustesSucursalesState } from '../../_store/sucursales/ajustes-sucursales.state';
 import { TipoDireccion } from '.prisma/client';
 
 @Component({
@@ -27,7 +27,7 @@ import { TipoDireccion } from '.prisma/client';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SucursalesDetailsComponent implements OnInit, OnDestroy {
-    @Select(AjustesState.loading) loading$: Observable<boolean>;
+    @Select(AjustesSucursalesState.loading) loading$: Observable<boolean>;
 
     editMode$: Observable<EditMode>;
     colonias$: Observable<IColoniaReturnDto>;
@@ -39,6 +39,17 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
         mask: '(999)-999-99-99',
         autoUnmask: true,
     });
+
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
+
+    constructor(
+        private _store: Store,
+        private _formBuilder: FormBuilder,
+        private _actions$: Actions,
+        private _sharedService: SharedService,
+        private _toast: HotToastService,
+        private _route: ActivatedRoute
+    ) {}
 
     get id() {
         return this.sucursalForm.get('id') as FormControl;
@@ -75,17 +86,6 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
     get estado() {
         return this.sucursalForm.get('direccion').get('estado') as FormControl;
     }
-
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
-
-    constructor(
-        private _store: Store,
-        private _formBuilder: FormBuilder,
-        private _actions$: Actions,
-        private _sharedService: SharedService,
-        private _toast: HotToastService,
-        private _route: ActivatedRoute
-    ) {}
 
     ngOnInit(): void {
         this.sucursalForm = this.createSucursalForm();
@@ -140,7 +140,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
      *
      */
     initializeData(id: string): void {
-        this.editMode$ = this._store.select(AjustesState.editMode).pipe(
+        this.editMode$ = this._store.select(AjustesSucursalesState.editMode).pipe(
             tap((edit) => {
                 this.editMode = edit;
 
@@ -150,7 +150,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
             })
         );
 
-        this.colonias$ = this._store.select(AjustesState.colonias).pipe(
+        this.colonias$ = this._store.select(AjustesSucursalesState.colonias).pipe(
             tap((colonias: IColoniaReturnDto) => {
                 if (colonias) {
                     this.ciudad.patchValue(colonias.ciudad.descripcion);
@@ -159,7 +159,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
             })
         );
 
-        this.selectedSucursal$ = this._store.select(AjustesState.selectedSucursal).pipe(
+        this.selectedSucursal$ = this._store.select(AjustesSucursalesState.selectedSucursal).pipe(
             tap((sucursal: ISucursalReturnDto) => {
                 if (sucursal) {
                     this.sucursalForm.patchValue({

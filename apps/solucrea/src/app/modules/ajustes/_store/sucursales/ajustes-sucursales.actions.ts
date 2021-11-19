@@ -35,11 +35,10 @@ export class GetColonias {
     constructor(public cp: string) {}
 }
 
-export class SearchSucursal {
-    static readonly type = '[Sucursal] Search';
-    constructor(public payload: string) {}
-}
-
 export class ClearSucursalState {
     static readonly type = '[Sucursal] Clear Sucursal State';
+}
+
+export class ClearSucursales {
+    static readonly type = '[Sucursal] Clear Sucursales';
 }

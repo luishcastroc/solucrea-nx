@@ -1,1 +1,75 @@
-<p>Productos list works!</p>
+<ng-container *ngIf="false; then loadingTemplate; else dataTemplate"></ng-container>
+<ng-template #loadingTemplate>
+    <mat-spinner> </mat-spinner>
+</ng-template>
+<ng-template #dataTemplate>
+    <div class="w-full max-w-3xl flex flex-col">
+        <!-- Add team member -->
+        <div class="w-full">
+            <mat-form-field class="fuse-mat-no-subscript w-full" [floatLabel]="'always'">
+                <mat-label>Buscar Producto</mat-label>
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:view-boards'" matPrefix></mat-icon>
+                <input
+                    matInput
+                    [autocomplete]="'off'"
+                    [placeholder]="'Nombre del Producto'"
+                    [formControl]="searchInput"
+                />
+                <button
+                    mat-icon-button
+                    matSuffix
+                    aria-label="Crear sucursal"
+                    #tooltip="matTooltip"
+                    matTooltip="Crear sucursal"
+                    [matTooltipPosition]="'below'"
+                    (click)="newProducto()"
+                >
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                </button>
+            </mat-form-field>
+            <!-- Content -->
+            <div class="flex-auto mt-8">
+                <!-- <ng-container *ngFor="let sucursal of searchResults$ | async">
+                    <div class="z-20 flex px-8 py-4 md:px-10 border-b justify-between">
+                        <div class="flex gap-6 xsm:flex-wrap sm:flex-wrap">
+                            <div class="flex flex-col">
+                                <div class="font-bold">Nombre:</div>
+                                <div class="mt-2">{{ sucursal.nombre }}</div>
+                            </div>
+                            <div class="flex flex-col">
+                                <div class="font-bold">Telefono:</div>
+                                <div class="mt-2">
+                                    ({{ sucursal.telefono | slice: 0:3 }})-{{ sucursal.telefono | slice: 3:6 }}-{{
+                                        sucursal.telefono | slice: 6:8
+                                    }}-{{ sucursal.telefono | slice: 8:10 }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-1 sm:order-2 sm:ml-3 xsm:flex-col flex justify-center items-center">
+                            <button
+                                mat-icon-button
+                                aria-label="Editar sucursal"
+                                #tooltip="matTooltip"
+                                matTooltip="Editar sucursal"
+                                [matTooltipPosition]="'below'"
+                                (click)="editSucursal(sucursal.id)"
+                            >
+                                <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:clipboard-list'"></mat-icon>
+                            </button>
+                            <button
+                                mat-icon-button
+                                aria-label="Borrar sucursal"
+                                #tooltip="matTooltip"
+                                matTooltip="Borrar sucursal"
+                                [matTooltipPosition]="'below'"
+                                (click)="deleteSucursal(sucursal)"
+                            >
+                                <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </ng-container> -->
+            </div>
+        </div>
+    </div>
+</ng-template>

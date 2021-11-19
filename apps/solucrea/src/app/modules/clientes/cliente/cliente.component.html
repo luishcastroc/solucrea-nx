@@ -788,9 +788,10 @@
                                                         trabajoForm.invalid) ||
                                                     (clienteForm.disabled && trabajoForm.disabled) ||
                                                     (editMode === 'edit' &&
-                                                        !clienteForm.touched && !trabajoForm.touched) ||
-                                                        clienteForm.invalid ||
-                                                        trabajoForm.invalid
+                                                        !clienteForm.touched &&
+                                                        !trabajoForm.touched) ||
+                                                    clienteForm.invalid ||
+                                                    trabajoForm.invalid
                                                 "
                                             >
                                                 {{ editMode === 'edit' ? 'Actualizar' : 'Guardar' }}

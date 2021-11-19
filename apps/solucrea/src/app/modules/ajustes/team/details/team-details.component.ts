@@ -7,12 +7,12 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { EditMode } from 'app/core/models';
-import { AjustesState } from 'app/modules/ajustes/_store/ajustes.state';
 import { combineLatest, map, Observable, Subject, takeUntil } from 'rxjs';
 
-import { AddUsuario, ClearUsuarioState, EditUsuario } from '../../_store/ajustes-usuarios.actions';
-import { IRole } from '../../models/roles.model';
 import { defaultRoles } from '../../_config/roles';
+import { AddUsuario, ClearUsuarioState, EditUsuario } from '../../_store/usuarios/ajustes-usuarios.actions';
+import { AjustesUsuariosState } from '../../_store/usuarios/ajustes-usuarios.state';
+import { IRole } from '../../models/roles.model';
 import { createPasswordStrengthValidator } from '../../validators/custom-ajustes.validators';
 
 @Component({
@@ -23,8 +23,8 @@ import { createPasswordStrengthValidator } from '../../validators/custom-ajustes
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TeamDetailsComponent implements OnInit, OnDestroy {
-    @Select(AjustesState.editMode) editMode$: Observable<EditMode>;
-    @Select(AjustesState.selectedUsuario) selectedUsuario$: Observable<Usuario>;
+    @Select(AjustesUsuariosState.editMode) editMode$: Observable<EditMode>;
+    @Select(AjustesUsuariosState.selectedUsuario) selectedUsuario$: Observable<Usuario>;
     selectedUsuario: Usuario;
     usuarioForm: FormGroup;
     successMessage: string;

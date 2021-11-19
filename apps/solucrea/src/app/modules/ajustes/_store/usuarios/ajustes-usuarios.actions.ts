@@ -41,6 +41,6 @@ export class ClearUsuarioState {
     static readonly type = '[Usuario] Clear Usuario State';
 }
 
-export class ClearAjustesState {
-    static readonly type = '[Ajustes] Clear State';
+export class ClearUsuarios {
+    static readonly type = '[Usuario] Clear Usuarios';
 }

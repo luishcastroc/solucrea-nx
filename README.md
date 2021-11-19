@@ -16,7 +16,13 @@ Posteriormente se debera iniciar sesion en AWS usando SSH `ssh -i "solucrea-back
 
 En la consola de AWS `rm -rf /opt/front-end/*` y `rm -rf /opt/api/*` para borrar el contenido de los directorios.
 
-copiar el contenido de dist a AWS utilizando el comando `scp -i "solucrea-backend.pem" -r <folder raiz del proyecto>/dist/apps/solucrea/* ec2-user@ec2-18-188-146-210.us-east-2.compute.amazonaws.com:/opt/front-end` para el front end, `scp -i "solucrea-backend.pem" -r <folder raiz del proyecto>/dist/apps/api/* ec2-user@ec2-18-188-146-210.us-east-2.compute.amazonaws.com:/opt/api` para el backend y `scp -i "solucrea-backend.pem" -r <folder raiz del proyecto>/prisma/* ec2-user@ec2-18-188-146-210.us-east-2.compute.amazonaws.com:/opt/api` para el cliente PRisma (este se encarga del manejo de la base de datos junto con el backend).
+copiar el contenido de dist a AWS utilizando el comando:
+
+`scp -i "solucrea-backend.pem" -r <folder raiz del proyecto>/dist/apps/solucrea/* ec2-user@ec2-18-188-146-210.us-east-2.compute.amazonaws.com:/opt/front-end` para el front end.
+
+`scp -i "solucrea-backend.pem" -r <folder raiz del proyecto>/dist/apps/api/* ec2-user@ec2-18-188-146-210.us-east-2.compute.amazonaws.com:/opt/api` para el backend.
+
+`scp -i "solucrea-backend.pem" -r <folder raiz del proyecto>/prisma/* ec2-user@ec2-18-188-146-210.us-east-2.compute.amazonaws.com:/opt/api` para el cliente PRisma (este se encarga del manejo de la base de datos junto con el backend).
 
 despues se debera detener la instancia de PM2 para reiniciarla usando `pm2 delete main`.
 

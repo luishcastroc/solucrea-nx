@@ -20,6 +20,7 @@ import {
     SelectCliente,
 } from './clientes.actions';
 import { ClientesStateModel, IColoniasState } from './clientes.model';
+import { sortBy } from 'lodash';
 
 @State<ClientesStateModel>({
     name: 'clientes',
@@ -80,8 +81,9 @@ export class ClientesState {
         return this.clientesService.getClientes().pipe(
             tap((clientes: IClienteReturnDto[]) => {
                 if (clientes) {
+                    const sortedClientes = clientes.sort();
                     ctx.patchState({
-                        clientes,
+                        clientes: sortedClientes,
                         loading: false,
                     });
                 }
@@ -123,6 +125,7 @@ export class ClientesState {
             tap((colonias: IColoniaReturnDto) => {
                 const state = ctx.getState();
                 if (state.colonias) {
+                    colonias = { ...colonias, colonias: sortBy(colonias.colonias, 'descripcion') };
                     const coloniasState = [...state.colonias];
                     if (index >= 0) {
                         coloniasState[index] = { tipoDireccion: tipo, ubicacion: colonias };
@@ -178,11 +181,11 @@ export class ClientesState {
         }).pipe(
             tap(({ generos, estadosCiviles, escolaridades, tiposDeVivienda, actividadesEconomicas }) => {
                 const config = {
-                    generos,
-                    estadosCiviles,
-                    escolaridades,
-                    tiposDeVivienda,
-                    actividadesEconomicas,
+                    generos: sortBy(generos, 'descripcion'),
+                    estadosCiviles: sortBy(estadosCiviles, 'descripcion'),
+                    escolaridades: sortBy(escolaridades, 'descripcion'),
+                    tiposDeVivienda: sortBy(tiposDeVivienda, 'descripcion'),
+                    actividadesEconomicas: sortBy(actividadesEconomicas, 'descripcion'),
                 };
                 loading = false;
                 ctx.patchState({ config, loading });
