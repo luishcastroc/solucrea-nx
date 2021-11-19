@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -33,6 +34,7 @@ import { clientesRoutes } from './clientes.routing';
         MatDatepickerModule,
         MatNativeDateModule,
         MatMomentDateModule,
+        MatRadioModule,
         MatSelectModule,
         MatProgressSpinnerModule,
         MatStepperModule,

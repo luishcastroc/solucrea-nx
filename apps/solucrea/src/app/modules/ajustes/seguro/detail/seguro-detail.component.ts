@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-    selector: 'app-list',
-    templateUrl: './productos-list.component.html',
-    styleUrls: ['./productos-list.component.scss'],
+    selector: 'app-seguro-detail',
+    templateUrl: './seguro-detail.component.html',
+    styleUrls: ['./seguro-detail.component.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductosListComponent implements OnInit {
+export class SeguroDetailComponent implements OnInit {
     constructor() {}
 
     ngOnInit(): void {}

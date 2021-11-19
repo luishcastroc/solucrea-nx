@@ -29,10 +29,10 @@ export const ajustesPanels = [
         roles: [Role.ADMIN, Role.DIRECTOR],
     },
     {
-        id: 'productos',
+        id: 'creditos',
         icon: 'heroicons_outline:library',
-        title: 'Productos',
-        description: 'Catálogo de productos',
+        title: 'Créditos',
+        description: 'Catálogo de tipos de crédito',
         roles: [Role.ADMIN, Role.DIRECTOR],
     },
     {
@@ -43,10 +43,10 @@ export const ajustesPanels = [
         roles: [Role.ADMIN, Role.DIRECTOR],
     },
     {
-        id: 'modalidades_de_seguros',
+        id: 'seguros',
         icon: 'heroicons_outline:color-swatch',
-        title: 'Modalidades de Seguro',
-        description: 'Catálogo de modalidades de seguro',
+        title: 'Seguros',
+        description: 'Catálogo de seguros',
         roles: [Role.ADMIN, Role.DIRECTOR],
     },
 ];

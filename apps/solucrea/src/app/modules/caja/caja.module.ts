@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -11,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
+import { InputMaskModule } from '@ngneat/input-mask';
 import { NgxsModule } from '@ngxs/store';
 import { SharedModule } from 'app/shared/shared.module';
 
@@ -19,7 +19,6 @@ import { CajaDetailComponent } from './caja-detail/caja-detail.component';
 import { CajaListComponent } from './caja-list/caja-list.component';
 import { CajaComponent } from './caja.component';
 import { cajaRoutes } from './caja.routing';
-import { InputMaskModule } from '@ngneat/input-mask';
 
 @NgModule({
     declarations: [CajaComponent, CajaListComponent, CajaDetailComponent],

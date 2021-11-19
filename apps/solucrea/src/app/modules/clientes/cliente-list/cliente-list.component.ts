@@ -19,6 +19,8 @@ import { ClientesState } from '../_store/clientes.state';
 export class ClienteListComponent implements OnInit, OnDestroy {
     @Select(ClientesState.clientes) clientes$: Observable<IClienteReturnDto[]>;
 
+    values: string[] = ['Activos', 'Inactivos'];
+    active: string = this.values[0];
     clientes: IClienteReturnDto[];
     searchResults$: Observable<IClienteReturnDto[]>;
     searchInput = new FormControl();
@@ -148,11 +150,12 @@ export class ClienteListComponent implements OnInit, OnDestroy {
         // returning the filtered array
         return clientes.filter(
             (cliente) =>
-                cliente.nombre.toLowerCase().includes(filterValue) ||
-                cliente.apellidoPaterno.toLowerCase().includes(filterValue) ||
-                cliente.apellidoMaterno.toLowerCase().includes(filterValue) ||
-                cliente.rfc.toLowerCase().includes(filterValue) ||
-                cliente.curp.toLowerCase().includes(filterValue)
+                (cliente.nombre.toLowerCase().includes(filterValue) ||
+                    cliente.apellidoPaterno.toLowerCase().includes(filterValue) ||
+                    cliente.apellidoMaterno.toLowerCase().includes(filterValue) ||
+                    cliente.rfc.toLowerCase().includes(filterValue) ||
+                    cliente.curp.toLowerCase().includes(filterValue)) &&
+                cliente.activo === (this.active === 'Activos' ? true : false)
         );
     }
 }

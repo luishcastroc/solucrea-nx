@@ -18,20 +18,22 @@ import { AjustesState } from './_store/ajustes.state';
 import { AjustesAccountComponent } from './account/account.component';
 import { AjustesComponent } from './ajustes.component';
 import { ajustesRoutes } from './ajustes.routing';
-import { ProductosDetailsComponent } from './productos/details/productos-details.component';
-import { ProductosListComponent } from './productos/list/productos-list.component';
-import { ProductosComponent } from './productos/productos.component';
+import { AjustesCreditosComponent } from './creditos/ajustes-creditos.component';
+import { AjustesCreditosDetailsComponent } from './creditos/details/ajustes-creditos-details.component';
+import { AjustesCreditosListComponent } from './creditos/list/ajustes-creditos-list.component';
+import { AjustesOcupacionesComponent } from './ocupaciones/ajustes-ocupaciones.component';
+import { OcupacionesDetailComponent } from './ocupaciones/detail/ocupaciones-detail.component';
+import { OcupacionesListComponent } from './ocupaciones/list/ocupaciones-list.component';
 import { AjustesSecurityComponent } from './security/security.component';
+import { SeguroDetailComponent } from './seguro/detail/seguro-detail.component';
+import { SeguroListComponent } from './seguro/list/seguro-list.component';
+import { SeguroComponent } from './seguro/seguro.component';
 import { SucursalesDetailsComponent } from './sucursales/details/sucursales-details.component';
 import { SucusalesListComponent } from './sucursales/list/sucusales-list.component';
 import { SucursalesComponent } from './sucursales/sucursales.component';
 import { TeamDetailsComponent } from './team/details/team-details.component';
 import { TeamListComponent } from './team/list/team-list.component';
 import { AjustesTeamComponent } from './team/team.component';
-import { OcupacionesDetailComponent } from './ocupaciones/detail/ocupaciones-detail.component';
-import { OcupacionesListComponent } from './ocupaciones/list/ocupaciones-list.component';
-import { ModalidadesDeSeguroListComponent } from './modalidades-de-seguro/list/modalidades-de-seguro-list.component';
-import { ModalidadesDeSeguroDetailComponent } from './modalidades-de-seguro/detail/modalidades-de-seguro-detail.component';
 
 @NgModule({
     declarations: [
@@ -44,13 +46,15 @@ import { ModalidadesDeSeguroDetailComponent } from './modalidades-de-seguro/deta
         SucursalesComponent,
         SucusalesListComponent,
         SucursalesDetailsComponent,
-        ProductosComponent,
-        ProductosDetailsComponent,
-        ProductosListComponent,
+        AjustesCreditosComponent,
+        AjustesCreditosDetailsComponent,
+        AjustesCreditosListComponent,
         OcupacionesDetailComponent,
         OcupacionesListComponent,
-        ModalidadesDeSeguroListComponent,
-        ModalidadesDeSeguroDetailComponent,
+        SeguroListComponent,
+        SeguroDetailComponent,
+        AjustesOcupacionesComponent,
+        SeguroComponent,
     ],
     imports: [
         RouterModule.forChild(ajustesRoutes),

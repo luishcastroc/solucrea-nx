@@ -28,18 +28,15 @@
         <div class="mt-8 divide-y border-t border-b flex-auto">
             <ng-container *ngFor="let usuario of searchResults$ | async; trackBy: trackByFn">
                 <div class="flex flex-col sm:flex-row sm:items-center py-6 flex-auto">
-                    <div class="flex items-center">
-                        <div
-                            class="flex flex-0 items-center justify-center w-10 h-10 rounded-full overflow-hidden"
-                        ></div>
-                        <div class="ml-4">
+                    <div class="flex flex-auto items-center">
+                        <div class="sm:ml-4">
                             <div class="font-medium">{{ usuario.nombre }} {{ usuario.apellido }}</div>
                             <div class="text-secondary">
                                 {{ usuario.nombreUsuario }}
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center mt-4 sm:mt-0 sm:ml-auto">
+                    <div class="flex items-center justify-between mt-4 sm:mt-0 sm:ml-auto">
                         <div class="order-2 sm:order-1 ml-4 sm:ml-0">
                             <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-32">
                                 <mat-select
