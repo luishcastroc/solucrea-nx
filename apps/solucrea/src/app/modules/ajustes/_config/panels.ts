@@ -49,4 +49,11 @@ export const ajustesPanels = [
         description: 'Catálogo de seguros',
         roles: [Role.ADMIN, Role.DIRECTOR],
     },
+    {
+        id: 'frecuencias',
+        icon: 'heroicons_outline:currency-dollar',
+        title: 'Frecuencias de Pago',
+        description: 'Catálogo de frecuencias de pago',
+        roles: [Role.ADMIN, Role.DIRECTOR],
+    },
 ];
