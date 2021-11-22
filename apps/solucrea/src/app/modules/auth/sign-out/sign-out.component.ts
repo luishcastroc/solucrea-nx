@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { Logout } from 'app/core/auth/store/auth.actions';
+import { Logout } from 'app/core/auth';
 import { finalize, Subject, takeUntil, takeWhile, tap, timer } from 'rxjs';
 
 @Component({

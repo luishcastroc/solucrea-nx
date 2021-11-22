@@ -10,12 +10,6 @@ import { AuthState } from './store/auth.state';
     selector: '[verifyRole]',
 })
 export class VerifyRoleDirective implements OnInit, OnDestroy {
-    @Input() set verifyRole(roles: Role[]) {
-        if (roles) {
-            this.roles = roles;
-        }
-    }
-
     roles: Role[];
     user: Usuario;
 
@@ -28,6 +22,12 @@ export class VerifyRoleDirective implements OnInit, OnDestroy {
         private _store: Store
     ) {
         this._unsubscribeAll = new Subject();
+    }
+
+    @Input() set verifyRole(roles: Role[]) {
+        if (roles) {
+            this.roles = roles;
+        }
     }
 
     ngOnInit(): void {

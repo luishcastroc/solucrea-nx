@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertService } from '@fuse/components/alert/alert.service';
 import { Actions, ofActionErrored, Store } from '@ngxs/store';
-import { Login } from 'app/core/auth/store/auth.actions';
+import { Login } from 'app/core/auth/';
 import { Subject, takeUntil } from 'rxjs';
 
 import { IAlert } from '../../../../@fuse/components/alert/alert.model';

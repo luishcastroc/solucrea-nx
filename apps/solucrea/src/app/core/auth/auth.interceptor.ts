@@ -5,8 +5,7 @@ import { Store } from '@ngxs/store';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { catchError, Observable, throwError } from 'rxjs';
 
-import { Logout } from './store/auth.actions';
-import { AuthState } from './store/auth.state';
+import { Logout, AuthState } from 'app/core/auth';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

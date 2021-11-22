@@ -51,7 +51,7 @@ export const ajustesPanels = [
     },
     {
         id: 'frecuencias',
-        icon: 'heroicons_outline:currency-dollar',
+        icon: 'heroicons_outline:clock',
         title: 'Frecuencias de Pago',
         description: 'Catálogo de frecuencias de pago',
         roles: [Role.ADMIN, Role.DIRECTOR],

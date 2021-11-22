@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { EditMode } from 'app/core/models';
+import { AjustesCreditosService } from 'app/modules/ajustes/_services';
 
-import { AjustesCreditosService } from '../../_services/ajustes-creditos.service';
-import { AjustesModeCredito, GetAllCreditos, ClearCreditoState, ClearCreditos } from './ajustes-creditos.actions';
+import { AjustesModeCredito, ClearCreditos, ClearCreditoState } from './ajustes-creditos.actions';
 import { AjustesCreditosStateModel } from './ajustes-creditos.model';
 import { Producto } from '.prisma/client';
 

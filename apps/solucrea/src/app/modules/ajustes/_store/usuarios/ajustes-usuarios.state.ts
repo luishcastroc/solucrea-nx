@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
-import { UpdateUsuario } from 'app/core/auth/store/auth.actions';
-import { AuthState } from 'app/core/auth/store/auth.state';
+import { AuthState, UpdateUsuario } from 'app/core/auth';
 import { EditMode } from 'app/core/models';
+import { AjustesUsuarioService } from 'app/modules/ajustes/_services';
 import { tap } from 'rxjs';
 
-import { AjustesUsuarioService } from '../../_services/ajustes-usuario.service';
 import {
     AddUsuario,
     AjustesModeUsuario,

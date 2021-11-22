@@ -36,5 +36,5 @@ export class ClearCreditoState {
 }
 
 export class ClearCreditos {
-    static readonly type = '[Credito] Clear Creditoes';
+    static readonly type = '[Credito] Clear Creditos';
 }

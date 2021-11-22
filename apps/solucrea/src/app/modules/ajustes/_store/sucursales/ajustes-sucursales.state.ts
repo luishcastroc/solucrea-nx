@@ -6,7 +6,7 @@ import { ClientesService } from 'app/modules/clientes';
 import { sortBy } from 'lodash';
 import { tap } from 'rxjs';
 
-import { AjustesSucursalService } from '../../_services';
+import { AjustesSucursalService } from 'app/modules/ajustes/_services';
 import {
     AddSucursal,
     AjustesModeSucursal,
