@@ -3,7 +3,7 @@ import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@
 @Component({
     selector: 'app-seguro',
     templateUrl: './seguro.component.html',
-    styleUrls: ['./seguro.component.scss'],
+    styleUrls: [],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

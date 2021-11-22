@@ -1,6 +1,6 @@
-import { UpdateUsuarioDto } from './../../dtos/update-usuario.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Prisma, Usuario, Role } from '@prisma/client';
+import { Prisma, Role, Usuario } from '@prisma/client';
+import { UpdateUsuarioDto } from 'api/dtos';
 import * as bcrypt from 'bcrypt';
 
 import { PrismaService } from '../../prisma/prisma.service';
@@ -20,8 +20,15 @@ export class UsuariosService {
             }
             delete usuarioReturn.password;
             return usuarioReturn;
-        } catch {
-            throw new HttpException({ message: 'Error al consultar usuario' }, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch ({ response }) {
+            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al consultar usuario' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: response.status, message: response.message }, response.status);
+            }
         }
     }
 
@@ -36,8 +43,15 @@ export class UsuariosService {
                 return usuario;
             });
             return usuarioReturn;
-        } catch {
-            throw new HttpException({ message: 'Error al consultar usuarios' }, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch ({ response }) {
+            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al consultar usuarios' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: response.status, message: response.message }, response.status);
+            }
         }
     }
 
@@ -92,11 +106,15 @@ export class UsuariosService {
             });
             delete usuarioActualizado.password;
             return usuarioActualizado;
-        } catch {
-            throw new HttpException(
-                { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al actualizar usuario.' },
-                HttpStatus.INTERNAL_SERVER_ERROR
-            );
+        } catch ({ response }) {
+            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al actualizar usuario' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: response.status, message: response.message }, response.status);
+            }
         }
     }
 

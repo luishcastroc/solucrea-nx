@@ -38,11 +38,15 @@ export class SucursalesService {
             }
 
             return sucursalReturn;
-        } catch {
-            throw new HttpException(
-                { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error consultando la sucursal' },
-                HttpStatus.INTERNAL_SERVER_ERROR
-            );
+        } catch ({ response }) {
+            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error consultando las sucursales' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: response.status, message: response.message }, response.status);
+            }
         }
     }
 
@@ -59,7 +63,6 @@ export class SucursalesService {
 
     async createSucursal(sucursal: CreateSucursalDto): Promise<ISucursalReturnDto> {
         const { nombre, telefono, direccion: direccionDto, creadoPor } = sucursal;
-        console.log(sucursal);
         const direccion: Prisma.DireccionCreateNestedOneWithoutSucursalesInput = {
             create: {
                 tipo: 'SUCURSAL',
@@ -77,11 +80,15 @@ export class SucursalesService {
                 data,
                 select: this.select,
             });
-        } catch {
-            throw new HttpException(
-                { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando la sucursal' },
-                HttpStatus.INTERNAL_SERVER_ERROR
-            );
+        } catch ({ response }) {
+            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando la sucursal' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: response.status, message: response.message }, response.status);
+            }
         }
     }
 
@@ -123,11 +130,15 @@ export class SucursalesService {
                 where,
                 select: this.select,
             });
-        } catch (e) {
-            throw new HttpException(
-                { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error actualizando la sucursal' },
-                HttpStatus.INTERNAL_SERVER_ERROR
-            );
+        } catch ({ response }) {
+            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error actualizando la sucursal' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: response.status, message: response.message }, response.status);
+            }
         }
     }
 
@@ -138,28 +149,25 @@ export class SucursalesService {
 
             if (!sucursal) {
                 throw new HttpException(
-                    { status: HttpStatus.NOT_FOUND, message: 'la dirección de la sucursal no existe' },
+                    { status: HttpStatus.NOT_FOUND, message: 'la sucursal no existe' },
                     HttpStatus.NOT_FOUND
                 );
             }
-            //delete the sucursal address first
-            const deleteDireccionSucursal = await this.prisma.direccion.delete({
-                where: { id: sucursal.direccion.id },
-            });
-
-            if (!deleteDireccionSucursal) {
+            // delete the actual sucursal
+            await this.prisma.sucursal.update({ where, data: { activa: false } });
+            return sucursal;
+        } catch (e) {
+            console.log(e);
+            const { response } = e;
+            console.log(response);
+            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
-                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error borrando la sucursal' },
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error inhabilitando la sucursal' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
+            } else {
+                throw new HttpException({ status: response.status, message: response.message }, response.status);
             }
-            //delete the actual sucursal
-            return sucursal;
-        } catch {
-            throw new HttpException(
-                { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error borrando la sucursal' },
-                HttpStatus.INTERNAL_SERVER_ERROR
-            );
         }
     }
 }

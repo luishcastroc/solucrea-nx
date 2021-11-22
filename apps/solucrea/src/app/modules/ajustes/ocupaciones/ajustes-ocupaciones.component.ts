@@ -3,7 +3,7 @@ import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@
 @Component({
     selector: 'app-ajustes-ocupaciones',
     templateUrl: './ajustes-ocupaciones.component.html',
-    styleUrls: ['./ajustes-ocupaciones.component.scss'],
+    styleUrls: [],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

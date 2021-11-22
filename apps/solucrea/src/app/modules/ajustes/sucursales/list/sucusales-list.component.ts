@@ -20,7 +20,7 @@ import { AjustesSucursalesState } from '../../_store/sucursales/ajustes-sucursal
 @Component({
     selector: 'app-sucusales-list',
     templateUrl: './sucusales-list.component.html',
-    styleUrls: ['./sucusales-list.component.scss'],
+    styleUrls: [],
 })
 export class SucusalesListComponent implements OnInit, OnDestroy {
     @Select(AjustesSucursalesState.sucursales) sucursales$: Observable<ISucursalReturnDto[]>;
@@ -47,6 +47,8 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
             withLatestFrom(this.sucursales$),
             map(([value, sucursales]) => this._filter(value, sucursales))
         );
+
+        this.subscribeToActions();
     }
 
     /**
@@ -60,8 +62,6 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
             new Navigate([`ajustes/sucursales/${AuthUtils.guid()}`]),
             new AjustesModeSucursal('new'),
         ]);
-
-        this.subscribeToActions();
     }
 
     /**

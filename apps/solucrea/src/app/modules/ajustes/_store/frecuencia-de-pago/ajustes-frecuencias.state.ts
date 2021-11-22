@@ -36,7 +36,7 @@ export class AjustesFrecuenciasDePagoState {
     }
 
     @Selector()
-    static creditos({ frecuencias }: AjustesFrecuenciasDePagoStateModel): FrecuenciaDePago[] {
+    static frecuencias({ frecuencias }: AjustesFrecuenciasDePagoStateModel): FrecuenciaDePago[] {
         return frecuencias;
     }
 

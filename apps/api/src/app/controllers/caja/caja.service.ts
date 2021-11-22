@@ -72,12 +72,15 @@ export class CajaService {
 
         try {
             return await this.prisma.caja.create({ data: cajaCreate, select: this.select });
-        } catch (e) {
-            console.log(e);
-            throw new HttpException(
-                { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando la caja.' },
-                HttpStatus.INTERNAL_SERVER_ERROR
-            );
+        } catch ({ response }) {
+            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando el turno' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: response.status, message: response.message }, response.status);
+            }
         }
     }
 
@@ -104,11 +107,15 @@ export class CajaService {
                 where,
                 select: this.select,
             });
-        } catch (e) {
-            throw new HttpException(
-                { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error actualizando el turno' },
-                HttpStatus.INTERNAL_SERVER_ERROR
-            );
+        } catch ({ response }) {
+            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error actualizando el turno' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: response.status, message: response.message }, response.status);
+            }
         }
     }
 
@@ -118,11 +125,15 @@ export class CajaService {
                 where,
                 select: this.select,
             });
-        } catch {
-            throw new HttpException(
-                { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error borrando la caja.' },
-                HttpStatus.INTERNAL_SERVER_ERROR
-            );
+        } catch ({ response }) {
+            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error borrando el turno' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: response.status, message: response.message }, response.status);
+            }
         }
     }
 }

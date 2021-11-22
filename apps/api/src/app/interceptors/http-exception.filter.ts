@@ -20,6 +20,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
             if (!message) {
                 message = exception.getResponse()['message'];
             }
+            console.log('status: ', status);
+            console.log('message: ', message);
             switch (status) {
                 case 401:
                 case 403:

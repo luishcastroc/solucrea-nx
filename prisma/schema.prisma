@@ -291,6 +291,7 @@ model Sucursal {
     creditos           Credito[]
     comisiones         Comision[]
     cajas              Caja[]
+    activa             Boolean    @default(true)
     creadoPor          String     @default("ADMIN")
     fechaCreacion      DateTime   @default(now())
     actualizadoPor     String     @default("ADMIN")

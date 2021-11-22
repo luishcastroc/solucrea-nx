@@ -86,11 +86,15 @@ export class ClientesService {
                 );
             }
             return clientesReturn;
-        } catch {
-            throw new HttpException(
-                { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error consultando clientes' },
-                HttpStatus.INTERNAL_SERVER_ERROR
-            );
+        } catch ({ response }) {
+            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error consultando clientes' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: response.status, message: response.message }, response.status);
+            }
         }
     }
 
@@ -160,11 +164,15 @@ export class ClientesService {
             return await this.prisma.cliente.create({
                 data: clienteData,
             });
-        } catch {
-            throw new HttpException(
-                { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al agregar cliente' },
-                HttpStatus.INTERNAL_SERVER_ERROR
-            );
+        } catch ({ response }) {
+            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al agregar al cliente' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: response.status, message: response.message }, response.status);
+            }
         }
     }
 
@@ -237,11 +245,15 @@ export class ClientesService {
             });
 
             return updateStatement;
-        } catch (err) {
-            throw new HttpException(
-                { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al actualizar el cliente' },
-                HttpStatus.INTERNAL_SERVER_ERROR
-            );
+        } catch ({ response }) {
+            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error actualizando el cliente' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: response.status, message: response.message }, response.status);
+            }
         }
     }
 
@@ -269,11 +281,15 @@ export class ClientesService {
             });
 
             return updateStatement;
-        } catch {
-            throw new HttpException(
-                { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al borrar el cliente' },
-                HttpStatus.INTERNAL_SERVER_ERROR
-            );
+        } catch ({ response }) {
+            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error inhablilitando el cliente' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: response.status, message: response.message }, response.status);
+            }
         }
     }
 
