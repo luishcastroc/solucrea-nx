@@ -8,7 +8,7 @@ import { AjustesFrecuenciasDePagoStateModel } from './ajustes-frecuencias.model'
 import { FrecuenciaDePago } from '.prisma/client';
 
 @State<AjustesFrecuenciasDePagoStateModel>({
-    name: 'ajustesCreditos',
+    name: 'ajustesFrecuencias',
     defaults: {
         frecuencias: [],
         editMode: 'edit',

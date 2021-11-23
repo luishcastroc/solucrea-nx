@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { CreateSucursalDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 
@@ -12,7 +13,7 @@ export class GetAllSucursales {
 
 export class EditSucursal {
     static readonly type = '[Sucursal] Edit';
-    constructor(public id: string, public payload: any) {}
+    constructor(public id: string, public payload: Prisma.SucursalUncheckedUpdateInput) {}
 }
 
 export class DeleteSucursal {
@@ -41,4 +42,9 @@ export class ClearSucursalState {
 
 export class ClearSucursales {
     static readonly type = '[Sucursal] Clear Sucursales';
+}
+
+export class ChangeSearchFilter {
+    static readonly type = '[Sucursal] Change Filter';
+    constructor(public payload: boolean) {}
 }

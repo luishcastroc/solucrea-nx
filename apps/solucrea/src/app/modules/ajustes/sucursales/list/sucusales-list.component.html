@@ -29,8 +29,12 @@
                     class="flex flex-row gap-3 items-center justify-center"
                     [(ngModel)]="activa"
                 >
-                    <mat-radio-button *ngFor="let value of values" [value]="value">
-                        {{ value }}
+                    <mat-radio-button
+                        *ngFor="let value of values"
+                        [value]="value.value"
+                        (change)="changeActiva($event)"
+                    >
+                        {{ value.display }}
                     </mat-radio-button>
                 </mat-radio-group>
             </div>
@@ -66,12 +70,17 @@
                             <button
                                 mat-icon-button
                                 aria-label="Inhabilitar sucursal"
+                                (click)="sucursal.activa ? deleteSucursal(sucursal) : activateSucursal(sucursal)"
                                 #tooltip="matTooltip"
-                                matTooltip="Inhabilitar sucursal"
+                                matTooltip="{{ sucursal.activa ? 'Inactivar sucursal' : 'Activar sucursal' }}"
                                 [matTooltipPosition]="'below'"
-                                (click)="deleteSucursal(sucursal)"
                             >
-                                <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                <mat-icon
+                                    class="text-hint"
+                                    [svgIcon]="
+                                        sucursal.activa ? 'heroicons_outline:trash' : 'heroicons_outline:badge-check'
+                                    "
+                                ></mat-icon>
                             </button>
                         </div>
                     </div>

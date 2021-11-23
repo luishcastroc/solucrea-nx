@@ -47,7 +47,7 @@ const routerConfig: ExtraOptions = {
             developmentMode: !environment.production,
         }),
         NgxsStoragePluginModule.forRoot({
-            key: ['auth', 'ajustes', 'caja'],
+            key: ['auth', 'ajustesSucursales', 'ajustesCreditos', 'ajustesFrecuencias', 'ajustesUsuarios', 'caja'],
         }),
         NgxsRouterPluginModule.forRoot(),
         NgxsReduxDevtoolsPluginModule.forRoot(),

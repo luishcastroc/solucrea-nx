@@ -163,11 +163,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
                     });
 
                     if (action instanceof AddCaja) {
-                        // we clear the forms
-                        this.cajaForm.reset();
                         setTimeout(() => {
-                            // we enable the form
-                            this.cajaForm.enable();
                             this._store.dispatch(new Navigate(['/caja']));
                         }, 3000);
                     } else if (action instanceof EditCaja && this.editMode === 'cierre') {

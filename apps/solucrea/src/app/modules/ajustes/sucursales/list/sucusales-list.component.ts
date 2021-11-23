@@ -10,7 +10,9 @@ import { AuthUtils } from 'app/core/auth';
 import {
     AjustesModeSucursal,
     AjustesSucursalesState,
+    ChangeSearchFilter,
     DeleteSucursal,
+    EditSucursal,
     GetAllSucursales,
 } from 'app/modules/ajustes/_store';
 import { ConfirmationDialogComponent } from 'app/shared';
@@ -26,8 +28,11 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
     @Select(AjustesSucursalesState.loading) loading$: Observable<boolean>;
     searchResults$: Observable<ISucursalReturnDto[]>;
     searchInput = new FormControl();
-    values: string[] = ['Activas', 'Inactivas'];
-    activa: string = this.values[0];
+    values = [
+        { display: 'Activas', value: true },
+        { display: 'Inactivas', value: false },
+    ];
+    activa = true;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -71,24 +76,40 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
      *
      */
     subscribeToActions(): void {
-        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(DeleteSucursal)).subscribe((result) => {
-            const { error, successful } = result.result;
-            if (error) {
-                const message = `${error['error'].message}`;
-                this._toast.error(message, {
-                    duration: 4000,
-                    position: 'bottom-center',
-                });
-            }
-            if (successful) {
-                const message = 'Sucursal Borrada exitosamente.';
-                this._toast.success(message, {
-                    duration: 4000,
-                    position: 'bottom-center',
-                });
-                this.searchInput.updateValueAndValidity({ onlySelf: false, emitEvent: true });
-            }
-        });
+        this._actions$
+            .pipe(
+                takeUntil(this._unsubscribeAll),
+                ofActionCompleted(GetAllSucursales, EditSucursal, DeleteSucursal, ChangeSearchFilter)
+            )
+            .subscribe((result) => {
+                const { error, successful } = result.result;
+                const { action } = result;
+                let message;
+                if (error) {
+                    message = `${error['error'].message}`;
+                    this._toast.error(message, {
+                        duration: 4000,
+                        position: 'bottom-center',
+                    });
+                }
+                if (successful) {
+                    if (action instanceof DeleteSucursal) {
+                        message = 'Sucursal desactivada exitosamente.';
+                        this._store.dispatch(new ChangeSearchFilter(this.activa));
+                    }
+                    if (action instanceof EditSucursal) {
+                        message = 'Sucursal activada exitosamente.';
+                        this._store.dispatch(new ChangeSearchFilter(this.activa));
+                    }
+                    if (!(action instanceof GetAllSucursales) && !(action instanceof ChangeSearchFilter)) {
+                        this._toast.success(message, {
+                            duration: 4000,
+                            position: 'bottom-center',
+                        });
+                    }
+                    this.searchInput.updateValueAndValidity({ onlySelf: false, emitEvent: true });
+                }
+            });
     }
 
     /**
@@ -110,8 +131,8 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
     deleteSucursal({ id, nombre }: Sucursal): void {
         const confirmDialog = this._dialog.open(ConfirmationDialogComponent, {
             data: {
-                title: 'Confirmar Borrar Sucursal',
-                message: `Estas seguro que deseas borrar la sucursal: ${nombre}`,
+                title: 'Confirmar desactivar Sucursal',
+                message: `Estas seguro que deseas desactivar la sucursal: ${nombre}`,
             },
         });
         confirmDialog.afterClosed().subscribe((result) => {
@@ -119,6 +140,21 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
                 this._store.dispatch(new DeleteSucursal(id));
             }
         });
+    }
+
+    /**
+     * Activate Sucursal
+     *
+     */
+    activateSucursal({ id }: Sucursal): void {
+        this._store.dispatch(new EditSucursal(id, { activa: true }));
+    }
+
+    /**
+     * Change radioButton
+     */
+    changeActiva(e): void {
+        this._store.dispatch(new ChangeSearchFilter(e.value));
     }
 
     /**
@@ -137,17 +173,13 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
      *
      */
     private _filter(value: string, sucursales: ISucursalReturnDto[]): ISucursalReturnDto[] {
+        if (!value || value === '') {
+            return sucursales;
+        }
         //getting the value from the input
         const filterValue = value.toLowerCase();
-        if (filterValue === '') {
-            return sucursales.filter((sucursal) => sucursal.activa === (this.activa === 'Activos' ? true : false));
-        }
 
         // returning the filtered array
-        return sucursales.filter(
-            (sucursal) =>
-                sucursal.nombre.toLowerCase().includes(filterValue) &&
-                sucursal.activa === (this.activa === 'Activos' ? true : false)
-        );
+        return sucursales.filter((sucursal) => sucursal.nombre.toLowerCase().includes(filterValue));
     }
 }

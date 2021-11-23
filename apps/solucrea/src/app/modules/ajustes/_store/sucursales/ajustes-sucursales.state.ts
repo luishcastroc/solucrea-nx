@@ -19,11 +19,13 @@ import {
     SelectSucursal,
 } from './ajustes-sucursales.actions';
 import { AjustesSucursalesStateModel } from './ajustes-sucursales.model';
+import { ChangeSearchFilter } from '.';
 
 @State<AjustesSucursalesStateModel>({
     name: 'ajustesSucursales',
     defaults: {
         sucursales: [],
+        sucursalesFiltered: [],
         editMode: 'edit',
         selectedSucursal: undefined,
         loading: false,
@@ -50,8 +52,8 @@ export class AjustesSucursalesState {
     }
 
     @Selector()
-    static sucursales({ sucursales }: AjustesSucursalesStateModel): ISucursalReturnDto[] {
-        return sucursales;
+    static sucursales({ sucursalesFiltered }: AjustesSucursalesStateModel): ISucursalReturnDto[] {
+        return sucursalesFiltered;
     }
 
     @Selector()
@@ -70,8 +72,10 @@ export class AjustesSucursalesState {
         ctx.patchState({ loading: true });
         return this._ajustesSucursalesService.getSucursales().pipe(
             tap((sucursales: ISucursalReturnDto[]) => {
+                const sucursalesFiltered = sucursales.filter((sucursal) => sucursal.activa === true);
                 ctx.patchState({
                     sucursales,
+                    sucursalesFiltered,
                     loading: false,
                 });
             })
@@ -129,7 +133,7 @@ export class AjustesSucursalesState {
                 if (sucursal) {
                     const sucursales = [...state.sucursales];
                     const idx = sucursales.findIndex((suc) => suc.id === id);
-                    sucursales.splice(idx, 1);
+                    sucursales[idx] = sucursal;
                     ctx.patchState({
                         sucursales,
                     });
@@ -153,6 +157,17 @@ export class AjustesSucursalesState {
         );
     }
 
+    @Action(ChangeSearchFilter)
+    changeSearchFilter(ctx: StateContext<AjustesSucursalesStateModel>, { payload }: ChangeSearchFilter) {
+        ctx.patchState({ loading: true });
+        const { sucursales } = ctx.getState();
+        const sucursalesFiltered = sucursales.filter((sucursal) => sucursal.activa === payload);
+        ctx.patchState({
+            sucursalesFiltered,
+            loading: false,
+        });
+    }
+
     @Action(ClearSucursalState)
     clearSucursalState(ctx: StateContext<AjustesSucursalesStateModel>) {
         ctx.patchState({
@@ -167,6 +182,7 @@ export class AjustesSucursalesState {
     clearSucursales(ctx: StateContext<AjustesSucursalesStateModel>) {
         ctx.patchState({
             sucursales: [],
+            sucursalesFiltered: [],
         });
     }
 }

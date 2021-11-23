@@ -156,6 +156,7 @@ export class SucursalesService {
             }
             // disable the actual sucursal
             await this.prisma.sucursal.update({ where, data: { activa: false } });
+            sucursal.activa = false;
             return sucursal;
         } catch (e) {
             const { response } = e;
