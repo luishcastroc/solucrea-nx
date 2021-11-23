@@ -10,8 +10,7 @@ import { EditMode } from 'app/core/models';
 import { combineLatest, map, Observable, Subject, takeUntil } from 'rxjs';
 
 import { defaultRoles } from '../../_config/roles';
-import { AddUsuario, ClearUsuarioState, EditUsuario } from '../../_store/usuarios/ajustes-usuarios.actions';
-import { AjustesUsuariosState } from '../../_store/usuarios/ajustes-usuarios.state';
+import { AddUsuario, ClearUsuarioState, EditUsuario, AjustesUsuariosState } from 'app/modules/ajustes/_store';
 import { IRole } from '../../models/roles.model';
 import { createPasswordStrengthValidator } from '../../validators/custom-ajustes.validators';
 

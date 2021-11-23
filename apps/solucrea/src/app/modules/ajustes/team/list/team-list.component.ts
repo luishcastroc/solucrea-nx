@@ -26,9 +26,9 @@ import {
     EditUsuario,
     GetAllUsuarios,
     SelectUsuario,
-} from '../../_store/usuarios/ajustes-usuarios.actions';
+    AjustesUsuariosState,
+} from 'app/modules/ajustes/_store';
 import { IRole } from '../../models/roles.model';
-import { AjustesUsuariosState } from './../../_store/usuarios/ajustes-usuarios.state';
 
 @Component({
     selector: 'team-list',

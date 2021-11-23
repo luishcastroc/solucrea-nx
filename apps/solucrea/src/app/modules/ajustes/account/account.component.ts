@@ -4,11 +4,9 @@ import { fuseAnimations } from '@fuse/animations/public-api';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
+import { AjustesUsuariosState, EditUsuario } from 'app/modules/ajustes/_store';
 import { isEqual } from 'lodash';
 import { Observable, Subject, takeUntil } from 'rxjs';
-
-import { EditUsuario } from '../_store/usuarios/ajustes-usuarios.actions';
-import { AjustesUsuariosState } from '../_store/usuarios/ajustes-usuarios.state';
 
 @Component({
     selector: 'settings-account',

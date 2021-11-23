@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
-import { ClearSucursales, ClearSucursalState } from 'app/modules/ajustes/_store/sucursales/ajustes-sucursales.actions';
 import {
+    ClearSucursales,
+    ClearSucursalState,
     ClearUsuarios,
     ClearUsuarioState,
     SelectUsuario,
-} from 'app/modules/ajustes/_store/usuarios/ajustes-usuarios.actions';
+} from 'app/modules/ajustes/_store/';
+import { ClearCajasState } from 'app/modules/caja/_store/caja.actions';
 import { ClearClientesState } from 'app/modules/clientes/_store/clientes.actions';
 import { tap, throwError } from 'rxjs';
 
@@ -72,6 +74,7 @@ export class AuthState {
             new ClearSucursalState(),
             new ClearSucursales(),
             new ClearAuthState(),
+            new ClearCajasState(),
         ]);
     }
 

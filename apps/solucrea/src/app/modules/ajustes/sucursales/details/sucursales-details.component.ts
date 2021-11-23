@@ -7,17 +7,17 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { IColoniaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
-import { SharedService } from 'app/shared';
-import { Observable, Subject, takeUntil, tap } from 'rxjs';
-
 import {
     AddSucursal,
+    AjustesSucursalesState,
     ClearSucursalState,
     EditSucursal,
     GetColonias,
     SelectSucursal,
-} from '../../_store/sucursales/ajustes-sucursales.actions';
-import { AjustesSucursalesState } from '../../_store/sucursales/ajustes-sucursales.state';
+} from 'app/modules/ajustes/_store';
+import { SharedService } from 'app/shared';
+import { Observable, Subject, takeUntil, tap } from 'rxjs';
+
 import { TipoDireccion } from '.prisma/client';
 
 @Component({

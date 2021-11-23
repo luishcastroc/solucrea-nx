@@ -4,7 +4,7 @@ import { Usuario } from '@prisma/client';
 import { AuthState } from 'app/core/auth/store/auth.state';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
-import { SelectUsuario } from '../_store/usuarios/ajustes-usuarios.actions';
+import { SelectUsuario } from 'app/modules/ajustes/_store';
 
 @Component({
     selector: 'settings-team',

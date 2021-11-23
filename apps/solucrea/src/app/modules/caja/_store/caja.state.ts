@@ -6,7 +6,7 @@ import { AjustesSucursalService } from 'app/modules/ajustes/_services';
 import { tap } from 'rxjs';
 
 import { CajaService } from '../_services/caja.service';
-import { AddCaja, GetAll, GetAllSucursales, SelectCaja, CajasMode, EditCaja } from './caja.actions';
+import { AddCaja, GetAll, GetAllSucursales, SelectCaja, CajasMode, EditCaja, ClearCajasState } from './caja.actions';
 import { CajaStateModel } from './caja.model';
 
 @State<CajaStateModel>({
@@ -121,5 +121,10 @@ export class CajasState {
     toggleEditModeSucursal(ctx: StateContext<CajaStateModel>, action: CajasMode) {
         const { payload } = action;
         ctx.patchState({ editMode: payload });
+    }
+
+    @Action(ClearCajasState)
+    clearCajaState(ctx: StateContext<CajaStateModel>) {
+        ctx.patchState({ cajas: [], sucursales: [], editMode: 'edit', selectedCaja: undefined, loading: false });
     }
 }

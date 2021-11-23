@@ -5,4 +5,5 @@ export interface ISucursalReturnDto {
     nombre: string;
     telefono: string;
     direccion: IDireccionesReturnDto;
+    activa: boolean;
 }

@@ -6,22 +6,34 @@
     <div class="w-full max-w-3xl flex flex-col">
         <!-- Add team member -->
         <div class="w-full">
-            <mat-form-field class="fuse-mat-no-subscript w-full" [floatLabel]="'always'">
-                <mat-label>Buscar Sucursal</mat-label>
-                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:office-building'" matPrefix></mat-icon>
-                <input matInput [autocomplete]="'off'" [placeholder]="'Nombre'" [formControl]="searchInput" />
-                <button
-                    mat-icon-button
-                    matSuffix
-                    aria-label="Crear sucursal"
-                    #tooltip="matTooltip"
-                    matTooltip="Crear sucursal"
-                    [matTooltipPosition]="'below'"
-                    (click)="openNewSucursal()"
+            <div class="flex flex-col gap-3">
+                <mat-form-field class="fuse-mat-no-subscript w-full" [floatLabel]="'always'">
+                    <mat-label>Buscar Sucursal</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:office-building'" matPrefix></mat-icon>
+                    <input matInput [autocomplete]="'off'" [placeholder]="'Nombre'" [formControl]="searchInput" />
+                    <button
+                        mat-icon-button
+                        matSuffix
+                        aria-label="Crear sucursal"
+                        #tooltip="matTooltip"
+                        matTooltip="Crear sucursal"
+                        [matTooltipPosition]="'below'"
+                        (click)="openNewSucursal()"
+                    >
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                    </button>
+                </mat-form-field>
+                <!-- Active or Innactive ones -->
+                <mat-radio-group
+                    aria-labelledby="radio-group-label"
+                    class="flex flex-row gap-3 items-center justify-center"
+                    [(ngModel)]="activa"
                 >
-                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
-                </button>
-            </mat-form-field>
+                    <mat-radio-button *ngFor="let value of values" [value]="value">
+                        {{ value }}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
             <!-- Content -->
             <div class="flex-auto mt-8">
                 <ng-container *ngFor="let sucursal of searchResults$ | async">
@@ -53,9 +65,9 @@
                             </button>
                             <button
                                 mat-icon-button
-                                aria-label="Borrar sucursal"
+                                aria-label="Inhabilitar sucursal"
                                 #tooltip="matTooltip"
-                                matTooltip="Borrar sucursal"
+                                matTooltip="Inhabilitar sucursal"
                                 [matTooltipPosition]="'below'"
                                 (click)="deleteSucursal(sucursal)"
                             >

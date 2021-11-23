@@ -6,16 +6,15 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { Sucursal } from '@prisma/client';
 import { ISucursalReturnDto } from 'api/dtos';
-import { AuthUtils } from 'app/core/auth/auth.utils';
-import { ConfirmationDialogComponent } from 'app/shared';
-import { map, Observable, startWith, Subject, takeUntil, withLatestFrom } from 'rxjs';
-
+import { AuthUtils } from 'app/core/auth';
 import {
     AjustesModeSucursal,
+    AjustesSucursalesState,
     DeleteSucursal,
     GetAllSucursales,
-} from '../../_store/sucursales/ajustes-sucursales.actions';
-import { AjustesSucursalesState } from '../../_store/sucursales/ajustes-sucursales.state';
+} from 'app/modules/ajustes/_store';
+import { ConfirmationDialogComponent } from 'app/shared';
+import { map, Observable, startWith, Subject, takeUntil, withLatestFrom } from 'rxjs';
 
 @Component({
     selector: 'app-sucusales-list',
@@ -27,6 +26,8 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
     @Select(AjustesSucursalesState.loading) loading$: Observable<boolean>;
     searchResults$: Observable<ISucursalReturnDto[]>;
     searchInput = new FormControl();
+    values: string[] = ['Activas', 'Inactivas'];
+    activa: string = this.values[0];
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -85,6 +86,7 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
                     duration: 4000,
                     position: 'bottom-center',
                 });
+                this.searchInput.updateValueAndValidity({ onlySelf: false, emitEvent: true });
             }
         });
     }
@@ -138,10 +140,14 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
         //getting the value from the input
         const filterValue = value.toLowerCase();
         if (filterValue === '') {
-            return sucursales;
+            return sucursales.filter((sucursal) => sucursal.activa === (this.activa === 'Activos' ? true : false));
         }
 
         // returning the filtered array
-        return sucursales.filter((sucursal) => sucursal.nombre.toLowerCase().includes(filterValue));
+        return sucursales.filter(
+            (sucursal) =>
+                sucursal.nombre.toLowerCase().includes(filterValue) &&
+                sucursal.activa === (this.activa === 'Activos' ? true : false)
+        );
     }
 }

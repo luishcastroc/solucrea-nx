@@ -20,6 +20,7 @@ export class SucursalesService {
                 colonia: { select: { id: true, descripcion: true, codigoPostal: true } },
             },
         },
+        activa: true,
     };
     constructor(private prisma: PrismaService) {}
 
@@ -153,14 +154,12 @@ export class SucursalesService {
                     HttpStatus.NOT_FOUND
                 );
             }
-            // delete the actual sucursal
+            // disable the actual sucursal
             await this.prisma.sucursal.update({ where, data: { activa: false } });
             return sucursal;
         } catch (e) {
-            console.log(e);
             const { response } = e;
-            console.log(response);
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+            if (!response || response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error inhabilitando la sucursal' },
                     HttpStatus.INTERNAL_SERVER_ERROR

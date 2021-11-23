@@ -1,9 +1,9 @@
-import { CajasMode } from './../_store/caja.actions';
+import { CajasMode, ClearCajasState } from './../_store/caja.actions';
 import { Navigate } from '@ngxs/router-plugin';
 import { ICajaReturnDto } from 'api/dtos';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { CajasState } from '../_store/caja.state';
 import { GetAll } from '../_store/caja.actions';
 import { AuthUtils } from 'app/core/auth/auth.utils';
@@ -14,7 +14,7 @@ import { AuthUtils } from 'app/core/auth/auth.utils';
     styleUrls: ['./caja-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CajaListComponent implements OnInit {
+export class CajaListComponent implements OnInit, OnDestroy {
     @Select(CajasState.cajas) cajas$: Observable<ICajaReturnDto[]>;
 
     constructor(private _store: Store) {}
@@ -49,5 +49,9 @@ export class CajaListComponent implements OnInit {
      */
     cerrarCaja(id: string): void {
         this._store.dispatch([new Navigate([`caja/${id}`]), new CajasMode('cierre')]);
+    }
+
+    ngOnDestroy(): void {
+        this._store.dispatch(new ClearCajasState());
     }
 }
