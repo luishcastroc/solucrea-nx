@@ -1,3 +1,4 @@
+import { FormControl } from '@angular/forms';
 import { Navigate } from '@ngxs/router-plugin';
 import { Observable } from 'rxjs';
 import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
@@ -7,11 +8,12 @@ import { AuthUtils } from 'app/core/auth/auth.utils';
 @Component({
     selector: 'app-list',
     templateUrl: './ajustes-creditos-list.component.html',
-    styleUrls: ['./ajustes-creditos-list.component.scss'],
+    styleUrls: [],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AjustesCreditosListComponent implements OnInit {
+    searchInput = new FormControl();
     constructor(private _store: Store) {}
 
     ngOnInit(): void {}

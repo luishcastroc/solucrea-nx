@@ -1,11 +1,17 @@
-import { AjustesFrecuenciasDePagoService } from 'app/modules/ajustes/_services';
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { FrecuenciaDePago } from '@prisma/client';
 import { EditMode } from 'app/core/models';
+import { AjustesFrecuenciasDePagoService } from 'app/modules/ajustes/_services';
+import { tap } from 'rxjs';
 
-import { AjustesModeFrecuencias, ClearFrecuencias, ClearFrecuenciasState } from './ajustes-frecuencias.actions';
+import {
+    AjustesModeFrecuencias,
+    ClearFrecuencias,
+    ClearFrecuenciasState,
+    GetAllFrecuenciass,
+} from './ajustes-frecuencias.actions';
 import { AjustesFrecuenciasDePagoStateModel } from './ajustes-frecuencias.model';
-import { FrecuenciaDePago } from '.prisma/client';
 
 @State<AjustesFrecuenciasDePagoStateModel>({
     name: 'ajustesFrecuencias',
@@ -38,6 +44,18 @@ export class AjustesFrecuenciasDePagoState {
     @Selector()
     static frecuencias({ frecuencias }: AjustesFrecuenciasDePagoStateModel): FrecuenciaDePago[] {
         return frecuencias;
+    }
+
+    @Action(GetAllFrecuenciass)
+    getAllFrecuencias(ctx: StateContext<AjustesFrecuenciasDePagoStateModel>) {
+        ctx.patchState({ loading: true });
+        return this._ajustesFrecuenciasService.getFrecuenciasDePago().pipe(
+            tap((frecuencias: FrecuenciaDePago[]) => {
+                if (frecuencias) {
+                    ctx.patchState({ frecuencias, loading: false });
+                }
+            })
+        );
     }
 
     @Action(AjustesModeFrecuencias)

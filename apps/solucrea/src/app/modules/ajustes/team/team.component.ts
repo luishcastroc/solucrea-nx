@@ -1,3 +1,4 @@
+import { ClearUsuarios } from './../_store/usuarios/ajustes-usuarios.actions';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
@@ -39,7 +40,7 @@ export class AjustesTeamComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this._store.dispatch(new SelectUsuario(this.usuario));
+        this._store.dispatch([new SelectUsuario(this.usuario), new ClearUsuarios()]);
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
