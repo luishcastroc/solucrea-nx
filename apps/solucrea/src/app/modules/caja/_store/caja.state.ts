@@ -65,7 +65,9 @@ export class CajasState {
         return this._sucursalesService.getSucursales().pipe(
             tap((sucursales: ISucursalReturnDto[]) => {
                 if (sucursales) {
-                    const sucursalesActivas = sucursales.filter((sucursal) => sucursal.activa === true);
+                    const sucursalesActivas = sucursales.filter(
+                        (sucursal: ISucursalReturnDto) => sucursal.activa === true
+                    );
                     ctx.patchState({ sucursales: sucursalesActivas });
                 }
             })

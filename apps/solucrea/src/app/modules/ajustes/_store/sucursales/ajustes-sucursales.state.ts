@@ -72,7 +72,9 @@ export class AjustesSucursalesState {
         ctx.patchState({ loading: true });
         return this._ajustesSucursalesService.getSucursales().pipe(
             tap((sucursales: ISucursalReturnDto[]) => {
-                const sucursalesFiltered = sucursales.filter((sucursal) => sucursal.activa === true);
+                const sucursalesFiltered = sucursales.filter(
+                    (sucursal: ISucursalReturnDto) => sucursal.activa === true
+                );
                 ctx.patchState({
                     sucursales,
                     sucursalesFiltered,
@@ -161,7 +163,7 @@ export class AjustesSucursalesState {
     changeSearchFilter(ctx: StateContext<AjustesSucursalesStateModel>, { payload }: ChangeSearchFilter) {
         ctx.patchState({ loading: true });
         const { sucursales } = ctx.getState();
-        const sucursalesFiltered = sucursales.filter((sucursal) => sucursal.activa === payload);
+        const sucursalesFiltered = sucursales.filter((sucursal: ISucursalReturnDto) => sucursal.activa === payload);
         ctx.patchState({
             sucursalesFiltered,
             loading: false,
