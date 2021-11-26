@@ -3,9 +3,10 @@ import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { EditMode } from 'app/core/models';
 import { AjustesCreditosService } from 'app/modules/ajustes/_services';
 
-import { AjustesModeCredito, ClearCreditos, ClearCreditoState } from './ajustes-creditos.actions';
+import { AjustesModeCredito, ClearCreditos, ClearCreditoState, GetAllCreditos } from './ajustes-creditos.actions';
 import { AjustesCreditosStateModel } from './ajustes-creditos.model';
 import { Producto } from '.prisma/client';
+import { tap } from 'rxjs';
 
 @State<AjustesCreditosStateModel>({
     name: 'ajustesCreditos',
@@ -26,7 +27,7 @@ export class AjustesCreditosState {
     }
 
     @Selector()
-    static selectedSucursal({ selectedCredito }: AjustesCreditosStateModel): Producto | undefined {
+    static selectedCredito({ selectedCredito }: AjustesCreditosStateModel): Producto | undefined {
         return selectedCredito;
     }
 
@@ -40,6 +41,19 @@ export class AjustesCreditosState {
         return creditos;
     }
 
+    @Action(GetAllCreditos)
+    getAllSucursales(ctx: StateContext<AjustesCreditosStateModel>) {
+        ctx.patchState({ loading: true });
+        return this._ajustesCreditosService.getProductos().pipe(
+            tap((creditos: Producto[]) => {
+                ctx.patchState({
+                    creditos,
+                    loading: false,
+                });
+            })
+        );
+    }
+
     @Action(AjustesModeCredito)
     toggleEditModeCredito(ctx: StateContext<AjustesCreditosStateModel>, action: AjustesModeCredito) {
         const { payload } = action;
@@ -47,7 +61,7 @@ export class AjustesCreditosState {
     }
 
     @Action(ClearCreditoState)
-    clearSucursalState(ctx: StateContext<AjustesCreditosStateModel>) {
+    clearCreditosState(ctx: StateContext<AjustesCreditosStateModel>) {
         ctx.patchState({
             editMode: 'edit',
             selectedCredito: undefined,
