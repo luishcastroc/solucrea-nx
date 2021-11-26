@@ -12,9 +12,11 @@ export class CreateAvalDto implements Prisma.AvalCreateInput {
     @IsNotEmpty({ message: 'Fecha de nacimiento es requerida.' })
     fechaDeNacimiento: string | Date;
     @IsNotEmpty({ message: 'Parentesco es requerida.' })
-    parentesco: Prisma.ParentescoCreateNestedOneWithoutAvalesInput;
+    parentesco: string;
     @IsNotEmpty({ message: 'Ocupación es requerida.' })
-    ocupacion: Prisma.OcupacionCreateNestedOneWithoutAvalesInput;
+    ocupacion: string;
+    id?: string;
+    otro: string;
     creadoPor: string;
     fechaCreacion?: string | Date;
     actualizadoPor?: string;

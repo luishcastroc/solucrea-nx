@@ -1,5 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
-import { Prisma } from '@prisma/client';
+import { frecuencia, Prisma } from '@prisma/client';
 export class CreateProductoDto implements Prisma.ProductoCreateInput {
     @IsNotEmpty({ message: 'Nombre es requerido.' })
     nombre: string;
@@ -15,14 +15,16 @@ export class CreateProductoDto implements Prisma.ProductoCreateInput {
     interes: string | number | Prisma.Decimal;
     @IsNotEmpty({ message: 'Interes moratorio es requerido.' })
     interesMoratorio: string | number | Prisma.Decimal;
-    @IsNotEmpty({ message: 'Frecuencia de pagos es requerido.' })
-    frecuencia: Prisma.FrecuenciaDePagoCreateNestedOneWithoutProductosInput;
     @IsNotEmpty({ message: 'Penalización es requerida.' })
     penalizacion?: string | number | Prisma.Decimal;
     @IsNotEmpty({ message: 'Duración es requerido.' })
     duracion: number;
     @IsNotEmpty({ message: 'Número de pagos es requerido.' })
     numeroDePagos: number;
+    @IsNotEmpty({ message: 'La frecuencia de pago es requerida.' })
+    frecuencia: frecuencia;
+    diaSemana?: number;
+    diaMes?: number;
     comision?: string | number | Prisma.Decimal;
     cargos?: string | number | Prisma.Decimal;
     creadoPor?: string;

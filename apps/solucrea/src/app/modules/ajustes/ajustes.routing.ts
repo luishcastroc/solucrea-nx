@@ -5,12 +5,6 @@ import { AjustesComponent } from './ajustes.component';
 import { AjustesCreditosComponent } from './creditos/ajustes-creditos.component';
 import { AjustesCreditosDetailsComponent } from './creditos/details/ajustes-creditos-details.component';
 import { AjustesCreditosListComponent } from './creditos/list/ajustes-creditos-list.component';
-import { FrecuenciasDetailComponent } from './frecuencias/detail/frecuencias-detail.component';
-import { FrecuenciasListComponent } from './frecuencias/list/frecuencias-list.component';
-import { FrecuenciasComponent } from './frecuencias/frecuencias.component';
-import { AjustesOcupacionesComponent } from './ocupaciones/ajustes-ocupaciones.component';
-import { OcupacionesDetailComponent } from './ocupaciones/detail/ocupaciones-detail.component';
-import { OcupacionesListComponent } from './ocupaciones/list/ocupaciones-list.component';
 import { AjustesSecurityComponent } from './security/security.component';
 import { SeguroDetailComponent } from './seguro/detail/seguro-detail.component';
 import { SeguroListComponent } from './seguro/list/seguro-list.component';
@@ -72,17 +66,6 @@ export const ajustesRoutes: Route[] = [
                 ],
             },
             {
-                path: 'ocupaciones',
-                component: AjustesOcupacionesComponent,
-                children: [
-                    { path: '', component: OcupacionesListComponent },
-                    {
-                        path: ':id',
-                        component: OcupacionesDetailComponent,
-                    },
-                ],
-            },
-            {
                 path: 'seguros',
                 component: SeguroComponent,
                 children: [
@@ -90,17 +73,6 @@ export const ajustesRoutes: Route[] = [
                     {
                         path: ':id',
                         component: SeguroDetailComponent,
-                    },
-                ],
-            },
-            {
-                path: 'frecuencias',
-                component: FrecuenciasComponent,
-                children: [
-                    { path: '', component: FrecuenciasListComponent },
-                    {
-                        path: ':id',
-                        component: FrecuenciasDetailComponent,
                     },
                 ],
             },

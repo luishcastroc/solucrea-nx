@@ -37,22 +37,6 @@ model PeriodoDePago {
     @@map(name: "PeriodosDePago")
 }
 
-model FrecuenciaDePago {
-    id                 String     @id @default(uuid())
-    descripcion        String
-    diaInicio          Int
-    diaFin             Int
-    diaDelMes          Int
-    semanaDelMes       Int
-    creadoPor          String     @default("ADMIN")
-    fechaCreacion      DateTime   @default(now())
-    actualizadoPor     String     @default("ADMIN")
-    fechaActualizacion DateTime   @default(now()) @updatedAt
-    productos          Producto[]
-
-    @@map(name: "FrecuenciasDePago")
-}
-
 model ActividadEconomica {
     id                 String   @id @default(uuid())
     descripcion        String
@@ -157,30 +141,6 @@ model Genero {
     @@map(name: "Generos")
 }
 
-model Parentesco {
-    id                 String   @id @default(uuid())
-    descripcion        String
-    avales             Aval[]
-    creadoPor          String   @default("ADMIN")
-    fechaCreacion      DateTime @default(now())
-    actualizadoPor     String   @default("ADMIN")
-    fechaActualizacion DateTime @default(now()) @updatedAt
-
-    @@map(name: "Parentescos")
-}
-
-model Ocupacion {
-    id                 String   @id @default(uuid())
-    descripcion        String
-    avales             Aval[]
-    creadoPor          String   @default("ADMIN")
-    fechaCreacion      DateTime @default(now())
-    actualizadoPor     String   @default("ADMIN")
-    fechaActualizacion DateTime @default(now()) @updatedAt
-
-    @@map(name: "Ocupaciones")
-}
-
 model EstadoDeCredito {
     id                 String    @id @default(uuid())
     nombre             String
@@ -261,6 +221,18 @@ enum Posicion {
 enum TiposMovimiento {
     DEPOSITO
     RETIRO
+}
+
+enum frecuencia {
+    DIARIO
+    SEMANAL
+    QUINCENAL
+    MENSUAL
+    BIMESTRAL
+    TRIMESTRAL
+    CUATRIMESTRAL
+    SEMESTRAL
+    ANUAL
 }
 
 // Catálogos Fin
@@ -424,46 +396,46 @@ model Trabajo {
 }
 
 model Aval {
-    id                 String     @id @default(uuid())
+    id                 String    @id @default(uuid())
     nombre             String
     apellidoPaterno    String
     apellidoMaterno    String
     telefono           String
     fechaDeNacimiento  DateTime
-    parentesco         Parentesco @relation(fields: [parentescoId], references: [id])
-    ocupacion          Ocupacion  @relation(fields: [ocupacionId], references: [id])
+    parentesco         String
+    otro               String
+    ocupacion          String
     creditos           Credito[]
     creadoPor          String
-    fechaCreacion      DateTime   @default(now())
-    actualizadoPor     String     @default("ADMIN")
-    fechaActualizacion DateTime   @default(now()) @updatedAt
-    parentescoId       String
-    ocupacionId        String
+    fechaCreacion      DateTime  @default(now())
+    actualizadoPor     String    @default("ADMIN")
+    fechaActualizacion DateTime  @default(now()) @updatedAt
 
     @@map(name: "Avales")
 }
 
 model Producto {
-    id                 String           @id @default(uuid())
+    id                 String     @id @default(uuid())
     nombre             String
     descripcion        String
-    montoMinimo        Decimal          @db.Decimal(15, 2)
-    montoMaximo        Decimal          @db.Decimal(15, 2)
-    multiplos          Decimal          @db.Decimal(15, 2)
-    interes            Decimal          @db.Decimal(15, 2)
-    interesMoratorio   Decimal          @db.Decimal(15, 2)
-    penalizacion       Decimal          @default(0) @db.Decimal(15, 2)
-    comision           Decimal          @default(0) @db.Decimal(15, 2)
-    cargos             Decimal          @default(0) @db.Decimal(15, 2)
+    montoMinimo        Decimal    @db.Decimal(15, 2)
+    montoMaximo        Decimal    @db.Decimal(15, 2)
+    multiplos          Decimal    @db.Decimal(15, 2)
+    interes            Decimal    @db.Decimal(15, 2)
+    interesMoratorio   Decimal    @db.Decimal(15, 2)
+    penalizacion       Decimal    @default(0) @db.Decimal(15, 2)
+    comision           Decimal    @default(0) @db.Decimal(15, 2)
+    cargos             Decimal    @default(0) @db.Decimal(15, 2)
     duracion           Int
     numeroDePagos      Int
-    frecuencia         FrecuenciaDePago @relation(fields: [frecuenciaDePagoId], references: [id])
-    frecuenciaDePagoId String
+    frecuencia         frecuencia
     creditos           Credito[]
-    creadoPor          String           @default("ADMIN")
-    fechaCreacion      DateTime         @default(now())
-    actualizadoPor     String           @default("ADMIN")
-    fechaActualizacion DateTime         @default(now()) @updatedAt
+    creadoPor          String     @default("ADMIN")
+    fechaCreacion      DateTime   @default(now())
+    actualizadoPor     String     @default("ADMIN")
+    fechaActualizacion DateTime   @default(now()) @updatedAt
+    diaSemana          Int?
+    diaMes             Int?
 
     @@map(name: "Productos")
 }

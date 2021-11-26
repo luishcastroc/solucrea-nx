@@ -1,4 +1,0 @@
--- AlterTable
-ALTER TABLE `Cajas` ADD COLUMN `fechaApertura` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    ADD COLUMN `fechaCierre` DATETIME(3),
-    ADD COLUMN `saldoFinal` DECIMAL(15, 2);

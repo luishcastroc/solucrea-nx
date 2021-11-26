@@ -36,24 +36,10 @@ export const ajustesPanels = [
         roles: [Role.ADMIN, Role.DIRECTOR],
     },
     {
-        id: 'ocupaciones',
-        icon: 'heroicons_outline:briefcase',
-        title: 'Ocupaciones',
-        description: 'Catálogo de ocupaciones',
-        roles: [Role.ADMIN, Role.DIRECTOR],
-    },
-    {
         id: 'seguros',
         icon: 'heroicons_outline:color-swatch',
         title: 'Seguros',
         description: 'Catálogo de seguros',
-        roles: [Role.ADMIN, Role.DIRECTOR],
-    },
-    {
-        id: 'frecuencias',
-        icon: 'heroicons_outline:clock',
-        title: 'Frecuencias de Pago',
-        description: 'Catálogo de frecuencias de pago',
         roles: [Role.ADMIN, Role.DIRECTOR],
     },
 ];

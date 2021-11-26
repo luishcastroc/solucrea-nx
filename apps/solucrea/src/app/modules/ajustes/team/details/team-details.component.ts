@@ -183,6 +183,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
      *
      */
     saveUsuario(): void {
+        this.usuarioForm.disable();
         const id = this._route.snapshot.paramMap.get('id');
         const usuario = { id, ...this.usuarioForm.value };
         this._store.dispatch(new AddUsuario(usuario));
