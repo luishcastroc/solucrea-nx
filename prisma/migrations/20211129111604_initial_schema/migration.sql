@@ -156,6 +156,7 @@ CREATE TABLE `Seguros` (
 -- CreateTable
 CREATE TABLE `ModalidadesDeSeguro` (
     `id` VARCHAR(191) NOT NULL,
+    `titulo` VARCHAR(191) NOT NULL,
     `descripcion` VARCHAR(191) NOT NULL,
     `creadoPor` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
     `fechaCreacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -217,12 +218,12 @@ CREATE TABLE `Direcciones` (
     `calle` VARCHAR(191) NOT NULL,
     `numero` VARCHAR(191) NOT NULL,
     `cruzamientos` VARCHAR(191) NULL,
+    `clienteId` VARCHAR(191) NULL,
+    `coloniaId` VARCHAR(191) NOT NULL,
     `creadoPor` VARCHAR(191) NOT NULL,
     `fechaCreacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `actualizadoPor` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
     `fechaActualizacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `clienteId` VARCHAR(191) NULL,
-    `coloniaId` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -323,6 +324,18 @@ CREATE TABLE `Trabajos` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `Parentescos` (
+    `id` VARCHAR(191) NOT NULL,
+    `descripcion` VARCHAR(191) NOT NULL,
+    `creadoPor` VARCHAR(191) NOT NULL,
+    `fechaCreacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `actualizadoPor` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
+    `fechaActualizacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Avales` (
     `id` VARCHAR(191) NOT NULL,
     `nombre` VARCHAR(191) NOT NULL,
@@ -330,7 +343,7 @@ CREATE TABLE `Avales` (
     `apellidoMaterno` VARCHAR(191) NOT NULL,
     `telefono` VARCHAR(191) NOT NULL,
     `fechaDeNacimiento` DATETIME(3) NOT NULL,
-    `parentesco` VARCHAR(191) NOT NULL,
+    `parentescoId` VARCHAR(191) NOT NULL,
     `otro` VARCHAR(191) NOT NULL,
     `ocupacion` VARCHAR(191) NOT NULL,
     `creadoPor` VARCHAR(191) NOT NULL,
@@ -384,6 +397,7 @@ CREATE TABLE `Creditos` (
     `productosId` VARCHAR(191) NOT NULL,
     `segurosId` VARCHAR(191) NOT NULL,
     `avalId` VARCHAR(191) NOT NULL,
+    `modalidadDeSeguroId` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -425,9 +439,6 @@ ALTER TABLE `Ciudades` ADD CONSTRAINT `Ciudades_estadoId_fkey` FOREIGN KEY (`est
 ALTER TABLE `Colonias` ADD CONSTRAINT `Colonias_ciudadId_fkey` FOREIGN KEY (`ciudadId`) REFERENCES `Ciudades`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Seguros` ADD CONSTRAINT `Seguros_modalidadDeSeguroId_fkey` FOREIGN KEY (`modalidadDeSeguroId`) REFERENCES `ModalidadesDeSeguro`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `Sucursales` ADD CONSTRAINT `Sucursales_direccionId_fkey` FOREIGN KEY (`direccionId`) REFERENCES `Direcciones`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -467,6 +478,9 @@ ALTER TABLE `Trabajos` ADD CONSTRAINT `Trabajos_direccionId_fkey` FOREIGN KEY (`
 ALTER TABLE `Trabajos` ADD CONSTRAINT `Trabajos_actividadEconomicaId_fkey` FOREIGN KEY (`actividadEconomicaId`) REFERENCES `ActividadesEconomicas`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `Avales` ADD CONSTRAINT `Avales_parentescoId_fkey` FOREIGN KEY (`parentescoId`) REFERENCES `Parentescos`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_clienteId_fkey` FOREIGN KEY (`clienteId`) REFERENCES `Clientes`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -480,6 +494,9 @@ ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_productosId_fkey` FOREIGN KEY (`
 
 -- AddForeignKey
 ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_segurosId_fkey` FOREIGN KEY (`segurosId`) REFERENCES `Seguros`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_modalidadDeSeguroId_fkey` FOREIGN KEY (`modalidadDeSeguroId`) REFERENCES `ModalidadesDeSeguro`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_avalId_fkey` FOREIGN KEY (`avalId`) REFERENCES `Avales`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

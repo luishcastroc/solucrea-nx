@@ -4,10 +4,11 @@ import {
     escolaridadesCreate,
     tiposDeViviendaCreate,
     actividadesEconomicasCreate,
+    parentescos,
 } from './seed-data';
 /* eslint-disable prefer-arrow/prefer-arrow-functions */
 import { PrismaClient, ActividadEconomica } from '@prisma/client';
-import { adminUsuario, createEstado, createCiudades, createColonias } from './seed-data';
+import { adminUsuario, createEstado, createCiudades, createColonias, modalidadesDeSeguro } from './seed-data';
 const prisma = new PrismaClient();
 
 async function main() {
@@ -31,6 +32,14 @@ async function main() {
                     console.log(`Colonias creadas exitosamente Conteo: ${colonias.count}`);
                 }
             }
+        }
+        const modalidadesIns = await prisma.modalidadDeSeguro.createMany({ data: modalidadesDeSeguro });
+        if (modalidadesIns) {
+            console.log(`Modalidades de seguro creadas exitosamente: ${modalidadesIns.count}`);
+        }
+        const parentescosIns = await prisma.parentesco.createMany({ data: parentescos });
+        if (parentescosIns) {
+            console.log(`Parentescos creados exitosamente: ${parentescosIns.count}`);
         }
         const estadosCiviles = await prisma.estadoCivil.createMany({ data: estadosCivilesCreate });
         if (estadosCiviles) {

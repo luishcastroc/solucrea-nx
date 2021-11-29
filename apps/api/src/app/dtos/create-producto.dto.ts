@@ -1,5 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
-import { frecuencia, Prisma } from '@prisma/client';
+import { Frecuencia, Prisma } from '@prisma/client';
 export class CreateProductoDto implements Prisma.ProductoCreateInput {
     @IsNotEmpty({ message: 'Nombre es requerido.' })
     nombre: string;
@@ -22,7 +22,7 @@ export class CreateProductoDto implements Prisma.ProductoCreateInput {
     @IsNotEmpty({ message: 'Número de pagos es requerido.' })
     numeroDePagos: number;
     @IsNotEmpty({ message: 'La frecuencia de pago es requerida.' })
-    frecuencia: frecuencia;
+    frecuencia: Frecuencia;
     diaSemana?: number;
     diaMes?: number;
     comision?: string | number | Prisma.Decimal;

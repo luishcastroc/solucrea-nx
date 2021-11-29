@@ -10,6 +10,99 @@ export const adminUsuario: Prisma.UsuarioCreateInput = {
 
 const creationDate = new Date().toISOString();
 
+export const modalidadesDeSeguro: Prisma.ModalidadDeSeguroUncheckedCreateInput[] = [
+    { titulo: 'Diferido', descripcion: 'Pago parcial del seguro en cada cuota' },
+    { titulo: 'Contado', descripcion: 'Pago total del seguro' },
+    { titulo: 'Sin Seguro', descripcion: 'El crédito no estará protegido' },
+];
+
+export const parentescos: Prisma.ParentescoUncheckedCreateInput[] = [
+    {
+        descripcion: 'Padre/Madre',
+        creadoPor: 'ADMIN',
+        fechaCreacion: creationDate,
+        actualizadoPor: 'ADMIN',
+        fechaActualizacion: creationDate,
+    },
+    {
+        descripcion: 'Hermano/a',
+        creadoPor: 'ADMIN',
+        fechaCreacion: creationDate,
+        actualizadoPor: 'ADMIN',
+        fechaActualizacion: creationDate,
+    },
+    {
+        descripcion: 'Tio/a',
+        creadoPor: 'ADMIN',
+        fechaCreacion: creationDate,
+        actualizadoPor: 'ADMIN',
+        fechaActualizacion: creationDate,
+    },
+    {
+        descripcion: 'Sobrino/a',
+        creadoPor: 'ADMIN',
+        fechaCreacion: creationDate,
+        actualizadoPor: 'ADMIN',
+        fechaActualizacion: creationDate,
+    },
+    {
+        descripcion: 'Abuelo/a',
+        creadoPor: 'ADMIN',
+        fechaCreacion: creationDate,
+        actualizadoPor: 'ADMIN',
+        fechaActualizacion: creationDate,
+    },
+    {
+        descripcion: 'Nieto/a',
+        creadoPor: 'ADMIN',
+        fechaCreacion: creationDate,
+        actualizadoPor: 'ADMIN',
+        fechaActualizacion: creationDate,
+    },
+    {
+        descripcion: 'Eposo/a',
+        creadoPor: 'ADMIN',
+        fechaCreacion: creationDate,
+        actualizadoPor: 'ADMIN',
+        fechaActualizacion: creationDate,
+    },
+    {
+        descripcion: 'Pareja',
+        creadoPor: 'ADMIN',
+        fechaCreacion: creationDate,
+        actualizadoPor: 'ADMIN',
+        fechaActualizacion: creationDate,
+    },
+    {
+        descripcion: 'Hijo/a',
+        creadoPor: 'ADMIN',
+        fechaCreacion: creationDate,
+        actualizadoPor: 'ADMIN',
+        fechaActualizacion: creationDate,
+    },
+    {
+        descripcion: 'Amigo/a',
+        creadoPor: 'ADMIN',
+        fechaCreacion: creationDate,
+        actualizadoPor: 'ADMIN',
+        fechaActualizacion: creationDate,
+    },
+    {
+        descripcion: 'Jefe/a',
+        creadoPor: 'ADMIN',
+        fechaCreacion: creationDate,
+        actualizadoPor: 'ADMIN',
+        fechaActualizacion: creationDate,
+    },
+    {
+        descripcion: 'Otro (Especificar)',
+        creadoPor: 'ADMIN',
+        fechaCreacion: creationDate,
+        actualizadoPor: 'ADMIN',
+        fechaActualizacion: creationDate,
+    },
+];
+
 export const estadosCivilesCreate: Prisma.EstadoCivilUncheckedCreateInput[] = [
     {
         descripcion: 'Soltero/a',

@@ -18,9 +18,9 @@
                 <button
                     mat-icon-button
                     matSuffix
-                    aria-label="Crear sucursal"
+                    aria-label="Crear producto"
                     #tooltip="matTooltip"
-                    matTooltip="Crear sucursal"
+                    matTooltip="Crear producto"
                     [matTooltipPosition]="'below'"
                     (click)="newProducto()"
                 >
@@ -32,7 +32,7 @@
                 <ng-container *ngIf="searchResults$ | async as productos">
                     <ng-container *ngIf="productos.lenght > 0; else noProducts"> prueba </ng-container>
                     <ng-template #noProducts>
-                        <div>No existen productos disponibles, agregar uno utilizando el boton</div>
+                        <div>No existen productos disponibles, agregar uno utilizando el botón +</div>
                     </ng-template>
                 </ng-container>
                 <!-- <ng-container *ngFor="let sucursal of searchResults$ | async">
