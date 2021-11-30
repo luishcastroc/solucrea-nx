@@ -4,31 +4,32 @@ import { ActivatedRoute } from '@angular/router';
 import { IAlert } from '@fuse/components/alert/alert.model';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
-import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { Actions, ofActionCompleted, ofActionErrored, ofActionSuccessful, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { EditMode } from 'app/core/models';
-import { combineLatest, map, Observable, Subject, takeUntil } from 'rxjs';
+import { AddUsuario, AjustesUsuariosState, ClearUsuarioState, EditUsuario } from 'app/modules/ajustes/_store';
+import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { defaultRoles } from '../../_config/roles';
-import { AddUsuario, ClearUsuarioState, EditUsuario, AjustesUsuariosState } from 'app/modules/ajustes/_store';
 import { IRole } from '../../models/roles.model';
 import { createPasswordStrengthValidator } from '../../validators/custom-ajustes.validators';
 
 @Component({
     selector: 'team-details',
     templateUrl: './team-details.component.html',
-    styleUrls: ['./team-details.component.scss'],
+    styleUrls: [],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TeamDetailsComponent implements OnInit, OnDestroy {
-    @Select(AjustesUsuariosState.editMode) editMode$: Observable<EditMode>;
-    @Select(AjustesUsuariosState.selectedUsuario) selectedUsuario$: Observable<Usuario>;
+    editMode$: Observable<EditMode>;
+    selectedUsuario$: Observable<Usuario>;
+    actions$: Actions;
+    editMode: EditMode;
     selectedUsuario: Usuario;
     usuarioForm: FormGroup;
     successMessage: string;
     errorMessage: string;
-    mode: EditMode;
     roles: IRole[] = defaultRoles;
 
     alert: IAlert = {
@@ -41,7 +42,6 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
         message: '',
         dismissTime: 4,
     };
-    private _unsubscribeAll: Subject<any>;
 
     /**
      * Constructor
@@ -52,9 +52,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
         private _actions$: Actions,
         private _route: ActivatedRoute,
         private _toast: HotToastService
-    ) {
-        this._unsubscribeAll = new Subject();
-    }
+    ) {}
 
     get password() {
         return this.usuarioForm.controls['password'];
@@ -77,53 +75,68 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        combineLatest([this.selectedUsuario$, this.editMode$])
-            .pipe(
-                takeUntil(this._unsubscribeAll),
-                map(([selectedUsuario, editMode]) => ({
-                    selectedUsuario,
-                    editMode,
-                }))
-            )
-            .subscribe(({ selectedUsuario, editMode }) => {
-                this.mode = editMode;
-                this.setMessage(editMode);
-                this.createUsuarioForm(editMode);
-                if (selectedUsuario) {
-                    this.selectedUsuario = selectedUsuario;
-                    if (editMode === 'edit') {
-                        this.usuarioForm.patchValue(this.selectedUsuario);
+        this.initializeData();
+
+        this.setActions();
+    }
+
+    /**
+     *
+     * Initialize the selectors for the mode
+     *
+     */
+    initializeData(): void {
+        this.editMode$ = this._store.select(AjustesUsuariosState.editMode).pipe(
+            tap((edit) => {
+                this.setMessage(edit);
+                this.createUsuarioForm(edit);
+                this.editMode = edit;
+
+                this.selectedUsuario$ = this._store.select(AjustesUsuariosState.selectedUsuario).pipe(
+                    tap((usuario: Usuario) => {
+                        if (usuario) {
+                            this.selectedUsuario = usuario;
+                            this.usuarioForm.patchValue(this.selectedUsuario);
+                        }
+                    })
+                );
+            })
+        );
+    }
+
+    /**
+     * Function to set the actions behavior
+     *
+     *
+     */
+    setActions(): void {
+        this.actions$ = this._actions$.pipe(
+            ofActionCompleted(EditUsuario, AddUsuario),
+            tap((result) => {
+                const { error, successful } = result.result;
+                const { action } = result;
+                if (error) {
+                    const message = `${error['error'].message}`;
+                    this._toast.error(message, {
+                        duration: 4000,
+                        position: 'bottom-center',
+                    });
+                }
+                if (successful) {
+                    const message = this.successMessage;
+                    this._toast.success(message, {
+                        duration: 4000,
+                        position: 'bottom-center',
+                    });
+
+                    if (action instanceof AddUsuario) {
+                        setTimeout(() => {
+                            this._store.dispatch(new Navigate(['/ajustes/usuarios/']));
+                        }, 3000);
                     }
                 }
-            });
-
-        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionErrored(EditUsuario, AddUsuario)).subscribe(() => {
-            const message = this.errorMessage;
-            this._toast.error(message, {
-                duration: 4000,
-                position: 'bottom-center',
-            });
-            this.usuarioForm.enable();
-        });
-
-        this._actions$
-            .pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(EditUsuario, AddUsuario))
-            .subscribe((action) => {
-                const message = this.successMessage;
-                this._toast.success(message, {
-                    duration: 4000,
-                    position: 'bottom-center',
-                });
-                this.usuarioForm.enable();
-                if (this.mode === 'password') {
-                    this.usuarioForm.reset();
-                }
-                if (action instanceof AddUsuario) {
-                    setTimeout(() => {
-                        this._store.dispatch(new Navigate(['/ajustes/usuarios/']));
-                    }, 2000);
-                }
-            });
+            })
+        );
     }
 
     /**
@@ -194,9 +207,6 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
      */
     ngOnDestroy(): void {
         this._store.dispatch(new ClearUsuarioState());
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
     }
 
     /**

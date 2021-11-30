@@ -33,7 +33,7 @@ import { IRole } from '../../models/roles.model';
 @Component({
     selector: 'team-list',
     templateUrl: './team-list.component.html',
-    styleUrls: ['./team-list.component.scss'],
+    styleUrls: [],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

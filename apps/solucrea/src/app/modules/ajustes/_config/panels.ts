@@ -35,11 +35,4 @@ export const ajustesPanels = [
         description: 'Catálogo de tipos de crédito',
         roles: [Role.ADMIN, Role.DIRECTOR],
     },
-    {
-        id: 'seguros',
-        icon: 'heroicons_outline:color-swatch',
-        title: 'Seguros',
-        description: 'Catálogo de seguros',
-        roles: [Role.ADMIN, Role.DIRECTOR],
-    },
 ];

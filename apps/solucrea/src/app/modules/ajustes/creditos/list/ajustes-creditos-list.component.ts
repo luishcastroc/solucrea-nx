@@ -6,7 +6,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { AjustesCreditosState, DeleteCredito, GetAllCreditos } from 'app/modules/ajustes/_store';
-import { map, Observable, startWith, Subject, takeUntil, withLatestFrom } from 'rxjs';
+import { map, Observable, startWith, Subject, takeUntil, tap, withLatestFrom } from 'rxjs';
 
 import { Producto } from '.prisma/client';
 
@@ -22,6 +22,7 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
     @Select(AjustesCreditosState.loading) loading$: Observable<boolean>;
     searchResults$: Observable<Producto[]>;
     searchInput = new FormControl();
+    actions$: Observable<Actions>;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -43,7 +44,7 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
             map(([value, creditos]) => this._filter(value, creditos))
         );
 
-        this.subscribeToActions();
+        this.actions$ = this.subscribeToActions();
     }
 
     /**
@@ -51,10 +52,11 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
      *
      *
      */
-    subscribeToActions(): void {
-        this._actions$
-            .pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(GetAllCreditos, DeleteCredito))
-            .subscribe((result) => {
+    subscribeToActions(): Actions {
+        return this._actions$.pipe(
+            takeUntil(this._unsubscribeAll),
+            ofActionCompleted(GetAllCreditos, DeleteCredito),
+            tap((result) => {
                 const { error, successful } = result.result;
                 const { action } = result;
                 let message;
@@ -77,7 +79,8 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
                     }
                     this.searchInput.updateValueAndValidity({ onlySelf: false, emitEvent: true });
                 }
-            });
+            })
+        );
     }
 
     /**

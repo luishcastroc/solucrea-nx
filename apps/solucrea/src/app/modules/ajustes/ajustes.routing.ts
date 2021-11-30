@@ -6,9 +6,6 @@ import { AjustesCreditosComponent } from './creditos/ajustes-creditos.component'
 import { AjustesCreditosDetailsComponent } from './creditos/details/ajustes-creditos-details.component';
 import { AjustesCreditosListComponent } from './creditos/list/ajustes-creditos-list.component';
 import { AjustesSecurityComponent } from './security/security.component';
-import { SeguroDetailComponent } from './seguro/detail/seguro-detail.component';
-import { SeguroListComponent } from './seguro/list/seguro-list.component';
-import { SeguroComponent } from './seguro/seguro.component';
 import { SucursalesDetailsComponent } from './sucursales/details/sucursales-details.component';
 import { SucusalesListComponent } from './sucursales/list/sucusales-list.component';
 import { SucursalesComponent } from './sucursales/sucursales.component';
@@ -62,17 +59,6 @@ export const ajustesRoutes: Route[] = [
                     {
                         path: ':id',
                         component: AjustesCreditosDetailsComponent,
-                    },
-                ],
-            },
-            {
-                path: 'seguros',
-                component: SeguroComponent,
-                children: [
-                    { path: '', component: SeguroListComponent },
-                    {
-                        path: ':id',
-                        component: SeguroDetailComponent,
                     },
                 ],
             },

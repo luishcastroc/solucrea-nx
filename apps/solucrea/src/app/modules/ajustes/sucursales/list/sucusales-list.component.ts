@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -14,18 +14,20 @@ import {
     DeleteSucursal,
     EditSucursal,
     GetAllSucursales,
+    SelectSucursal,
 } from 'app/modules/ajustes/_store';
 import { ConfirmationDialogComponent } from 'app/shared';
-import { map, Observable, startWith, Subject, takeUntil, withLatestFrom } from 'rxjs';
+import { map, Observable, startWith, tap, withLatestFrom } from 'rxjs';
 
 @Component({
     selector: 'app-sucusales-list',
     templateUrl: './sucusales-list.component.html',
     styleUrls: [],
 })
-export class SucusalesListComponent implements OnInit, OnDestroy {
+export class SucusalesListComponent implements OnInit {
     @Select(AjustesSucursalesState.sucursales) sucursales$: Observable<ISucursalReturnDto[]>;
     @Select(AjustesSucursalesState.loading) loading$: Observable<boolean>;
+    actions$: Actions;
     searchResults$: Observable<ISucursalReturnDto[]>;
     searchInput = new FormControl();
     values = [
@@ -33,8 +35,6 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
         { display: 'Inactivas', value: false },
     ];
     activa = true;
-
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
         private _store: Store,
@@ -48,13 +48,12 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
 
         // generating a new observable from the searchInput based on the criteria
         this.searchResults$ = this.searchInput.valueChanges.pipe(
-            takeUntil(this._unsubscribeAll),
             startWith(''),
             withLatestFrom(this.sucursales$),
             map(([value, sucursales]) => this._filter(value, sucursales))
         );
 
-        this.subscribeToActions();
+        this.setActions();
     }
 
     /**
@@ -71,17 +70,14 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Function to subscribe to actions
+     * Function to set the actions
      *
      *
      */
-    subscribeToActions(): void {
-        this._actions$
-            .pipe(
-                takeUntil(this._unsubscribeAll),
-                ofActionCompleted(GetAllSucursales, EditSucursal, DeleteSucursal, ChangeSearchFilter)
-            )
-            .subscribe((result) => {
+    setActions(): void {
+        this.actions$ = this._actions$.pipe(
+            ofActionCompleted(GetAllSucursales, EditSucursal, DeleteSucursal, ChangeSearchFilter),
+            tap((result) => {
                 const { error, successful } = result.result;
                 const { action } = result;
                 let message;
@@ -109,7 +105,8 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
                     }
                     this.searchInput.updateValueAndValidity({ onlySelf: false, emitEvent: true });
                 }
-            });
+            })
+        );
     }
 
     /**
@@ -119,7 +116,11 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
      * @param id string
      */
     editSucursal(id: string): void {
-        this._store.dispatch([new Navigate([`ajustes/sucursales/${id}`]), new AjustesModeSucursal('edit')]);
+        this._store.dispatch([
+            new Navigate([`ajustes/sucursales/${id}`]),
+            new AjustesModeSucursal('edit'),
+            new SelectSucursal(id),
+        ]);
     }
 
     /**
@@ -155,15 +156,6 @@ export class SucusalesListComponent implements OnInit, OnDestroy {
      */
     changeActiva(e): void {
         this._store.dispatch(new ChangeSearchFilter(e.value));
-    }
-
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
     }
 
     /**

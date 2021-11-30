@@ -1,152 +1,172 @@
-<!-- Content -->
-<div class="w-full max-w-3xl">
-    <!-- Form -->
-    <form [formGroup]="usuarioForm">
-        <!-- Section -->
-        <div class="w-full">
-            <div class="text-xl">Usuario</div>
-            <div class="text-secondary" [ngSwitch]="mode">
-                <ng-container *ngSwitchCase="'edit'"> Verificar que la información sea correcta. </ng-container>
-                <ng-container *ngSwitchCase="'password'">
-                    Cambiar contraseña de {{ selectedUsuario.nombreUsuario }}.
-                </ng-container>
-                <ng-container *ngSwitchCase="'new'"> Crear nuevo usuario Solucrea. </ng-container>
+<ng-container
+    *ngIf="
+        { mode: editMode$ | async, selected: selectedUsuario$ | async, actions: actions$ | async } as data;
+        else loadingTemplate
+    "
+>
+    <!-- Content -->
+    <div class="w-full max-w-3xl">
+        <!-- Form -->
+        <form [formGroup]="usuarioForm">
+            <!-- Section -->
+            <div class="w-full">
+                <div class="text-xl">Usuario</div>
+                <div class="text-secondary" [ngSwitch]="data.mode">
+                    <ng-container *ngSwitchCase="'edit'"> Verificar que la información sea correcta. </ng-container>
+                    <ng-container *ngSwitchCase="'password'">
+                        Cambiar contraseña de {{ selectedUsuario.nombreUsuario }}.
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'new'"> Crear nuevo usuario Solucrea. </ng-container>
+                </div>
             </div>
-        </div>
-        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
-            <ng-container *ngIf="mode === 'edit' || mode === 'new'">
-                <!-- Nombre -->
-                <div class="sm:col-span-4">
-                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                        <mat-label>Nombre</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
-                        <input [formControlName]="'nombre'" matInput />
-                    </mat-form-field>
-                    <ng-container *ngIf="nombre.touched">
-                        <mat-error *ngIf="nombre.errors?.required"> El nombre es requerido. </mat-error>
-                    </ng-container>
-                </div>
-                <!-- Apellido -->
-                <div class="sm:col-span-4">
-                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                        <mat-label>Apellidos</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
-                        <input [formControlName]="'apellido'" matInput />
-                    </mat-form-field>
-                    <ng-container *ngIf="apellido.touched">
-                        <mat-error *ngIf="apellido.errors?.required"> El apellido es requerido. </mat-error>
-                    </ng-container>
-                </div>
-                <div class="sm:col-span-4">
-                    <div class="grid gap-6 grid-cols-2">
-                        <div>
-                            <!-- Nombre de Usuario -->
-                            <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
-                                <mat-label>Nombre de Usuario</mat-label>
-                                <div class="text-secondary" matPrefix>solucrea/</div>
-                                <input [formControlName]="'nombreUsuario'" matInput />
-                            </mat-form-field>
-                            <ng-container *ngIf="nombreUsuario.touched">
-                                <mat-error *ngIf="nombreUsuario.errors?.required">
-                                    El nombre de usuario es requerido.
-                                </mat-error>
-                            </ng-container>
+            <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+                <ng-container *ngIf="data.mode === 'edit' || data.mode === 'new'">
+                    <!-- Nombre -->
+                    <div class="sm:col-span-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Nombre</mat-label>
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
+                            <input [formControlName]="'nombre'" matInput />
+                        </mat-form-field>
+                        <ng-container *ngIf="nombre.touched">
+                            <mat-error *ngIf="nombre.errors?.required"> El nombre es requerido. </mat-error>
+                        </ng-container>
+                    </div>
+                    <!-- Apellido -->
+                    <div class="sm:col-span-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Apellidos</mat-label>
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
+                            <input [formControlName]="'apellido'" matInput />
+                        </mat-form-field>
+                        <ng-container *ngIf="apellido.touched">
+                            <mat-error *ngIf="apellido.errors?.required"> El apellido es requerido. </mat-error>
+                        </ng-container>
+                    </div>
+                    <div class="sm:col-span-4">
+                        <div class="grid gap-6 grid-cols-2">
+                            <div>
+                                <!-- Nombre de Usuario -->
+                                <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
+                                    <mat-label>Nombre de Usuario</mat-label>
+                                    <div class="text-secondary" matPrefix>solucrea/</div>
+                                    <input [formControlName]="'nombreUsuario'" matInput />
+                                </mat-form-field>
+                                <ng-container *ngIf="nombreUsuario.touched">
+                                    <mat-error *ngIf="nombreUsuario.errors?.required">
+                                        El nombre de usuario es requerido.
+                                    </mat-error>
+                                </ng-container>
+                            </div>
+                            <!-- Role -->
+                            <div>
+                                <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
+                                    <mat-label>Rol</mat-label>
+                                    <mat-select
+                                        [panelClass]="'w-72 min-w-72 max-w-72 h-auto'"
+                                        [formControlName]="'role'"
+                                        disableOptionCentering
+                                        #roleSelect="matSelect"
+                                    >
+                                        <mat-select-trigger class="text-md">
+                                            <span class="ml-1 font-medium">{{ roleSelect.value | titlecase }}</span>
+                                        </mat-select-trigger>
+                                        <ng-container *ngFor="let role of roles">
+                                            <mat-option class="h-auto py-4 leading-none" [value]="role.value">
+                                                <div class="font-medium">
+                                                    {{ role.label }}
+                                                </div>
+                                                <div
+                                                    class="
+                                                        mt-1.5
+                                                        text-sm
+                                                        whitespace-normal
+                                                        leading-normal
+                                                        text-secondary
+                                                    "
+                                                >
+                                                    {{ role.description }}
+                                                </div>
+                                            </mat-option>
+                                        </ng-container>
+                                    </mat-select>
+                                </mat-form-field>
+                                <ng-container *ngIf="role.touched">
+                                    <mat-error *ngIf="role.errors?.required"> El Rol es requerido. </mat-error>
+                                </ng-container>
+                            </div>
                         </div>
-                        <!-- Role -->
-                        <div>
-                            <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
-                                <mat-label>Rol</mat-label>
-                                <mat-select
-                                    [panelClass]="'w-72 min-w-72 max-w-72 h-auto'"
-                                    [formControlName]="'role'"
-                                    disableOptionCentering
-                                    #roleSelect="matSelect"
-                                >
-                                    <mat-select-trigger class="text-md">
-                                        <span class="ml-1 font-medium">{{ roleSelect.value | titlecase }}</span>
-                                    </mat-select-trigger>
-                                    <ng-container *ngFor="let role of roles">
-                                        <mat-option class="h-auto py-4 leading-none" [value]="role.value">
-                                            <div class="font-medium">
-                                                {{ role.label }}
-                                            </div>
-                                            <div class="mt-1.5 text-sm whitespace-normal leading-normal text-secondary">
-                                                {{ role.description }}
-                                            </div>
-                                        </mat-option>
-                                    </ng-container>
-                                </mat-select>
-                            </mat-form-field>
-                            <ng-container *ngIf="role.touched">
-                                <mat-error *ngIf="role.errors?.required"> El Rol es requerido. </mat-error>
-                            </ng-container>
+                    </div>
+                    <!-- password -->
+                    <div class="sm:col-span-4" *ngIf="data.mode === 'new'">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Contraseña</mat-label>
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:key'" matPrefix></mat-icon>
+                            <input [formControlName]="'password'" type="password" matInput />
+                        </mat-form-field>
+                        <div class="mt-1 text-md text-hint">
+                            Minimo 8 caracteres. Debe incluir una letra mayúscula, una minúscula y un caracter especial
+                            (#?!@$%^&*-).
                         </div>
+                        <ng-container *ngIf="password.touched">
+                            <mat-error *ngIf="password.errors?.required"> La contraseña es requerida. </mat-error>
+                            <mat-error *ngIf="password.errors?.minlength">
+                                La nueva contraseña debe tener mínimo 8 caracteres.
+                            </mat-error>
+                            <mat-error *ngIf="password.errors?.passwordStrength">
+                                la Contraseña debe incluir mínimo 8 caracteres. Al menos una mayúscula, una minúscula,
+                                un número y un caracter especial (#?!@$%^&*-).
+                            </mat-error>
+                        </ng-container>
                     </div>
-                </div>
-                <!-- password -->
-                <div class="sm:col-span-4" *ngIf="mode === 'new'">
-                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                        <mat-label>Contraseña</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:key'" matPrefix></mat-icon>
-                        <input [formControlName]="'password'" type="password" matInput />
-                    </mat-form-field>
-                    <div class="mt-1 text-md text-hint">
-                        Minimo 8 caracteres. Debe incluir una letra mayúscula, una minúscula y un caracter especial
-                        (#?!@$%^&*-).
+                </ng-container>
+                <ng-container *ngIf="data.mode === 'password'">
+                    <!-- password -->
+                    <div class="sm:col-span-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Nueva contraseña</mat-label>
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:key'" matPrefix></mat-icon>
+                            <input [formControlName]="'password'" type="password" matInput />
+                        </mat-form-field>
+                        <div class="mt-1 text-md text-hint">
+                            Minimo 8 caracteres. Debe incluir una letra mayúscula, una minúscula y un caracter especial
+                            (#?!@$%^&*-).
+                        </div>
+                        <ng-container *ngIf="password.touched">
+                            <mat-error *ngIf="password.errors?.minlength">
+                                La nueva contraseña debe tener mínimo 8 caracteres.
+                            </mat-error>
+                            <mat-error *ngIf="password.errors?.passwordStrength">
+                                la Contraseña debe incluir mínimo 8 caracteres. Al menos una mayúscula, una minúscula,
+                                un número y un caracter especial (#?!@$%^&*-).
+                            </mat-error>
+                        </ng-container>
                     </div>
-                    <ng-container *ngIf="password.touched">
-                        <mat-error *ngIf="password.errors?.required"> La contraseña es requerida. </mat-error>
-                        <mat-error *ngIf="password.errors?.minlength">
-                            La nueva contraseña debe tener mínimo 8 caracteres.
-                        </mat-error>
-                        <mat-error *ngIf="password.errors?.passwordStrength">
-                            la Contraseña debe incluir mínimo 8 caracteres. Al menos una mayúscula, una minúscula, un
-                            número y un caracter especial (#?!@$%^&*-).
-                        </mat-error>
-                    </ng-container>
-                </div>
-            </ng-container>
-            <ng-container *ngIf="mode === 'password'">
-                <!-- password -->
-                <div class="sm:col-span-4">
-                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                        <mat-label>Nueva contraseña</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:key'" matPrefix></mat-icon>
-                        <input [formControlName]="'password'" type="password" matInput />
-                    </mat-form-field>
-                    <div class="mt-1 text-md text-hint">
-                        Minimo 8 caracteres. Debe incluir una letra mayúscula, una minúscula y un caracter especial
-                        (#?!@$%^&*-).
-                    </div>
-                    <ng-container *ngIf="password.touched">
-                        <mat-error *ngIf="password.errors?.minlength">
-                            La nueva contraseña debe tener mínimo 8 caracteres.
-                        </mat-error>
-                        <mat-error *ngIf="password.errors?.passwordStrength">
-                            la Contraseña debe incluir mínimo 8 caracteres. Al menos una mayúscula, una minúscula, un
-                            número y un caracter especial (#?!@$%^&*-).
-                        </mat-error>
-                    </ng-container>
-                </div>
-            </ng-container>
-        </div>
+                </ng-container>
+            </div>
 
-        <!-- Divider -->
-        <div class="mt-11 mb-10 border-t"></div>
+            <!-- Divider -->
+            <div class="mt-11 mb-10 border-t"></div>
 
-        <!-- Acciones -->
-        <div class="flex items-center justify-end">
-            <button mat-stroked-button type="button" (click)="cancelEdit()">Cancelar</button>
-            <button
-                class="ml-4"
-                mat-flat-button
-                type="submit"
-                [color]="'primary'"
-                (click)="mode !== 'new' ? updateUsuario() : saveUsuario()"
-                [disabled]="!usuarioForm.touched || usuarioForm.invalid"
-            >
-                Guardar
-            </button>
-        </div>
-    </form>
-</div>
+            <!-- Acciones -->
+            <div class="flex items-center justify-end">
+                <button mat-stroked-button type="button" (click)="cancelEdit()">Cancelar</button>
+                <button
+                    class="ml-4"
+                    mat-flat-button
+                    type="submit"
+                    [color]="'primary'"
+                    (click)="data.mode !== 'new' ? updateUsuario() : saveUsuario()"
+                    [disabled]="!usuarioForm.touched || usuarioForm.invalid"
+                >
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</ng-container>
+<ng-template #loadingTemplate>
+    <div class="z-20 flex px-8 py-4 md:px-10 border-b justify-center">
+        <mat-spinner> </mat-spinner>
+    </div>
+</ng-template>

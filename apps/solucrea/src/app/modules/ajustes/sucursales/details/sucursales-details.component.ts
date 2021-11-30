@@ -23,7 +23,7 @@ import { TipoDireccion } from '.prisma/client';
 @Component({
     selector: 'app-sucursales-details',
     templateUrl: './sucursales-details.component.html',
-    styleUrls: ['./sucursales-details.component.scss'],
+    styleUrls: [],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SucursalesDetailsComponent implements OnInit, OnDestroy {
@@ -31,6 +31,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
 
     editMode$: Observable<EditMode>;
     colonias$: Observable<IColoniaReturnDto>;
+    actions$: Actions;
     selectedSucursal$: Observable<ISucursalReturnDto>;
     sucursalForm: FormGroup;
     editMode: EditMode;
@@ -144,35 +145,31 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
             tap((edit) => {
                 this.editMode = edit;
 
-                if (edit === 'edit') {
-                    this._store.dispatch(new SelectSucursal(id));
-                }
-            })
-        );
+                this.colonias$ = this._store.select(AjustesSucursalesState.colonias).pipe(
+                    tap((colonias: IColoniaReturnDto) => {
+                        if (colonias) {
+                            this.ciudad.patchValue(colonias.ciudad.descripcion);
+                            this.estado.patchValue(colonias.estado.descripcion);
+                        }
+                    })
+                );
 
-        this.colonias$ = this._store.select(AjustesSucursalesState.colonias).pipe(
-            tap((colonias: IColoniaReturnDto) => {
-                if (colonias) {
-                    this.ciudad.patchValue(colonias.ciudad.descripcion);
-                    this.estado.patchValue(colonias.estado.descripcion);
-                }
-            })
-        );
+                this.selectedSucursal$ = this._store.select(AjustesSucursalesState.selectedSucursal).pipe(
+                    tap((sucursal: ISucursalReturnDto) => {
+                        if (sucursal) {
+                            this.sucursalForm.patchValue({
+                                ...sucursal,
+                                direccion: {
+                                    ...sucursal.direccion,
+                                    colonia: sucursal.direccion.colonia.id,
+                                    codigoPostal: sucursal.direccion.colonia.codigoPostal,
+                                },
+                            });
 
-        this.selectedSucursal$ = this._store.select(AjustesSucursalesState.selectedSucursal).pipe(
-            tap((sucursal: ISucursalReturnDto) => {
-                if (sucursal) {
-                    this.sucursalForm.patchValue({
-                        ...sucursal,
-                        direccion: {
-                            ...sucursal.direccion,
-                            colonia: sucursal.direccion.colonia.id,
-                            codigoPostal: sucursal.direccion.colonia.codigoPostal,
-                        },
-                    });
-
-                    this.getColonias(sucursal.direccion.colonia.codigoPostal);
-                }
+                            this.getColonias(sucursal.direccion.colonia.codigoPostal);
+                        }
+                    })
+                );
             })
         );
     }

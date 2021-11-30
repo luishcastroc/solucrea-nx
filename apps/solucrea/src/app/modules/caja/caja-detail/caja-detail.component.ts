@@ -19,7 +19,7 @@ import { EditCaja } from './../_store/caja.actions';
 @Component({
     selector: 'app-caja-detail',
     templateUrl: './caja-detail.component.html',
-    styleUrls: ['./caja-detail.component.scss'],
+    styleUrls: [],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CajaDetailComponent implements OnInit, OnDestroy {

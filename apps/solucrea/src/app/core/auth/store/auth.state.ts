@@ -59,6 +59,8 @@ export class AuthState {
                 });
                 if (rememberMe) {
                     localStorage.setItem('usuario', username);
+                } else {
+                    localStorage.removeItem('usuario');
                 }
                 ctx.dispatch([new Navigate([redirectURL]), new SelectUsuario(user)]);
             })

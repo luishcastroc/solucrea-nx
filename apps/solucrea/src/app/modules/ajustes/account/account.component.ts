@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations/public-api';
 import { HotToastService } from '@ngneat/hot-toast';
-import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
+import { UpdateUsuario } from 'app/core/auth';
 import { AjustesUsuariosState, EditUsuario } from 'app/modules/ajustes/_store';
 import { isEqual } from 'lodash';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Component({
     selector: 'settings-account',
@@ -15,12 +16,12 @@ import { Observable, Subject, takeUntil } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations,
 })
-export class AjustesAccountComponent implements OnInit, OnDestroy {
-    @Select(AjustesUsuariosState.selectedUsuario) user$: Observable<Usuario>;
+export class AjustesAccountComponent implements OnInit {
+    user$: Observable<Usuario>;
+    actions$: Actions;
 
     accountForm: FormGroup;
     defaultUser: Usuario;
-    private _unsubscribeAll: Subject<any>;
 
     /**
      * Constructor
@@ -30,9 +31,7 @@ export class AjustesAccountComponent implements OnInit, OnDestroy {
         private _store: Store,
         private _actions$: Actions,
         private _toast: HotToastService
-    ) {
-        this._unsubscribeAll = new Subject();
-    }
+    ) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -43,36 +42,59 @@ export class AjustesAccountComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
         // Create the form
+        this.createUserForm();
+
+        this.user$ = this._store.select(AjustesUsuariosState.selectedUsuario).pipe(
+            tap((user: Usuario) => {
+                if (user) {
+                    this.defaultUser = user;
+                    this.accountForm.patchValue(this.defaultUser);
+                }
+            })
+        );
+
+        this.setActions();
+    }
+
+    /**
+     *
+     * Create user form
+     */
+    createUserForm(): void {
         this.accountForm = this._formBuilder.group({
             nombre: [''],
             apellido: [''],
             nombreUsuario: [''],
         });
+    }
 
-        this.user$.pipe(takeUntil(this._unsubscribeAll)).subscribe((user) => {
-            if (user) {
-                this.defaultUser = user;
-                this.accountForm.patchValue(this.defaultUser);
-            }
-        });
-
-        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionErrored(EditUsuario)).subscribe(() => {
-            const message = 'Error al editar usuario.';
-            this._toast.error(message, {
-                duration: 4000,
-                position: 'bottom-center',
-            });
-            this.accountForm.enable();
-        });
-
-        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(EditUsuario)).subscribe(() => {
-            const message = 'Usuario modificado exitosamente.';
-            this._toast.success(message, {
-                duration: 4000,
-                position: 'bottom-center',
-            });
-            this.accountForm.enable();
-        });
+    /**
+     * Function to set the actions behavior
+     *
+     *
+     */
+    setActions(): void {
+        this.actions$ = this._actions$.pipe(
+            ofActionCompleted(EditUsuario, UpdateUsuario),
+            tap((result) => {
+                const { error, successful } = result.result;
+                if (error) {
+                    const message = `${error['error'].message}`;
+                    this._toast.error(message, {
+                        duration: 4000,
+                        position: 'bottom-center',
+                    });
+                }
+                if (successful) {
+                    const message = 'Usuario modificado exitosamente.';
+                    this._toast.success(message, {
+                        duration: 4000,
+                        position: 'bottom-center',
+                    });
+                    this.accountForm.enable();
+                }
+            })
+        );
     }
 
     cancelEdit(): void {
@@ -92,10 +114,5 @@ export class AjustesAccountComponent implements OnInit, OnDestroy {
             this.accountForm.disable();
             this._store.dispatch(new EditUsuario(this.defaultUser.id, this.accountForm.value));
         }
-    }
-
-    ngOnDestroy(): void {
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
     }
 }
