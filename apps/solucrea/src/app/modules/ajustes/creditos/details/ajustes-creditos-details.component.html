@@ -231,11 +231,13 @@
                                     </mat-select>
                                 </mat-form-field>
                                 <ng-container *ngIf="frecuencia.touched">
-                                    <mat-error *ngIf="frecuencia.errors?.required"> El Rol es requerido. </mat-error>
+                                    <mat-error *ngIf="frecuencia.errors?.required">
+                                        La frecuencia es requerida.
+                                    </mat-error>
                                 </ng-container>
                             </div>
                             <!-- Descripción -->
-                            <div class="col-span-2">
+                            <div class="md:col-span-2">
                                 <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
                                     <mat-label>Descripción</mat-label>
                                     <mat-icon
