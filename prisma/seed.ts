@@ -5,6 +5,7 @@ import {
     tiposDeViviendaCreate,
     actividadesEconomicasCreate,
     parentescos,
+    seguros,
 } from './seed-data';
 /* eslint-disable prefer-arrow/prefer-arrow-functions */
 import { PrismaClient, ActividadEconomica } from '@prisma/client';
@@ -32,6 +33,10 @@ async function main() {
                     console.log(`Colonias creadas exitosamente Conteo: ${colonias.count}`);
                 }
             }
+        }
+        const segurosIns = await prisma.seguro.createMany({ data: seguros });
+        if (segurosIns) {
+            console.log(`Seguros creados exitosamente: ${segurosIns.count}`);
         }
         const modalidadesIns = await prisma.modalidadDeSeguro.createMany({ data: modalidadesDeSeguro });
         if (modalidadesIns) {

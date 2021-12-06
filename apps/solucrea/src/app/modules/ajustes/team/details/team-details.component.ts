@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { IAlert } from '@fuse/components/alert/alert.model';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, ofActionErrored, ofActionSuccessful, Store } from '@ngxs/store';
@@ -31,17 +30,6 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
     successMessage: string;
     errorMessage: string;
     roles: IRole[] = defaultRoles;
-
-    alert: IAlert = {
-        appearance: 'soft',
-        name: 'alertBoxAj',
-        type: 'success',
-        dismissible: true,
-        dismissed: true,
-        showIcon: true,
-        message: '',
-        dismissTime: 4,
-    };
 
     /**
      * Constructor

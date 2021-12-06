@@ -1,1 +1,279 @@
-<p>details works!</p>
+<ng-container *ngIf="loading$ | async; then loadingTemplate; else formTemplate"></ng-container>
+<ng-template #loadingTemplate>
+    <mat-spinner> </mat-spinner>
+</ng-template>
+<ng-template #formTemplate>
+    <div class="flex-auto flex flex-col">
+        <div class="w-full">
+            <ng-container *ngIf="editMode$ | async as editMode">
+                <!-- Form -->
+                <form
+                    [formGroup]="creditosForm"
+                    *ngIf="(editMode === 'edit' && (selectedProducto$ | async)) || editMode === 'new'"
+                >
+                    <ng-template matStepLabel>Datos Generales</ng-template>
+                    <div class="flex flex-wrap gap-3 w-full mt-2">
+                        <div class="grid md:grid-cols-4 grid-cols-1 w-full gap-3">
+                            <!-- Nombre -->
+                            <div>
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>Nombre</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:office-building'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <input [formControlName]="'nombre'" matInput />
+                                </mat-form-field>
+                                <ng-container *ngIf="nombre.touched">
+                                    <mat-error *ngIf="nombre.errors?.required"> El nombre es requerido. </mat-error>
+                                </ng-container>
+                            </div>
+                            <!-- Monto Mínimo -->
+                            <div>
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>Monto Mínimo</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:office-building'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <input [formControlName]="'montoMinimo'" matInput />
+                                </mat-form-field>
+                                <ng-container *ngIf="montoMinimo.touched">
+                                    <mat-error *ngIf="montoMinimo.errors?.required">
+                                        El monto mínimo es requerido.
+                                    </mat-error>
+                                </ng-container>
+                            </div>
+                            <!-- Monto Máximo -->
+                            <div>
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>Monto Máximo</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:office-building'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <input [formControlName]="'montoMaximo'" matInput />
+                                </mat-form-field>
+                                <ng-container *ngIf="montoMaximo.touched">
+                                    <mat-error *ngIf="montoMaximo.errors?.required">
+                                        El monto máximo es requerido.
+                                    </mat-error>
+                                </ng-container>
+                            </div>
+                            <!-- Multiplos para Crecer -->
+                            <div>
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>Múltiplos para crecer el crédito</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:office-building'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <input [formControlName]="'multiplos'" matInput />
+                                </mat-form-field>
+                                <ng-container *ngIf="multiplos.touched">
+                                    <mat-error *ngIf="multiplos.errors?.required">
+                                        El múltiplo para crecer el crédito es requerido.
+                                    </mat-error>
+                                </ng-container>
+                            </div>
+                            <!-- Tasa de Interes -->
+                            <div>
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>Tasa de Interes</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:office-building'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <input [formControlName]="'interes'" matInput />
+                                </mat-form-field>
+                                <ng-container *ngIf="interes.touched">
+                                    <mat-error *ngIf="interes.errors?.required">
+                                        La tasa de interes es requerida.
+                                    </mat-error>
+                                </ng-container>
+                            </div>
+                            <!-- Interes Moratorio -->
+                            <div>
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>Interes Moratorio</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:office-building'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <input [formControlName]="'interesMoratorio'" matInput />
+                                </mat-form-field>
+                                <ng-container *ngIf="interesMoratorio.touched">
+                                    <mat-error *ngIf="interesMoratorio.errors?.required">
+                                        La tasa de interes moratorio es requerida.
+                                    </mat-error>
+                                </ng-container>
+                            </div>
+                            <!-- Penalización -->
+                            <div>
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>Penalización</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:office-building'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <input [formControlName]="'penalizacion'" matInput />
+                                </mat-form-field>
+                                <ng-container *ngIf="penalizacion.touched">
+                                    <mat-error *ngIf="penalizacion.errors?.required">
+                                        La penalización por liquidación anticipada es requerida.
+                                    </mat-error>
+                                </ng-container>
+                            </div>
+                            <!-- Comisión -->
+                            <div>
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>Comisión por apertura</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:office-building'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <input [formControlName]="'comision'" matInput />
+                                </mat-form-field>
+                                <ng-container *ngIf="comision.touched">
+                                    <mat-error *ngIf="comision.errors?.required">
+                                        La comisión por apertura es requerida.
+                                    </mat-error>
+                                </ng-container>
+                            </div>
+                            <!-- Cargos -->
+                            <div>
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>Cargos</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:office-building'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <input [formControlName]="'cargos'" matInput />
+                                </mat-form-field>
+                                <ng-container *ngIf="cargos.touched">
+                                    <mat-error *ngIf="cargos.errors?.required"> El cargo es requerido. </mat-error>
+                                </ng-container>
+                            </div>
+                            <!-- Duración -->
+                            <div>
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>Duración</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:office-building'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <input [formControlName]="'duracion'" matInput />
+                                </mat-form-field>
+                                <ng-container *ngIf="duracion.touched">
+                                    <mat-error *ngIf="duracion.errors?.required"> La duración es requerida. </mat-error>
+                                </ng-container>
+                            </div>
+                            <!-- Numero de Pagos -->
+                            <div>
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>Número de pagos</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:office-building'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <input [formControlName]="'numeroDePagos'" matInput />
+                                </mat-form-field>
+                                <ng-container *ngIf="numeroDePagos.touched">
+                                    <mat-error *ngIf="numeroDePagos.errors?.required">
+                                        El número de pagos es requerido.
+                                    </mat-error>
+                                </ng-container>
+                            </div>
+                            <!-- Frecuencia -->
+                            <div>
+                                <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
+                                    <mat-label>Frecuecia</mat-label>
+                                    <mat-select
+                                        [panelClass]="'w-72 min-w-72 max-w-72 h-auto'"
+                                        [formControlName]="'frecuencia'"
+                                        disableOptionCentering
+                                        #frecuenciaSelect="matSelect"
+                                    >
+                                        <mat-select-trigger class="text-md">
+                                            <span class="ml-1 font-medium">{{
+                                                frecuenciaSelect.value | titlecase
+                                            }}</span>
+                                        </mat-select-trigger>
+                                        <ng-container *ngFor="let frecuencia of frecuencias">
+                                            <mat-option class="h-auto py-4 leading-none" [value]="frecuencia.value">
+                                                <div class="font-medium">
+                                                    {{ frecuencia.label }}
+                                                </div>
+                                                <div
+                                                    class="
+                                                        mt-1.5
+                                                        text-sm
+                                                        whitespace-normal
+                                                        leading-normal
+                                                        text-secondary
+                                                    "
+                                                >
+                                                    {{ frecuencia.description }}
+                                                </div>
+                                            </mat-option>
+                                        </ng-container>
+                                    </mat-select>
+                                </mat-form-field>
+                                <ng-container *ngIf="frecuencia.touched">
+                                    <mat-error *ngIf="frecuencia.errors?.required"> El Rol es requerido. </mat-error>
+                                </ng-container>
+                            </div>
+                            <!-- Descripción -->
+                            <div class="col-span-2">
+                                <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                                    <mat-label>Descripción</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:clipboard-list'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <textarea [formControlName]="'descripcion'" matInput></textarea>
+                                </mat-form-field>
+                                <ng-container *ngIf="descripcion.touched">
+                                    <mat-error *ngIf="descripcion.errors?.required">
+                                        La descripción es requerida.
+                                    </mat-error>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 w-full flex-auto justify-center">
+                        <button mat-stroked-button type="button" (click)="back()" matStepperPrevious>Regresar</button>
+                        <button
+                            mat-flat-button
+                            type="submit"
+                            [color]="'primary'"
+                            (click)="saveCredito()"
+                            class="ml-2"
+                            [disabled]="
+                                (editMode === 'new' && !creditosForm.touched) ||
+                                creditosForm.invalid ||
+                                creditosForm.disabled ||
+                                (editMode === 'edit' && !creditosForm.touched) ||
+                                creditosForm.invalid
+                            "
+                        >
+                            {{ editMode === 'edit' ? 'Actualizar' : 'Guardar' }}
+                        </button>
+                    </div>
+                </form></ng-container
+            >
+        </div>
+    </div>
+</ng-template>

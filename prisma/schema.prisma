@@ -2,237 +2,236 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-    provider = "mysql"
-    url      = env("DATABASE_URL")
-    output   = "../node_modules/.prisma/client"
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  output   = "../node_modules/.prisma/client"
 }
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 // Catálogos Inicio
 
 model TipoDePago {
-    id                 String   @id @default(uuid())
-    descripcion        String
-    creadoPor          String   @default("ADMIN")
-    fechaCreacion      DateTime @default(now())
-    actualizadoPor     String   @default("ADMIN")
-    fechaActualizacion DateTime @default(now()) @updatedAt
+  id                 String   @id @default(uuid())
+  descripcion        String
+  creadoPor          String   @default("ADMIN")
+  fechaCreacion      DateTime @default(now())
+  actualizadoPor     String   @default("ADMIN")
+  fechaActualizacion DateTime @default(now()) @updatedAt
 
-    @@map(name: "TiposDePago")
+  @@map(name: "TiposDePago")
 }
 
 model PeriodoDePago {
-    id                 String   @id @default(uuid())
-    descripcion        String
-    periodo            Int
-    vencimiento        Int
-    creadoPor          String   @default("ADMIN")
-    fechaCreacion      DateTime @default(now())
-    actualizadoPor     String   @default("ADMIN")
-    fechaActualizacion DateTime @default(now()) @updatedAt
+  id                 String   @id @default(uuid())
+  descripcion        String
+  periodo            Int
+  vencimiento        Int
+  creadoPor          String   @default("ADMIN")
+  fechaCreacion      DateTime @default(now())
+  actualizadoPor     String   @default("ADMIN")
+  fechaActualizacion DateTime @default(now()) @updatedAt
 
-    @@map(name: "PeriodosDePago")
+  @@map(name: "PeriodosDePago")
 }
 
 model ActividadEconomica {
-    id                 String   @id @default(uuid())
-    descripcion        String
-    montoMin           Decimal  @db.Decimal(15, 2)
-    montoMax           Decimal  @db.Decimal(15, 2)
-    cicloEscalonado    Int
-    creadoPor          String   @default("ADMIN")
-    fechaCreacion      DateTime @default(now())
-    actualizadoPor     String   @default("ADMIN")
-    fechaActualizacion DateTime @default(now()) @updatedAt
+  id                 String   @id @default(uuid())
+  descripcion        String
+  montoMin           Decimal  @db.Decimal(15, 2)
+  montoMax           Decimal  @db.Decimal(15, 2)
+  cicloEscalonado    Int
+  creadoPor          String   @default("ADMIN")
+  fechaCreacion      DateTime @default(now())
+  actualizadoPor     String   @default("ADMIN")
+  fechaActualizacion DateTime @default(now()) @updatedAt
 
-    Trabajo Trabajo[]
-    @@map(name: "ActividadesEconomicas")
+  Trabajo Trabajo[]
+  @@map(name: "ActividadesEconomicas")
 }
 
 model EstadoCivil {
-    id                 String    @id @default(uuid())
-    descripcion        String
-    clientes           Cliente[]
-    creadoPor          String    @default("ADMIN")
-    fechaCreacion      DateTime  @default(now())
-    actualizadoPor     String    @default("ADMIN")
-    fechaActualizacion DateTime  @default(now()) @updatedAt
+  id                 String    @id @default(uuid())
+  descripcion        String
+  clientes           Cliente[]
+  creadoPor          String    @default("ADMIN")
+  fechaCreacion      DateTime  @default(now())
+  actualizadoPor     String    @default("ADMIN")
+  fechaActualizacion DateTime  @default(now()) @updatedAt
 
-    @@map(name: "EstadosCiviles")
+  @@map(name: "EstadosCiviles")
 }
 
 model Estado {
-    id                 Int      @id @default(autoincrement())
-    descripcion        String
-    creadoPor          String   @default("ADMIN")
-    fechaCreacion      DateTime @default(now())
-    actualizadoPor     String   @default("ADMIN")
-    fechaActualizacion DateTime @default(now()) @updatedAt
+  id                 Int      @id @default(autoincrement())
+  descripcion        String
+  creadoPor          String   @default("ADMIN")
+  fechaCreacion      DateTime @default(now())
+  actualizadoPor     String   @default("ADMIN")
+  fechaActualizacion DateTime @default(now()) @updatedAt
 
-    Ciudad Ciudad[]
-    @@map(name: "Estados")
+  Ciudad Ciudad[]
+  @@map(name: "Estados")
 }
 
 model Ciudad {
-    id                 Int       @id @default(autoincrement())
-    descripcion        String
-    estado             Estado    @relation(fields: [estadoId], references: [id])
-    colonias           Colonia[]
-    creadoPor          String    @default("ADMIN")
-    fechaCreacion      DateTime  @default(now())
-    actualizadoPor     String    @default("ADMIN")
-    fechaActualizacion DateTime  @default(now()) @updatedAt
-    estadoId           Int
+  id                 Int       @id @default(autoincrement())
+  descripcion        String
+  estado             Estado    @relation(fields: [estadoId], references: [id])
+  colonias           Colonia[]
+  creadoPor          String    @default("ADMIN")
+  fechaCreacion      DateTime  @default(now())
+  actualizadoPor     String    @default("ADMIN")
+  fechaActualizacion DateTime  @default(now()) @updatedAt
+  estadoId           Int
 
-    @@map(name: "Ciudades")
+  @@map(name: "Ciudades")
 }
 
 model Colonia {
-    id                 String      @id @default(uuid())
-    descripcion        String
-    codigoPostal       String
-    ciudad             Ciudad?     @relation(fields: [ciudadId], references: [id])
-    ciudadId           Int?
-    direccion          Direccion[]
-    creadoPor          String      @default("ADMIN")
-    fechaCreacion      DateTime    @default(now())
-    actualizadoPor     String      @default("ADMIN")
-    fechaActualizacion DateTime    @default(now()) @updatedAt
+  id                 String      @id @default(uuid())
+  descripcion        String
+  codigoPostal       String
+  ciudad             Ciudad?     @relation(fields: [ciudadId], references: [id])
+  ciudadId           Int?
+  direccion          Direccion[]
+  creadoPor          String      @default("ADMIN")
+  fechaCreacion      DateTime    @default(now())
+  actualizadoPor     String      @default("ADMIN")
+  fechaActualizacion DateTime    @default(now()) @updatedAt
 
-    @@map(name: "Colonias")
+  @@map(name: "Colonias")
 }
 
 model TipoDeVivienda {
-    id                 String    @id @default(uuid())
-    descripcion        String
-    clientes           Cliente[]
-    creadoPor          String    @default("ADMIN")
-    fechaCreacion      DateTime  @default(now())
-    actualizadoPor     String    @default("ADMIN")
-    fechaActualizacion DateTime  @default(now()) @updatedAt
+  id                 String    @id @default(uuid())
+  descripcion        String
+  clientes           Cliente[]
+  creadoPor          String    @default("ADMIN")
+  fechaCreacion      DateTime  @default(now())
+  actualizadoPor     String    @default("ADMIN")
+  fechaActualizacion DateTime  @default(now()) @updatedAt
 
-    @@map(name: "TiposDeVivienda")
+  @@map(name: "TiposDeVivienda")
 }
 
 model Escolaridad {
-    id                 String    @id @default(uuid())
-    descripcion        String
-    clientes           Cliente[]
-    creadoPor          String    @default("ADMIN")
-    fechaCreacion      DateTime  @default(now())
-    actualizadoPor     String    @default("ADMIN")
-    fechaActualizacion DateTime  @default(now()) @updatedAt
+  id                 String    @id @default(uuid())
+  descripcion        String
+  clientes           Cliente[]
+  creadoPor          String    @default("ADMIN")
+  fechaCreacion      DateTime  @default(now())
+  actualizadoPor     String    @default("ADMIN")
+  fechaActualizacion DateTime  @default(now()) @updatedAt
 
-    @@map(name: "Escolaridades")
+  @@map(name: "Escolaridades")
 }
 
 model Genero {
-    id                 String    @id @default(uuid())
-    descripcion        String
-    clientes           Cliente[]
-    creadoPor          String    @default("ADMIN")
-    fechaCreacion      DateTime  @default(now())
-    actualizadoPor     String    @default("ADMIN")
-    fechaActualizacion DateTime  @default(now()) @updatedAt
+  id                 String    @id @default(uuid())
+  descripcion        String
+  clientes           Cliente[]
+  creadoPor          String    @default("ADMIN")
+  fechaCreacion      DateTime  @default(now())
+  actualizadoPor     String    @default("ADMIN")
+  fechaActualizacion DateTime  @default(now()) @updatedAt
 
-    @@map(name: "Generos")
+  @@map(name: "Generos")
 }
 
 model EstadoDeCredito {
-    id                 String    @id @default(uuid())
-    nombre             String
-    descripcion        String
-    creadoPor          String    @default("ADMIN")
-    fechaCreacion      DateTime  @default(now())
-    actualizadoPor     String    @default("ADMIN")
-    fechaActualizacion DateTime  @default(now()) @updatedAt
-    creditos           Credito[]
+  id                 String    @id @default(uuid())
+  nombre             String
+  descripcion        String
+  creadoPor          String    @default("ADMIN")
+  fechaCreacion      DateTime  @default(now())
+  actualizadoPor     String    @default("ADMIN")
+  fechaActualizacion DateTime  @default(now()) @updatedAt
+  creditos           Credito[]
 
-    @@map(name: "EstadosDeCredito")
+  @@map(name: "EstadosDeCredito")
 }
 
 model Seguro {
-    id                 String    @id @default(uuid())
-    nombre             String
-    monto              Decimal   @db.Decimal(15, 2)
-    creadoPor          String    @default("ADMIN")
-    fechaCreacion      DateTime  @default(now())
-    actualizadoPor     String    @default("ADMIN")
-    fechaActualizacion DateTime  @default(now()) @updatedAt
-    creditos           Credito[]
+  id                 String    @id @default(uuid())
+  nombre             String
+  monto              Decimal   @db.Decimal(15, 2)
+  creadoPor          String    @default("ADMIN")
+  fechaCreacion      DateTime  @default(now())
+  actualizadoPor     String    @default("ADMIN")
+  fechaActualizacion DateTime  @default(now()) @updatedAt
+  creditos           Credito[]
 
-    modalidadDeSeguroId String
-    @@map(name: "Seguros")
+  @@map(name: "Seguros")
 }
 
 model ModalidadDeSeguro {
-    id                 String   @id @default(uuid())
-    titulo             String
-    descripcion        String
-    creadoPor          String   @default("ADMIN")
-    fechaCreacion      DateTime @default(now())
-    actualizadoPor     String   @default("ADMIN")
-    fechaActualizacion DateTime @default(now()) @updatedAt
+  id                 String   @id @default(uuid())
+  titulo             String
+  descripcion        String
+  creadoPor          String   @default("ADMIN")
+  fechaCreacion      DateTime @default(now())
+  actualizadoPor     String   @default("ADMIN")
+  fechaActualizacion DateTime @default(now()) @updatedAt
 
-    Credito Credito[]
-    @@map(name: "ModalidadesDeSeguro")
+  Credito Credito[]
+  @@map(name: "ModalidadesDeSeguro")
 }
 
 model Concepto {
-    id                 String   @id @default(uuid())
-    descripcion        String
-    creadoPor          String   @default("ADMIN")
-    fechaCreacion      DateTime @default(now())
-    actualizadoPor     String   @default("ADMIN")
-    fechaActualizacion DateTime @default(now()) @updatedAt
+  id                 String   @id @default(uuid())
+  descripcion        String
+  creadoPor          String   @default("ADMIN")
+  fechaCreacion      DateTime @default(now())
+  actualizadoPor     String   @default("ADMIN")
+  fechaActualizacion DateTime @default(now()) @updatedAt
 
-    @@map(name: "Conceptos")
+  @@map(name: "Conceptos")
 }
 
 enum Role {
-    USUARIO
-    ADMIN
-    DIRECTOR
-    CAJERO
-    MANAGER
-    SECRETARIO
-    COLOCADOR
-    COBRADOR
-    ALL
+  USUARIO
+  ADMIN
+  DIRECTOR
+  CAJERO
+  MANAGER
+  SECRETARIO
+  COLOCADOR
+  COBRADOR
+  ALL
 }
 
 enum TipoDireccion {
-    SUCURSAL
-    CLIENTE
-    AVAL
-    NEGOCIO
-    TRABAJO
-    OTRO
+  SUCURSAL
+  CLIENTE
+  AVAL
+  NEGOCIO
+  TRABAJO
+  OTRO
 }
 
 enum Posicion {
-    COLOCADOR
-    COBRADOR
+  COLOCADOR
+  COBRADOR
 }
 
 enum TiposMovimiento {
-    DEPOSITO
-    RETIRO
+  DEPOSITO
+  RETIRO
 }
 
 enum Frecuencia {
-    DIARIO
-    SEMANAL
-    QUINCENAL
-    MENSUAL
-    BIMESTRAL
-    TRIMESTRAL
-    CUATRIMESTRAL
-    SEMESTRAL
-    ANUAL
+  DIARIO
+  SEMANAL
+  QUINCENAL
+  MENSUAL
+  BIMESTRAL
+  TRIMESTRAL
+  CUATRIMESTRAL
+  SEMESTRAL
+  ANUAL
 }
 
 // Catálogos Fin
@@ -240,283 +239,283 @@ enum Frecuencia {
 // Modelos Funcionales
 
 model Usuario {
-    id                 String     @id @default(uuid())
-    nombreUsuario      String     @unique
-    password           String
-    nombre             String
-    apellido           String
-    role               Role       @default(USUARIO)
-    comision           Comision[]
-    creadoPor          String     @default("ADMIN")
-    fechaCreacion      DateTime   @default(now())
-    actualizadoPor     String     @default("ADMIN")
-    fechaActualizacion DateTime   @default(now()) @updatedAt
+  id                 String     @id @default(uuid())
+  nombreUsuario      String     @unique
+  password           String
+  nombre             String
+  apellido           String
+  role               Role       @default(USUARIO)
+  comision           Comision[]
+  creadoPor          String     @default("ADMIN")
+  fechaCreacion      DateTime   @default(now())
+  actualizadoPor     String     @default("ADMIN")
+  fechaActualizacion DateTime   @default(now()) @updatedAt
 
-    @@map(name: "Usuarios")
+  @@map(name: "Usuarios")
 }
 
 model Sucursal {
-    id                 String     @id @default(uuid())
-    nombre             String     @unique
-    direccion          Direccion  @relation(fields: [direccionId], references: [id])
-    telefono           String
-    creditos           Credito[]
-    comisiones         Comision[]
-    cajas              Caja[]
-    activa             Boolean    @default(true)
-    creadoPor          String     @default("ADMIN")
-    fechaCreacion      DateTime   @default(now())
-    actualizadoPor     String     @default("ADMIN")
-    fechaActualizacion DateTime   @default(now()) @updatedAt
-    direccionId        String
+  id                 String     @id @default(uuid())
+  nombre             String     @unique
+  direccion          Direccion  @relation(fields: [direccionId], references: [id])
+  telefono           String
+  creditos           Credito[]
+  comisiones         Comision[]
+  cajas              Caja[]
+  activa             Boolean    @default(true)
+  creadoPor          String     @default("ADMIN")
+  fechaCreacion      DateTime   @default(now())
+  actualizadoPor     String     @default("ADMIN")
+  fechaActualizacion DateTime   @default(now()) @updatedAt
+  direccionId        String
 
-    @@map(name: "Sucursales")
+  @@map(name: "Sucursales")
 }
 
 model Direccion {
-    id                 String        @id @default(uuid())
-    tipo               TipoDireccion
-    calle              String
-    numero             String
-    cruzamientos       String?
-    colonia            Colonia       @relation(fields: [coloniaId], references: [id])
-    sucursales         Sucursal[]
-    cliente            Cliente?      @relation(fields: [clienteId], references: [id])
-    clienteId          String?
-    coloniaId          String
-    trabajo            Trabajo[]
-    creadoPor          String
-    fechaCreacion      DateTime      @default(now())
-    actualizadoPor     String        @default("ADMIN")
-    fechaActualizacion DateTime      @default(now()) @updatedAt
+  id                 String        @id @default(uuid())
+  tipo               TipoDireccion
+  calle              String
+  numero             String
+  cruzamientos       String?
+  colonia            Colonia       @relation(fields: [coloniaId], references: [id])
+  sucursales         Sucursal[]
+  cliente            Cliente?      @relation(fields: [clienteId], references: [id])
+  clienteId          String?
+  coloniaId          String
+  trabajo            Trabajo[]
+  creadoPor          String
+  fechaCreacion      DateTime      @default(now())
+  actualizadoPor     String        @default("ADMIN")
+  fechaActualizacion DateTime      @default(now()) @updatedAt
 
-    @@map(name: "Direcciones")
+  @@map(name: "Direcciones")
 }
 
 model MovimientoDeCaja {
-    id                 String          @id @default(uuid())
-    monto              Decimal         @db.Decimal(15, 2)
-    tipo               TiposMovimiento
-    observaciones      String
-    creadoPor          String
-    fechaCreacion      DateTime        @default(now())
-    actualizadoPor     String          @default("ADMIN")
-    fechaActualizacion DateTime        @default(now()) @updatedAt
-    caja               Caja?           @relation(fields: [cajaId], references: [id])
-    cajaId             String?
+  id                 String          @id @default(uuid())
+  monto              Decimal         @db.Decimal(15, 2)
+  tipo               TiposMovimiento
+  observaciones      String
+  creadoPor          String
+  fechaCreacion      DateTime        @default(now())
+  actualizadoPor     String          @default("ADMIN")
+  fechaActualizacion DateTime        @default(now()) @updatedAt
+  caja               Caja?           @relation(fields: [cajaId], references: [id])
+  cajaId             String?
 
-    @@map(name: "MovimientosDeCaja")
+  @@map(name: "MovimientosDeCaja")
 }
 
 model Caja {
-    id                 String             @id @default(uuid())
-    sucursal           Sucursal           @relation(fields: [sucursalId], references: [id])
-    saldoInicial       Decimal            @db.Decimal(15, 2)
-    fechaApertura      DateTime           @default(now())
-    saldoFinal         Decimal?           @db.Decimal(15, 2)
-    fechaCierre        DateTime?
-    observaciones      String?
-    creadoPor          String
-    fechaCreacion      DateTime           @default(now())
-    actualizadoPor     String             @default("ADMIN")
-    fechaActualizacion DateTime           @default(now()) @updatedAt
-    movimientos        MovimientoDeCaja[]
-    sucursalId         String
+  id                 String             @id @default(uuid())
+  sucursal           Sucursal           @relation(fields: [sucursalId], references: [id])
+  saldoInicial       Decimal            @db.Decimal(15, 2)
+  fechaApertura      DateTime           @default(now())
+  saldoFinal         Decimal?           @db.Decimal(15, 2)
+  fechaCierre        DateTime?
+  observaciones      String?
+  creadoPor          String
+  fechaCreacion      DateTime           @default(now())
+  actualizadoPor     String             @default("ADMIN")
+  fechaActualizacion DateTime           @default(now()) @updatedAt
+  movimientos        MovimientoDeCaja[]
+  sucursalId         String
 
-    @@map(name: "Cajas")
+  @@map(name: "Cajas")
 }
 
 model Pago {
-    id                 String   @id @default(uuid())
-    monto              Decimal  @db.Decimal(15, 2)
-    fechaDePago        DateTime
-    observaciones      String?
-    Credito            Credito? @relation(fields: [creditoId], references: [id])
-    creditoId          String?
-    creadoPor          String
-    fechaCreacion      DateTime @default(now())
-    actualizadoPor     String   @default("ADMIN")
-    fechaActualizacion DateTime @default(now()) @updatedAt
-    clienteId          String
-    sucursalId         String
+  id                 String   @id @default(uuid())
+  monto              Decimal  @db.Decimal(15, 2)
+  fechaDePago        DateTime
+  observaciones      String?
+  Credito            Credito? @relation(fields: [creditoId], references: [id])
+  creditoId          String?
+  creadoPor          String
+  fechaCreacion      DateTime @default(now())
+  actualizadoPor     String   @default("ADMIN")
+  fechaActualizacion DateTime @default(now()) @updatedAt
+  clienteId          String
+  sucursalId         String
 
-    @@map(name: "Pagos")
+  @@map(name: "Pagos")
 }
 
 model Cliente {
-    id                   String         @id @default(uuid())
-    nombre               String
-    apellidoPaterno      String
-    apellidoMaterno      String
-    fechaDeNacimiento    DateTime
-    rfc                  String         @unique
-    curp                 String         @unique
-    telefono1            String
-    telefono2            String?
-    trabajo              Trabajo        @relation(fields: [trabajoId], references: [id])
-    estadoCivil          EstadoCivil    @relation(fields: [estadoCivilId], references: [id])
-    tipoDeVivienda       TipoDeVivienda @relation(fields: [tipoDeViviendaId], references: [id])
-    escolaridad          Escolaridad    @relation(fields: [escolaridadId], references: [id])
-    genero               Genero         @relation(fields: [generoId], references: [id])
-    direcciones          Direccion[]
-    creditos             Credito[]
-    montoMinimo          Decimal        @db.Decimal(15, 2)
-    montoMaximo          Decimal        @db.Decimal(15, 2)
-    numeroCreditosCrecer Int            @default(3)
-    activo               Boolean        @default(true)
-    estadoCivilId        String
-    tipoDeViviendaId     String
-    escolaridadId        String
-    generoId             String
-    trabajoId            String
-    creadoPor            String
-    fechaCreacion        DateTime       @default(now())
-    actualizadoPor       String         @default("ADMIN")
-    fechaActualizacion   DateTime       @default(now()) @updatedAt
+  id                   String         @id @default(uuid())
+  nombre               String
+  apellidoPaterno      String
+  apellidoMaterno      String
+  fechaDeNacimiento    DateTime
+  rfc                  String         @unique
+  curp                 String         @unique
+  telefono1            String
+  telefono2            String?
+  trabajo              Trabajo        @relation(fields: [trabajoId], references: [id])
+  estadoCivil          EstadoCivil    @relation(fields: [estadoCivilId], references: [id])
+  tipoDeVivienda       TipoDeVivienda @relation(fields: [tipoDeViviendaId], references: [id])
+  escolaridad          Escolaridad    @relation(fields: [escolaridadId], references: [id])
+  genero               Genero         @relation(fields: [generoId], references: [id])
+  direcciones          Direccion[]
+  creditos             Credito[]
+  montoMinimo          Decimal        @db.Decimal(15, 2)
+  montoMaximo          Decimal        @db.Decimal(15, 2)
+  numeroCreditosCrecer Int            @default(3)
+  activo               Boolean        @default(true)
+  estadoCivilId        String
+  tipoDeViviendaId     String
+  escolaridadId        String
+  generoId             String
+  trabajoId            String
+  creadoPor            String
+  fechaCreacion        DateTime       @default(now())
+  actualizadoPor       String         @default("ADMIN")
+  fechaActualizacion   DateTime       @default(now()) @updatedAt
 
-    @@map(name: "Clientes")
+  @@map(name: "Clientes")
 }
 
 model Trabajo {
-    id                   String             @id @default(uuid())
-    nombre               String
-    direccion            Direccion          @relation(fields: [direccionId], references: [id])
-    telefono             String
-    antiguedad           Int
-    actividadEconomica   ActividadEconomica @relation(fields: [actividadEconomicaId], references: [id])
-    cliente              Cliente[]
-    direccionId          String
-    actividadEconomicaId String
-    creadoPor            String
-    fechaCreacion        DateTime           @default(now())
-    actualizadoPor       String             @default("ADMIN")
-    fechaActualizacion   DateTime           @default(now()) @updatedAt
+  id                   String             @id @default(uuid())
+  nombre               String
+  direccion            Direccion          @relation(fields: [direccionId], references: [id])
+  telefono             String
+  antiguedad           Int
+  actividadEconomica   ActividadEconomica @relation(fields: [actividadEconomicaId], references: [id])
+  cliente              Cliente[]
+  direccionId          String
+  actividadEconomicaId String
+  creadoPor            String
+  fechaCreacion        DateTime           @default(now())
+  actualizadoPor       String             @default("ADMIN")
+  fechaActualizacion   DateTime           @default(now()) @updatedAt
 
-    @@map(name: "Trabajos")
+  @@map(name: "Trabajos")
 }
 
 model Parentesco {
-    id                 String   @id @default(uuid())
-    descripcion        String
-    aval               Aval[]
-    creadoPor          String
-    fechaCreacion      DateTime @default(now())
-    actualizadoPor     String   @default("ADMIN")
-    fechaActualizacion DateTime @default(now()) @updatedAt
+  id                 String   @id @default(uuid())
+  descripcion        String
+  aval               Aval[]
+  creadoPor          String
+  fechaCreacion      DateTime @default(now())
+  actualizadoPor     String   @default("ADMIN")
+  fechaActualizacion DateTime @default(now()) @updatedAt
 
-    @@map(name: "Parentescos")
+  @@map(name: "Parentescos")
 }
 
 model Aval {
-    id                 String     @id @default(uuid())
-    nombre             String
-    apellidoPaterno    String
-    apellidoMaterno    String
-    telefono           String
-    fechaDeNacimiento  DateTime
-    parentesco         Parentesco @relation(fields: [parentescoId], references: [id])
-    parentescoId       String
-    otro               String
-    ocupacion          String
-    creditos           Credito[]
-    creadoPor          String
-    fechaCreacion      DateTime   @default(now())
-    actualizadoPor     String     @default("ADMIN")
-    fechaActualizacion DateTime   @default(now()) @updatedAt
+  id                 String     @id @default(uuid())
+  nombre             String
+  apellidoPaterno    String
+  apellidoMaterno    String
+  telefono           String
+  fechaDeNacimiento  DateTime
+  parentesco         Parentesco @relation(fields: [parentescoId], references: [id])
+  parentescoId       String
+  otro               String
+  ocupacion          String
+  creditos           Credito[]
+  creadoPor          String
+  fechaCreacion      DateTime   @default(now())
+  actualizadoPor     String     @default("ADMIN")
+  fechaActualizacion DateTime   @default(now()) @updatedAt
 
-    @@map(name: "Avales")
+  @@map(name: "Avales")
 }
 
 model Producto {
-    id                 String     @id @default(uuid())
-    nombre             String
-    descripcion        String
-    montoMinimo        Decimal    @db.Decimal(15, 2)
-    montoMaximo        Decimal    @db.Decimal(15, 2)
-    multiplos          Decimal    @db.Decimal(15, 2)
-    interes            Decimal    @db.Decimal(15, 2)
-    interesMoratorio   Decimal    @db.Decimal(15, 2)
-    penalizacion       Decimal    @default(0) @db.Decimal(15, 2)
-    comision           Decimal    @default(0) @db.Decimal(15, 2)
-    cargos             Decimal    @default(0) @db.Decimal(15, 2)
-    duracion           Int
-    numeroDePagos      Int
-    frecuencia         Frecuencia
-    creditos           Credito[]
-    creadoPor          String     @default("ADMIN")
-    fechaCreacion      DateTime   @default(now())
-    actualizadoPor     String     @default("ADMIN")
-    fechaActualizacion DateTime   @default(now()) @updatedAt
-    diaSemana          Int?
-    diaMes             Int?
+  id                 String     @id @default(uuid())
+  nombre             String
+  descripcion        String
+  montoMinimo        Decimal    @db.Decimal(15, 2)
+  montoMaximo        Decimal    @db.Decimal(15, 2)
+  multiplos          Decimal    @db.Decimal(15, 2)
+  interes            Decimal    @db.Decimal(15, 2)
+  interesMoratorio   Decimal    @db.Decimal(15, 2)
+  penalizacion       Decimal    @default(0) @db.Decimal(15, 2)
+  comision           Decimal    @default(0) @db.Decimal(15, 2)
+  cargos             Decimal    @default(0) @db.Decimal(15, 2)
+  duracion           Int
+  numeroDePagos      Int
+  frecuencia         Frecuencia
+  creditos           Credito[]
+  creadoPor          String     @default("ADMIN")
+  fechaCreacion      DateTime   @default(now())
+  actualizadoPor     String     @default("ADMIN")
+  fechaActualizacion DateTime   @default(now()) @updatedAt
+  diaSemana          Int?
+  diaMes             Int?
 
-    @@map(name: "Productos")
+  @@map(name: "Productos")
 }
 
 model Credito {
-    id                  String            @id @default(uuid())
-    cliente             Cliente           @relation(fields: [clienteId], references: [id])
-    sucursal            Sucursal          @relation(fields: [sucursalId], references: [id])
-    estado              EstadoDeCredito   @relation(fields: [estadoDeCreditoId], references: [id])
-    fechaInicio         DateTime          @default(now())
-    fechaFinal          DateTime
-    fechaLiquidacion    DateTime
-    monto               Decimal           @db.Decimal(15, 2)
-    producto            Producto          @relation(fields: [productosId], references: [id])
-    seguro              Seguro            @relation(fields: [segurosId], references: [id])
-    modalidadDeSeguro   ModalidadDeSeguro @relation(fields: [modalidadDeSeguroId], references: [id])
-    aval                Aval              @relation(fields: [avalId], references: [id])
-    comisiones          Comision[]
-    pagos               Pago[]
-    creadoPor           String
-    fechaCreacion       DateTime          @default(now())
-    actualizadoPor      String            @default("ADMIN")
-    fechaActualizacion  DateTime          @default(now()) @updatedAt
-    clienteId           String
-    sucursalId          String
-    estadoDeCreditoId   String
-    productosId         String
-    segurosId           String
-    avalId              String
-    modalidadDeSeguroId String
+  id                  String            @id @default(uuid())
+  cliente             Cliente           @relation(fields: [clienteId], references: [id])
+  sucursal            Sucursal          @relation(fields: [sucursalId], references: [id])
+  estado              EstadoDeCredito   @relation(fields: [estadoDeCreditoId], references: [id])
+  fechaInicio         DateTime          @default(now())
+  fechaFinal          DateTime
+  fechaLiquidacion    DateTime
+  monto               Decimal           @db.Decimal(15, 2)
+  producto            Producto          @relation(fields: [productosId], references: [id])
+  seguro              Seguro            @relation(fields: [segurosId], references: [id])
+  modalidadDeSeguro   ModalidadDeSeguro @relation(fields: [modalidadDeSeguroId], references: [id])
+  aval                Aval              @relation(fields: [avalId], references: [id])
+  comisiones          Comision[]
+  pagos               Pago[]
+  creadoPor           String
+  fechaCreacion       DateTime          @default(now())
+  actualizadoPor      String            @default("ADMIN")
+  fechaActualizacion  DateTime          @default(now()) @updatedAt
+  clienteId           String
+  sucursalId          String
+  estadoDeCreditoId   String
+  productosId         String
+  segurosId           String
+  avalId              String
+  modalidadDeSeguroId String
 
-    @@map(name: "Creditos")
+  @@map(name: "Creditos")
 }
 
 enum TipoDeEsquema {
-    PORCENTAJE
-    MONTO
+  PORCENTAJE
+  MONTO
 }
 
 model EsquemaComision {
-    id                 String        @id @default(uuid())
-    tipo               TipoDeEsquema
-    descripcion        String
-    monto              String
-    comision           Comision[]
-    creadoPor          String
-    fechaCreacion      DateTime      @default(now())
-    actualizadoPor     String        @default("ADMIN")
-    fechaActualizacion DateTime      @default(now()) @updatedAt
+  id                 String        @id @default(uuid())
+  tipo               TipoDeEsquema
+  descripcion        String
+  monto              String
+  comision           Comision[]
+  creadoPor          String
+  fechaCreacion      DateTime      @default(now())
+  actualizadoPor     String        @default("ADMIN")
+  fechaActualizacion DateTime      @default(now()) @updatedAt
 
-    @@map(name: "EsquemasComision")
+  @@map(name: "EsquemasComision")
 }
 
 model Comision {
-    id                 String          @id @default(uuid())
-    credito            Credito         @relation(fields: [creditoId], references: [id])
-    sucursal           Sucursal        @relation(fields: [sucursalId], references: [id])
-    usuario            Usuario         @relation(fields: [usuarioId], references: [id])
-    esquema            EsquemaComision @relation(fields: [esquemaComisionId], references: [id])
-    monto              Decimal         @db.Decimal(15, 2)
-    creadoPor          String
-    fechaCreacion      DateTime        @default(now())
-    actualizadoPor     String          @default("ADMIN")
-    fechaActualizacion DateTime        @default(now()) @updatedAt
-    creditoId          String
-    sucursalId         String
-    usuarioId          String
-    esquemaComisionId  String
+  id                 String          @id @default(uuid())
+  credito            Credito         @relation(fields: [creditoId], references: [id])
+  sucursal           Sucursal        @relation(fields: [sucursalId], references: [id])
+  usuario            Usuario         @relation(fields: [usuarioId], references: [id])
+  esquema            EsquemaComision @relation(fields: [esquemaComisionId], references: [id])
+  monto              Decimal         @db.Decimal(15, 2)
+  creadoPor          String
+  fechaCreacion      DateTime        @default(now())
+  actualizadoPor     String          @default("ADMIN")
+  fechaActualizacion DateTime        @default(now()) @updatedAt
+  creditoId          String
+  sucursalId         String
+  usuarioId          String
+  esquemaComisionId  String
 
-    @@map(name: "Comisiones")
+  @@map(name: "Comisiones")
 }

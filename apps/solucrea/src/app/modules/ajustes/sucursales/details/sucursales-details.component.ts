@@ -13,7 +13,6 @@ import {
     ClearSucursalState,
     EditSucursal,
     GetColonias,
-    SelectSucursal,
 } from 'app/modules/ajustes/_store';
 import { SharedService } from 'app/shared';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
@@ -122,7 +121,6 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
                     if (action instanceof AddSucursal) {
                         // we clear the forms
                         this.sucursalForm.reset();
-                        this.sucursalForm.reset();
                         setTimeout(() => {
                             this._store.dispatch(new Navigate(['/ajustes/sucursales/']));
                         }, 2000);
@@ -206,7 +204,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Function to save cliente into the database
+     * Function to save sucursal into the database
      *
      *
      */
@@ -221,7 +219,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Volver a Clientes
+     * Volver a Sucursales
      */
     back(): void {
         this._store.dispatch(new Navigate(['/ajustes/sucursales']));

@@ -5,7 +5,7 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { AuthUtils } from 'app/core/auth/auth.utils';
-import { AjustesCreditosState, DeleteCredito, GetAllCreditos } from 'app/modules/ajustes/_store';
+import { AjustesCreditosState, AjustesModeCredito, DeleteCredito, GetAllCreditos } from 'app/modules/ajustes/_store';
 import { map, Observable, startWith, Subject, takeUntil, tap, withLatestFrom } from 'rxjs';
 
 import { Producto } from '.prisma/client';
@@ -31,7 +31,9 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
         private _dialog: MatDialog,
         private _actions$: Actions,
         private _toast: HotToastService
-    ) {}
+    ) {
+        this.actions$ = this.subscribeToActions();
+    }
 
     ngOnInit(): void {
         this._store.dispatch(new GetAllCreditos());
@@ -43,8 +45,6 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
             withLatestFrom(this.creditos$),
             map(([value, creditos]) => this._filter(value, creditos))
         );
-
-        this.actions$ = this.subscribeToActions();
     }
 
     /**
@@ -88,7 +88,7 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
      *
      */
     newProducto(): void {
-        this._store.dispatch([new Navigate([`ajustes/creditos/${AuthUtils.guid()}`])]);
+        this._store.dispatch([new Navigate([`ajustes/creditos/${AuthUtils.guid()}`]), new AjustesModeCredito('new')]);
     }
 
     /**

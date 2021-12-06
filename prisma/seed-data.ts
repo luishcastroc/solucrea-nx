@@ -10,6 +10,8 @@ export const adminUsuario: Prisma.UsuarioCreateInput = {
 
 const creationDate = new Date().toISOString();
 
+export const seguros: Prisma.SeguroUncheckedCreateInput[] = [{ nombre: 'Tradicional', monto: 45 }];
+
 export const modalidadesDeSeguro: Prisma.ModalidadDeSeguroUncheckedCreateInput[] = [
     { titulo: 'Diferido', descripcion: 'Pago parcial del seguro en cada cuota' },
     { titulo: 'Contado', descripcion: 'Pago total del seguro' },
