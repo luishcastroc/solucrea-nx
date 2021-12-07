@@ -5,10 +5,18 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { AuthUtils } from 'app/core/auth/auth.utils';
-import { AjustesCreditosState, AjustesModeCredito, DeleteCredito, GetAllCreditos } from 'app/modules/ajustes/_store';
+import {
+    AjustesCreditosState,
+    AjustesModeCredito,
+    DeleteCredito,
+    GetAllCreditos,
+    EditCredito,
+    ChangeSearchFilterCreditos,
+} from 'app/modules/ajustes/_store';
 import { map, Observable, startWith, Subject, takeUntil, tap, withLatestFrom } from 'rxjs';
 
 import { Producto } from '.prisma/client';
+import { ConfirmationDialogComponent } from 'app/shared';
 
 @Component({
     selector: 'app-list',
@@ -23,6 +31,11 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
     searchResults$: Observable<Producto[]>;
     searchInput = new FormControl();
     actions$: Observable<Actions>;
+    values = [
+        { display: 'Activos', value: true },
+        { display: 'Inactivos', value: false },
+    ];
+    activo = true;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -54,7 +67,7 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
      */
     subscribeToActions(): Actions {
         return this._actions$.pipe(
-            ofActionCompleted(GetAllCreditos, DeleteCredito),
+            ofActionCompleted(GetAllCreditos, EditCredito, DeleteCredito, ChangeSearchFilterCreditos),
             takeUntil(this._unsubscribeAll),
             tap((result) => {
                 const { error, successful } = result.result;
@@ -70,8 +83,13 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
                 if (successful) {
                     if (action instanceof DeleteCredito) {
                         message = 'Sucursal desactivada exitosamente.';
+                        this._store.dispatch(new ChangeSearchFilterCreditos(this.activo));
                     }
-                    if (!(action instanceof GetAllCreditos)) {
+                    if (action instanceof EditCredito) {
+                        message = 'Sucursal activada exitosamente.';
+                        this._store.dispatch(new ChangeSearchFilterCreditos(this.activo));
+                    }
+                    if (!(action instanceof GetAllCreditos) && !(action instanceof ChangeSearchFilterCreditos)) {
                         this._toast.success(message, {
                             duration: 4000,
                             position: 'bottom-center',
@@ -92,23 +110,40 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
     }
 
     /**
-     *
-     * Function to edit Producto
-     *
-     * @param id string
+     * Change radioButton
      */
-    editProduco(id: string): void {
-        this._store.dispatch([new Navigate([`ajustes/creditos/${id}`])]);
+    changeActivo(e): void {
+        this._store.dispatch(new ChangeSearchFilterCreditos(e.value));
     }
 
     /**
      *
-     * Function to delete Producto
+     * Function to edit Productos
      *
      * @param id string
      */
-    deleteProducto(id: string): void {
-        this._store.dispatch([new Navigate([`ajustes/creditos/${id}`])]);
+    editProducto(id: string): void {
+        this._store.dispatch([new Navigate([`ajustes/creditos/${id}`]), new AjustesModeCredito('edit')]);
+    }
+
+    /**
+     * Delete the selected sucursal
+     *
+     * @param id
+     *
+     */
+    deleteProducto({ id, nombre }: Producto): void {
+        const confirmDialog = this._dialog.open(ConfirmationDialogComponent, {
+            data: {
+                title: 'Confirmar desactivar Producto',
+                message: `Estas seguro que deseas desactivar el producto: ${nombre}`,
+            },
+        });
+        confirmDialog.afterClosed().subscribe((result) => {
+            if (result === true) {
+                this._store.dispatch(new DeleteCredito(id));
+            }
+        });
     }
 
     /**

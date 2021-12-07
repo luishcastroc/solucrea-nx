@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 
 import { PrismaService } from '../../prisma/prisma.service';
 import { Producto } from '.prisma/client';
+import { identity } from 'lodash';
 
 @Injectable()
 export class ProductosService {
@@ -11,30 +12,58 @@ export class ProductosService {
     // Productos
 
     async producto(where: Prisma.ProductoWhereUniqueInput): Promise<Producto | null> {
-        return await this.prisma.producto.findUnique({
-            where,
-        });
+        try {
+            const producto = await this.prisma.producto.findUnique({
+                where,
+            });
+            return producto;
+        } catch ({ response }) {
+            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error obteniendo el credito' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: response.status, message: response.message }, response.status);
+            }
+        }
     }
 
     async productos(): Promise<Producto[]> {
-        return await this.prisma.producto.findMany({});
+        try {
+            const productos = await this.prisma.producto.findMany({});
+
+            return productos;
+        } catch ({ response }) {
+            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error obteniendo los creditos' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: response.status, message: response.message }, response.status);
+            }
+        }
     }
 
     async createProducto(data: Prisma.ProductoCreateInput): Promise<Producto> {
+        const { id, ...rest } = data;
+        const producto = rest;
         try {
             const newProducto = await this.prisma.producto.create({
-                data,
+                data: producto,
             });
 
             return newProducto;
-        } catch ({ response }) {
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+        } catch (e) {
+            console.log(e);
+            if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando el nuevo producto' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: response.status, message: response.message }, response.status);
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
             }
         }
     }
@@ -44,10 +73,24 @@ export class ProductosService {
         data: Prisma.ProductoUpdateInput;
     }): Promise<Producto> {
         const { where, data } = params;
-        return await this.prisma.producto.update({
-            data,
-            where,
-        });
+
+        try {
+            const producto = await this.prisma.producto.update({
+                data,
+                where,
+            });
+
+            return producto;
+        } catch ({ response }) {
+            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error actualizando el credito' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: response.status, message: response.message }, response.status);
+            }
+        }
     }
 
     async deleteProducto(where: Prisma.ProductoWhereUniqueInput): Promise<Producto> {

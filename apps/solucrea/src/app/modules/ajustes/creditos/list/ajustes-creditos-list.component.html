@@ -7,75 +7,116 @@
         <div class="w-full flex flex-col">
             <!-- Add team member -->
             <div class="w-full">
-                <mat-form-field class="fuse-mat-no-subscript w-full" [floatLabel]="'always'">
-                    <mat-label>Buscar Producto:</mat-label>
-                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:view-boards'" matPrefix></mat-icon>
-                    <input
-                        matInput
-                        [autocomplete]="'off'"
-                        [placeholder]="'Nombre del Producto'"
-                        [formControl]="searchInput"
-                    />
-                    <button
-                        mat-icon-button
-                        matSuffix
-                        aria-label="Crear producto"
-                        #tooltip="matTooltip"
-                        matTooltip="Crear producto"
-                        [matTooltipPosition]="'below'"
-                        (click)="newProducto()"
+                <div class="flex flex-col gap-3">
+                    <mat-form-field class="fuse-mat-no-subscript w-full" [floatLabel]="'always'">
+                        <mat-label>Buscar Producto:</mat-label>
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:view-boards'" matPrefix></mat-icon>
+                        <input
+                            matInput
+                            [autocomplete]="'off'"
+                            [placeholder]="'Nombre del Producto'"
+                            [formControl]="searchInput"
+                        />
+                        <button
+                            mat-icon-button
+                            matSuffix
+                            aria-label="Crear producto"
+                            #tooltip="matTooltip"
+                            matTooltip="Crear producto"
+                            [matTooltipPosition]="'below'"
+                            (click)="newProducto()"
+                        >
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                        </button>
+                    </mat-form-field>
+                    <!-- Active or Innactive ones -->
+                    <mat-radio-group
+                        aria-labelledby="radio-group-label"
+                        class="flex flex-row gap-3 items-center justify-center"
+                        [(ngModel)]="activo"
                     >
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
-                    </button>
-                </mat-form-field>
+                        <mat-radio-button
+                            *ngFor="let value of values"
+                            [value]="value.value"
+                            (change)="changeActivo($event)"
+                        >
+                            {{ value.display }}
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
                 <!-- Content -->
                 <div class="flex-auto mt-8">
                     <ng-container *ngIf="searchResults$ | async as productos">
-                        <ng-container *ngIf="productos.lenght > 0; else noProducts"> prueba </ng-container>
+                        <ng-container *ngIf="productos.length > 0; else noProducts">
+                            <ng-container *ngFor="let producto of productos">
+                                <div class="grid grid-cols-1 z-20 md:flex px-8 py-4 md:px-10 border-b justify-between">
+                                    <div class="grid grid-cols-2 md:flex md:flex-row gap-6 xsm:flex-wrap sm:flex-wrap">
+                                        <div class="flex flex-col">
+                                            <div class="font-bold">Nombre:</div>
+                                            <div class="mt-2">{{ producto.nombre }}</div>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <div class="font-bold">Tasa de Interes:</div>
+                                            <div class="mt-2 md:text-center">{{ producto.interes }} %</div>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <div class="font-bold">Duración:</div>
+                                            <div class="mt-2 md:text-center">{{ producto.duracion }} Días</div>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <div class="font-bold">Monto Minimo:</div>
+                                            <div class="mt-2 md:text-center">
+                                                {{ producto.montoMinimo | currency: 'MXN':'symbol':'4.2-2' }}
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <div class="font-bold">Monto Maximo:</div>
+                                            <div class="mt-2 md:text-center">
+                                                {{ producto.montoMaximo | currency: 'MXN':'symbol':'4.2-2' }}
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <div class="font-bold">Descripción:</div>
+                                            <div class="mt-2">
+                                                {{ producto.descripcion }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="xsm:mt-4 sm:mt-4 sm:ml-3 flex justify-center items-center">
+                                        <button
+                                            mat-icon-button
+                                            aria-label="Editar producto"
+                                            #tooltip="matTooltip"
+                                            matTooltip="Editar producto"
+                                            [matTooltipPosition]="'below'"
+                                            (click)="editProducto(producto.id)"
+                                        >
+                                            <mat-icon
+                                                class="text-hint"
+                                                [svgIcon]="'heroicons_outline:clipboard-list'"
+                                            ></mat-icon>
+                                        </button>
+                                        <button
+                                            mat-icon-button
+                                            aria-label="Borrar producto"
+                                            #tooltip="matTooltip"
+                                            matTooltip="Borrar producto"
+                                            [matTooltipPosition]="'below'"
+                                            (click)="deleteProducto(producto)"
+                                        >
+                                            <mat-icon
+                                                class="text-hint"
+                                                [svgIcon]="'heroicons_outline:trash'"
+                                            ></mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
                         <ng-template #noProducts>
                             <div>No existen productos disponibles, agregar uno utilizando el botón +</div>
                         </ng-template>
                     </ng-container>
-                    <!-- <ng-container *ngFor="let sucursal of searchResults$ | async">
-                            <div class="z-20 flex px-8 py-4 md:px-10 border-b justify-between">
-                                <div class="flex gap-6 xsm:flex-wrap sm:flex-wrap">
-                                    <div class="flex flex-col">
-                                        <div class="font-bold">Nombre:</div>
-                                        <div class="mt-2">{{ sucursal.nombre }}</div>
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <div class="font-bold">Telefono:</div>
-                                        <div class="mt-2">
-                                            ({{ sucursal.telefono | slice: 0:3 }})-{{ sucursal.telefono | slice: 3:6 }}-{{
-                                                sucursal.telefono | slice: 6:8
-                                            }}-{{ sucursal.telefono | slice: 8:10 }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="order-1 sm:order-2 sm:ml-3 xsm:flex-col flex justify-center items-center">
-                                    <button
-                                        mat-icon-button
-                                        aria-label="Editar sucursal"
-                                        #tooltip="matTooltip"
-                                        matTooltip="Editar sucursal"
-                                        [matTooltipPosition]="'below'"
-                                        (click)="editSucursal(sucursal.id)"
-                                    >
-                                        <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:clipboard-list'"></mat-icon>
-                                    </button>
-                                    <button
-                                        mat-icon-button
-                                        aria-label="Borrar sucursal"
-                                        #tooltip="matTooltip"
-                                        matTooltip="Borrar sucursal"
-                                        [matTooltipPosition]="'below'"
-                                        (click)="deleteSucursal(sucursal)"
-                                    >
-                                        <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
-                                    </button>
-                                </div>
-                            </div>
-                        </ng-container> -->
                 </div>
             </div>
         </div>

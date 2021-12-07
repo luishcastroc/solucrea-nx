@@ -6,7 +6,13 @@ import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { EditMode } from 'app/core/models';
-import { AddCredito, AjustesCreditosState, ClearCreditoState, EditCredito } from 'app/modules/ajustes/_store';
+import {
+    AddCredito,
+    AjustesCreditosState,
+    ClearCreditoState,
+    EditCredito,
+    SelectCredito,
+} from 'app/modules/ajustes/_store';
 import { IDays, IFrecuencia } from 'app/modules/ajustes/models';
 import { SharedService } from 'app/shared';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
@@ -170,24 +176,25 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
                     });
                 }
                 if (successful) {
-                    const message = 'Sucursal salvada exitosamente.';
+                    let message = 'Producto salvado exitosamente.';
+                    if (action instanceof EditCredito) {
+                        message = 'Producto actualizado exitosamente';
+                    }
                     this._toast.success(message, {
                         duration: 4000,
                         position: 'bottom-center',
                     });
 
                     if (action instanceof AddCredito) {
-                        // we clear the forms
-                        this.creditosForm.reset();
                         setTimeout(() => {
                             this._store.dispatch(new Navigate(['/ajustes/creditos/']));
                         }, 2000);
                     } else {
                         this.creditosForm.markAsPristine();
+                        // we enable the form
+                        this.creditosForm.enable();
                     }
                 }
-                // we enable the form
-                this.creditosForm.enable();
             });
     }
 
@@ -200,6 +207,10 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
         this.editMode$ = this._store.select(AjustesCreditosState.editMode).pipe(
             tap((edit) => {
                 this.editMode = edit;
+
+                if (edit === 'edit') {
+                    this._store.dispatch(new SelectCredito(id));
+                }
 
                 this.selectedProducto$ = this._store.select(AjustesCreditosState.selectedCredito).pipe(
                     tap((credito: Producto) => {
@@ -222,7 +233,9 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
     saveCredito(): void {
         if (this.editMode === 'new') {
             this.creditosForm.disable();
-            this._store.dispatch(new AddCredito(this.creditosForm.value));
+            const diaSemana = this.diaSemana.value === '' ? null : this.diaSemana.value;
+            const diaMes = this.diaMes.value === '' ? null : this.diaMes.value;
+            this._store.dispatch(new AddCredito({ ...this.creditosForm.value, diaMes, diaSemana }));
         } else if (this.editMode === 'edit') {
             const creditoEdit = this._sharedService.getDirtyValues(this.creditosForm);
             this._store.dispatch(new EditCredito(this.id.value, creditoEdit));

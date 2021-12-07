@@ -38,3 +38,8 @@ export class ClearCreditoState {
 export class ClearCreditos {
     static readonly type = '[Credito] Clear Creditos';
 }
+
+export class ChangeSearchFilterCreditos {
+    static readonly type = '[Credito] Change Filter';
+    constructor(public payload: boolean) {}
+}

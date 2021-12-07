@@ -15,11 +15,13 @@ import {
 } from './ajustes-creditos.actions';
 import { AjustesCreditosStateModel } from './ajustes-creditos.model';
 import { Producto } from '.prisma/client';
+import { ChangeSearchFilterCreditos } from '.';
 
 @State<AjustesCreditosStateModel>({
     name: 'ajustesCreditos',
     defaults: {
         creditos: [],
+        creditosFiltered: [],
         editMode: 'edit',
         selectedCredito: undefined,
         loading: false,
@@ -45,8 +47,8 @@ export class AjustesCreditosState {
     }
 
     @Selector()
-    static creditos({ creditos }: AjustesCreditosStateModel): Producto[] {
-        return creditos;
+    static creditos({ creditosFiltered }: AjustesCreditosStateModel): Producto[] {
+        return creditosFiltered;
     }
 
     @Action(GetAllCreditos)
@@ -54,8 +56,10 @@ export class AjustesCreditosState {
         ctx.patchState({ loading: true });
         return this._ajustesCreditosService.getProductos().pipe(
             tap((creditos: Producto[]) => {
+                const creditosFiltered = creditos.filter((credito: Producto) => credito.activo === true);
                 ctx.patchState({
                     creditos,
+                    creditosFiltered,
                     loading: false,
                 });
             })
@@ -104,6 +108,17 @@ export class AjustesCreditosState {
         );
     }
 
+    @Action(ChangeSearchFilterCreditos)
+    changeSearchFilter(ctx: StateContext<AjustesCreditosStateModel>, { payload }: ChangeSearchFilterCreditos) {
+        ctx.patchState({ loading: true });
+        const { creditos } = ctx.getState();
+        const creditosFiltered = creditos.filter((credito: Producto) => credito.activo === payload);
+        ctx.patchState({
+            creditosFiltered,
+            loading: false,
+        });
+    }
+
     @Action(AjustesModeCredito)
     toggleEditModeCredito(ctx: StateContext<AjustesCreditosStateModel>, action: AjustesModeCredito) {
         const { payload } = action;
@@ -123,6 +138,7 @@ export class AjustesCreditosState {
     clearCreditos(ctx: StateContext<AjustesCreditosStateModel>) {
         ctx.patchState({
             creditos: [],
+            creditosFiltered: [],
         });
     }
 }

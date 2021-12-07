@@ -13,6 +13,7 @@ import {
     ClearSucursalState,
     EditSucursal,
     GetColonias,
+    SelectSucursal,
 } from 'app/modules/ajustes/_store';
 import { SharedService } from 'app/shared';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
@@ -119,17 +120,15 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
                     });
 
                     if (action instanceof AddSucursal) {
-                        // we clear the forms
-                        this.sucursalForm.disable();
                         setTimeout(() => {
                             this._store.dispatch(new Navigate(['/ajustes/sucursales/']));
                         }, 2000);
                     } else {
                         this.sucursalForm.markAsPristine();
+                        // we enable the form
+                        this.sucursalForm.enable();
                     }
                 }
-                // we enable the form
-                this.sucursalForm.enable();
             });
     }
 
@@ -142,6 +141,10 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
         this.editMode$ = this._store.select(AjustesSucursalesState.editMode).pipe(
             tap((edit) => {
                 this.editMode = edit;
+
+                if (edit === 'edit') {
+                    this._store.dispatch(new SelectSucursal(id));
+                }
 
                 this.colonias$ = this._store.select(AjustesSucursalesState.colonias).pipe(
                     tap((colonias: IColoniaReturnDto) => {

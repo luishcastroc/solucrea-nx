@@ -14,7 +14,6 @@ import {
     DeleteSucursal,
     EditSucursal,
     GetAllSucursales,
-    SelectSucursal,
 } from 'app/modules/ajustes/_store';
 import { ConfirmationDialogComponent } from 'app/shared';
 import { map, Observable, startWith, tap, withLatestFrom } from 'rxjs';
@@ -116,11 +115,7 @@ export class SucusalesListComponent implements OnInit {
      * @param id string
      */
     editSucursal(id: string): void {
-        this._store.dispatch([
-            new Navigate([`ajustes/sucursales/${id}`]),
-            new AjustesModeSucursal('edit'),
-            new SelectSucursal(id),
-        ]);
+        this._store.dispatch([new Navigate([`ajustes/sucursales/${id}`]), new AjustesModeSucursal('edit')]);
     }
 
     /**
