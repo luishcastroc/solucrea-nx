@@ -139,7 +139,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
      */
     subscribeToActions(): void {
         this._actions$
-            .pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(AddCaja, EditCaja))
+            .pipe(ofActionCompleted(AddCaja, EditCaja), takeUntil(this._unsubscribeAll))
             .subscribe((result) => {
                 const { error, successful } = result.result;
                 const { action } = result;
@@ -163,6 +163,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
                     });
 
                     if (action instanceof AddCaja) {
+                        this.cajaForm.disable();
                         setTimeout(() => {
                             this._store.dispatch(new Navigate(['/caja']));
                         }, 3000);
@@ -234,6 +235,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
      */
     cancelCaja(editMode: EditMode): void {
         if (editMode === 'new') {
+            this.cajaForm.markAsPristine();
             this.cajaForm.reset();
         } else if (editMode === 'edit') {
             this.cajaForm.patchValue({

@@ -24,6 +24,9 @@ export class ClientesService {
         montoMinimo: true,
         montoMaximo: true,
         numeroCreditosCrecer: true,
+        multiplos: true,
+        porcentajeDePagos: true,
+        porcentajeDeMora: true,
         telefono1: true,
         telefono2: true,
         direcciones: {
@@ -134,6 +137,9 @@ export class ClientesService {
             direcciones: { createMany: { data: direccionesCreate } },
             montoMinimo: data.montoMinimo,
             montoMaximo: data.montoMaximo,
+            porcentajeDePagos: data.porcentajeDePagos,
+            porcentajeDeMora: data.porcentajeDeMora,
+            multiplos: data.multiplos,
             estadoCivil: { connect: { id: data.estadoCivil as string } },
             tipoDeVivienda: { connect: { id: data.tipoDeVivienda as string } },
             escolaridad: { connect: { id: data.escolaridad as string } },
@@ -164,14 +170,15 @@ export class ClientesService {
             return await this.prisma.cliente.create({
                 data: clienteData,
             });
-        } catch ({ response }) {
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+        } catch (e) {
+            console.log(e);
+            if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al agregar al cliente' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: response.status, message: response.message }, response.status);
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
             }
         }
     }

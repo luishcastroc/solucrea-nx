@@ -9,8 +9,6 @@ export class CreateProductoDto implements Prisma.ProductoCreateInput {
     montoMinimo: string | number | Prisma.Decimal;
     @IsNotEmpty({ message: 'Monto máximo es requerido.' })
     montoMaximo: string | number | Prisma.Decimal;
-    @IsNotEmpty({ message: 'Multiplos es requerido.' })
-    multiplos: string | number | Prisma.Decimal;
     @IsNotEmpty({ message: 'Interes es requerido.' })
     interes: string | number | Prisma.Decimal;
     @IsNotEmpty({ message: 'Interes moratorio es requerido.' })

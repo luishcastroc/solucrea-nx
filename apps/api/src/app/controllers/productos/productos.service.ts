@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 import { PrismaService } from '../../prisma/prisma.service';
@@ -21,9 +21,22 @@ export class ProductosService {
     }
 
     async createProducto(data: Prisma.ProductoCreateInput): Promise<Producto> {
-        return await this.prisma.producto.create({
-            data,
-        });
+        try {
+            const newProducto = await this.prisma.producto.create({
+                data,
+            });
+
+            return newProducto;
+        } catch ({ response }) {
+            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando el nuevo producto' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: response.status, message: response.message }, response.status);
+            }
+        }
     }
 
     async updateProducto(params: {

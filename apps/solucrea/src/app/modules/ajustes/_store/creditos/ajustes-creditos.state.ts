@@ -2,11 +2,19 @@ import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { EditMode } from 'app/core/models';
 import { AjustesCreditosService } from 'app/modules/ajustes/_services';
+import { tap } from 'rxjs';
 
-import { AjustesModeCredito, ClearCreditos, ClearCreditoState, GetAllCreditos } from './ajustes-creditos.actions';
+import {
+    AddCredito,
+    AjustesModeCredito,
+    ClearCreditos,
+    ClearCreditoState,
+    EditCredito,
+    GetAllCreditos,
+    SelectCredito,
+} from './ajustes-creditos.actions';
 import { AjustesCreditosStateModel } from './ajustes-creditos.model';
 import { Producto } from '.prisma/client';
-import { tap } from 'rxjs';
 
 @State<AjustesCreditosStateModel>({
     name: 'ajustesCreditos',
@@ -42,7 +50,7 @@ export class AjustesCreditosState {
     }
 
     @Action(GetAllCreditos)
-    getAllSucursales(ctx: StateContext<AjustesCreditosStateModel>) {
+    getAllCreditos(ctx: StateContext<AjustesCreditosStateModel>) {
         ctx.patchState({ loading: true });
         return this._ajustesCreditosService.getProductos().pipe(
             tap((creditos: Producto[]) => {
@@ -50,6 +58,48 @@ export class AjustesCreditosState {
                     creditos,
                     loading: false,
                 });
+            })
+        );
+    }
+
+    @Action(AddCredito)
+    addNewCredito(ctx: StateContext<AjustesCreditosStateModel>, action: AddCredito) {
+        const { payload } = action;
+        return this._ajustesCreditosService.addProducto(payload).pipe(
+            tap((credito: Producto) => {
+                const state = ctx.getState();
+                const creditos = [...state.creditos];
+                creditos.push(credito);
+
+                ctx.patchState({ creditos });
+            })
+        );
+    }
+
+    @Action(EditCredito)
+    editCredito(ctx: StateContext<AjustesCreditosStateModel>, action: EditCredito) {
+        const { id, payload } = action;
+        return this._ajustesCreditosService.editProducto(id, payload).pipe(
+            tap((credito: Producto) => {
+                const state = ctx.getState();
+                if (state.creditos) {
+                    const creditos = [...state.creditos];
+                    const idx = creditos.findIndex((suc) => suc.id === id);
+                    creditos[idx] = credito;
+
+                    ctx.patchState({
+                        creditos,
+                    });
+                }
+            })
+        );
+    }
+
+    @Action(SelectCredito)
+    selectSucursal(ctx: StateContext<AjustesCreditosStateModel>, { id }: SelectCredito) {
+        return this._ajustesCreditosService.getProducto(id).pipe(
+            tap((selectedCredito) => {
+                ctx.patchState({ selectedCredito });
             })
         );
     }

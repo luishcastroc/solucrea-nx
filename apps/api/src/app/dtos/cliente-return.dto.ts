@@ -35,6 +35,9 @@ export interface IClienteReturnDto {
     telefono1: string;
     telefono2: string;
     numeroCreditosCrecer: number;
+    porcentajeDePagos: Decimal;
+    porcentajeDeMora: Decimal;
+    multiplos: Decimal;
     direcciones: IDireccionesReturnDto[];
     trabajo: ITrabajoReturn;
     activo: boolean;

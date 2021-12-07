@@ -36,10 +36,10 @@ export class ClienteListComponent implements OnInit, OnDestroy {
 
         // generating a new observable from the searchInput based on the criteria
         this.searchResults$ = this.searchInput.valueChanges.pipe(
-            takeUntil(this._unsubscribeAll),
             startWith(''),
             withLatestFrom(this.clientes$),
-            map(([value, clientes]) => this._filter(value, clientes))
+            map(([value, clientes]) => this._filter(value, clientes)),
+            takeUntil(this._unsubscribeAll)
         );
     }
 
@@ -50,7 +50,7 @@ export class ClienteListComponent implements OnInit, OnDestroy {
      */
     subscribeToActions(): void {
         this._actions$
-            .pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(Inactivate, Edit))
+            .pipe(ofActionCompleted(Inactivate, Edit), takeUntil(this._unsubscribeAll))
             .subscribe((result) => {
                 const { error, successful } = result.result;
                 const { action } = result;

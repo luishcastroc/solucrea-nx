@@ -63,7 +63,7 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
             ],
         });
 
-        this._actions$.pipe(takeUntil(this.destroy$), ofActionErrored(Login)).subscribe(() => {
+        this._actions$.pipe(ofActionErrored(Login), takeUntil(this.destroy$)).subscribe(() => {
             this.signInForm.enable();
             this.signInNgForm.resetForm();
             this.alert = {

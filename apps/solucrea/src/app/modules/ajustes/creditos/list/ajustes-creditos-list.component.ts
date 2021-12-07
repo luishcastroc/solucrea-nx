@@ -40,10 +40,10 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
 
         // generating a new observable from the searchInput based on the criteria
         this.searchResults$ = this.searchInput.valueChanges.pipe(
-            takeUntil(this._unsubscribeAll),
             startWith(''),
             withLatestFrom(this.creditos$),
-            map(([value, creditos]) => this._filter(value, creditos))
+            map(([value, creditos]) => this._filter(value, creditos)),
+            takeUntil(this._unsubscribeAll)
         );
     }
 
@@ -54,8 +54,8 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
      */
     subscribeToActions(): Actions {
         return this._actions$.pipe(
-            takeUntil(this._unsubscribeAll),
             ofActionCompleted(GetAllCreditos, DeleteCredito),
+            takeUntil(this._unsubscribeAll),
             tap((result) => {
                 const { error, successful } = result.result;
                 const { action } = result;

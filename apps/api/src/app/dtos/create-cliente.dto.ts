@@ -66,7 +66,10 @@ export class CreateClienteDto {
     @IsNotEmpty({ message: 'Trabajo es requerido' })
     trabajo: ITrabajo;
     telefono2?: string;
+    porcentajeDePagos?: number;
+    porcentajeDeMora?: number;
     numeroCreditosCrecer?: number;
+    multiplos?: number;
     creadoPor?: string;
     fechaCreacion?: string | Date;
     actualizadoPor?: string;

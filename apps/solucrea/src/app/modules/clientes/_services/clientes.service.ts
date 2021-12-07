@@ -101,6 +101,10 @@ export class ClientesService {
             tipoDeVivienda,
             telefono1,
             telefono2,
+            porcentajeDeMora,
+            porcentajeDePagos,
+            multiplos,
+            numeroCreditosCrecer,
         } = clienteForm.value;
 
         const direcciones: IDireccion[] = direccionesCliente.map((dir) => ({

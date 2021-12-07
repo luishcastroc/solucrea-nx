@@ -100,7 +100,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
      */
     subscribeToActions(): void {
         this._actions$
-            .pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(AddSucursal, EditSucursal))
+            .pipe(ofActionCompleted(AddSucursal, EditSucursal), takeUntil(this._unsubscribeAll))
             .subscribe((result) => {
                 const { error, successful } = result.result;
                 const { action } = result;
@@ -120,7 +120,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
 
                     if (action instanceof AddSucursal) {
                         // we clear the forms
-                        this.sucursalForm.reset();
+                        this.sucursalForm.disable();
                         setTimeout(() => {
                             this._store.dispatch(new Navigate(['/ajustes/sucursales/']));
                         }, 2000);

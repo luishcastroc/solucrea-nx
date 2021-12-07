@@ -38,7 +38,7 @@
                                         [svgIcon]="'heroicons_outline:office-building'"
                                         matPrefix
                                     ></mat-icon>
-                                    <input [formControlName]="'montoMinimo'" matInput />
+                                    <input [formControlName]="'montoMinimo'" matInput [inputMask]="currencyInputMask" />
                                 </mat-form-field>
                                 <ng-container *ngIf="montoMinimo.touched">
                                     <mat-error *ngIf="montoMinimo.errors?.required">
@@ -55,28 +55,11 @@
                                         [svgIcon]="'heroicons_outline:office-building'"
                                         matPrefix
                                     ></mat-icon>
-                                    <input [formControlName]="'montoMaximo'" matInput />
+                                    <input [formControlName]="'montoMaximo'" matInput [inputMask]="currencyInputMask" />
                                 </mat-form-field>
                                 <ng-container *ngIf="montoMaximo.touched">
                                     <mat-error *ngIf="montoMaximo.errors?.required">
                                         El monto máximo es requerido.
-                                    </mat-error>
-                                </ng-container>
-                            </div>
-                            <!-- Multiplos para Crecer -->
-                            <div>
-                                <mat-form-field class="fuse-mat-no-subscript w-full">
-                                    <mat-label>Múltiplos para crecer el crédito</mat-label>
-                                    <mat-icon
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_outline:office-building'"
-                                        matPrefix
-                                    ></mat-icon>
-                                    <input [formControlName]="'multiplos'" matInput />
-                                </mat-form-field>
-                                <ng-container *ngIf="multiplos.touched">
-                                    <mat-error *ngIf="multiplos.errors?.required">
-                                        El múltiplo para crecer el crédito es requerido.
                                     </mat-error>
                                 </ng-container>
                             </div>
@@ -89,7 +72,7 @@
                                         [svgIcon]="'heroicons_outline:office-building'"
                                         matPrefix
                                     ></mat-icon>
-                                    <input [formControlName]="'interes'" matInput />
+                                    <input [formControlName]="'interes'" matInput [inputMask]="percentageInputMask" />
                                 </mat-form-field>
                                 <ng-container *ngIf="interes.touched">
                                     <mat-error *ngIf="interes.errors?.required">
@@ -106,7 +89,11 @@
                                         [svgIcon]="'heroicons_outline:office-building'"
                                         matPrefix
                                     ></mat-icon>
-                                    <input [formControlName]="'interesMoratorio'" matInput />
+                                    <input
+                                        [formControlName]="'interesMoratorio'"
+                                        matInput
+                                        [inputMask]="percentageInputMask"
+                                    />
                                 </mat-form-field>
                                 <ng-container *ngIf="interesMoratorio.touched">
                                     <mat-error *ngIf="interesMoratorio.errors?.required">
@@ -123,7 +110,11 @@
                                         [svgIcon]="'heroicons_outline:office-building'"
                                         matPrefix
                                     ></mat-icon>
-                                    <input [formControlName]="'penalizacion'" matInput />
+                                    <input
+                                        [formControlName]="'penalizacion'"
+                                        matInput
+                                        [inputMask]="percentageInputMask"
+                                    />
                                 </mat-form-field>
                                 <ng-container *ngIf="penalizacion.touched">
                                     <mat-error *ngIf="penalizacion.errors?.required">
@@ -140,7 +131,7 @@
                                         [svgIcon]="'heroicons_outline:office-building'"
                                         matPrefix
                                     ></mat-icon>
-                                    <input [formControlName]="'comision'" matInput />
+                                    <input [formControlName]="'comision'" matInput [inputMask]="percentageInputMask" />
                                 </mat-form-field>
                                 <ng-container *ngIf="comision.touched">
                                     <mat-error *ngIf="comision.errors?.required">
@@ -157,7 +148,7 @@
                                         [svgIcon]="'heroicons_outline:office-building'"
                                         matPrefix
                                     ></mat-icon>
-                                    <input [formControlName]="'cargos'" matInput />
+                                    <input [formControlName]="'cargos'" matInput [inputMask]="currencyInputMask" />
                                 </mat-form-field>
                                 <ng-container *ngIf="cargos.touched">
                                     <mat-error *ngIf="cargos.errors?.required"> El cargo es requerido. </mat-error>
@@ -166,13 +157,13 @@
                             <!-- Duración -->
                             <div>
                                 <mat-form-field class="fuse-mat-no-subscript w-full">
-                                    <mat-label>Duración</mat-label>
+                                    <mat-label>Duración (días)</mat-label>
                                     <mat-icon
                                         class="icon-size-5"
                                         [svgIcon]="'heroicons_outline:office-building'"
                                         matPrefix
                                     ></mat-icon>
-                                    <input [formControlName]="'duracion'" matInput />
+                                    <input [formControlName]="'duracion'" matInput type="number" />
                                 </mat-form-field>
                                 <ng-container *ngIf="duracion.touched">
                                     <mat-error *ngIf="duracion.errors?.required"> La duración es requerida. </mat-error>
@@ -187,7 +178,7 @@
                                         [svgIcon]="'heroicons_outline:office-building'"
                                         matPrefix
                                     ></mat-icon>
-                                    <input [formControlName]="'numeroDePagos'" matInput />
+                                    <input [formControlName]="'numeroDePagos'" matInput type="number" />
                                 </mat-form-field>
                                 <ng-container *ngIf="numeroDePagos.touched">
                                     <mat-error *ngIf="numeroDePagos.errors?.required">
@@ -235,6 +226,22 @@
                                         La frecuencia es requerida.
                                     </mat-error>
                                 </ng-container>
+                            </div>
+                            <!-- Dia -->
+                            <div *ngIf="frecuencia.value === 'SEMANAL' || frecuencia.value === 'QUINCENAL'">
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>Dia de la semana</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:academic-cap'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <mat-select [formControlName]="'diaSemana'">
+                                        <mat-option *ngFor="let dia of days" [value]="dia.id">{{
+                                            dia.nombre
+                                        }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
                             </div>
                             <!-- Descripción -->
                             <div class="md:col-span-2">

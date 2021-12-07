@@ -1,16 +1,18 @@
-import { defaultFrecuencias } from './../../_config/frecuencias';
-import { IFrecuencia } from './../../models/frecuencia.model';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
+import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { EditMode } from 'app/core/models';
 import { AddCredito, AjustesCreditosState, ClearCreditoState, EditCredito } from 'app/modules/ajustes/_store';
+import { IDays, IFrecuencia } from 'app/modules/ajustes/models';
 import { SharedService } from 'app/shared';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
+import { dias } from '../../_config/dias';
+import { defaultFrecuencias } from '../../_config/frecuencias';
 import { Producto } from '.prisma/client';
 
 @Component({
@@ -27,6 +29,26 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
     editMode$: Observable<EditMode>;
     selectedProducto$: Observable<Producto>;
     frecuencias: IFrecuencia[] = defaultFrecuencias;
+    days: IDays[] = dias;
+
+    currencyInputMask = createMask({
+        alias: 'numeric',
+        groupSeparator: ',',
+        digits: 2,
+        digitsOptional: false,
+        prefix: '$ ',
+        placeholder: '0',
+        autoUnmask: true,
+    });
+
+    percentageInputMask = createMask({
+        alias: 'numeric',
+        digits: 2,
+        digitsOptional: false,
+        suffix: ' %',
+        placeholder: '0',
+        autoUnmask: true,
+    });
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -57,10 +79,6 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
 
     get montoMaximo() {
         return this.creditosForm.get('montoMaximo') as FormControl;
-    }
-
-    get multiplos() {
-        return this.creditosForm.get('multiplos') as FormControl;
     }
 
     get interes() {
@@ -120,7 +138,6 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
             descripcion: ['', Validators.required],
             montoMinimo: ['', Validators.required],
             montoMaximo: ['', Validators.required],
-            multiplos: ['', Validators.required],
             interes: ['', Validators.required],
             interesMoratorio: ['', Validators.required],
             penalizacion: ['', Validators.required],
@@ -141,7 +158,7 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
      */
     subscribeToActions(): void {
         this._actions$
-            .pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(AddCredito, EditCredito))
+            .pipe(ofActionCompleted(AddCredito, EditCredito), takeUntil(this._unsubscribeAll))
             .subscribe((result) => {
                 const { error, successful } = result.result;
                 const { action } = result;

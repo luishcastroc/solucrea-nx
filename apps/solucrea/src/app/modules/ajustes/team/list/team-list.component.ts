@@ -77,7 +77,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
         );
 
         this._actions$
-            .pipe(takeUntil(this._unsubscribeAll), ofActionErrored(DeleteUsuario, EditUsuario))
+            .pipe(ofActionErrored(DeleteUsuario, EditUsuario), takeUntil(this._unsubscribeAll))
             .subscribe((action) => {
                 let message = 'Error al modificar rol de usuario.';
                 if (action instanceof DeleteUsuario) {
@@ -91,7 +91,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
             });
 
         this._actions$
-            .pipe(takeUntil(this._unsubscribeAll), ofActionSuccessful(DeleteUsuario, EditUsuario))
+            .pipe(ofActionSuccessful(DeleteUsuario, EditUsuario), takeUntil(this._unsubscribeAll))
             .subscribe((action) => {
                 let message = 'Rol de usuario modificado exitosamente';
                 if (action instanceof DeleteUsuario) {

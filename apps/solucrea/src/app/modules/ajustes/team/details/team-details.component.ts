@@ -82,7 +82,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
 
                 this.selectedUsuario$ = this._store.select(AjustesUsuariosState.selectedUsuario).pipe(
                     tap((usuario: Usuario) => {
-                        if (usuario) {
+                        if ((usuario && edit === 'edit') || edit === 'password') {
                             this.selectedUsuario = usuario;
                             this.usuarioForm.patchValue(this.selectedUsuario);
                         }

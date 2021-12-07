@@ -242,7 +242,6 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
     subscribeToEditMode(id: string): void {
         this.editMode$
             .pipe(
-                takeUntil(this._unsubscribeAll),
                 switchMap((editMode) => {
                     this.editMode = editMode;
                     if (editMode === 'edit' && id) {
@@ -250,7 +249,8 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                         return this.selectedCliente$;
                     }
                     return of(null);
-                })
+                }),
+                takeUntil(this._unsubscribeAll)
             )
             .subscribe((selectedCliente: IClienteReturnDto) => {
                 if (selectedCliente) {
@@ -322,6 +322,10 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
             curp: ['', [Validators.required, curpValidator()]],
             telefono1: ['', [Validators.required]],
             telefono2: [''],
+            multiplos: [''],
+            numeroCreditosCrecer: [''],
+            porcentajeDePagos: [''],
+            porcentajeDeMora: [''],
             direcciones: this._formBuilder.array([]),
         });
     }

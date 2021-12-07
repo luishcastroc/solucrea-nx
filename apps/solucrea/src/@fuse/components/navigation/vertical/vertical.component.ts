@@ -160,7 +160,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
             this.onCollapsableItemCollapsed,
             this.onCollapsableItemExpanded
         )
-            .pipe(takeUntil(this._unsubscribeAll), delay(250))
+            .pipe(delay(250), takeUntil(this._unsubscribeAll))
             .subscribe(() => {
                 // Loop through the scrollbars and update them
                 fuseScrollbarDirectives.forEach((fuseScrollbarDirective) => {
