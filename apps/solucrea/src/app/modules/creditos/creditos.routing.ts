@@ -1,4 +1,3 @@
-import { CreditosClienteDetailComponent } from './creditos-cliente-detail/creditos-cliente-detail.component';
 import { Route } from '@angular/router';
 import { DataCheckGuard } from 'app/core/auth/guards/data-check.guard';
 import { CreditosDetailComponent } from './creditos-detail/creditos-detail.component';
@@ -13,7 +12,6 @@ export const creditosRoutes: Route[] = [
         pathMatch: 'prefix',
         children: [
             { path: '', component: CreditosListComponent },
-            { path: 'cliente/:id', component: CreditosClienteDetailComponent },
             {
                 path: ':id',
                 canDeactivate: [DataCheckGuard],

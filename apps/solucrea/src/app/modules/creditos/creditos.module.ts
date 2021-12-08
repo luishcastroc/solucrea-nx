@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
@@ -5,10 +6,9 @@ import { CreditosDetailComponent } from './creditos-detail/creditos-detail.compo
 import { CreditosListComponent } from './creditos-list/creditos-list.component';
 import { CreditosComponent } from './creditos.component';
 import { creditosRoutes } from './creditos.routing';
-import { CreditosClienteDetailComponent } from './creditos-cliente-detail/creditos-cliente-detail.component';
 
 @NgModule({
-    declarations: [CreditosComponent, CreditosListComponent, CreditosDetailComponent, CreditosClienteDetailComponent],
-    imports: [RouterModule.forChild(creditosRoutes)],
+    declarations: [CreditosComponent, CreditosListComponent, CreditosDetailComponent],
+    imports: [RouterModule.forChild(creditosRoutes), CommonModule],
 })
 export class CreditosModule {}
