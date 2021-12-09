@@ -243,6 +243,27 @@
                                     </mat-select>
                                 </mat-form-field>
                             </div>
+                            <!-- Creditos Activos -->
+                            <div>
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>Creditos Activos</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:office-building'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <input
+                                        [formControlName]="'creditosActivos'"
+                                        matInput
+                                        [inputMask]="percentageInputMask"
+                                    />
+                                </mat-form-field>
+                                <ng-container *ngIf="creditosActivos.touched">
+                                    <mat-error *ngIf="creditosActivos.errors?.required">
+                                        El numero de creditos activos es requerido.
+                                    </mat-error>
+                                </ng-container>
+                            </div>
                             <!-- Descripción -->
                             <div class="md:col-span-2">
                                 <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">

@@ -127,6 +127,10 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
         return this.creditosForm.get('diaMes') as FormControl;
     }
 
+    get creditosActivos() {
+        return this.creditosForm.get('creditosActivos') as FormControl;
+    }
+
     ngOnInit(): void {
         this.creditosForm = this.createCreditosForm();
         this.subscribeToActions();
@@ -152,6 +156,7 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
             duracion: ['', Validators.required],
             numeroDePagos: ['', Validators.required],
             frecuencia: ['', Validators.required],
+            creditosActivos: ['', Validators.required],
             diaSemana: [''],
             diaMes: [''],
         });

@@ -98,9 +98,9 @@
                                         </button>
                                         <button
                                             mat-icon-button
-                                            aria-label="Borrar producto"
+                                            aria-label="Desactivar producto"
                                             #tooltip="matTooltip"
-                                            matTooltip="Borrar producto"
+                                            matTooltip="Desactivar producto"
                                             [matTooltipPosition]="'below'"
                                             (click)="deleteProducto(producto)"
                                         >
@@ -114,7 +114,9 @@
                             </ng-container>
                         </ng-container>
                         <ng-template #noProducts>
-                            <div>No existen productos disponibles, agregar uno utilizando el botón +</div>
+                            <div *ngIf="activo">
+                                No existen productos disponibles, agregar uno utilizando el botón +
+                            </div>
                         </ng-template>
                     </ng-container>
                 </div>
