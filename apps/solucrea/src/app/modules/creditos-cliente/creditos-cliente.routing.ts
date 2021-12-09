@@ -11,9 +11,9 @@ export const creditosClienteRoutes: Route[] = [
         component: CreditosClienteComponent,
         pathMatch: 'prefix',
         children: [
-            { path: '', component: CreditosClienteListComponent },
+            { path: ':clientId', component: CreditosClienteListComponent },
             {
-                path: ':id',
+                path: ':clientId/detail/:creditId',
                 canDeactivate: [DataCheckGuard],
                 component: CreditosClienteDetailComponent,
             },

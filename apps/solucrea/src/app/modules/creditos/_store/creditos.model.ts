@@ -1,14 +1,13 @@
+import { ICreditoReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 
-import { Credito } from '.prisma/client';
-
 export interface CreditosStateModel {
-    creditos: Credito[] | [];
-    creditosFiltered: Credito[] | [];
-    clienteCreditos: Credito[] | [];
-    clienteCreditosFiltered: Credito[] | [];
+    creditos: ICreditoReturnDto[] | [];
+    creditosFiltered: ICreditoReturnDto[] | [];
+    clienteCreditos: ICreditoReturnDto[] | [];
+    clienteCreditosFiltered: ICreditoReturnDto[] | [];
     editMode: EditMode;
-    selectedCredito: Credito | undefined;
-    selectedClienteCredito: Credito | undefined;
+    selectedCredito: ICreditoReturnDto | undefined;
+    selectedClienteCredito: ICreditoReturnDto | undefined;
     loading: boolean;
 }

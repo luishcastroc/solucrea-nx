@@ -10,6 +10,7 @@ import {
     CiudadModule,
     ClientesModule,
     ColoniasModule,
+    CreditosModule,
     DireccionesModule,
     EscolaridadesModule,
     EstadoModule,
@@ -41,6 +42,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
         AvalesModule,
         ActividadesEconomicasModule,
         ProductosModule,
+        CreditosModule,
     ],
     providers: [
         {

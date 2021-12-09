@@ -1,8 +1,8 @@
-import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ICreditoReturnDto } from 'api/dtos';
 import { environment } from 'apps/solucrea/src/environments/environment';
-import { Credito } from '.prisma/client';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -24,7 +24,7 @@ export class CreditosService {
      * @param id
      *
      */
-    getCreditosCliente(id: string): Observable<Credito[]> {
-        return this._httpClient.get<Credito[]>(`${this._environment.uri}/creditos/cliente/${id}`);
+    getCreditosCliente(id: string): Observable<ICreditoReturnDto[]> {
+        return this._httpClient.get<ICreditoReturnDto[]>(`${this._environment.uri}/creditos/cliente/${id}`);
     }
 }

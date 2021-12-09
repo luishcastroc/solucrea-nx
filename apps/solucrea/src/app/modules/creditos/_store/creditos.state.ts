@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { ICreditoReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
+import { tap } from 'rxjs';
 
 import { CreditosService } from '../_services/creditos.service';
 import { GetAllCreditosCliente } from './creditos.actions';
 import { CreditosStateModel } from './creditos.model';
-import { Credito } from '.prisma/client';
 
 @State<CreditosStateModel>({
     name: 'creditos',
@@ -30,7 +31,7 @@ export class CreditosState {
     }
 
     @Selector()
-    static selectedCredito({ selectedCredito }: CreditosStateModel): Credito | undefined {
+    static selectedCredito({ selectedCredito }: CreditosStateModel): ICreditoReturnDto | undefined {
         return selectedCredito;
     }
 
@@ -40,12 +41,22 @@ export class CreditosState {
     }
 
     @Selector()
-    static creditos({ creditosFiltered }: CreditosStateModel): Credito[] {
+    static creditos({ creditosFiltered }: CreditosStateModel): ICreditoReturnDto[] {
         return creditosFiltered;
     }
 
     @Action(GetAllCreditosCliente)
-    getAllCreditos(ctx: StateContext<CreditosStateModel>) {
+    getAllCreditos(ctx: StateContext<CreditosStateModel>, { id }: GetAllCreditosCliente) {
         ctx.patchState({ loading: true });
+        return this._creditosService.getCreditosCliente(id).pipe(
+            tap((creditos: ICreditoReturnDto[]) => {
+                const creditosFiltered = creditos.filter((credito: ICreditoReturnDto) => credito.status === 'ABIERTO');
+                ctx.patchState({
+                    creditos,
+                    creditosFiltered,
+                    loading: false,
+                });
+            })
+        );
     }
 }

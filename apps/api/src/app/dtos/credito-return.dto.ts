@@ -2,7 +2,7 @@ import { Decimal } from '@prisma/client/runtime';
 import { IClienteReturnDto, ISucursalReturnDto } from 'api/dtos';
 
 import { IAvalReturnDto } from './aval-return.dto';
-import { Estado, ModalidadDeSeguro, Pago, Producto, Seguro, Status } from '.prisma/client';
+import { ModalidadDeSeguro, Pago, Producto, Seguro, Status } from '.prisma/client';
 
 export interface ICreditoReturnDto {
     id: string;
@@ -15,12 +15,10 @@ export interface ICreditoReturnDto {
     fechaCreacion: Date | string;
     actualizadoPor: string;
     fechaActualizacion: Date | string;
-    cliente: IClienteReturnDto;
-    sucursal: ISucursalReturnDto;
-    estado: Estado;
-    producto: Producto;
-    seguro: Seguro;
-    modalidadDeSeguro: ModalidadDeSeguro;
-    aval: IAvalReturnDto;
-    pagos: Pago[];
+    sucursal: Partial<ISucursalReturnDto>;
+    producto: Partial<Producto>;
+    seguro: Partial<Seguro>;
+    modalidadDeSeguro: Partial<ModalidadDeSeguro>;
+    aval: Partial<IAvalReturnDto>;
+    pagos: Partial<Pago>[];
 }

@@ -25,3 +25,6 @@ export * from './caja-return.dto';
 export * from './sucursal-return.dto';
 export * from './update-sucursal.dto';
 export * from './create-producto.dto';
+export * from './credito-return.dto';
+export * from './aval-return.dto';
+export * from './create-aval.dto';

@@ -141,19 +141,6 @@ model Genero {
   @@map(name: "Generos")
 }
 
-model EstadoDeCredito {
-  id                 String    @id @default(uuid())
-  nombre             String
-  descripcion        String
-  creadoPor          String    @default("ADMIN")
-  fechaCreacion      DateTime  @default(now())
-  actualizadoPor     String    @default("ADMIN")
-  fechaActualizacion DateTime  @default(now()) @updatedAt
-  creditos           Credito[]
-
-  @@map(name: "EstadosDeCredito")
-}
-
 model Seguro {
   id                 String    @id @default(uuid())
   nombre             String
@@ -466,7 +453,6 @@ model Credito {
   id                  String            @id @default(uuid())
   cliente             Cliente           @relation(fields: [clienteId], references: [id])
   sucursal            Sucursal          @relation(fields: [sucursalId], references: [id])
-  estado              EstadoDeCredito   @relation(fields: [estadoDeCreditoId], references: [id])
   fechaInicio         DateTime          @default(now())
   fechaFinal          DateTime
   fechaLiquidacion    DateTime
@@ -484,7 +470,6 @@ model Credito {
   fechaActualizacion  DateTime          @default(now()) @updatedAt
   clienteId           String
   sucursalId          String
-  estadoDeCreditoId   String
   productosId         String
   segurosId           String
   avalId              String

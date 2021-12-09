@@ -13,3 +13,4 @@ export * from './generos';
 export * from './productos';
 export * from './tipos-vivienda';
 export * from './usuarios';
+export * from './creditos';

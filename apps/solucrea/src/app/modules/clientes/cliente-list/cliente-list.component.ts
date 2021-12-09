@@ -1,3 +1,4 @@
+import { ModeCredito } from './../../creditos/_store/creditos.actions';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -102,7 +103,7 @@ export class ClienteListComponent implements OnInit, OnDestroy {
      * @param id string
      */
     goToCreditos(id: string) {
-        this._store.dispatch(new Navigate([`creditos-cliente/${id}`]));
+        this._store.dispatch([new Navigate([`creditos-cliente/${id}`])]);
     }
 
     /**
