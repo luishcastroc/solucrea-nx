@@ -27,4 +27,13 @@ export class CreditosService {
     getCreditosCliente(id: string): Observable<ICreditoReturnDto[]> {
         return this._httpClient.get<ICreditoReturnDto[]>(`${this._environment.uri}/creditos/cliente/${id}`);
     }
+
+    /**
+     * Get Creditos
+     *
+     *
+     */
+    getCreditos(): Observable<ICreditoReturnDto[]> {
+        return this._httpClient.get<ICreditoReturnDto[]>(`${this._environment.uri}/creditos`);
+    }
 }

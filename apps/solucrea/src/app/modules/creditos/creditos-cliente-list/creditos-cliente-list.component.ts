@@ -1,10 +1,10 @@
-import { ModeCredito, GetAllCreditosCliente } from './../../creditos/_store/creditos.actions';
+import { ModeCredito, GetAllCreditosCliente } from '../_store/creditos.actions';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { Status } from '.prisma/client';
 import { FormControl } from '@angular/forms';
 import { Observable, tap } from 'rxjs';
-import { CreditosState } from '../../creditos/_store/creditos.state';
+import { CreditosState } from '../_store/creditos.state';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { ICreditoReturnDto } from 'api/dtos';
@@ -18,11 +18,10 @@ import { ActivatedRoute } from '@angular/router';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditosClienteListComponent implements OnInit {
-    @Select(CreditosState.creditos) sucursales$: Observable<ICreditoReturnDto[]>;
+    @Select(CreditosState.creditosCliente) creditos$: Observable<ICreditoReturnDto[]>;
+    @Select(CreditosState.creditosClienteFiltered) creditosFiltered$: Observable<ICreditoReturnDto[]>;
     @Select(CreditosState.loading) loading$: Observable<boolean>;
     actions$: Actions;
-    searchResults$: Observable<ICreditoReturnDto[]>;
-    searchInput = new FormControl();
     values = [
         { display: 'Abiertos', value: Status.ABIERTO },
         { display: 'Cerrados', value: Status.CERRADO },
@@ -52,7 +51,7 @@ export class CreditosClienteListComponent implements OnInit {
      */
     openNewCredito(): void {
         this._store.dispatch([
-            new Navigate([`/creditos-cliente/${this.clienteId}/detail/${AuthUtils.guid()}`]),
+            new Navigate([`creditos/cliente/${this.clienteId}/detail/${AuthUtils.guid()}`]),
             new ModeCredito('new'),
         ]);
     }
@@ -83,7 +82,6 @@ export class CreditosClienteListComponent implements OnInit {
                             position: 'bottom-center',
                         });
                     }
-                    this.searchInput.updateValueAndValidity({ onlySelf: false, emitEvent: true });
                 }
             })
         );

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { ICreditoReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
+import { GetAllCreditos } from 'app/modules/ajustes/_store';
 import { tap } from 'rxjs';
 
 import { CreditosService } from '../_services/creditos.service';
@@ -41,14 +42,46 @@ export class CreditosState {
     }
 
     @Selector()
-    static creditos({ creditosFiltered }: CreditosStateModel): ICreditoReturnDto[] {
+    static creditosFiltered({ creditosFiltered }: CreditosStateModel): ICreditoReturnDto[] {
         return creditosFiltered;
     }
 
+    @Selector()
+    static creditos({ creditos }: CreditosStateModel): ICreditoReturnDto[] {
+        return creditos;
+    }
+
+    @Selector()
+    static creditosClienteFiltered({ clienteCreditosFiltered }: CreditosStateModel): ICreditoReturnDto[] {
+        return clienteCreditosFiltered;
+    }
+
+    @Selector()
+    static creditosCliente({ clienteCreditos }: CreditosStateModel): ICreditoReturnDto[] {
+        return clienteCreditos;
+    }
+
     @Action(GetAllCreditosCliente)
-    getAllCreditos(ctx: StateContext<CreditosStateModel>, { id }: GetAllCreditosCliente) {
+    getAllCreditosCliente(ctx: StateContext<CreditosStateModel>, { id }: GetAllCreditosCliente) {
         ctx.patchState({ loading: true });
         return this._creditosService.getCreditosCliente(id).pipe(
+            tap((clienteCreditos: ICreditoReturnDto[]) => {
+                const clienteCreditosFiltered = clienteCreditos.filter(
+                    (credito: ICreditoReturnDto) => credito.status === 'ABIERTO'
+                );
+                ctx.patchState({
+                    clienteCreditos,
+                    clienteCreditosFiltered,
+                    loading: false,
+                });
+            })
+        );
+    }
+
+    @Action(GetAllCreditos)
+    getAllCreditos(ctx: StateContext<CreditosStateModel>) {
+        ctx.patchState({ loading: true });
+        return this._creditosService.getCreditos().pipe(
             tap((creditos: ICreditoReturnDto[]) => {
                 const creditosFiltered = creditos.filter((credito: ICreditoReturnDto) => credito.status === 'ABIERTO');
                 ctx.patchState({

@@ -103,7 +103,7 @@ export class ClienteListComponent implements OnInit, OnDestroy {
      * @param id string
      */
     goToCreditos(id: string) {
-        this._store.dispatch([new Navigate([`creditos-cliente/${id}`])]);
+        this._store.dispatch([new Navigate([`creditos/cliente/${id}`])]);
     }
 
     /**
