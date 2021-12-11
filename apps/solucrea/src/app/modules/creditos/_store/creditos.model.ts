@@ -1,4 +1,5 @@
-import { ICreditoReturnDto } from 'api/dtos';
+import { Producto } from '.prisma/client';
+import { ICreditoReturnDto, IClienteReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 
 export interface CreditosStateModel {
@@ -10,4 +11,7 @@ export interface CreditosStateModel {
     selectedCredito: ICreditoReturnDto | undefined;
     selectedClienteCredito: ICreditoReturnDto | undefined;
     loading: boolean;
+    productos: Producto[] | [];
+    sucursales: ISucursalReturnDto[] | [];
+    clientes: IClienteReturnDto[] | [];
 }

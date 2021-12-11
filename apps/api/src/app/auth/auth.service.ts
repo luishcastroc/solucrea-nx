@@ -23,7 +23,7 @@ export class AuthService {
 
         if (isMatch) {
             delete user.password;
-            return user;
+            return user as IUsuarioReturnDto;
         }
         return null;
     }

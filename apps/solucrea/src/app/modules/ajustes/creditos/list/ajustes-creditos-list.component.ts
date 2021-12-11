@@ -22,7 +22,6 @@ import { ConfirmationDialogComponent } from 'app/shared';
     selector: 'app-list',
     templateUrl: './ajustes-creditos-list.component.html',
     styleUrls: [],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AjustesCreditosListComponent implements OnInit, OnDestroy {

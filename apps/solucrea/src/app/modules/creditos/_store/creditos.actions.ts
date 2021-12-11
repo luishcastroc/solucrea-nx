@@ -19,3 +19,11 @@ export class ChangeSearchFilter {
     static readonly type = '[Creditos] Change Filter';
     constructor(public payload: Status) {}
 }
+
+export class GetCreditosConfiguration {
+    static readonly type = '[Creditos] Get Creditos Config';
+}
+
+export class ClearCreditosState {
+    static readonly type = '[Creditos] Clear State';
+}

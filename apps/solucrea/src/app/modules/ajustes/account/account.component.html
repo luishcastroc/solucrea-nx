@@ -40,17 +40,18 @@
 
             <!-- Acciones -->
             <div class="flex items-center justify-end">
-                <button mat-stroked-button type="button" (click)="cancelEdit()">Cancelar</button>
-                <button
-                    class="ml-4"
-                    mat-flat-button
-                    type="submit"
-                    [color]="'primary'"
-                    (click)="saveChanges()"
-                    [disabled]="!accountForm.touched"
-                >
-                    Guardar
-                </button>
+                <div class="grid grid-cols-2 gap-2">
+                    <button mat-stroked-button type="button" (click)="cancelEdit()">Cancelar</button>
+                    <button
+                        mat-flat-button
+                        type="submit"
+                        [color]="'primary'"
+                        (click)="saveChanges()"
+                        [disabled]="!accountForm.touched"
+                    >
+                        Guardar
+                    </button>
+                </div>
             </div>
         </form>
     </div>

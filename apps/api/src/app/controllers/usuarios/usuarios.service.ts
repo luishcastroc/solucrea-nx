@@ -9,7 +9,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 export class UsuariosService {
     constructor(private prisma: PrismaService) {}
 
-    async usuario(where: Prisma.UsuarioWhereUniqueInput): Promise<Usuario | null> {
+    async usuario(where: Prisma.UsuarioWhereUniqueInput): Promise<Partial<Usuario> | null> {
         try {
             const usuarioReturn = await this.prisma.usuario.findUnique({
                 where,
@@ -18,8 +18,8 @@ export class UsuariosService {
             if (!usuarioReturn) {
                 throw new HttpException({ message: 'El usuario no existe, verificar' }, HttpStatus.NOT_FOUND);
             }
-            delete usuarioReturn.password;
-            return usuarioReturn;
+            const { password, ...rest } = usuarioReturn;
+            return rest;
         } catch ({ response }) {
             if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
@@ -32,15 +32,15 @@ export class UsuariosService {
         }
     }
 
-    async usuarios(): Promise<Usuario[]> {
+    async usuarios(): Promise<Partial<Usuario>[]> {
         try {
             const users = await this.prisma.usuario.findMany();
             if (users.length === 0) {
                 throw new HttpException({ message: 'No existen usuarios' }, HttpStatus.NOT_FOUND);
             }
             const usuarioReturn = users.map((usuario) => {
-                delete usuario.password;
-                return usuario;
+                const { password, ...rest } = usuario;
+                return rest;
             });
             return usuarioReturn;
         } catch ({ response }) {
@@ -55,22 +55,22 @@ export class UsuariosService {
         }
     }
 
-    async createUsuario(data: Prisma.UsuarioCreateInput): Promise<Usuario> {
+    async createUsuario(data: Prisma.UsuarioCreateInput): Promise<Partial<Usuario>> {
         const saltOrRounds = 10;
         const hash = await bcrypt.hash(data.password, saltOrRounds);
         data = { ...data, password: hash };
         const usuarioCreado = await this.prisma.usuario.create({
             data,
         });
-        delete usuarioCreado.password;
-        return usuarioCreado;
+        const { password, ...rest } = usuarioCreado;
+        return rest;
     }
 
     async updateUsuario(params: {
         where: Prisma.UsuarioWhereUniqueInput;
         data: UpdateUsuarioDto;
         role: Role;
-    }): Promise<Usuario> {
+    }): Promise<Partial<Usuario>> {
         const { where, role } = params;
         let { data } = params;
         if (data.password) {
@@ -104,8 +104,8 @@ export class UsuariosService {
                 data,
                 where,
             });
-            delete usuarioActualizado.password;
-            return usuarioActualizado;
+            const { password, ...rest } = usuarioActualizado;
+            return rest;
         } catch ({ response }) {
             if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
@@ -118,11 +118,14 @@ export class UsuariosService {
         }
     }
 
-    async deleteUsuario(where: Prisma.UsuarioWhereUniqueInput): Promise<Usuario> {
+    async deleteUsuario(where: Prisma.UsuarioWhereUniqueInput): Promise<Partial<Usuario>> {
         try {
-            return this.prisma.usuario.delete({
+            const deleteUsuario = await this.prisma.usuario.delete({
                 where,
             });
+
+            const { password, ...rest } = deleteUsuario;
+            return deleteUsuario;
         } catch {
             throw new HttpException(
                 { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al borrar el Usuario.' },
@@ -131,8 +134,8 @@ export class UsuariosService {
         }
     }
 
-    async searchUsuarioByName(where: Prisma.UsuarioWhereUniqueInput): Promise<Usuario> {
-        const usuario = this.prisma.usuario.findFirst({
+    async searchUsuarioByName(where: Prisma.UsuarioWhereUniqueInput): Promise<Partial<Usuario>> {
+        const usuario = await this.prisma.usuario.findFirst({
             where,
         });
         if (!usuario) {
@@ -141,6 +144,7 @@ export class UsuariosService {
                 HttpStatus.NOT_FOUND
             );
         }
+
         return usuario;
     }
 }

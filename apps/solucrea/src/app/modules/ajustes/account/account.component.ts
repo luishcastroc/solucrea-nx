@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations/public-api';
@@ -30,7 +31,8 @@ export class AjustesAccountComponent implements OnInit {
         private _formBuilder: FormBuilder,
         private _store: Store,
         private _actions$: Actions,
-        private _toast: HotToastService
+        private _toast: HotToastService,
+        private location: Location
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -75,7 +77,7 @@ export class AjustesAccountComponent implements OnInit {
      */
     setActions(): void {
         this.actions$ = this._actions$.pipe(
-            ofActionCompleted(EditUsuario, UpdateUsuario),
+            ofActionCompleted(UpdateUsuario),
             tap((result) => {
                 const { error, successful } = result.result;
                 if (error) {

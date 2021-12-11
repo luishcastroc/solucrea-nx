@@ -14,12 +14,12 @@ export const creditosRoutes: Route[] = [
         children: [
             { path: '', component: CreditosListComponent },
             {
-                path: ':id',
+                path: ':creditoId',
                 canDeactivate: [DataCheckGuard],
                 component: CreditosDetailComponent,
             },
-            { path: 'cliente/:clientId', component: CreditosClienteListComponent },
-            { path: 'cliente/:clientId/detail/:creditId', component: CreditosDetailComponent },
+            { path: 'cliente/:clienteId', component: CreditosClienteListComponent },
+            { path: 'cliente/:clienteId/detail/:creditoId', component: CreditosDetailComponent },
         ],
     },
 ];

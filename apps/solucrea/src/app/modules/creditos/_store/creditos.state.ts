@@ -1,12 +1,14 @@
+import { AjustesCreditosService, AjustesSucursalService } from 'app/modules/ajustes/_services';
+import { Producto } from '.prisma/client';
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { ICreditoReturnDto } from 'api/dtos';
+import { ICreditoReturnDto, IClienteReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 import { GetAllCreditos } from 'app/modules/ajustes/_store';
-import { tap } from 'rxjs';
+import { tap, forkJoin } from 'rxjs';
 
 import { CreditosService } from '../_services/creditos.service';
-import { GetAllCreditosCliente } from './creditos.actions';
+import { ClearCreditosState, GetAllCreditosCliente, GetCreditosConfiguration, ModeCredito } from './creditos.actions';
 import { CreditosStateModel } from './creditos.model';
 
 @State<CreditosStateModel>({
@@ -19,12 +21,19 @@ import { CreditosStateModel } from './creditos.model';
         editMode: 'edit',
         selectedCredito: undefined,
         selectedClienteCredito: undefined,
+        productos: [],
+        sucursales: [],
+        clientes: [],
         loading: false,
     },
 })
 @Injectable()
 export class CreditosState {
-    constructor(private _creditosService: CreditosService) {}
+    constructor(
+        private _creditosService: CreditosService,
+        private _ajustesCreditosService: AjustesCreditosService,
+        private _ajustesSucursalesService: AjustesSucursalService
+    ) {}
 
     @Selector()
     static editMode({ editMode }: CreditosStateModel): EditMode {
@@ -61,6 +70,21 @@ export class CreditosState {
         return clienteCreditos;
     }
 
+    @Selector()
+    static productos({ productos }: CreditosStateModel): Producto[] {
+        return productos;
+    }
+
+    @Selector()
+    static clientes({ clientes }: CreditosStateModel): IClienteReturnDto[] {
+        return clientes;
+    }
+
+    @Selector()
+    static sucursales({ sucursales }: CreditosStateModel): ISucursalReturnDto[] {
+        return sucursales;
+    }
+
     @Action(GetAllCreditosCliente)
     getAllCreditosCliente(ctx: StateContext<CreditosStateModel>, { id }: GetAllCreditosCliente) {
         ctx.patchState({ loading: true });
@@ -91,5 +115,40 @@ export class CreditosState {
                 });
             })
         );
+    }
+
+    @Action(GetCreditosConfiguration)
+    getCreditosConfiguration(ctx: StateContext<CreditosStateModel>) {
+        return forkJoin([
+            this._ajustesCreditosService.getProductos(),
+            this._ajustesSucursalesService.getSucursales(),
+        ]).pipe(
+            tap(([productos, sucursales]) => {
+                ctx.patchState({ productos, sucursales });
+            })
+        );
+    }
+
+    @Action(ModeCredito)
+    toggleEditModeCredito(ctx: StateContext<CreditosStateModel>, action: ModeCredito) {
+        const { payload } = action;
+        ctx.patchState({ editMode: payload });
+    }
+
+    @Action(ClearCreditosState)
+    clearState(ctx: StateContext<CreditosStateModel>) {
+        ctx.patchState({
+            creditos: [],
+            creditosFiltered: [],
+            clienteCreditos: [],
+            clienteCreditosFiltered: [],
+            editMode: 'edit',
+            selectedCredito: undefined,
+            selectedClienteCredito: undefined,
+            productos: [],
+            sucursales: [],
+            clientes: [],
+            loading: false,
+        });
     }
 }

@@ -3,7 +3,6 @@ import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@
 @Component({
     selector: 'app-ajustes-creditos',
     templateUrl: './ajustes-creditos.component.html',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AjustesCreditosComponent implements OnInit {

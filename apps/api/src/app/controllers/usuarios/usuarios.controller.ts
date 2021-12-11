@@ -1,4 +1,3 @@
-import { UpdateUsuarioDto } from './../../dtos/update-usuario.dto';
 import {
     Body,
     Controller,
@@ -12,14 +11,15 @@ import {
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
-import { Prisma, Role, Usuario as UsersModel } from '@prisma/client';
+import { Role, Usuario } from '@prisma/client';
 
 import { AuthService } from '../../auth/auth.service';
 import { Public } from '../../decorators/public.decorator';
 import { Roles } from '../../decorators/roles.decorator';
+import { CreateUsuarioDto } from '../../dtos/create-usuario.dto';
+import { UpdateUsuarioDto } from '../../dtos/update-usuario.dto';
 import { LocalAuthGuard } from '../../guards/local.auth.guard';
 import { RolesGuard } from '../../guards/roles.guard';
-import { CreateUsuarioDto } from '../../dtos/create-usuario.dto';
 import { UsuariosService } from './usuarios.service';
 
 @Controller()
@@ -36,14 +36,14 @@ export class UsuariosController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Get('usuarios')
-    async getUsuarios(): Promise<UsersModel[]> {
+    async getUsuarios(): Promise<Partial<Usuario>[]> {
         return this.usuariosService.usuarios();
     }
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN, Role.CAJERO, Role.SECRETARIO, Role.USUARIO)
     @Get('usuario/:id')
-    async getUsuario(@Param('id') id: string): Promise<UsersModel> {
+    async getUsuario(@Param('id') id: string): Promise<Partial<Usuario>> {
         return this.usuariosService.usuario({ id });
     }
 
@@ -51,16 +51,18 @@ export class UsuariosController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Post('usuario')
-    async createUsuario(@Body() data: CreateUsuarioDto): Promise<UsersModel> {
-        const usuarioCreate = await this.usuariosService.createUsuario(data);
-        delete usuarioCreate.password;
-        return usuarioCreate;
+    async createUsuario(@Body() data: CreateUsuarioDto): Promise<Partial<Usuario>> {
+        return await this.usuariosService.createUsuario(data);
     }
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN, Role.CAJERO, Role.SECRETARIO, Role.USUARIO)
     @Put('usuario/:id')
-    async editUsuario(@Param('id') id: string, @Body() data: UpdateUsuarioDto, @Request() req): Promise<UsersModel> {
+    async editUsuario(
+        @Param('id') id: string,
+        @Body() data: UpdateUsuarioDto,
+        @Request() req
+    ): Promise<Partial<Usuario>> {
         const role = req.user.role;
         data.actualizadoPor = req.user.username;
         return this.usuariosService.updateUsuario({
@@ -73,9 +75,8 @@ export class UsuariosController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN)
     @Delete('usuario/:id')
-    async deleteUsuario(@Param('id') id: string): Promise<UsersModel> {
+    async deleteUsuario(@Param('id') id: string): Promise<Partial<Usuario>> {
         const usuarioDelete = await this.usuariosService.deleteUsuario({ id });
-        delete usuarioDelete.password;
         return usuarioDelete;
     }
 }

@@ -1,16 +1,17 @@
-import { ModeCredito, GetAllCreditosCliente } from '../_store/creditos.actions';
-import { AuthUtils } from 'app/core/auth/auth.utils';
-import { MatDialog } from '@angular/material/dialog';
-import { Status } from '.prisma/client';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable, tap } from 'rxjs';
-import { CreditosState } from '../_store/creditos.state';
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
-import { ICreditoReturnDto } from 'api/dtos';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
-import { ActivatedRoute } from '@angular/router';
+import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
+import { ICreditoReturnDto } from 'api/dtos';
+import { AuthUtils } from 'app/core/auth/auth.utils';
+import { Observable, tap } from 'rxjs';
+
+import { GetAllCreditosCliente, ModeCredito } from '../_store/creditos.actions';
+import { CreditosState } from '../_store/creditos.state';
+import { Status } from '.prisma/client';
 
 @Component({
     selector: 'app-creditos-cliente-list',
@@ -22,6 +23,7 @@ export class CreditosClienteListComponent implements OnInit {
     @Select(CreditosState.creditosClienteFiltered) creditosFiltered$: Observable<ICreditoReturnDto[]>;
     @Select(CreditosState.loading) loading$: Observable<boolean>;
     actions$: Actions;
+    searchInput = new FormControl();
     values = [
         { display: 'Abiertos', value: Status.ABIERTO },
         { display: 'Cerrados', value: Status.CERRADO },
@@ -38,7 +40,7 @@ export class CreditosClienteListComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.clienteId = this._route.snapshot.paramMap.get('clientId');
+        this.clienteId = this._route.snapshot.paramMap.get('clienteId');
         this._store.dispatch(new GetAllCreditosCliente(this.clienteId));
 
         this.setActions();

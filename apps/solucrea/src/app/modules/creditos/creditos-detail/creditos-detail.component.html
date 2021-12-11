@@ -1,1 +1,20 @@
-<p>creditos-detail works!</p>
+<div class="flex flex-col flex-auto py-8 px-6">
+    <div class="flex justify-between border-b pb-3">
+        <h1 class="text-4xl font-extrabold tracking-tight leading-none">Nuevo Crédito</h1>
+        <button
+            mat-icon-button
+            aria-label="Regresar"
+            (click)="back()"
+            #tooltip="matTooltip"
+            matTooltip="Regresar"
+            [matTooltipPosition]="'below'"
+        >
+            <mat-icon svgIcon="heroicons_outline:arrow-left"></mat-icon>
+        </button>
+    </div>
+    <ng-container *ngIf="loading$ | async; then loadingTemplate; else formTemplate"></ng-container>
+    <ng-template #loadingTemplate>
+        <mat-spinner> </mat-spinner>
+    </ng-template>
+    <ng-template #formTemplate> </ng-template>
+</div>

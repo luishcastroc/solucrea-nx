@@ -1,9 +1,8 @@
-import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 import { PrismaService } from '../../prisma/prisma.service';
 import { Producto } from '.prisma/client';
-import { identity } from 'lodash';
 
 @Injectable()
 export class ProductosService {
@@ -34,14 +33,17 @@ export class ProductosService {
             const productos = await this.prisma.producto.findMany({});
 
             return productos;
-        } catch ({ response }) {
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+        } catch (e) {
+            if (e?.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error obteniendo los creditos' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: response.status, message: response.message }, response.status);
+                throw new HttpException(
+                    { status: e?.response.status, message: e?.response.message },
+                    e?.response.status
+                );
             }
         }
     }
@@ -56,7 +58,6 @@ export class ProductosService {
 
             return newProducto;
         } catch (e) {
-            console.log(e);
             if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando el nuevo producto' },
@@ -94,8 +95,22 @@ export class ProductosService {
     }
 
     async deleteProducto(where: Prisma.ProductoWhereUniqueInput): Promise<Producto> {
-        return this.prisma.producto.delete({
-            where,
-        });
+        try {
+            const innactiveCredito = await this.prisma.producto.update({
+                where,
+                data: { activo: false },
+            });
+
+            return innactiveCredito;
+        } catch (e) {
+            if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error desactivando el credito' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
+            }
+        }
     }
 }
