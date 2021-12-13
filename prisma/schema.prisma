@@ -455,7 +455,7 @@ model Credito {
   sucursal            Sucursal          @relation(fields: [sucursalId], references: [id])
   fechaInicio         DateTime          @default(now())
   fechaFinal          DateTime
-  fechaLiquidacion    DateTime
+  fechaLiquidacion    DateTime?
   monto               Decimal           @db.Decimal(15, 2)
   producto            Producto          @relation(fields: [productosId], references: [id])
   seguro              Seguro            @relation(fields: [segurosId], references: [id])
