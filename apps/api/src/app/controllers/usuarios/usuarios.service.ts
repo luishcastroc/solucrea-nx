@@ -55,6 +55,32 @@ export class UsuariosService {
         }
     }
 
+    async usuariosWhere(where: Prisma.UsuarioWhereInput): Promise<Partial<Usuario>[]> {
+        try {
+            const users = await this.prisma.usuario.findMany({ where });
+            if (users.length === 0) {
+                throw new HttpException(
+                    { status: HttpStatus.NOT_FOUND, message: 'No existen usuarios colocadores' },
+                    HttpStatus.NOT_FOUND
+                );
+            }
+            const usuarioReturn = users.map((usuario) => {
+                const { password, ...rest } = usuario;
+                return rest;
+            });
+            return usuarioReturn;
+        } catch (e) {
+            if (e.response.status === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al consultar usuarios' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
+            }
+        }
+    }
+
     async createUsuario(data: Prisma.UsuarioCreateInput): Promise<Partial<Usuario>> {
         const saltOrRounds = 10;
         const hash = await bcrypt.hash(data.password, saltOrRounds);
@@ -107,7 +133,7 @@ export class UsuariosService {
             const { password, ...rest } = usuarioActualizado;
             return rest;
         } catch ({ response }) {
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+            if (response.status === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al actualizar usuario' },
                     HttpStatus.INTERNAL_SERVER_ERROR

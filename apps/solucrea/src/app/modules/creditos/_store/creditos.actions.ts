@@ -27,3 +27,12 @@ export class GetCreditosConfiguration {
 export class ClearCreditosState {
     static readonly type = '[Creditos] Clear State';
 }
+
+export class ClearCreditosDetails {
+    static readonly type = '[Creditos] Clear Details State';
+}
+
+export class GetClienteData {
+    static readonly type = '[Creditos] Get Cliente Data';
+    constructor(public id: string) {}
+}

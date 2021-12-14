@@ -1,14 +1,15 @@
 import { Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Actions, Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { IClienteReturnDto } from 'api/dtos';
+import { forkJoin, map, Observable } from 'rxjs';
 
-import { GetCreditosConfiguration } from '../_store/creditos.actions';
+import { ClearCreditosDetails, GetClienteData, GetCreditosConfiguration } from '../_store/creditos.actions';
 import { CreditosState } from '../_store/creditos.state';
 import { Producto } from '.prisma/client';
-import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-creditos-detail',
@@ -16,9 +17,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
     styleUrls: ['./creditos-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreditosDetailComponent implements OnInit {
+export class CreditosDetailComponent implements OnInit, OnDestroy {
     @Select(CreditosState.productos) productos$: Observable<Producto[]>;
+    @Select(CreditosState.selectedCliente) selectedCliente$: Observable<IClienteReturnDto>;
     @Select(CreditosState.loading) loading$: Observable<boolean>;
+
+    data$: Observable<{ productos?: Producto[]; cliente?: IClienteReturnDto }>;
+
     clienteId: string;
     creditoId: string;
     creditosForm: FormGroup;
@@ -35,6 +40,7 @@ export class CreditosDetailComponent implements OnInit {
         this._store.dispatch(new GetCreditosConfiguration());
         this.clienteId = this._route.snapshot.paramMap.get('clienteId');
         this.creditoId = this._route.snapshot.paramMap.get('creditoId');
+        this.initCredito(this.clienteId, this.creditoId);
     }
 
     /**
@@ -50,7 +56,14 @@ export class CreditosDetailComponent implements OnInit {
      * @param clienteId
      * @param creditoId
      */
-    initCredito(clienteId: string, creditoId: string): void {}
+    initCredito(clienteId: string, creditoId: string): void {
+        if (clienteId) {
+            this._store.dispatch(new GetClienteData(clienteId));
+            this.data$ = forkJoin([this.productos$, this.selectedCliente$]).pipe(
+                map(([productos, cliente]) => ({ productos, cliente }))
+            );
+        }
+    }
 
     /**
      * Create Creditos Form
@@ -65,5 +78,9 @@ export class CreditosDetailComponent implements OnInit {
             montoMinimo: [null, Validators.required],
             montoMaximo: [null, Validators.required],
         });
+    }
+
+    ngOnDestroy(): void {
+        this._store.dispatch(new ClearCreditosDetails());
     }
 }

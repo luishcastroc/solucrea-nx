@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Cliente, Prisma } from '@prisma/client';
 import {
     CreateClienteDto,
     IActividadEconomicaReturnDto,
@@ -14,10 +13,9 @@ import {
     UpdateClienteDto,
 } from 'api/dtos';
 import { IDireccion } from 'api/dtos/';
+import { environment } from 'apps/solucrea/src/environments/environment';
 import { Moment } from 'moment';
 import { Observable } from 'rxjs';
-
-import { environment } from '../../../../environments/environment';
 
 @Injectable({
     providedIn: 'root',
@@ -161,6 +159,10 @@ export class ClientesService {
             trabajo,
             montoMinimo,
             montoMaximo,
+            porcentajeDeMora,
+            porcentajeDePagos,
+            multiplos,
+            numeroCreditosCrecer,
         };
 
         return clienteReturn;

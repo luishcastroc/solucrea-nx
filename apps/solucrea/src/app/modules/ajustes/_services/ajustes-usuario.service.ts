@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Usuario } from '@prisma/client';
+import { Usuario, Prisma } from '@prisma/client';
 import { CreateUsuarioDto, UpdateUsuarioDto } from 'api/dtos';
 import { Observable } from 'rxjs';
 
@@ -27,6 +27,15 @@ export class AjustesUsuarioService {
      */
     getUsuarios(): Observable<Usuario[]> {
         return this._httpClient.get<Usuario[]>(`${this._environment.uri}/usuarios`);
+    }
+
+    /**
+     *
+     * @param where
+     *
+     */
+    getUsuariosWhere(where: Prisma.UsuarioWhereInput) {
+        return this._httpClient.post<Usuario[]>(`${this._environment.uri}/usuarios/where`, where);
     }
 
     /**

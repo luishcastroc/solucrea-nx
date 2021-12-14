@@ -11,7 +11,7 @@ import {
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
-import { Role, Usuario } from '@prisma/client';
+import { Role, Usuario, Prisma } from '@prisma/client';
 
 import { AuthService } from '../../auth/auth.service';
 import { Public } from '../../decorators/public.decorator';
@@ -78,5 +78,12 @@ export class UsuariosController {
     async deleteUsuario(@Param('id') id: string): Promise<Partial<Usuario>> {
         const usuarioDelete = await this.usuariosService.deleteUsuario({ id });
         return usuarioDelete;
+    }
+
+    @UseGuards(RolesGuard)
+    @Roles(Role.ADMIN, Role.CAJERO, Role.SECRETARIO, Role.USUARIO)
+    @Post('usuarios/where')
+    async getUsuariosWhere(@Body() data: Prisma.UsuarioWhereInput): Promise<Partial<Usuario>[]> {
+        return this.usuariosService.usuariosWhere(data);
     }
 }

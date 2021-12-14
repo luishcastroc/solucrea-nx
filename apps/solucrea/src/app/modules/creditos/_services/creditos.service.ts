@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ICreditoReturnDto } from 'api/dtos';
+import { IClienteReturnDto, ICreditoReturnDto } from 'api/dtos';
 import { environment } from 'apps/solucrea/src/environments/environment';
 import { Observable } from 'rxjs';
 

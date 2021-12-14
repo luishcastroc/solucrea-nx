@@ -1,5 +1,6 @@
-import { AjustesCreditosService, AjustesSucursalService } from 'app/modules/ajustes/_services';
-import { Producto } from '.prisma/client';
+import { ClientesService } from 'app/modules/clientes';
+import { AjustesCreditosService, AjustesSucursalService, AjustesUsuarioService } from 'app/modules/ajustes/_services';
+import { Producto, Role } from '.prisma/client';
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { ICreditoReturnDto, IClienteReturnDto, ISucursalReturnDto } from 'api/dtos';
@@ -8,7 +9,14 @@ import { GetAllCreditos } from 'app/modules/ajustes/_store';
 import { tap, forkJoin } from 'rxjs';
 
 import { CreditosService } from '../_services/creditos.service';
-import { ClearCreditosState, GetAllCreditosCliente, GetCreditosConfiguration, ModeCredito } from './creditos.actions';
+import {
+    ClearCreditosDetails,
+    ClearCreditosState,
+    GetAllCreditosCliente,
+    GetClienteData,
+    GetCreditosConfiguration,
+    ModeCredito,
+} from './creditos.actions';
 import { CreditosStateModel } from './creditos.model';
 
 @State<CreditosStateModel>({
@@ -24,6 +32,8 @@ import { CreditosStateModel } from './creditos.model';
         productos: [],
         sucursales: [],
         clientes: [],
+        selectedCliente: undefined,
+        colocadores: [],
         loading: false,
     },
 })
@@ -32,7 +42,9 @@ export class CreditosState {
     constructor(
         private _creditosService: CreditosService,
         private _ajustesCreditosService: AjustesCreditosService,
-        private _ajustesSucursalesService: AjustesSucursalService
+        private _ajustesSucursalesService: AjustesSucursalService,
+        private _ajustesUsuarios: AjustesUsuarioService,
+        private _clientesService: ClientesService
     ) {}
 
     @Selector()
@@ -81,6 +93,11 @@ export class CreditosState {
     }
 
     @Selector()
+    static selectedCliente({ selectedCliente }: CreditosStateModel): IClienteReturnDto {
+        return selectedCliente;
+    }
+
+    @Selector()
     static sucursales({ sucursales }: CreditosStateModel): ISucursalReturnDto[] {
         return sucursales;
     }
@@ -122,9 +139,21 @@ export class CreditosState {
         return forkJoin([
             this._ajustesCreditosService.getProductos(),
             this._ajustesSucursalesService.getSucursales(),
+            this._ajustesUsuarios.getUsuariosWhere({ role: Role.COLOCADOR }),
         ]).pipe(
-            tap(([productos, sucursales]) => {
-                ctx.patchState({ productos, sucursales });
+            tap(([productos, sucursales, colocadores]) => {
+                ctx.patchState({ productos, sucursales, colocadores });
+            })
+        );
+    }
+
+    @Action(GetClienteData)
+    getClienteData(ctx: StateContext<CreditosStateModel>, { id }: GetClienteData) {
+        return this._clientesService.getCliente(id).pipe(
+            tap((selectedCliente: IClienteReturnDto) => {
+                ctx.patchState({
+                    selectedCliente,
+                });
             })
         );
     }
@@ -148,7 +177,19 @@ export class CreditosState {
             productos: [],
             sucursales: [],
             clientes: [],
+            selectedCliente: undefined,
+            colocadores: [],
             loading: false,
+        });
+    }
+
+    @Action(ClearCreditosDetails)
+    clearDetailState(ctx: StateContext<CreditosStateModel>) {
+        ctx.patchState({
+            productos: [],
+            sucursales: [],
+            clientes: [],
+            colocadores: [],
         });
     }
 }
