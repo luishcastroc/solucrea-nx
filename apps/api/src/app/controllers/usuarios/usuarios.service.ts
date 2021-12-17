@@ -59,10 +59,7 @@ export class UsuariosService {
         try {
             const users = await this.prisma.usuario.findMany({ where });
             if (users.length === 0) {
-                throw new HttpException(
-                    { status: HttpStatus.NOT_FOUND, message: 'No existen usuarios colocadores' },
-                    HttpStatus.NOT_FOUND
-                );
+                return [];
             }
             const usuarioReturn = users.map((usuario) => {
                 const { password, ...rest } = usuario;
