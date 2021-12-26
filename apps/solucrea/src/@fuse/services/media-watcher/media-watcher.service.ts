@@ -1,27 +1,29 @@
-/* eslint-disable arrow-parens */
-import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Injectable } from '@angular/core';
-import { FuseTailwindService } from '@fuse/services/tailwind/tailwind.service';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { map, Observable, ReplaySubject, switchMap } from 'rxjs';
+import { fromPairs } from 'lodash-es';
+import { FuseConfigService } from '@fuse/services/config';
 
 @Injectable()
 export class FuseMediaWatcherService {
-    private _onMediaChange: ReplaySubject<{
+    private _onMediaChange: ReplaySubject<{ matchingAliases: string[]; matchingQueries: any }> = new ReplaySubject<{
         matchingAliases: string[];
         matchingQueries: any;
-    }> = new ReplaySubject<{ matchingAliases: string[]; matchingQueries: any }>(1);
+    }>(1);
 
     /**
      * Constructor
      */
-    constructor(
-        private _breakpointObserver: BreakpointObserver,
-        private _fuseTailwindConfigService: FuseTailwindService
-    ) {
-        this._fuseTailwindConfigService.tailwindConfig$
+    constructor(private _breakpointObserver: BreakpointObserver, private _fuseConfigService: FuseConfigService) {
+        this._fuseConfigService.config$
             .pipe(
-                switchMap((config) =>
-                    this._breakpointObserver.observe(Object.values(config.breakpoints)).pipe(
+                map((config) =>
+                    fromPairs(
+                        Object.entries(config.screens).map(([alias, screen]) => [alias, `(min-width: ${screen})`])
+                    )
+                ),
+                switchMap((screens) =>
+                    this._breakpointObserver.observe(Object.values(screens)).pipe(
                         map((state) => {
                             // Prepare the observable values and set their defaults
                             const matchingAliases: string[] = [];
@@ -32,9 +34,7 @@ export class FuseMediaWatcherService {
                                 Object.entries(state.breakpoints).filter(([query, matches]) => matches) ?? [];
                             for (const [query] of matchingBreakpoints) {
                                 // Find the alias of the matching query
-                                const matchingAlias = Object.entries(config.breakpoints).find(
-                                    ([alias, q]) => q === query
-                                )[0];
+                                const matchingAlias = Object.entries(screens).find(([alias, q]) => q === query)[0];
 
                                 // Add the matching query to the observable values
                                 if (matchingAlias) {
@@ -62,10 +62,7 @@ export class FuseMediaWatcherService {
     /**
      * Getter for _onMediaChange
      */
-    get onMediaChange$(): Observable<{
-        matchingAliases: string[];
-        matchingQueries: any;
-    }> {
+    get onMediaChange$(): Observable<{ matchingAliases: string[]; matchingQueries: any }> {
         return this._onMediaChange.asObservable();
     }
 

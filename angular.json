@@ -91,7 +91,7 @@
                             }
                         ],
                         "stylePreprocessorOptions": {
-                            "includePaths": ["src/@fuse/styles"]
+                            "includePaths": ["apps/solucrea/src/@fuse/styles"]
                         },
                         "styles": [
                             "apps/solucrea/src/@fuse/styles/tailwind.scss",

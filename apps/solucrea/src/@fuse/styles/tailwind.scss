@@ -3,6 +3,7 @@
 
 /* This injects additional styles into Tailwind's base styles layer. */
 @layer base {
+
     * {
         /* Text rendering */
         text-rendering: optimizeLegibility;
@@ -62,15 +63,11 @@
         -webkit-text-fill-color: currentColor;
     }
 
-    body,
-    .dark,
-    .light {
+    body, .dark, .light {
         @apply text-default bg-default #{'!important'};
     }
 
-    *,
-    *::before,
-    *::after {
+    *, *::before, *::after {
         --tw-border-opacity: 1 !important;
         border-color: rgba(var(--fuse-border-rgb), var(--tw-border-opacity));
 
@@ -85,14 +82,13 @@
 
     /* Print styles */
     @media print {
+
         /* Make the base font size smaller for print so everything is scaled nicely */
         html {
             font-size: 12px !important;
         }
 
-        body,
-        .dark,
-        .light {
+        body, .dark, .light {
             background: none !important;
         }
     }
