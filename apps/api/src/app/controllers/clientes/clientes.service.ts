@@ -5,6 +5,7 @@ import { CreateClienteDto, CreateDireccionDto, IClienteReturnDto, UpdateClienteD
 import { PrismaService } from '../../prisma/prisma.service';
 import { IDireccionUpdateDto, ITrabajoDto } from '../../dtos/update-cliente.dto';
 import { isEmpty } from 'lodash';
+import { contains } from 'class-validator';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 @Injectable()
@@ -83,10 +84,7 @@ export class ClientesService {
                 select: this.select,
             });
             if (!clientesReturn) {
-                throw new HttpException(
-                    { status: HttpStatus.NOT_FOUND, message: 'no existen clientes' },
-                    HttpStatus.NOT_FOUND
-                );
+                return [];
             }
             return clientesReturn;
         } catch ({ response }) {
@@ -319,6 +317,32 @@ export class ClientesService {
             );
         }
         return clienteSearch;
+    }
+
+    async getClientesByWhere(data: string): Promise<IClienteReturnDto[]> {
+        const where: Prisma.ClienteWhereInput = {
+            OR: [
+                { nombre: { contains: data } },
+                { apellidoPaterno: { contains: data } },
+                {
+                    apellidoMaterno: { contains: data },
+                },
+                { curp: { contains: data } },
+                { rfc: { contains: data } },
+            ],
+        };
+        try {
+            return this.prisma.cliente.findMany({ where, select: this.select });
+        } catch (e) {
+            if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error inhablilitando el cliente' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
+            }
+        }
     }
 
     private getDirecciones(

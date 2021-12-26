@@ -1,5 +1,6 @@
 <div class="flex flex-col flex-auto py-8 px-6">
     <div class="flex justify-between border-b pb-3">
+        <!-- Title -->
         <h1 class="text-4xl font-extrabold tracking-tight leading-none">Nuevo Crédito</h1>
         <button
             mat-icon-button
@@ -13,8 +14,303 @@
         </button>
     </div>
     <ng-container *ngIf="loading$ | async; then loadingTemplate; else formTemplate"></ng-container>
-    <ng-template #loadingTemplate>
-        <mat-spinner> </mat-spinner>
+    <ng-template #formTemplate>
+        <mat-stepper [linear]="true" #stepper class="flex flex-col items-center">
+            <mat-step [stepControl]="creditosForm" class="w-full">
+                <!-- Main actions -->
+                <div class="flex flex-col items-center gap-4 flex-auto p-10">
+                    <!-- Search -->
+                    <div class="w-full" *ngIf="!clienteId">
+                        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full min-w-50">
+                            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                            <input
+                                matInput
+                                [formControl]="searchInput"
+                                [matAutocomplete]="auto"
+                                [placeholder]="'Buscar cliente'"
+                            />
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                <mat-option *ngFor="let cliente of clientes$ | async" [value]="cliente">
+                                    {{ cliente.nombre }} {{ cliente.apellidoPaterno }} {{ cliente.apellidoMaterno }}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+                    <ng-container *ngIf="!loading; else loadingTemplate">
+                        <form [formGroup]="creditosForm" *ngIf="selectedCliente$ | async as cliente">
+                            <mat-card class="flex flex-col gap-8 justify-center items-center px-13"
+                                ><div class="flex flex-col w-full gap-6">
+                                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 w-full mt-3 content-center">
+                                        <!-- Nombre -->
+                                        <div class="flex flex-col gap-2">
+                                            <div class="flex gap-2">
+                                                <mat-icon
+                                                    role="img"
+                                                    class="mat-icon notranslate mat-icon-no-color"
+                                                    aria-hidden="true"
+                                                    [svgIcon]="'heroicons_solid:user'"
+                                                    matPrefix
+                                                >
+                                                </mat-icon>
+                                                <div class="leading-6 font-light">Nombre:</div>
+                                            </div>
+                                            <div class="leading-6 font-bold ml-4">
+                                                {{ cliente.nombre }} {{ cliente.apellidoPaterno }}
+                                                {{ cliente.apellidoMaterno }}
+                                            </div>
+                                        </div>
+                                        <!-- Direccion -->
+                                        <div class="flex flex-col gap-2">
+                                            <div class="flex gap-2">
+                                                <mat-icon
+                                                    role="img"
+                                                    class="mat-icon notranslate mat-icon-no-color"
+                                                    aria-hidden="true"
+                                                    [svgIcon]="'heroicons_outline:location-marker'"
+                                                    matPrefix
+                                                >
+                                                </mat-icon>
+                                                <div class="leading-6 font-light">Dirección:</div>
+                                            </div>
+                                            <div class="leading-6 font-bold ml-4">
+                                                {{ cliente.direcciones[0].calle }}, {{ cliente.direcciones[0].numero }},
+                                                {{ cliente.direcciones[0].cruzamientos }},
+                                                {{ cliente.direcciones[0].colonia.descripcion }}, CP
+                                                {{ cliente.direcciones[0].colonia.codigoPostal }}
+                                            </div>
+                                        </div>
+                                        <!-- CURP -->
+                                        <div class="flex flex-col gap-2">
+                                            <div class="flex gap-2">
+                                                <mat-icon
+                                                    role="img"
+                                                    class="mat-icon notranslate mat-icon-no-color"
+                                                    aria-hidden="true"
+                                                    [svgIcon]="'heroicons_outline:clipboard-check'"
+                                                    matPrefix
+                                                >
+                                                </mat-icon>
+                                                <div class="leading-6 font-light">CURP:</div>
+                                            </div>
+                                            <div class="leading-6 font-bold ml-4">
+                                                {{ cliente.curp }}
+                                            </div>
+                                        </div>
+                                        <!-- RFC -->
+                                        <div class="flex flex-col gap-2">
+                                            <div class="flex gap-2">
+                                                <mat-icon
+                                                    role="img"
+                                                    class="mat-icon notranslate mat-icon-no-color"
+                                                    aria-hidden="true"
+                                                    [svgIcon]="'heroicons_outline:clipboard-check'"
+                                                    matPrefix
+                                                >
+                                                </mat-icon>
+                                                <div class="leading-6 font-light">RFC:</div>
+                                            </div>
+                                            <div class="leading-6 font-bold ml-4">
+                                                {{ cliente.rfc }}
+                                            </div>
+                                        </div>
+                                        <!-- Telefono 1-->
+                                        <div class="flex flex-col gap-2">
+                                            <div class="flex gap-2">
+                                                <mat-icon
+                                                    role="img"
+                                                    class="mat-icon notranslate mat-icon-no-color"
+                                                    aria-hidden="true"
+                                                    [svgIcon]="'heroicons_outline:phone'"
+                                                    matPrefix
+                                                >
+                                                </mat-icon>
+                                                <div class="leading-6 font-light">Teléfono 1:</div>
+                                            </div>
+                                            <div class="leading-6 font-bold ml-4">
+                                                {{ cliente.telefono1 }}
+                                            </div>
+                                        </div>
+                                        <!-- Telefono 2-->
+                                        <div class="flex flex-col gap-2" *ngIf="cliente.telefono2">
+                                            <div class="flex gap-2">
+                                                <mat-icon
+                                                    role="img"
+                                                    class="mat-icon notranslate mat-icon-no-color"
+                                                    aria-hidden="true"
+                                                    [svgIcon]="'heroicons_outline:phone'"
+                                                    matPrefix
+                                                >
+                                                </mat-icon>
+                                                <div class="leading-6 font-light">Teléfono 2:</div>
+                                            </div>
+                                            <div class="leading-6 font-bold ml-4">
+                                                {{ cliente.telefono2 }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ng-container *ngIf="productos$ | async as productos; else noProductosTemplate">
+                                        <ng-container *ngIf="productos.length > 0">
+                                            <!-- Colonia -->
+                                            <div>
+                                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                                    <mat-label>Elegír producto a utilizar</mat-label>
+                                                    <mat-icon
+                                                        class="icon-size-5"
+                                                        [svgIcon]="'heroicons_outline:currency-dollar'"
+                                                        matPrefix
+                                                    ></mat-icon>
+                                                    <mat-select
+                                                        [formControl]="producto"
+                                                        (selectionChange)="selectProducto($event.value)"
+                                                    >
+                                                        <mat-option
+                                                            class="h-auto py-4 leading-none"
+                                                            *ngFor="let producto of productos$ | async"
+                                                            [value]="producto"
+                                                        >
+                                                            <div class="font-medium">
+                                                                {{ producto.descripcion }}
+                                                            </div>
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                                <ng-container *ngIf="producto.touched">
+                                                    <mat-error *ngIf="producto.errors?.required">
+                                                        El producto es requerido.
+                                                    </mat-error>
+                                                </ng-container>
+                                            </div>
+                                        </ng-container>
+                                    </ng-container>
+                                    <ng-template #noProductosTemplate>
+                                        <div class="font-bold">No existen productos para ofrecer, agregar uno</div>
+                                    </ng-template>
+                                </div>
+                                <div
+                                    class="mt-2 grid grid-cols-1 md:grid-cols-4 content-center gap-6 w-full"
+                                    *ngIf="selectedProducto as producto"
+                                >
+                                    <!-- Descripción -->
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex gap-2">
+                                            <mat-icon
+                                                role="img"
+                                                class="mat-icon notranslate mat-icon-no-color"
+                                                aria-hidden="true"
+                                                [svgIcon]="'heroicons_outline:credit-card'"
+                                                matPrefix
+                                            >
+                                            </mat-icon>
+                                            <div class="leading-6 font-light">Nombre:</div>
+                                        </div>
+                                        <div class="leading-6 font-bold ml-4">
+                                            {{ producto.descripcion }}
+                                        </div>
+                                    </div>
+                                    <!-- Tasa de Interes -->
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex gap-2">
+                                            <mat-icon
+                                                role="img"
+                                                class="mat-icon notranslate mat-icon-no-color"
+                                                aria-hidden="true"
+                                                [svgIcon]="'heroicons_outline:trending-up'"
+                                                matPrefix
+                                            >
+                                            </mat-icon>
+                                            <div class="leading-6 font-light">Tasa de Interés:</div>
+                                        </div>
+                                        <div class="leading-6 font-bold ml-4">
+                                            {{ producto.interes / 100 | percent: '1.2' }}
+                                        </div>
+                                    </div>
+                                    <!-- Comisión por apertura -->
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex gap-2">
+                                            <mat-icon
+                                                role="img"
+                                                class="mat-icon notranslate mat-icon-no-color"
+                                                aria-hidden="true"
+                                                [svgIcon]="'heroicons_outline:trending-up'"
+                                                matPrefix
+                                            >
+                                            </mat-icon>
+                                            <div class="leading-6 font-light">Comisión por apertura:</div>
+                                        </div>
+                                        <div class="leading-6 font-bold ml-4">
+                                            {{ producto.comision / 100 | percent: '1.2' }}
+                                        </div>
+                                    </div>
+                                    <!-- Interés moratorio -->
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex gap-2">
+                                            <mat-icon
+                                                role="img"
+                                                class="mat-icon notranslate mat-icon-no-color"
+                                                aria-hidden="true"
+                                                [svgIcon]="'heroicons_outline:trending-up'"
+                                                matPrefix
+                                            >
+                                            </mat-icon>
+                                            <div class="leading-6 font-light">Interés moratorio:</div>
+                                        </div>
+                                        <div class="leading-6 font-bold ml-4">
+                                            {{ producto.interesMoratorio / 100 | percent: '1.2' }}
+                                        </div>
+                                    </div>
+                                    <!-- Penalización -->
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex gap-2">
+                                            <mat-icon
+                                                role="img"
+                                                class="mat-icon notranslate mat-icon-no-color"
+                                                aria-hidden="true"
+                                                [svgIcon]="'heroicons_outline:trending-up'"
+                                                matPrefix
+                                            >
+                                            </mat-icon>
+                                            <div class="leading-6 font-light">Penalización pago tardío:</div>
+                                        </div>
+                                        <div class="leading-6 font-bold ml-4">
+                                            {{ producto.penalizacion / 100 | percent: '1.2' }}
+                                        </div>
+                                    </div>
+                                    <!-- Frecuencia de Pago -->
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex gap-2">
+                                            <mat-icon
+                                                role="img"
+                                                class="mat-icon notranslate mat-icon-no-color"
+                                                aria-hidden="true"
+                                                [svgIcon]="'heroicons_outline:credit-card'"
+                                                matPrefix
+                                            >
+                                            </mat-icon>
+                                            <div class="leading-6 font-light">Frecuencia de Pago:</div>
+                                        </div>
+                                        <div class="leading-6 font-bold ml-4">
+                                            {{ producto.frecuencia | titlecase }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <button
+                                    class="ml-4"
+                                    mat-flat-button
+                                    type="button"
+                                    [color]="'primary'"
+                                    matStepperNext
+                                    [disabled]="!this.selectedProducto"
+                                >
+                                    Siguiente
+                                </button></mat-card
+                            >
+                        </form>
+                    </ng-container>
+                </div>
+            </mat-step>
+        </mat-stepper>
     </ng-template>
-    <ng-template #formTemplate> </ng-template>
 </div>
+<ng-template #loadingTemplate>
+    <mat-spinner> </mat-spinner>
+</ng-template>

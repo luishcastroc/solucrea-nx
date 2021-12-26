@@ -1,3 +1,4 @@
+import { IClienteReturnDto } from 'api/dtos';
 import { Status } from '@prisma/client';
 import { EditMode } from 'app/core/models';
 
@@ -35,4 +36,14 @@ export class ClearCreditosDetails {
 export class GetClienteData {
     static readonly type = '[Creditos] Get Cliente Data';
     constructor(public id: string) {}
+}
+
+export class GetClienteWhere {
+    static readonly type = '[Creditos] Get Cliente Where';
+    constructor(public data: string) {}
+}
+
+export class SelectCliente {
+    static readonly type = '[Creditos] Select Cliente';
+    constructor(public cliente: IClienteReturnDto) {}
 }

@@ -3,6 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -56,6 +57,7 @@ import { AjustesTeamComponent } from './team/team.component';
         MatSelectModule,
         MatSidenavModule,
         MatSlideToggleModule,
+        MatProgressSpinnerModule,
         MatTooltipModule,
         FuseAutogrowModule,
         SharedModule,

@@ -96,11 +96,7 @@
                     (click)="signIn()"
                 >
                     <span *ngIf="!signInForm.disabled"> Ingresar </span>
-                    <mat-progress-spinner
-                        *ngIf="signInForm.disabled"
-                        [diameter]="24"
-                        [mode]="'indeterminate'"
-                    ></mat-progress-spinner>
+                    <mat-spinner *ngIf="signInForm.disabled" [diameter]="24" [mode]="'indeterminate'"></mat-spinner>
                 </button>
             </form>
         </div>

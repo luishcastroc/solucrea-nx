@@ -13,12 +13,11 @@ import {
 } from '@nestjs/common';
 import { Cliente, Prisma, Role } from '@prisma/client';
 
-import { CreateClienteDto } from '../../dtos/create-cliente.dto';
 import { Public } from '../../decorators/public.decorator';
 import { Roles } from '../../decorators/roles.decorator';
 import { RolesGuard } from '../../guards/roles.guard';
 import { ClientesService } from './clientes.service';
-import { IClienteReturnDto, UpdateClienteDto } from 'api/dtos';
+import { IClienteReturnDto, UpdateClienteDto, CreateClienteDto } from 'api/dtos';
 
 @Controller('')
 export class ClientesController {
@@ -78,5 +77,13 @@ export class ClientesController {
             where: { id },
             data,
         });
+    }
+
+    @UseGuards(RolesGuard)
+    @Roles(Role.ADMIN, Role.CAJERO, Role.DIRECTOR, Role.MANAGER, Role.SECRETARIO, Role.USUARIO)
+    @Post('clientes')
+    async getClientesByWhere(@Body() search: { data: string }): Promise<IClienteReturnDto[]> {
+        const { data } = search;
+        return this.clientesService.getClientesByWhere(data);
     }
 }

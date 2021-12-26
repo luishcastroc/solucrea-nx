@@ -32,12 +32,21 @@ export class ClientesService {
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
     /**
-     * Get usuarios
+     * Get clientes
      *
      *
      */
     getClientes(): Observable<IClienteReturnDto[]> {
         return this._httpClient.get<IClienteReturnDto[]>(`${this._environment.uri}/clientes`);
+    }
+
+    /**
+     * Get clientes where
+     *
+     *@param data
+     */
+    getClientesWhere(search: { data: string }): Observable<IClienteReturnDto[]> {
+        return this._httpClient.post<IClienteReturnDto[]>(`${this._environment.uri}/clientes`, search);
     }
 
     /**

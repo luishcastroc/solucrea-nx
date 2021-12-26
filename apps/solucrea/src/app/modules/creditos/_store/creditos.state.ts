@@ -13,8 +13,10 @@ import {
     ClearCreditosState,
     GetAllCreditosCliente,
     GetClienteData,
+    GetClienteWhere,
     GetCreditosConfiguration,
     ModeCredito,
+    SelectCliente,
 } from './creditos.actions';
 import { CreditosStateModel } from './creditos.model';
 import { Producto, Role } from '.prisma/client';
@@ -158,6 +160,23 @@ export class CreditosState {
         );
     }
 
+    @Action(SelectCliente)
+    selectClienteForCredito(ctx: StateContext<CreditosStateModel>, { cliente }: SelectCliente) {
+        ctx.patchState({ selectedCliente: cliente });
+    }
+
+    @Action(GetClienteWhere)
+    getClientesWhere(ctx: StateContext<CreditosStateModel>, { data }: GetClienteWhere) {
+        const search = { data };
+        return this._clientesService.getClientesWhere(search).pipe(
+            tap((clientes: IClienteReturnDto[]) => {
+                ctx.patchState({
+                    clientes,
+                });
+            })
+        );
+    }
+
     @Action(ModeCredito)
     toggleEditModeCredito(ctx: StateContext<CreditosStateModel>, action: ModeCredito) {
         const { payload } = action;
@@ -190,6 +209,7 @@ export class CreditosState {
             sucursales: [],
             clientes: [],
             colocadores: [],
+            selectedCliente: undefined,
         });
     }
 }

@@ -60,53 +60,50 @@ export class CreditosService {
 
     async creditosCliente(creditoWhereUniqueInput: Prisma.CreditoWhereInput): Promise<ICreditoReturnDto[] | null> {
         try {
-            const creditoReturn = this.prisma.credito.findMany({
+            return this.prisma.credito.findMany({
                 where: creditoWhereUniqueInput,
                 select: this.select,
             });
-
-            if (!creditoReturn) {
-                throw new HttpException(
-                    { status: HttpStatus.NOT_FOUND, message: 'no existen créditos para el cliente.' },
-                    HttpStatus.NOT_FOUND
-                );
-            }
-
-            return creditoReturn;
-        } catch ({ response }) {
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+        } catch (e) {
+            if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error consultando los créditos del cliente' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: response.status, message: response.message }, response.status);
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
             }
         }
     }
 
     async creditos(): Promise<ICreditoReturnDto[] | null> {
         try {
-            const creditoReturn = this.prisma.credito.findMany({
+            return this.prisma.credito.findMany({
                 select: this.select,
             });
-
-            if (!creditoReturn) {
-                throw new HttpException(
-                    { status: HttpStatus.NOT_FOUND, message: 'no existen créditos para el cliente.' },
-                    HttpStatus.NOT_FOUND
-                );
-            }
-
-            return creditoReturn;
-        } catch ({ response }) {
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+        } catch (e) {
+            if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error consultando los créditos del cliente' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: response.status, message: response.message }, response.status);
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
+            }
+        }
+    }
+
+    async createCredito(data: Prisma.CreditoCreateInput): Promise<ICreditoReturnDto> {
+        try {
+            return this.prisma.credito.create({ data, select: this.select });
+        } catch (e) {
+            if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando el nuevo crédito' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
             }
         }
     }

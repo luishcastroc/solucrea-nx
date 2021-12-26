@@ -43,7 +43,7 @@ export class AuthInterceptor implements HttpInterceptor {
                 ),
             });
         } else {
-            this._store.dispatch([new Logout(), new Navigate(['sign-in'])]);
+            this._store.dispatch([new Navigate(['sign-in']), new Logout()]);
         }
 
         // Response
@@ -52,7 +52,7 @@ export class AuthInterceptor implements HttpInterceptor {
                 // Catch "401 Unauthorized" responses
                 if (error instanceof HttpErrorResponse && error.status === 401) {
                     // Sign out
-                    this._store.dispatch(new Logout());
+                    this._store.dispatch(new Navigate(['main']));
                 }
 
                 return throwError(error);

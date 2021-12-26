@@ -458,7 +458,7 @@ model Credito {
   fechaLiquidacion    DateTime?
   monto               Decimal           @db.Decimal(15, 2)
   producto            Producto          @relation(fields: [productosId], references: [id])
-  seguro              Seguro            @relation(fields: [segurosId], references: [id])
+  seguro              Seguro?           @relation(fields: [segurosId], references: [id])
   modalidadDeSeguro   ModalidadDeSeguro @relation(fields: [modalidadDeSeguroId], references: [id])
   aval                Aval              @relation(fields: [avalId], references: [id])
   comisiones          Comision[]

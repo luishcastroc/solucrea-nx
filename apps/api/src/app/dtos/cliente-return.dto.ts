@@ -1,5 +1,6 @@
-import { IColonias } from './colonia-return.dto';
 import { Decimal } from '@prisma/client/runtime';
+
+import { IColonias } from './colonia-return.dto';
 
 export interface IDireccionesReturnDto {
     id: string;
@@ -30,14 +31,14 @@ export interface IClienteReturnDto {
     escolaridadId: string;
     estadoCivilId: string;
     tipoDeViviendaId: string;
-    montoMinimo: Decimal;
-    montoMaximo: Decimal;
+    montoMinimo: Decimal | number;
+    montoMaximo: Decimal | number;
     telefono1: string;
     telefono2: string;
     numeroCreditosCrecer: number;
-    porcentajeDePagos: Decimal;
-    porcentajeDeMora: Decimal;
-    multiplos: Decimal;
+    porcentajeDePagos: Decimal | number;
+    porcentajeDeMora: Decimal | number;
+    multiplos: Decimal | number;
     direcciones: IDireccionesReturnDto[];
     trabajo: ITrabajoReturn;
     activo: boolean;

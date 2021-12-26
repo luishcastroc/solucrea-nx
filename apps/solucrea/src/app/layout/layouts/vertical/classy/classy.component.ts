@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Data } from '@angular/router';
 import { FuseNavigationService } from '@fuse/components/navigation';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
@@ -12,6 +12,7 @@ import { Observable, Subject, takeUntil } from 'rxjs';
     selector: 'classy-layout',
     templateUrl: './classy.component.html',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy {
     user$: Observable<Usuario>;
@@ -27,7 +28,9 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _fuseNavigationService: FuseNavigationService,
         private _store: Store
-    ) {}
+    ) {
+        this.user$ = this._store.select(AuthState.user);
+    }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -48,8 +51,6 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-        //Get the user
-        this.user$ = this._store.select(AuthState.user);
         // Subscribe to the resolved route
         this._activatedRoute.data.subscribe((data: Data) => {
             this.data = data.initialData;
