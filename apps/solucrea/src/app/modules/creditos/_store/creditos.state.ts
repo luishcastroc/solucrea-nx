@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { IClienteReturnDto, ICreditoReturnDto, ISucursalReturnDto } from 'api/dtos';
+import { IClienteReturnDto, ICreditoReturnDto, IParentescoReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 import { AjustesCreditosService, AjustesSucursalService, AjustesUsuarioService } from 'app/modules/ajustes/_services';
 import { GetAllCreditos } from 'app/modules/ajustes/_store';
 import { ClientesService } from 'app/modules/clientes';
+import { ParentescosService } from 'app/shared';
 import { forkJoin, tap } from 'rxjs';
 
 import { CreditosService } from '../_services/creditos.service';
@@ -17,9 +18,12 @@ import {
     GetCreditosConfiguration,
     ModeCredito,
     SelectCliente,
+    SelectParentesco,
+    SelectProducto,
 } from './creditos.actions';
 import { CreditosStateModel } from './creditos.model';
 import { Producto, Role } from '.prisma/client';
+import { sortBy } from 'lodash';
 
 @State<CreditosStateModel>({
     name: 'creditos',
@@ -31,11 +35,14 @@ import { Producto, Role } from '.prisma/client';
         editMode: 'edit',
         selectedCredito: undefined,
         selectedClienteCredito: undefined,
+        selectedProducto: undefined,
         productos: [],
         sucursales: [],
         clientes: [],
         selectedCliente: undefined,
         colocadores: [],
+        parentescos: [],
+        selectedOtro: false,
         loading: false,
     },
 })
@@ -46,7 +53,8 @@ export class CreditosState {
         private _ajustesCreditosService: AjustesCreditosService,
         private _ajustesSucursalesService: AjustesSucursalService,
         private _ajustesUsuarios: AjustesUsuarioService,
-        private _clientesService: ClientesService
+        private _clientesService: ClientesService,
+        private _parentescosService: ParentescosService
     ) {}
 
     @Selector()
@@ -104,6 +112,21 @@ export class CreditosState {
         return sucursales;
     }
 
+    @Selector()
+    static parentescos({ parentescos }: CreditosStateModel): IParentescoReturnDto[] {
+        return parentescos;
+    }
+
+    @Selector()
+    static selectedProducto({ selectedProducto }: CreditosStateModel): Producto {
+        return selectedProducto;
+    }
+
+    @Selector()
+    static selectedOtro({ selectedOtro }: CreditosStateModel): boolean {
+        return selectedOtro;
+    }
+
     @Action(GetAllCreditosCliente)
     getAllCreditosCliente(ctx: StateContext<CreditosStateModel>, { id }: GetAllCreditosCliente) {
         ctx.patchState({ loading: true });
@@ -142,9 +165,15 @@ export class CreditosState {
             this._ajustesCreditosService.getProductos(),
             this._ajustesSucursalesService.getSucursales(),
             this._ajustesUsuarios.getUsuariosWhere({ role: Role.COLOCADOR }),
+            this._parentescosService.getParentescos(),
         ]).pipe(
-            tap(([productos, sucursales, colocadores]) => {
-                ctx.patchState({ productos, sucursales, colocadores });
+            tap(([productos, sucursales, colocadores, parentescos]) => {
+                ctx.patchState({
+                    productos: sortBy(productos, 'descripcion'),
+                    sucursales: sortBy(sucursales, 'descripcion'),
+                    colocadores: sortBy(colocadores, 'apellido'),
+                    parentescos: sortBy(parentescos, 'descripcion'),
+                });
             })
         );
     }
@@ -165,6 +194,17 @@ export class CreditosState {
         ctx.patchState({ selectedCliente: cliente });
     }
 
+    @Action(SelectProducto)
+    selectProductoForCredito(ctx: StateContext<CreditosStateModel>, { id }: SelectProducto) {
+        let selectedProducto;
+        if (id === null) {
+            selectedProducto = undefined;
+        } else {
+            selectedProducto = ctx.getState().productos.filter((producto: Producto) => producto.id === id)[0];
+        }
+        ctx.patchState({ selectedProducto });
+    }
+
     @Action(GetClienteWhere)
     getClientesWhere(ctx: StateContext<CreditosStateModel>, { data }: GetClienteWhere) {
         const search = { data };
@@ -183,6 +223,16 @@ export class CreditosState {
         ctx.patchState({ editMode: payload });
     }
 
+    @Action(SelectParentesco)
+    selectParentesco(ctx: StateContext<CreditosStateModel>, { id }: SelectParentesco) {
+        const parentesco = ctx.getState().parentescos.filter((par: IParentescoReturnDto) => par.id === id)[0];
+        if (parentesco.descripcion.includes('Otro')) {
+            ctx.patchState({ selectedOtro: true });
+        } else {
+            ctx.patchState({ selectedOtro: false });
+        }
+    }
+
     @Action(ClearCreditosState)
     clearState(ctx: StateContext<CreditosStateModel>) {
         ctx.patchState({
@@ -193,11 +243,13 @@ export class CreditosState {
             editMode: 'edit',
             selectedCredito: undefined,
             selectedClienteCredito: undefined,
+            selectedProducto: undefined,
             productos: [],
             sucursales: [],
             clientes: [],
             selectedCliente: undefined,
             colocadores: [],
+            parentescos: [],
             loading: false,
         });
     }
@@ -209,7 +261,11 @@ export class CreditosState {
             sucursales: [],
             clientes: [],
             colocadores: [],
+            parentescos: [],
             selectedCliente: undefined,
+            selectedCredito: undefined,
+            selectedProducto: undefined,
+            selectedOtro: false,
         });
     }
 }

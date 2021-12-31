@@ -1,6 +1,11 @@
-import { IUsuarioReturnDto } from './../../../../../../api/src/app/dtos/usuario-return.dto';
 import { Producto } from '.prisma/client';
-import { ICreditoReturnDto, IClienteReturnDto, ISucursalReturnDto } from 'api/dtos';
+import {
+    ICreditoReturnDto,
+    IClienteReturnDto,
+    ISucursalReturnDto,
+    IUsuarioReturnDto,
+    IParentescoReturnDto,
+} from 'api/dtos';
 import { EditMode } from 'app/core/models';
 
 export interface CreditosStateModel {
@@ -16,5 +21,8 @@ export interface CreditosStateModel {
     sucursales: ISucursalReturnDto[] | [];
     clientes: IClienteReturnDto[] | [];
     selectedCliente: IClienteReturnDto;
+    selectedProducto: Producto;
     colocadores: IUsuarioReturnDto[] | [];
+    parentescos: IParentescoReturnDto[] | [];
+    selectedOtro: boolean;
 }

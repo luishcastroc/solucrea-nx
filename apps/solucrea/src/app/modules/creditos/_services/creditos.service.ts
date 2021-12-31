@@ -1,3 +1,4 @@
+import { IDetails } from './../_models/details.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IClienteReturnDto, ICreditoReturnDto } from 'api/dtos';
@@ -35,5 +36,13 @@ export class CreditosService {
      */
     getCreditos(): Observable<ICreditoReturnDto[]> {
         return this._httpClient.get<ICreditoReturnDto[]>(`${this._environment.uri}/creditos`);
+    }
+
+    /**
+     * Calculate details
+     *
+     */
+    calculateDetails(): IDetails {
+        return {} as IDetails;
     }
 }

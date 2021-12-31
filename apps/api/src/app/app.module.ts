@@ -16,6 +16,7 @@ import {
     EstadoModule,
     EstadosCivilesModule,
     GenerosModule,
+    ParentescosModule,
     ProductosModule,
     SucursalesModule,
     TiposViviendaModule,
@@ -43,6 +44,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
         ActividadesEconomicasModule,
         ProductosModule,
         CreditosModule,
+        ParentescosModule,
     ],
     providers: [
         {

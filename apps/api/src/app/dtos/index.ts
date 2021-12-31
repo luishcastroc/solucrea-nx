@@ -28,3 +28,4 @@ export * from './create-producto.dto';
 export * from './credito-return.dto';
 export * from './aval-return.dto';
 export * from './create-aval.dto';
+export * from './parentesco.return.dto';

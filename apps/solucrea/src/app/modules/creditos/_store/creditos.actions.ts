@@ -47,3 +47,13 @@ export class SelectCliente {
     static readonly type = '[Creditos] Select Cliente';
     constructor(public cliente: IClienteReturnDto) {}
 }
+
+export class SelectProducto {
+    static readonly type = '[Creditos] Select Producto';
+    constructor(public id: string) {}
+}
+
+export class SelectParentesco {
+    static readonly type = '[Creditos] Select Parentesco';
+    constructor(public id: string) {}
+}

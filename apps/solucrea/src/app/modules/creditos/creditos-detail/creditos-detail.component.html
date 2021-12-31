@@ -15,32 +15,51 @@
     </div>
     <ng-container *ngIf="loading$ | async; then loadingTemplate; else formTemplate"></ng-container>
     <ng-template #formTemplate>
-        <mat-stepper [linear]="true" #stepper class="flex flex-col items-center">
-            <mat-step [stepControl]="creditosForm" class="w-full">
-                <!-- Main actions -->
-                <div class="flex flex-col items-center gap-4 flex-auto p-10">
-                    <!-- Search -->
-                    <div class="w-full" *ngIf="!clienteId">
-                        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full min-w-50">
-                            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                            <input
-                                matInput
-                                [formControl]="searchInput"
-                                [matAutocomplete]="auto"
-                                [placeholder]="'Buscar cliente'"
-                            />
-                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                                <mat-option *ngFor="let cliente of clientes$ | async" [value]="cliente">
-                                    {{ cliente.nombre }} {{ cliente.apellidoPaterno }} {{ cliente.apellidoMaterno }}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div>
-                    <ng-container *ngIf="!loading; else loadingTemplate">
-                        <form [formGroup]="creditosForm" *ngIf="selectedCliente$ | async as cliente">
-                            <mat-card class="flex flex-col gap-8 justify-center items-center px-13"
-                                ><div class="flex flex-col w-full gap-6">
-                                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 w-full mt-3 content-center">
+        <form [formGroup]="creditosForm">
+            <mat-stepper
+                [linear]="true"
+                #stepper
+                class="flex flex-col w-full flex-auto items-center"
+                [orientation]="orientation"
+            >
+                <mat-step [stepControl]="producto" label="Datos Generales del crédito">
+                    <!-- Main actions -->
+                    <div class="flex flex-col items-center gap-6 flex-auto p-10">
+                        <!-- Search -->
+                        <div class="w-full" *ngIf="!clienteId">
+                            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full min-w-50">
+                                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                                <input
+                                    matInput
+                                    [formControl]="searchInput"
+                                    [matAutocomplete]="auto"
+                                    [placeholder]="'Buscar cliente'"
+                                />
+                                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                    <mat-option *ngFor="let cliente of clientes$ | async" [value]="cliente">
+                                        {{ cliente.nombre }} {{ cliente.apellidoPaterno }} {{ cliente.apellidoMaterno }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                        <ng-container *ngIf="!loading; else loadingTemplate">
+                            <div class="flex flex-col gap-8" *ngIf="selectedCliente$ | async as cliente">
+                                <div class="flex flex-col w-full gap-6">
+                                    <h2 class="text-3xl font-extrabold tracking-tight leading-none self-center">
+                                        Datos del Cliente
+                                    </h2>
+                                    <div
+                                        class="
+                                            grid grid-cols-1
+                                            md:grid-cols-4
+                                            gap-6
+                                            w-full
+                                            mt-3
+                                            content-center
+                                            border-b border-t
+                                            py-6
+                                        "
+                                    >
                                         <!-- Nombre -->
                                         <div class="flex flex-col gap-2">
                                             <div class="flex gap-2">
@@ -150,7 +169,7 @@
                                     </div>
                                     <ng-container *ngIf="productos$ | async as productos; else noProductosTemplate">
                                         <ng-container *ngIf="productos.length > 0">
-                                            <!-- Colonia -->
+                                            <!-- Producto -->
                                             <div>
                                                 <mat-form-field class="fuse-mat-no-subscript w-full">
                                                     <mat-label>Elegír producto a utilizar</mat-label>
@@ -166,7 +185,7 @@
                                                         <mat-option
                                                             class="h-auto py-4 leading-none"
                                                             *ngFor="let producto of productos$ | async"
-                                                            [value]="producto"
+                                                            [value]="producto.id"
                                                         >
                                                             <div class="font-medium">
                                                                 {{ producto.descripcion }}
@@ -186,9 +205,22 @@
                                         <div class="font-bold">No existen productos para ofrecer, agregar uno</div>
                                     </ng-template>
                                 </div>
+                            </div>
+                            <ng-container *ngIf="selectedProducto$ | async as producto">
+                                <h2 class="text-3xl font-extrabold tracking-tight leading-none self-center">
+                                    Datos del Producto
+                                </h2>
                                 <div
-                                    class="mt-2 grid grid-cols-1 md:grid-cols-4 content-center gap-6 w-full"
-                                    *ngIf="selectedProducto as producto"
+                                    class="
+                                        mt-2
+                                        grid grid-cols-1
+                                        md:grid-cols-4
+                                        content-center
+                                        gap-6
+                                        w-full
+                                        border-b border-t
+                                        py-8
+                                    "
                                 >
                                     <!-- Descripción -->
                                     <div class="flex flex-col gap-2">
@@ -224,23 +256,6 @@
                                             {{ producto.interes / 100 | percent: '1.2' }}
                                         </div>
                                     </div>
-                                    <!-- Comisión por apertura -->
-                                    <div class="flex flex-col gap-2">
-                                        <div class="flex gap-2">
-                                            <mat-icon
-                                                role="img"
-                                                class="mat-icon notranslate mat-icon-no-color"
-                                                aria-hidden="true"
-                                                [svgIcon]="'heroicons_outline:trending-up'"
-                                                matPrefix
-                                            >
-                                            </mat-icon>
-                                            <div class="leading-6 font-light">Comisión por apertura:</div>
-                                        </div>
-                                        <div class="leading-6 font-bold ml-4">
-                                            {{ producto.comision / 100 | percent: '1.2' }}
-                                        </div>
-                                    </div>
                                     <!-- Interés moratorio -->
                                     <div class="flex flex-col gap-2">
                                         <div class="flex gap-2">
@@ -258,6 +273,23 @@
                                             {{ producto.interesMoratorio / 100 | percent: '1.2' }}
                                         </div>
                                     </div>
+                                    <!-- Comisión por apertura -->
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex gap-2">
+                                            <mat-icon
+                                                role="img"
+                                                class="mat-icon notranslate mat-icon-no-color"
+                                                aria-hidden="true"
+                                                [svgIcon]="'heroicons_outline:trending-up'"
+                                                matPrefix
+                                            >
+                                            </mat-icon>
+                                            <div class="leading-6 font-light">Comisión por apertura:</div>
+                                        </div>
+                                        <div class="leading-6 font-bold ml-4">
+                                            {{ producto.comision / 100 | percent: '1.2' }}
+                                        </div>
+                                    </div>
                                     <!-- Penalización -->
                                     <div class="flex flex-col gap-2">
                                         <div class="flex gap-2">
@@ -269,10 +301,33 @@
                                                 matPrefix
                                             >
                                             </mat-icon>
-                                            <div class="leading-6 font-light">Penalización pago tardío:</div>
+                                            <div class="leading-6 font-light">
+                                                Penalización incumplimiento de plazo:
+                                            </div>
                                         </div>
                                         <div class="leading-6 font-bold ml-4">
                                             {{ producto.penalizacion / 100 | percent: '1.2' }}
+                                        </div>
+                                    </div>
+                                    <!-- Cargos -->
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex gap-2">
+                                            <mat-icon
+                                                role="img"
+                                                class="mat-icon notranslate mat-icon-no-color"
+                                                aria-hidden="true"
+                                                [svgIcon]="'heroicons_outline:trending-up'"
+                                                matPrefix
+                                            >
+                                            </mat-icon>
+                                            <div class="leading-6 font-light">Cargos:</div>
+                                        </div>
+                                        <div class="leading-6 font-bold ml-4">
+                                            {{
+                                                producto.cargos === 0 || producto.cargos === '0'
+                                                    ? 'No Hay Cargos'
+                                                    : (producto.cargos / 100 | percent: '1.2')
+                                            }}
                                         </div>
                                     </div>
                                     <!-- Frecuencia de Pago -->
@@ -292,7 +347,61 @@
                                             {{ producto.frecuencia | titlecase }}
                                         </div>
                                     </div>
+                                    <!-- Número de Pagos -->
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex gap-2">
+                                            <mat-icon
+                                                role="img"
+                                                class="mat-icon notranslate mat-icon-no-color"
+                                                aria-hidden="true"
+                                                [svgIcon]="'heroicons_outline:credit-card'"
+                                                matPrefix
+                                            >
+                                            </mat-icon>
+                                            <div class="leading-6 font-light">Número de Pagos:</div>
+                                        </div>
+                                        <div class="leading-6 font-bold ml-4">
+                                            {{ producto.numeroDePagos | number }}
+                                        </div>
+                                    </div>
+                                    <!-- Monto Mínimo -->
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex gap-2">
+                                            <mat-icon
+                                                role="img"
+                                                class="mat-icon notranslate mat-icon-no-color"
+                                                aria-hidden="true"
+                                                [svgIcon]="'heroicons_outline:currency-dollar'"
+                                                matPrefix
+                                            >
+                                            </mat-icon>
+                                            <div class="leading-6 font-light">Monto Mínimo:</div>
+                                        </div>
+                                        <div class="leading-6 font-bold ml-4">
+                                            {{ producto.montoMinimo | currency }}
+                                        </div>
+                                    </div>
+                                    <!-- Monto Máximo -->
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex gap-2">
+                                            <mat-icon
+                                                role="img"
+                                                class="mat-icon notranslate mat-icon-no-color"
+                                                aria-hidden="true"
+                                                [svgIcon]="'heroicons_outline:currency-dollar'"
+                                                matPrefix
+                                            >
+                                            </mat-icon>
+                                            <div class="leading-6 font-light">Monto Máximo:</div>
+                                        </div>
+                                        <div class="leading-6 font-bold ml-4">
+                                            {{ producto.montoMaximo | currency }}
+                                        </div>
+                                    </div>
                                 </div>
+                            </ng-container>
+                            <div class="flex">
+                                <button mat-stroked-button type="button" (click)="cancelCredito()">Cancelar</button>
                                 <button
                                     class="ml-4"
                                     mat-flat-button
@@ -302,13 +411,238 @@
                                     [disabled]="!this.selectedProducto"
                                 >
                                     Siguiente
-                                </button></mat-card
-                            >
-                        </form>
-                    </ng-container>
-                </div>
-            </mat-step>
-        </mat-stepper>
+                                </button>
+                            </div>
+                        </ng-container>
+                    </div>
+                </mat-step>
+                <mat-step [stepControl]="aval" label="Datos del Aval"
+                    ><div class="flex flex-col w-full gap-6">
+                        <h2 class="text-3xl font-extrabold tracking-tight leading-none self-center">Datos del Aval</h2>
+                        <div class="flex flex-wrap gap-6 w-full mt-8">
+                            <form [formGroup]="aval" class="grid grid-cols-1 md:grid-cols-5 gap-3 w-full">
+                                <!-- Apellido Paterno -->
+                                <div>
+                                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                                        <mat-label>Apellido Paterno</mat-label>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_solid:user'"
+                                            matPrefix
+                                        ></mat-icon>
+                                        <input [formControlName]="'apellidoPaterno'" matInput />
+                                    </mat-form-field>
+                                    <ng-container *ngIf="aval.get('apellidoPaterno').touched">
+                                        <mat-error *ngIf="aval.get('apellidoPaterno').errors?.required">
+                                            El Apellido paterno es requerido.
+                                        </mat-error>
+                                    </ng-container>
+                                </div>
+                                <!-- Apellido Materno -->
+                                <div>
+                                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                                        <mat-label>Apellido Materno</mat-label>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_solid:user'"
+                                            matPrefix
+                                        ></mat-icon>
+                                        <input [formControlName]="'apellidoMaterno'" matInput />
+                                    </mat-form-field>
+                                    <ng-container *ngIf="aval.get('apellidoMaterno').touched">
+                                        <mat-error *ngIf="aval.get('apellidoMaterno').errors?.required">
+                                            El Apellido materno es requerido.
+                                        </mat-error>
+                                    </ng-container>
+                                </div>
+                                <!-- Nombre -->
+                                <div>
+                                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                                        <mat-label>Nombre</mat-label>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_solid:user'"
+                                            matPrefix
+                                        ></mat-icon>
+                                        <input [formControlName]="'nombre'" matInput />
+                                    </mat-form-field>
+                                    <ng-container *ngIf="aval.get('nombre').touched">
+                                        <mat-error *ngIf="aval.get('nombre').errors?.required">
+                                            El Nombre es requerido.
+                                        </mat-error>
+                                    </ng-container>
+                                </div>
+                                <!-- Fecha de Nacimiento -->
+                                <div>
+                                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                                        <mat-label>Fecha de Nacimiento</mat-label>
+                                        <mat-icon
+                                            matPrefix
+                                            class="hidden sm:flex icon-size-5"
+                                            [svgIcon]="'heroicons_solid:cake'"
+                                        ></mat-icon>
+                                        <input
+                                            matInput
+                                            [matDatepicker]="birthdayDatepicker"
+                                            [formControlName]="'fechaDeNacimiento'"
+                                            [placeholder]="'Fecha de Nacimiento'"
+                                        />
+                                        <mat-datepicker-toggle matSuffix [for]="birthdayDatepicker">
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #birthdayDatepicker></mat-datepicker>
+                                    </mat-form-field>
+                                    <ng-container *ngIf="aval.get('fechaDeNacimiento').touched">
+                                        <mat-error *ngIf="aval.get('fechaDeNacimiento').errors?.required">
+                                            La fecha de nacimiento es requerida.
+                                        </mat-error>
+                                    </ng-container>
+                                </div>
+                                <!-- Parentesco -->
+                                <div>
+                                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                                        <mat-label>Parentesco</mat-label>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_outline:library'"
+                                            matPrefix
+                                        ></mat-icon>
+                                        <mat-select
+                                            [formControlName]="'parentesco'"
+                                            (selectionChange)="checkParentesco($event.value)"
+                                        >
+                                            <mat-option
+                                                *ngFor="let parentesco of parentescos$ | async"
+                                                [value]="parentesco.id"
+                                                >{{ parentesco.descripcion }}</mat-option
+                                            >
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <ng-container *ngIf="aval.get('parentesco').touched">
+                                        <mat-error *ngIf="aval.get('parentesco').errors?.required">
+                                            El Parentesco es requerido.
+                                        </mat-error>
+                                    </ng-container>
+                                </div>
+                                <!-- Otro (Especificar) -->
+                                <div *ngIf="selectedOtro$ | async">
+                                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                                        <mat-label>Especificar</mat-label>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_solid:user'"
+                                            matPrefix
+                                        ></mat-icon>
+                                        <input [formControlName]="'otro'" matInput />
+                                    </mat-form-field>
+                                    <ng-container *ngIf="aval.get('otro').touched">
+                                        <mat-error *ngIf="aval.get('otro').errors?.required">
+                                            La especificación del parentesco es requerida.
+                                        </mat-error>
+                                    </ng-container>
+                                </div>
+                                <!-- Ocupación -->
+                                <div>
+                                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                                        <mat-label>Ocupación</mat-label>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_solid:user'"
+                                            matPrefix
+                                        ></mat-icon>
+                                        <input [formControlName]="'ocupacion'" matInput />
+                                    </mat-form-field>
+                                    <ng-container *ngIf="aval.get('ocupacion').touched">
+                                        <mat-error *ngIf="aval.get('ocupacion').errors?.required">
+                                            La Ocupación es requerida.
+                                        </mat-error>
+                                    </ng-container>
+                                </div>
+                                <!-- Teléfono 1 -->
+                                <div>
+                                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                                        <mat-label>Teléfono</mat-label>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_solid:phone'"
+                                            matPrefix
+                                        ></mat-icon>
+                                        <input [formControlName]="'telefono'" matInput [inputMask]="phoneInputMask" />
+                                    </mat-form-field>
+                                    <ng-container *ngIf="aval.get('telefono').touched">
+                                        <mat-error *ngIf="aval.get('telefono').errors?.required">
+                                            El telefono es requerido.
+                                        </mat-error>
+                                    </ng-container>
+                                </div>
+                            </form>
+                            <div class="flex flex-auto justify-center">
+                                <button mat-stroked-button type="button" matStepperPrevious>Anterior</button>
+                                <button
+                                    class="ml-4"
+                                    mat-flat-button
+                                    type="button"
+                                    [color]="'primary'"
+                                    matStepperNext
+                                    [disabled]="!this.aval.touched || this.aval.invalid"
+                                >
+                                    Siguiente
+                                </button>
+                            </div>
+                        </div>
+                    </div></mat-step
+                >
+                <mat-step label="Resumen de Operación"
+                    ><div class="flex flex-col w-full gap-6">
+                        <h2 class="text-3xl font-extrabold tracking-tight leading-none self-center">
+                            Datos Finales y Desembolso
+                        </h2>
+                        <div class="flex flex-col md:grid md:grid-cols-2 md:max-w-2/3 gap-6 w-full mt-8">
+                            <!-- Cantidad a Desembolsar -->
+                            <div>
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>Cantidad a Otorgar</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:currency-dollar'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <input [formControlName]="'monto'" matInput [inputMask]="currencyInputMask" />
+                                </mat-form-field>
+                                <ng-container *ngIf="monto.touched">
+                                    <mat-error *ngIf="monto.errors?.required">
+                                        La Cantidad a otorgar es requerida.
+                                    </mat-error>
+                                </ng-container>
+                            </div>
+                            <!-- Fecha de Desembolso -->
+                            <div>
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>Fecha de Desembolso</mat-label>
+                                    <mat-icon
+                                        matPrefix
+                                        class="hidden sm:flex icon-size-5"
+                                        [svgIcon]="'heroicons_outline:calendar'"
+                                    ></mat-icon>
+                                    <input
+                                        matInput
+                                        [matDatepicker]="initDatepicker"
+                                        [formControlName]="'fechaInicio'"
+                                        [placeholder]="'Fecha de Desembolso'"
+                                    />
+                                    <mat-datepicker-toggle matSuffix [for]="initDatepicker"> </mat-datepicker-toggle>
+                                    <mat-datepicker #initDatepicker></mat-datepicker>
+                                </mat-form-field>
+                                <ng-container *ngIf="fechaInicio.touched">
+                                    <mat-error *ngIf="fechaInicio.errors?.required">
+                                        La fecha de nacimiento es requerida.
+                                    </mat-error>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div></mat-step
+                >
+            </mat-stepper>
+        </form>
     </ng-template>
 </div>
 <ng-template #loadingTemplate>

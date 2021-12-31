@@ -1,10 +1,13 @@
+import { StepperOrientation } from '@angular/cdk/stepper';
 import { Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { HotToastService } from '@ngneat/hot-toast';
+import { createMask } from '@ngneat/input-mask';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
-import { IClienteReturnDto } from 'api/dtos';
+import { IClienteReturnDto, IParentescoReturnDto } from 'api/dtos';
 import { debounceTime, distinctUntilChanged, filter, Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import {
@@ -13,6 +16,8 @@ import {
     GetClienteWhere,
     GetCreditosConfiguration,
     SelectCliente,
+    SelectParentesco,
+    SelectProducto,
 } from '../_store/creditos.actions';
 import { CreditosState } from '../_store/creditos.state';
 import { Producto } from '.prisma/client';
@@ -27,8 +32,11 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
     @Select(CreditosState.loading) loading$: Observable<boolean>;
     @Select(CreditosState.clientes) clientes$: Observable<IClienteReturnDto[]>;
     @Select(CreditosState.productos) productos$: Observable<Producto[]>;
+    @Select(CreditosState.parentescos) parentescos$: Observable<IParentescoReturnDto[]>;
 
+    selectedProducto$: Observable<Producto>;
     selectedCliente$: Observable<IClienteReturnDto>;
+    selectedOtro$: Observable<boolean>;
 
     clienteId: string;
     creditoId: string;
@@ -37,6 +45,23 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
     selectedCliente: IClienteReturnDto;
     selectedProducto: Producto;
     loading = false;
+    selectedOtro = false;
+    orientation: StepperOrientation = 'horizontal';
+
+    phoneInputMask = createMask({
+        mask: '(999)-999-99-99',
+        autoUnmask: true,
+    });
+
+    currencyInputMask = createMask({
+        alias: 'numeric',
+        groupSeparator: ',',
+        digits: 2,
+        digitsOptional: false,
+        prefix: '$ ',
+        placeholder: '0',
+        autoUnmask: true,
+    });
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -46,7 +71,9 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
         private _toast: HotToastService,
         private location: Location,
         private _route: ActivatedRoute,
-        private _formBuilder: FormBuilder
+        private _formBuilder: FormBuilder,
+        private _cdr: ChangeDetectorRef,
+        private _fuseMediaWatcherService: FuseMediaWatcherService
     ) {}
 
     get id() {
@@ -90,7 +117,7 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
     }
 
     get aval() {
-        return this.creditosForm.get('aval') as FormControl;
+        return this.creditosForm.get('aval') as FormGroup;
     }
 
     ngOnInit(): void {
@@ -98,6 +125,22 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
         this.clienteId = this._route.snapshot.paramMap.get('clienteId');
         this.creditoId = this._route.snapshot.paramMap.get('creditoId');
         this.initCredito(this.clienteId, this.creditoId);
+
+        // Subscribe to media changes
+        this._fuseMediaWatcherService.onMediaChange$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(({ matchingAliases }) => {
+                // Set the drawerMode and drawerOpened
+                console.log(matchingAliases);
+                if (matchingAliases.includes('md')) {
+                    this.orientation = 'horizontal';
+                } else {
+                    this.orientation = 'vertical';
+                }
+
+                // Mark for check
+                this._cdr.markForCheck();
+            });
     }
 
     /**
@@ -115,9 +158,26 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
      */
     initCredito(clienteId: string, creditoId: string): void {
         this.creditosForm = this.createCreditosForm();
+
         this.selectedCliente$ = this._store.select(CreditosState.selectedCliente).pipe(
             tap((cliente) => {
                 this.selectedCliente = cliente;
+            })
+        );
+
+        this.selectedProducto$ = this._store.select(CreditosState.selectedProducto).pipe(
+            tap((producto: Producto) => {
+                this.selectedProducto = producto;
+            })
+        );
+
+        this.selectedOtro$ = this._store.select(CreditosState.selectedOtro).pipe(
+            tap((result) => {
+                if (result) {
+                    this.aval.get('otro').setValidators(Validators.required);
+                } else {
+                    this.aval.get('otro').setValidators([]);
+                }
             })
         );
 
@@ -170,9 +230,9 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
      *
      * @param producto
      */
-    selectProducto(producto: Producto): void {
-        console.log(producto);
-        this.selectedProducto = producto;
+    selectProducto(id: string): void {
+        //Assign to local variable
+        this._store.dispatch(new SelectProducto(id));
     }
 
     /**
@@ -203,6 +263,26 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
                 ocupacion: ['', Validators.required],
             }),
         });
+    }
+
+    /**
+     *
+     * Cancel Credito
+     *
+     */
+    cancelCredito(): void {
+        this.creditosForm.reset();
+        this._store.dispatch(new SelectProducto(null));
+        this._cdr.detectChanges();
+    }
+
+    /**
+     *
+     * @param parentesco
+     *
+     */
+    checkParentesco(id: string): void {
+        this._store.dispatch(new SelectParentesco(id));
     }
 
     /**
