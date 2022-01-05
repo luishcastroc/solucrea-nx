@@ -1,12 +1,16 @@
-import { Producto } from '.prisma/client';
+import { IModalidadSeguroReturnDto } from './../../../../../../api/src/app/dtos/modalidad-seguro-return.dto';
 import {
-    ICreditoReturnDto,
     IClienteReturnDto,
+    ICreditoReturnDto,
+    IParentescoReturnDto,
+    ISeguroReturnDto,
     ISucursalReturnDto,
     IUsuarioReturnDto,
-    IParentescoReturnDto,
 } from 'api/dtos';
 import { EditMode } from 'app/core/models';
+
+import { ISegurosData } from '../_models';
+import { Producto } from '.prisma/client';
 
 export interface CreditosStateModel {
     creditos: ICreditoReturnDto[] | [];
@@ -22,7 +26,10 @@ export interface CreditosStateModel {
     clientes: IClienteReturnDto[] | [];
     selectedCliente: IClienteReturnDto;
     selectedProducto: Producto;
+    selectedModalidadDeSeguro: IModalidadSeguroReturnDto | undefined;
+    selectedSeguro: ISeguroReturnDto | undefined;
     colocadores: IUsuarioReturnDto[] | [];
     parentescos: IParentescoReturnDto[] | [];
     selectedOtro: boolean;
+    segurosData: ISegurosData;
 }

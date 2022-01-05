@@ -8,4 +8,5 @@ export interface ICajaReturnDto {
     fechaCierre: string | Date;
     creadoPor: string;
     sucursal: Partial<Sucursal>;
+    saldoActual?: number;
 }

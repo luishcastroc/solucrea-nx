@@ -18,6 +18,7 @@ import {
     GenerosModule,
     ParentescosModule,
     ProductosModule,
+    SegurosModule,
     SucursalesModule,
     TiposViviendaModule,
     UsuariosModule,
@@ -45,6 +46,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
         ProductosModule,
         CreditosModule,
         ParentescosModule,
+        SegurosModule,
     ],
     providers: [
         {

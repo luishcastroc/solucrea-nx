@@ -102,7 +102,7 @@ const theming = plugin.withOptions((options) => ({
         // @ Map variable colors
         // -----------------------------------------------------------------------------------------------------
         const mapVariableColors = _.fromPairs(_.map(options.themes, (theme, themeName) => [
-            themeName === 'default' ? '.theme-default' : `.theme-${e(themeName)}`,
+            themeName === 'default' ? 'body, .theme-default' : `.theme-${e(themeName)}`,
             _.fromPairs(_.flatten(_.map(flattenColorPalette(_.fromPairs(_.flatten(_.map(normalizeTheme(theme), (palette, paletteName) => [
                     [
                         e(paletteName),

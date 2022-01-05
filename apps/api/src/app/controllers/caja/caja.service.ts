@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { Caja } from '.prisma/client';
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
 import { CreateCajaDto, ICajaReturnDto } from 'api/dtos';
 import { isEmpty } from 'lodash';
+
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class CajaService {

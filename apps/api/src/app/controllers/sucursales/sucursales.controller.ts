@@ -1,4 +1,3 @@
-import { UpdateSucursalDto } from './../../dtos/update-sucursal.dto';
 import {
     Body,
     Controller,
@@ -12,12 +11,13 @@ import {
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
-import { Prisma, Role } from '@prisma/client';
+import { Role } from '@prisma/client';
 import { CreateSucursalDto, ISucursalReturnDto } from 'api/dtos';
 
 import { Public } from '../../decorators/public.decorator';
 import { Roles } from '../../decorators/roles.decorator';
 import { RolesGuard } from '../../guards/roles.guard';
+import { UpdateSucursalDto } from './../../dtos/update-sucursal.dto';
 import { SucursalesService } from './sucursales.service';
 
 @Controller()
@@ -63,5 +63,15 @@ export class SucursalesController {
     @Delete('sucursal/:id')
     async deleteSucursal(@Param('id') id: string): Promise<ISucursalReturnDto> {
         return this.sucursalesService.deleteSucursal({ id });
+    }
+
+    @UseGuards(RolesGuard)
+    @Roles(Role.ALL)
+    @Post('sucursales/caja')
+    async getSucursalesWithCaja(
+        @Body() data: { minAmount: number; maxAmount: number }
+    ): Promise<Partial<ISucursalReturnDto>[]> {
+        const { minAmount, maxAmount } = data;
+        return this.sucursalesService.getSucursalesWithCaja(minAmount, maxAmount);
     }
 }

@@ -7,20 +7,30 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
-import { IClienteReturnDto, IParentescoReturnDto } from 'api/dtos';
+import {
+    IClienteReturnDto,
+    IModalidadSeguroReturnDto,
+    IParentescoReturnDto,
+    ISeguroReturnDto,
+    ISucursalReturnDto,
+} from 'api/dtos';
 import { debounceTime, distinctUntilChanged, filter, Observable, Subject, takeUntil, tap } from 'rxjs';
 
+import { ISegurosData } from '../_models';
 import {
     ClearCreditosDetails,
     GetClienteData,
     GetClienteWhere,
     GetCreditosConfiguration,
+    GetSucursalesWhereCaja,
     SelectCliente,
     SelectParentesco,
     SelectProducto,
 } from '../_store/creditos.actions';
 import { CreditosState } from '../_store/creditos.state';
+import { SelectModalidadSeguro } from './../_store/creditos.actions';
 import { Producto } from '.prisma/client';
+import { CreditosService } from '../_services/creditos.service';
 
 @Component({
     selector: 'app-creditos-detail',
@@ -32,11 +42,15 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
     @Select(CreditosState.loading) loading$: Observable<boolean>;
     @Select(CreditosState.clientes) clientes$: Observable<IClienteReturnDto[]>;
     @Select(CreditosState.productos) productos$: Observable<Producto[]>;
+    @Select(CreditosState.sucursales) sucursales$: Observable<ISucursalReturnDto[]>;
     @Select(CreditosState.parentescos) parentescos$: Observable<IParentescoReturnDto[]>;
+    @Select(CreditosState.segurosData) segurosData$: Observable<ISegurosData>;
 
     selectedProducto$: Observable<Producto>;
     selectedCliente$: Observable<IClienteReturnDto>;
     selectedOtro$: Observable<boolean>;
+    selectedModalidadDeSeguro$: Observable<IModalidadSeguroReturnDto>;
+    selectedSeguro$: Observable<ISeguroReturnDto>;
 
     clienteId: string;
     creditoId: string;
@@ -44,6 +58,8 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
     searchInput = new FormControl();
     selectedCliente: IClienteReturnDto;
     selectedProducto: Producto;
+    selectedModalidadDeSeguro: IModalidadSeguroReturnDto;
+    selectedSeguro: ISeguroReturnDto;
     loading = false;
     selectedOtro = false;
     orientation: StepperOrientation = 'horizontal';
@@ -73,7 +89,8 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
         private _route: ActivatedRoute,
         private _formBuilder: FormBuilder,
         private _cdr: ChangeDetectorRef,
-        private _fuseMediaWatcherService: FuseMediaWatcherService
+        private _fuseMediaWatcherService: FuseMediaWatcherService,
+        private _creditosService: CreditosService
     ) {}
 
     get id() {
@@ -131,7 +148,6 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(({ matchingAliases }) => {
                 // Set the drawerMode and drawerOpened
-                console.log(matchingAliases);
                 if (matchingAliases.includes('md')) {
                     this.orientation = 'horizontal';
                 } else {
@@ -161,13 +177,53 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
 
         this.selectedCliente$ = this._store.select(CreditosState.selectedCliente).pipe(
             tap((cliente) => {
-                this.selectedCliente = cliente;
+                if (cliente) {
+                    this.selectedCliente = cliente;
+                    this.cliente.setValue(cliente.id);
+                }
             })
         );
 
         this.selectedProducto$ = this._store.select(CreditosState.selectedProducto).pipe(
             tap((producto: Producto) => {
-                this.selectedProducto = producto;
+                if (producto) {
+                    this.selectedProducto = producto;
+                    this.producto.setValue(producto.id);
+                    this.monto.setValidators([
+                        Validators.required,
+                        Validators.min(Number(producto.montoMinimo)),
+                        Validators.max(Number(producto.montoMaximo)),
+                    ]);
+                    this._store.dispatch(
+                        new GetSucursalesWhereCaja(Number(producto.montoMinimo), Number(producto.montoMaximo))
+                    );
+                }
+            })
+        );
+
+        this.selectedModalidadDeSeguro$ = this._store.select(CreditosState.selectedModalidadDeSeguro).pipe(
+            tap((modalidad: IModalidadSeguroReturnDto) => {
+                if (modalidad) {
+                    this.seguro.enable();
+                    this.seguro.setValidators(Validators.required);
+                    this.selectedModalidadDeSeguro = modalidad;
+                } else {
+                    this.seguro.disable();
+                    this.seguro.setValidators([]);
+                }
+
+                // Mark for check
+                this._cdr.markForCheck();
+            })
+        );
+
+        this.selectedSeguro$ = this._store.select(CreditosState.selectedSeguro).pipe(
+            tap((seguro: ISeguroReturnDto) => {
+                if (seguro) {
+                    this.selectedSeguro = seguro;
+                }
+                // Mark for check
+                this._cdr.markForCheck();
             })
         );
 
@@ -178,6 +234,9 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
                 } else {
                     this.aval.get('otro').setValidators([]);
                 }
+
+                // Mark for check
+                this._cdr.markForCheck();
             })
         );
 
@@ -236,6 +295,16 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Select Modalidad de Seguro
+     *
+     * @param producto
+     */
+    selectModalidadDeSeguro(id: string): void {
+        //Assign to local variable
+        this._store.dispatch(new SelectModalidadSeguro(id));
+    }
+
+    /**
      * Create Creditos Form
      *
      */
@@ -272,6 +341,10 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
      */
     cancelCredito(): void {
         this.creditosForm.reset();
+        if (!this.clienteId) {
+            this._store.dispatch(new SelectCliente(null));
+            this.searchInput.setValue('');
+        }
         this._store.dispatch(new SelectProducto(null));
         this._cdr.detectChanges();
     }
@@ -291,6 +364,14 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
      */
     displayFn(cliente: IClienteReturnDto): string {
         return cliente ? `${cliente.nombre} ${cliente.apellidoPaterno} ${cliente.apellidoMaterno}` : '';
+    }
+
+    /**
+     * desembolsar el credito
+     *
+     */
+    desembolsar(): void {
+        console.log(this._creditosService.prepareCreditoRecord(this.creditosForm));
     }
 
     ngOnDestroy(): void {

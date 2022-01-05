@@ -1,7 +1,7 @@
-import { IGeneroReturnDto } from './../../dtos/genero.return.dto';
 import { Injectable } from '@nestjs/common';
-import { Genero, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
+import { IGeneroReturnDto } from '../../dtos/genero-return.dto';
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()

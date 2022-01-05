@@ -1,13 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { IClienteReturnDto, ICreditoReturnDto, IParentescoReturnDto, ISucursalReturnDto } from 'api/dtos';
+import {
+    IClienteReturnDto,
+    ICreditoReturnDto,
+    IModalidadSeguroReturnDto,
+    IParentescoReturnDto,
+    ISeguroReturnDto,
+    ISucursalReturnDto,
+} from 'api/dtos';
 import { EditMode } from 'app/core/models';
-import { AjustesCreditosService, AjustesSucursalService, AjustesUsuarioService } from 'app/modules/ajustes/_services';
+import { AjustesCreditosService, AjustesUsuarioService } from 'app/modules/ajustes/_services';
 import { GetAllCreditos } from 'app/modules/ajustes/_store';
 import { ClientesService } from 'app/modules/clientes';
 import { ParentescosService } from 'app/shared';
+import { sortBy } from 'lodash';
 import { forkJoin, tap } from 'rxjs';
 
+import { ISegurosData } from '../_models';
 import { CreditosService } from '../_services/creditos.service';
 import {
     ClearCreditosDetails,
@@ -16,14 +25,16 @@ import {
     GetClienteData,
     GetClienteWhere,
     GetCreditosConfiguration,
+    GetSucursalesWhereCaja,
     ModeCredito,
     SelectCliente,
+    SelectModalidadSeguro,
     SelectParentesco,
     SelectProducto,
+    SelectSeguro,
 } from './creditos.actions';
 import { CreditosStateModel } from './creditos.model';
 import { Producto, Role } from '.prisma/client';
-import { sortBy } from 'lodash';
 
 @State<CreditosStateModel>({
     name: 'creditos',
@@ -40,9 +51,12 @@ import { sortBy } from 'lodash';
         sucursales: [],
         clientes: [],
         selectedCliente: undefined,
+        selectedModalidadDeSeguro: undefined,
+        selectedSeguro: undefined,
         colocadores: [],
         parentescos: [],
         selectedOtro: false,
+        segurosData: undefined,
         loading: false,
     },
 })
@@ -51,7 +65,6 @@ export class CreditosState {
     constructor(
         private _creditosService: CreditosService,
         private _ajustesCreditosService: AjustesCreditosService,
-        private _ajustesSucursalesService: AjustesSucursalService,
         private _ajustesUsuarios: AjustesUsuarioService,
         private _clientesService: ClientesService,
         private _parentescosService: ParentescosService
@@ -127,6 +140,21 @@ export class CreditosState {
         return selectedOtro;
     }
 
+    @Selector()
+    static selectedModalidadDeSeguro({ selectedModalidadDeSeguro }: CreditosStateModel): IModalidadSeguroReturnDto {
+        return selectedModalidadDeSeguro;
+    }
+
+    @Selector()
+    static selectedSeguro({ selectedSeguro }: CreditosStateModel): ISeguroReturnDto {
+        return selectedSeguro;
+    }
+
+    @Selector()
+    static segurosData({ segurosData }: CreditosStateModel): ISegurosData {
+        return segurosData;
+    }
+
     @Action(GetAllCreditosCliente)
     getAllCreditosCliente(ctx: StateContext<CreditosStateModel>, { id }: GetAllCreditosCliente) {
         ctx.patchState({ loading: true });
@@ -163,17 +191,28 @@ export class CreditosState {
     getCreditosConfiguration(ctx: StateContext<CreditosStateModel>) {
         return forkJoin([
             this._ajustesCreditosService.getProductos(),
-            this._ajustesSucursalesService.getSucursales(),
+            this._creditosService.getSegurosData(),
             this._ajustesUsuarios.getUsuariosWhere({ role: Role.COLOCADOR }),
             this._parentescosService.getParentescos(),
         ]).pipe(
-            tap(([productos, sucursales, colocadores, parentescos]) => {
+            tap(([productos, segurosData, colocadores, parentescos]) => {
                 ctx.patchState({
                     productos: sortBy(productos, 'descripcion'),
-                    sucursales: sortBy(sucursales, 'descripcion'),
+                    segurosData,
                     colocadores: sortBy(colocadores, 'apellido'),
                     parentescos: sortBy(parentescos, 'descripcion'),
                 });
+            })
+        );
+    }
+
+    @Action(GetSucursalesWhereCaja)
+    getSucursalesWhereCaja(ctx: StateContext<CreditosStateModel>, { minAmount, maxAmount }: GetSucursalesWhereCaja) {
+        return this._creditosService.getSucursalesWithCaja(minAmount, maxAmount).pipe(
+            tap((sucursales) => {
+                if (sucursales) {
+                    ctx.patchState({ sucursales: sortBy(sucursales, 'descripcion') });
+                }
             })
         );
     }
@@ -233,6 +272,29 @@ export class CreditosState {
         }
     }
 
+    @Action(SelectModalidadSeguro)
+    selectModalidadSeguro(ctx: StateContext<CreditosStateModel>, { id }: SelectModalidadSeguro) {
+        const selectedModalidadDeSeguro = ctx
+            .getState()
+            .segurosData.modalidadesDeSeguro.filter((modalidad) => modalidad.id === id)[0];
+        if (selectedModalidadDeSeguro.titulo.includes('Sin Seguro')) {
+            ctx.patchState({ selectedModalidadDeSeguro: undefined });
+        } else {
+            ctx.patchState({ selectedModalidadDeSeguro });
+        }
+    }
+
+    @Action(SelectSeguro)
+    selectSeguro(ctx: StateContext<CreditosStateModel>, { id }: SelectSeguro) {
+        let selectedSeguro;
+        if (id === null) {
+            selectedSeguro = undefined;
+        } else {
+            selectedSeguro = ctx.getState().productos.filter((producto: Producto) => producto.id === id)[0];
+        }
+        ctx.patchState({ selectedSeguro });
+    }
+
     @Action(ClearCreditosState)
     clearState(ctx: StateContext<CreditosStateModel>) {
         ctx.patchState({
@@ -244,13 +306,16 @@ export class CreditosState {
             selectedCredito: undefined,
             selectedClienteCredito: undefined,
             selectedProducto: undefined,
+            selectedSeguro: undefined,
             productos: [],
             sucursales: [],
             clientes: [],
             selectedCliente: undefined,
+            selectedModalidadDeSeguro: undefined,
             colocadores: [],
             parentescos: [],
             loading: false,
+            segurosData: undefined,
         });
     }
 
@@ -266,6 +331,7 @@ export class CreditosState {
             selectedCredito: undefined,
             selectedProducto: undefined,
             selectedOtro: false,
+            segurosData: undefined,
         });
     }
 }

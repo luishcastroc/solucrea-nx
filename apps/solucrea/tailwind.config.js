@@ -167,17 +167,17 @@ const config = {
                 '2/4': '50%',
                 '3/4': '75%'
             },
-            minHeight               : theme => ({
+            minHeight               : ({theme}) => ({
                 ...theme('spacing')
             }),
-            maxHeight               : theme => ({
+            maxHeight               : {
                 none: 'none'
-            }),
-            minWidth                : theme => ({
+            },
+            minWidth                : ({theme}) => ({
                 ...theme('spacing'),
                 screen: '100vw'
             }),
-            maxWidth                : theme => ({
+            maxWidth                : ({theme}) => ({
                 ...theme('spacing'),
                 screen: '100vw'
             }),
@@ -189,7 +189,7 @@ const config = {
             },
 
             // @tailwindcss/typography
-            typography: (theme) => ({
+            typography: ({theme}) => ({
                 DEFAULT: {
                     css: {
                         color              : 'var(--fuse-text-default)',

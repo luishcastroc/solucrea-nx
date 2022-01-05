@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { CreateSucursalDto, ISucursalReturnDto, UpdateSucursalDto } from 'api/dtos';
+import { CreateSucursalDto, ICajaReturnDto, ISucursalReturnDto, UpdateSucursalDto } from 'api/dtos';
 import { isEmpty } from 'lodash';
 
 import { PrismaService } from '../../prisma/prisma.service';
@@ -169,5 +170,65 @@ export class SucursalesService {
                 throw new HttpException({ status: response.status, message: response.message }, response.status);
             }
         }
+    }
+
+    async getSucursalesWithCaja(minAmount: number, maxAmount): Promise<Partial<ISucursalReturnDto>[]> {
+        const cajas = await this.prisma.caja.findMany({
+            where: { fechaCierre: { equals: null } },
+            select: {
+                id: true,
+                saldoInicial: true,
+                fechaApertura: true,
+                sucursalId: true,
+                sucursal: {
+                    select: {
+                        id: true,
+                        nombre: true,
+                    },
+                },
+            },
+        });
+
+        let availableCajas: Partial<ICajaReturnDto>[] = [];
+        for (const caja of cajas) {
+            const pagos = await this.prisma.pago.aggregate({
+                where: {
+                    AND: [{ sucursalId: { equals: caja.sucursalId } }, { fechaDePago: { gte: caja.fechaApertura } }],
+                },
+                _sum: { monto: true },
+            });
+            const movimientos = await this.prisma.movimientoDeCaja.aggregate({
+                where: { cajaId: { equals: caja.id } },
+                _sum: { monto: true },
+            });
+
+            const saldoActual =
+                Number(caja.saldoInicial) -
+                (pagos._sum.monto ? Number(pagos._sum.monto) : 0) +
+                (movimientos._sum.monto ? Number(movimientos._sum.monto) : 0);
+
+            if ((saldoActual >= minAmount && saldoActual <= maxAmount) || saldoActual > maxAmount) {
+                availableCajas = [
+                    ...availableCajas,
+                    {
+                        ...caja,
+                        saldoActual,
+                    } as Partial<ICajaReturnDto>,
+                ];
+            }
+        }
+
+        let sucursalesReturn: Partial<ISucursalReturnDto>[] = [];
+        for (const caja of availableCajas) {
+            const sucursalWithCaja = await this.prisma.sucursal.findUnique({
+                where: { id: caja.sucursal.id },
+                select: { id: true, nombre: true },
+            });
+            if (sucursalWithCaja) {
+                sucursalesReturn = [...sucursalesReturn, sucursalWithCaja];
+            }
+        }
+
+        return sucursalesReturn;
     }
 }
