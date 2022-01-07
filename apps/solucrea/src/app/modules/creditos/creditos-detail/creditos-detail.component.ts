@@ -295,6 +295,16 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
     }
 
     /**
+     *
+     * @param event
+     */
+    changeFechaInicio(e): void {
+        this.fechaFinal.setValue(
+            this._creditosService.addBusinessDays(this.fechaInicio.value, this.selectedProducto.duracion)
+        );
+    }
+
+    /**
      * Select Modalidad de Seguro
      *
      * @param producto
@@ -314,7 +324,6 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
             fechaInicio: ['', Validators.required],
             fechaFinal: [null, Validators.required],
             monto: ['', Validators.required],
-            status: [null, Validators.required],
             cliente: [null, Validators.required],
             sucursal: [null, Validators.required],
             producto: [null, Validators.required],

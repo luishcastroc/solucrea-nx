@@ -1,19 +1,15 @@
-import { parentescos } from './../../../../../../../prisma/seed-data';
-import { IDetails } from './../_models/details.model';
+import { ICreditoData } from './../_models/credito-data.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-    IClienteReturnDto,
-    ICreditoReturnDto,
-    IModalidadSeguroReturnDto,
-    ISeguroReturnDto,
-    ISucursalReturnDto,
-} from 'api/dtos';
-import { environment } from 'apps/solucrea/src/environments/environment';
-import { Observable, forkJoin, map } from 'rxjs';
-import { ISegurosData } from '../_models';
-import { Prisma } from '@prisma/client';
 import { FormGroup } from '@angular/forms';
+import { Prisma } from '@prisma/client';
+import { ICreditoReturnDto, IModalidadSeguroReturnDto, ISeguroReturnDto, ISucursalReturnDto } from 'api/dtos';
+import { environment } from 'apps/solucrea/src/environments/environment';
+import { Moment } from 'moment';
+import { forkJoin, map, Observable } from 'rxjs';
+
+import { ISegurosData } from '../_models';
+import { IDetails } from './../_models/details.model';
 
 @Injectable({
     providedIn: 'root',
@@ -81,8 +77,31 @@ export class CreditosService {
      * Calculate details
      *
      */
-    calculateDetails(): IDetails {
+    calculateDetails(data: ICreditoData): IDetails {
         return {} as IDetails;
+    }
+
+    /**
+     * Add Business Days
+     *
+     * @param originalDate Moment
+     * @param numDaysToAdd number
+     * @returns Moment
+     */
+    addBusinessDays(originalDate: Moment, numDaysToAdd: number): Moment {
+        const sunday = 0;
+        let daysRemaining = numDaysToAdd;
+
+        const newDate = originalDate.clone();
+
+        while (daysRemaining > 0) {
+            newDate.add(1, 'days');
+            if (newDate.day() !== sunday) {
+                daysRemaining--;
+            }
+        }
+
+        return newDate;
     }
 
     /**
@@ -92,8 +111,9 @@ export class CreditosService {
     prepareCreditoRecord(creditosForm: FormGroup): Prisma.CreditoCreateInput {
         const formValue = creditosForm.value;
         formValue.fechaInicio = formValue.fechaInicio.toISOString();
+        formValue.fechaFinal = formValue.fechaFinal.toISOString();
         formValue.aval.fechaDeNacimiento = formValue.aval.fechaDeNacimiento.toISOString();
-        const { id, status, fechaFinal, ...rest } = formValue;
+        const { id, status, ...rest } = formValue;
         delete rest.aval.id;
         const creditoReturn: Prisma.CreditoCreateInput = {
             ...rest,
