@@ -1,4 +1,4 @@
-import { StepperOrientation } from '@angular/cdk/stepper';
+import { StepperOrientation, StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -13,10 +13,13 @@ import {
     IParentescoReturnDto,
     ISeguroReturnDto,
     ISucursalReturnDto,
+    IUsuarioReturnDto,
 } from 'api/dtos';
 import { debounceTime, distinctUntilChanged, filter, Observable, Subject, takeUntil, tap } from 'rxjs';
 
-import { ISegurosData } from '../_models';
+import { IDetails, ISegurosData } from '../_models';
+import { ICreditoData } from '../_models/credito-data.model';
+import { CreditosService } from '../_services/creditos.service';
 import {
     ClearCreditosDetails,
     GetClienteData,
@@ -24,13 +27,14 @@ import {
     GetCreditosConfiguration,
     GetSucursalesWhereCaja,
     SelectCliente,
+    SelectClienteReferral,
     SelectParentesco,
     SelectProducto,
+    SelectSeguro,
 } from '../_store/creditos.actions';
 import { CreditosState } from '../_store/creditos.state';
 import { SelectModalidadSeguro } from './../_store/creditos.actions';
 import { Producto } from '.prisma/client';
-import { CreditosService } from '../_services/creditos.service';
 
 @Component({
     selector: 'app-creditos-detail',
@@ -45,24 +49,29 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
     @Select(CreditosState.sucursales) sucursales$: Observable<ISucursalReturnDto[]>;
     @Select(CreditosState.parentescos) parentescos$: Observable<IParentescoReturnDto[]>;
     @Select(CreditosState.segurosData) segurosData$: Observable<ISegurosData>;
+    @Select(CreditosState.colocadores) colocadores$: Observable<IUsuarioReturnDto[]>;
+    @Select(CreditosState.selectedSeguro) selectedSeguro$: Observable<ISeguroReturnDto>;
+    @Select(CreditosState.selectedClienteReferral) selectedClienteReferral$: Observable<IClienteReturnDto>;
 
     selectedProducto$: Observable<Producto>;
     selectedCliente$: Observable<IClienteReturnDto>;
     selectedOtro$: Observable<boolean>;
     selectedModalidadDeSeguro$: Observable<IModalidadSeguroReturnDto>;
-    selectedSeguro$: Observable<ISeguroReturnDto>;
 
     clienteId: string;
     creditoId: string;
     creditosForm: FormGroup;
     searchInput = new FormControl();
+    searchInputReferral = new FormControl();
     selectedCliente: IClienteReturnDto;
+    selectedClienteReferral: IClienteReturnDto;
     selectedProducto: Producto;
     selectedModalidadDeSeguro: IModalidadSeguroReturnDto;
     selectedSeguro: ISeguroReturnDto;
     loading = false;
     selectedOtro = false;
     orientation: StepperOrientation = 'horizontal';
+    resumenOperacion: IDetails;
 
     phoneInputMask = createMask({
         mask: '(999)-999-99-99',
@@ -101,6 +110,10 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
         return this.creditosForm.get('fechaInicio') as FormControl;
     }
 
+    get fechaDesembolso() {
+        return this.creditosForm.get('fechaDesembolso') as FormControl;
+    }
+
     get fechaFinal() {
         return this.creditosForm.get('fechaFinal') as FormControl;
     }
@@ -135,6 +148,18 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
 
     get aval() {
         return this.creditosForm.get('aval') as FormGroup;
+    }
+
+    get colocador() {
+        return this.creditosForm.get('colocador') as FormControl;
+    }
+
+    get observaciones() {
+        return this.creditosForm.get('observaciones') as FormControl;
+    }
+
+    get referidoPor() {
+        return this.creditosForm.get('referidoPor') as FormControl;
     }
 
     ngOnInit(): void {
@@ -184,6 +209,14 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
             })
         );
 
+        this.selectedClienteReferral$.pipe(takeUntil(this._unsubscribeAll)).subscribe((cliente) => {
+            if (cliente) {
+                this.selectedClienteReferral = cliente;
+                this.colocador.setValue(cliente.id);
+                this.colocador.markAsTouched();
+            }
+        });
+
         this.selectedProducto$ = this._store.select(CreditosState.selectedProducto).pipe(
             tap((producto: Producto) => {
                 if (producto) {
@@ -217,15 +250,13 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
             })
         );
 
-        this.selectedSeguro$ = this._store.select(CreditosState.selectedSeguro).pipe(
-            tap((seguro: ISeguroReturnDto) => {
-                if (seguro) {
-                    this.selectedSeguro = seguro;
-                }
-                // Mark for check
-                this._cdr.markForCheck();
-            })
-        );
+        this.selectedSeguro$.pipe(takeUntil(this._unsubscribeAll)).subscribe((seguro: ISeguroReturnDto) => {
+            if (seguro) {
+                this.selectedSeguro = seguro;
+            }
+            // Mark for check
+            this._cdr.markForCheck();
+        });
 
         this.selectedOtro$ = this._store.select(CreditosState.selectedOtro).pipe(
             tap((result) => {
@@ -267,8 +298,8 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
         } else {
             this.searchInput.valueChanges
                 .pipe(
-                    distinctUntilChanged(),
                     debounceTime(500),
+                    distinctUntilChanged(),
                     filter((search) => !!search),
                     tap((search) => {
                         if (typeof search === 'string') {
@@ -282,6 +313,23 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
                 )
                 .subscribe();
         }
+
+        this.searchInputReferral.valueChanges
+            .pipe(
+                debounceTime(500),
+                distinctUntilChanged(),
+                filter((search) => !!search),
+                tap((search) => {
+                    if (typeof search === 'string') {
+                        this._store.dispatch(new GetClienteWhere(search));
+                    } else {
+                        this.loading = true;
+                        this._store.dispatch(new SelectClienteReferral(search));
+                    }
+                }),
+                takeUntil(this._unsubscribeAll)
+            )
+            .subscribe();
     }
 
     /**
@@ -298,10 +346,15 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
      *
      * @param event
      */
-    changeFechaInicio(e): void {
+    changeFechaDesembolso(e): void {
+        this.fechaInicio.setValue(
+            this._creditosService.addBusinessDays(this.fechaDesembolso.value, this.selectedProducto.duracion)
+        );
         this.fechaFinal.setValue(
             this._creditosService.addBusinessDays(this.fechaInicio.value, this.selectedProducto.duracion)
         );
+        this.fechaInicio.markAsTouched();
+        this.fechaFinal.markAsTouched();
     }
 
     /**
@@ -315,12 +368,23 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Select Seguro
+     *
+     * @param producto
+     */
+    selectSeguro(id: string): void {
+        //Assign to local variable
+        this._store.dispatch(new SelectSeguro(id));
+    }
+
+    /**
      * Create Creditos Form
      *
      */
     createCreditosForm(): FormGroup {
         return this._formBuilder.group({
             id: [''],
+            fechaDesembolso: ['', Validators.required],
             fechaInicio: ['', Validators.required],
             fechaFinal: [null, Validators.required],
             monto: ['', Validators.required],
@@ -328,7 +392,10 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
             sucursal: [null, Validators.required],
             producto: [null, Validators.required],
             seguro: [null],
+            colocador: [null, Validators.required],
             modalidadSeguro: [null, Validators.required],
+            observaciones: [''],
+            referidoPor: ['', Validators.required],
             aval: this._formBuilder.group({
                 id: [''],
                 nombre: ['', Validators.required],
@@ -381,6 +448,33 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
      */
     desembolsar(): void {
         console.log(this._creditosService.prepareCreditoRecord(this.creditosForm));
+    }
+
+    /**
+     * selection change for stepper
+     *
+     */
+    selectionChange(event: StepperSelectionEvent) {
+        const stepLabel = event.selectedStep.label;
+        if (stepLabel === 'Resumen de la Operación') {
+            const modalidadDeSeguro = this.selectedModalidadDeSeguro.titulo;
+            const data: ICreditoData = {
+                monto: this.monto.value,
+                interesMoratorio: Number(this.selectedProducto.interesMoratorio),
+                tasaInteres: Number(this.selectedProducto.interes),
+                cargos: Number(this.selectedProducto.cargos),
+                comisionPorApertura: Number(this.selectedProducto.comision),
+                numeroDePagos: Number(this.selectedProducto.numeroDePagos),
+                montoSeguro: Number(this.selectedSeguro ? this.selectedSeguro.monto : 0),
+                modalidadSeguro: modalidadDeSeguro.includes('Diferido')
+                    ? 'diferido'
+                    : modalidadDeSeguro.includes('Contado')
+                    ? 'contado'
+                    : 'sin seguro',
+            };
+
+            this.resumenOperacion = this._creditosService.calculateDetails(data);
+        }
     }
 
     ngOnDestroy(): void {

@@ -227,23 +227,28 @@ enum Status {
   SUSPENDIDO
 }
 
+enum ReferidoPor {
+  COLOCADOR
+  CLIENTE
+}
+
 // Catálogos Fin
 
 // Modelos Funcionales
 
 model Usuario {
-  id                 String     @id @default(uuid())
-  nombreUsuario      String     @unique
+  id                 String      @id @default(uuid())
+  nombreUsuario      String      @unique
   password           String
   nombre             String
   apellido           String
-  role               Role       @default(USUARIO)
+  role               Role        @default(USUARIO)
   comision           Comision[]
-  credito            Credito[]
-  creadoPor          String     @default("ADMIN")
-  fechaCreacion      DateTime   @default(now())
-  actualizadoPor     String     @default("ADMIN")
-  fechaActualizacion DateTime   @default(now()) @updatedAt
+  creadoPor          String      @default("ADMIN")
+  fechaCreacion      DateTime    @default(now())
+  actualizadoPor     String      @default("ADMIN")
+  fechaActualizacion DateTime    @default(now()) @updatedAt
+  colocador          Colocador[]
 
   @@map(name: "Usuarios")
 }
@@ -369,6 +374,7 @@ model Cliente {
   fechaCreacion        DateTime       @default(now())
   actualizadoPor       String         @default("ADMIN")
   fechaActualizacion   DateTime       @default(now()) @updatedAt
+  colocador            Colocador[]
 
   @@map(name: "Clientes")
 }
@@ -450,10 +456,22 @@ model Producto {
   @@map(name: "Productos")
 }
 
+model Colocador {
+  id        String    @id @default(uuid())
+  cliente   Cliente?  @relation(fields: [clienteId], references: [id])
+  usuario   Usuario?  @relation(fields: [usuarioId], references: [id])
+  clienteId String?
+  usuarioId String?
+  credito   Credito[]
+
+  @@map("Colocadores")
+}
+
 model Credito {
   id                  String            @id @default(uuid())
   cliente             Cliente           @relation(fields: [clienteId], references: [id])
   sucursal            Sucursal          @relation(fields: [sucursalId], references: [id])
+  fechaDesembolso     DateTime          @default(now())
   fechaInicio         DateTime          @default(now())
   fechaFinal          DateTime
   fechaLiquidacion    DateTime?
@@ -462,10 +480,12 @@ model Credito {
   seguro              Seguro?           @relation(fields: [segurosId], references: [id])
   modalidadDeSeguro   ModalidadDeSeguro @relation(fields: [modalidadDeSeguroId], references: [id])
   aval                Aval              @relation(fields: [avalId], references: [id])
-  colocador           Usuario           @relation(fields: [usuarioId], references: [id])
+  observaciones       String?
   comisiones          Comision[]
   pagos               Pago[]
   status              Status
+  referidoPor         ReferidoPor
+  colocador           Colocador         @relation(fields: [colocadorId], references: [id])
   creadoPor           String
   fechaCreacion       DateTime          @default(now())
   actualizadoPor      String            @default("ADMIN")
@@ -476,7 +496,7 @@ model Credito {
   segurosId           String
   avalId              String
   modalidadDeSeguroId String
-  usuarioId           String
+  colocadorId         String
 
   @@map(name: "Creditos")
 }

@@ -21,10 +21,11 @@
                 #stepper
                 class="flex flex-col w-full flex-auto items-center"
                 [orientation]="orientation"
+                (selectionChange)="selectionChange($event)"
             >
-                <mat-step [stepControl]="producto" label="Datos Generales del crédito">
+                <mat-step [stepControl]="sucursal" label="Datos Generales del crédito">
                     <!-- Main actions -->
-                    <div class="flex flex-col items-center gap-6 flex-auto p-10">
+                    <div class="flex flex-col items-center gap-6 flex-auto md:p-10">
                         <!-- Search -->
                         <div class="w-full" *ngIf="!clienteId">
                             <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full min-w-50">
@@ -167,9 +168,19 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="flex felx-col md:grid md:grid-cols-2 gap-6 flex-auto">
-                                        <ng-container *ngIf="productos$ | async as productos; else noProductosTemplate">
-                                            <ng-container *ngIf="productos.length > 0">
+                                    <div
+                                        class="
+                                            flex
+                                            felx-col
+                                            md:grid md:grid-cols-2
+                                            gap-6
+                                            flex-auto
+                                            justify-center
+                                            items-center
+                                        "
+                                    >
+                                        <ng-container *ngIf="productos$ | async as productos">
+                                            <ng-container *ngIf="productos.length > 0; else noProductosTemplate">
                                                 <!-- Producto -->
                                                 <div class="w-full">
                                                     <mat-form-field class="fuse-mat-no-subscript w-full">
@@ -203,43 +214,49 @@
                                             </ng-container>
                                         </ng-container>
                                         <!-- Sucursales -->
-                                        <div class="w-full">
-                                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                                <mat-label>Sucursal</mat-label>
-                                                <mat-icon
-                                                    class="icon-size-5"
-                                                    [svgIcon]="'heroicons_outline:library'"
-                                                    matPrefix
-                                                ></mat-icon>
-                                                <mat-select [formControlName]="'sucursal'">
-                                                    <mat-option>Elija una opción</mat-option>
-                                                    <ng-container
-                                                        *ngIf="
-                                                            sucursales$ | async as sucursales;
-                                                            else noSucursalesTemplate
-                                                        "
-                                                    >
-                                                        <ng-container *ngIf="sucursales.length > 0">
-                                                            <mat-option
-                                                                *ngFor="let sucursal of sucursales"
-                                                                [value]="sucursal.id"
-                                                                >{{ sucursal.nombre }}</mat-option
-                                                            >
+                                        <ng-container *ngIf="selectedProducto">
+                                            <ng-container *ngIf="sucursales$ | async as sucursales">
+                                                <ng-container *ngIf="sucursales.length > 0; else noSucursalesTemplate">
+                                                    <div class="w-full">
+                                                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                                                            <mat-label>Sucursal</mat-label>
+                                                            <mat-icon
+                                                                class="icon-size-5"
+                                                                [svgIcon]="'heroicons_outline:library'"
+                                                                matPrefix
+                                                            ></mat-icon>
+                                                            <mat-select [formControlName]="'sucursal'">
+                                                                <mat-option>Elija una opción</mat-option>
+
+                                                                <mat-option
+                                                                    *ngFor="let sucursal of sucursales"
+                                                                    [value]="sucursal.id"
+                                                                    >{{ sucursal.nombre }}</mat-option
+                                                                >
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                        <ng-container *ngIf="sucursal.touched">
+                                                            <mat-error *ngIf="sucursal.errors?.required">
+                                                                La sucursal es requerida.
+                                                            </mat-error>
                                                         </ng-container>
-                                                    </ng-container>
-                                                </mat-select>
-                                            </mat-form-field>
-                                            <ng-container *ngIf="sucursal.touched">
-                                                <mat-error *ngIf="sucursal.errors?.required">
-                                                    La sucursal es requerida.
-                                                </mat-error>
-                                            </ng-container>
-                                        </div>
+                                                    </div>
+                                                </ng-container></ng-container
+                                            >
+                                        </ng-container>
                                         <ng-template #noSucursalesTemplate>
-                                            <div class="font-bold">No existen sucursales para otorgar el préstamo</div>
+                                            <div class="font-bold text-center py-4">
+                                                <p>
+                                                    No existen sucursales con la cantidad de dinero para otorgar el
+                                                    préstamo,
+                                                </p>
+                                                <p>verifique que exista un turno abierto</p>
+                                            </div>
                                         </ng-template>
                                         <ng-template #noProductosTemplate>
-                                            <div class="font-bold">No existen productos para ofrecer, agregar uno</div>
+                                            <div class="font-bold text-center py-4">
+                                                No existen productos para ofrecer, agregar uno
+                                            </div>
                                         </ng-template>
                                     </div>
                                 </div>
@@ -446,7 +463,7 @@
                                     type="button"
                                     [color]="'primary'"
                                     matStepperNext
-                                    [disabled]="!this.selectedProducto"
+                                    [disabled]="producto.invalid || sucursal.invalid || cliente.invalid"
                                 >
                                     Siguiente
                                 </button>
@@ -671,7 +688,10 @@
                                             [svgIcon]="'heroicons_outline:library'"
                                             matPrefix
                                         ></mat-icon>
-                                        <mat-select [formControlName]="'seguro'">
+                                        <mat-select
+                                            [formControlName]="'seguro'"
+                                            (selectionChange)="selectSeguro($event.value)"
+                                        >
                                             <mat-option>Elija una opción</mat-option>
                                             <ng-container *ngIf="selectedModalidadDeSeguro$ | async">
                                                 <mat-option *ngFor="let seguro of data.seguros" [value]="seguro.id">{{
@@ -686,9 +706,9 @@
                         <h2 class="text-3xl font-extrabold tracking-tight leading-none self-center mt-6 flex-auto">
                             Datos Finales y Desembolso
                         </h2>
-                        <div class="flex flex-col md:grid md:grid-cols-2 gap-6 w-full mt-8">
+                        <div class="flex flex-col md:flex-row gap-6 w-full mt-8">
                             <!-- Cantidad a Desembolsar -->
-                            <div>
+                            <div class="w-full">
                                 <mat-form-field class="fuse-mat-no-subscript w-full">
                                     <mat-label>Cantidad a Otorgar</mat-label>
                                     <mat-icon
@@ -709,7 +729,7 @@
                                 </ng-container>
                             </div>
                             <!-- Fecha de Desembolso -->
-                            <div>
+                            <div class="w-full">
                                 <mat-form-field class="fuse-mat-no-subscript w-full">
                                     <mat-label>Fecha de Desembolso</mat-label>
                                     <mat-icon
@@ -720,18 +740,80 @@
                                     <input
                                         matInput
                                         [matDatepicker]="initDatepicker"
-                                        [formControlName]="'fechaInicio'"
+                                        [formControlName]="'fechaDesembolso'"
                                         [placeholder]="'Fecha de Desembolso'"
-                                        (dateChange)="changeFechaInicio($event)"
+                                        (dateChange)="changeFechaDesembolso($event)"
                                     />
                                     <mat-datepicker-toggle matSuffix [for]="initDatepicker"> </mat-datepicker-toggle>
                                     <mat-datepicker #initDatepicker></mat-datepicker>
                                 </mat-form-field>
-                                <ng-container *ngIf="fechaInicio.touched">
-                                    <mat-error *ngIf="fechaInicio.errors?.required">
-                                        La fecha de nacimiento es requerida.
+                                <ng-container *ngIf="fechaDesembolso.touched">
+                                    <mat-error *ngIf="fechaDesembolso.errors?.required">
+                                        La fecha de desembolso es requerida.
                                     </mat-error>
                                 </ng-container>
+                            </div>
+                            <!-- Colocador o Referido -->
+                            <div class="w-full">
+                                <mat-form-field class="fuse-mat-no-subscript w-full"
+                                    ><mat-label>Referido por</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:academic-cap'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <mat-select [formControlName]="'referidoPor'">
+                                        <mat-option>Elija una opción</mat-option>
+                                        <mat-option [value]="'colocador'">Colocador</mat-option
+                                        ><mat-option [value]="'cliente'">Cliente</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <!-- Colocador -->
+                            <div class="w-full">
+                                <!-- Colocador Usuario -->
+                                <mat-form-field
+                                    class="fuse-mat-no-subscript w-full"
+                                    *ngIf="referidoPor.value === 'colocador'"
+                                    ><mat-label>Colocador</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:academic-cap'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <mat-select [formControlName]="'colocador'">
+                                        <mat-option>Elija una opción</mat-option>
+                                        <mat-option
+                                            *ngFor="let colocador of colocadores$ | async"
+                                            [value]="colocador.id"
+                                            >{{ colocador.apellido }} {{ colocador.nombre }}</mat-option
+                                        >
+                                    </mat-select>
+                                </mat-form-field>
+                                <!-- Colocador Cliente -->
+                                <mat-form-field
+                                    class="fuse-mat-no-subscript w-full"
+                                    *ngIf="referidoPor.value === 'cliente'"
+                                >
+                                    <mat-label>Colocador</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        matPrefix
+                                        [svgIcon]="'heroicons_solid:search'"
+                                    ></mat-icon>
+                                    <input
+                                        matInput
+                                        [formControl]="searchInputReferral"
+                                        [matAutocomplete]="referral"
+                                        [placeholder]="'Buscar cliente'"
+                                    />
+                                    <mat-autocomplete #referral="matAutocomplete" [displayWith]="displayFn">
+                                        <mat-option *ngFor="let cliente of clientes$ | async" [value]="cliente">
+                                            {{ cliente.nombre }} {{ cliente.apellidoPaterno }}
+                                            {{ cliente.apellidoMaterno }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
                             </div>
                         </div>
                         <div class="flex flex-auto justify-center">
@@ -743,7 +825,12 @@
                                 [color]="'primary'"
                                 matStepperNext
                                 [disabled]="
-                                    !monto.touched || monto.invalid || fechaInicio.invalid || !fechaInicio.touched
+                                    !monto.touched ||
+                                    monto.invalid ||
+                                    fechaDesembolso.invalid ||
+                                    !fechaDesembolso.touched ||
+                                    colocador.invalid ||
+                                    !colocador.touched
                                 "
                             >
                                 Siguiente
@@ -756,6 +843,89 @@
                         <h2 class="text-3xl font-extrabold tracking-tight leading-none self-center flex-auto">
                             Datos Generales
                         </h2>
+                        <div
+                            class="
+                                grid grid-cols-1
+                                md:grid-cols-4
+                                gap-6
+                                w-full
+                                mt-3
+                                content-center
+                                border-b border-t
+                                py-6
+                            "
+                            *ngIf="resumenOperacion as details"
+                        >
+                            <!-- Nombre -->
+                            <div class="flex flex-col gap-2">
+                                <div class="flex gap-2">
+                                    <mat-icon
+                                        role="img"
+                                        class="mat-icon notranslate mat-icon-no-color"
+                                        aria-hidden="true"
+                                        [svgIcon]="'heroicons_solid:user'"
+                                        matPrefix
+                                    >
+                                    </mat-icon>
+                                    <div class="leading-6 font-light">Nombre del Cliente:</div>
+                                </div>
+                                <div class="leading-6 font-bold">
+                                    {{ selectedCliente.nombre }} {{ selectedCliente.apellidoPaterno }}
+                                    {{ selectedCliente.apellidoMaterno }}
+                                </div>
+                            </div>
+                            <!-- Monto -->
+                            <div class="flex flex-col gap-2">
+                                <div class="flex gap-2">
+                                    <mat-icon
+                                        role="img"
+                                        class="mat-icon notranslate mat-icon-no-color"
+                                        aria-hidden="true"
+                                        [svgIcon]="'heroicons_outline:currency-dollar'"
+                                        matPrefix
+                                    >
+                                    </mat-icon>
+                                    <div class="leading-6 font-light">Monto a Otorgar:</div>
+                                </div>
+                                <div class="leading-6 font-bold">
+                                    {{ monto.value | currency }}
+                                </div>
+                            </div>
+                            <!-- Seguro -->
+                            <div class="flex flex-col gap-2">
+                                <div class="flex gap-2">
+                                    <mat-icon
+                                        role="img"
+                                        class="mat-icon notranslate mat-icon-no-color"
+                                        aria-hidden="true"
+                                        [svgIcon]="'heroicons_outline:clipboard-check'"
+                                        matPrefix
+                                    >
+                                    </mat-icon>
+                                    <div class="leading-6 font-light">Modalidad de Seguro:</div>
+                                </div>
+                                <div class="leading-6 font-bold">
+                                    {{ selectedModalidadDeSeguro.descripcion }}
+                                </div>
+                            </div>
+                            <!-- Producto -->
+                            <div class="flex flex-col gap-2">
+                                <div class="flex gap-2">
+                                    <mat-icon
+                                        role="img"
+                                        class="mat-icon notranslate mat-icon-no-color"
+                                        aria-hidden="true"
+                                        [svgIcon]="'heroicons_outline:clipboard-check'"
+                                        matPrefix
+                                    >
+                                    </mat-icon>
+                                    <div class="leading-6 font-light">Producto a otorgar:</div>
+                                </div>
+                                <div class="leading-6 font-bold">
+                                    {{ selectedProducto.descripcion }}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="flex flex-auto justify-center">
                         <button mat-stroked-button type="button" matStepperPrevious>Anterior</button>

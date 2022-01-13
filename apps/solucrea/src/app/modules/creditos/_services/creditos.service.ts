@@ -2,7 +2,7 @@ import { ICreditoData } from './../_models/credito-data.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Prisma } from '@prisma/client';
+import { Prisma, ReferidoPor } from '@prisma/client';
 import { ICreditoReturnDto, IModalidadSeguroReturnDto, ISeguroReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { environment } from 'apps/solucrea/src/environments/environment';
 import { Moment } from 'moment';
@@ -78,7 +78,26 @@ export class CreditosService {
      *
      */
     calculateDetails(data: ICreditoData): IDetails {
-        return {} as IDetails;
+        const { tasaInteres, monto, montoSeguro, numeroDePagos, comisionPorApertura, modalidadSeguro } = data;
+        const capital = monto / numeroDePagos;
+        const intereses = capital * (tasaInteres / 100);
+        const seguroDiferido = modalidadSeguro === 'diferido' ? montoSeguro / numeroDePagos : 0;
+        const cuota = capital + intereses + seguroDiferido;
+        const apertura = comisionPorApertura ? monto * (comisionPorApertura / 100) : 0;
+        const total = apertura + (modalidadSeguro === 'contado' ? montoSeguro : 0);
+        const seguro =
+            modalidadSeguro === 'diferido' ? seguroDiferido : modalidadSeguro === 'contado' ? montoSeguro : 0;
+
+        const details: IDetails = {
+            capital,
+            interes: intereses,
+            cuota,
+            apertura,
+            total,
+            seguro,
+        };
+
+        return details;
     }
 
     /**
@@ -109,20 +128,42 @@ export class CreditosService {
      *
      */
     prepareCreditoRecord(creditosForm: FormGroup): Prisma.CreditoCreateInput {
+        //getting all the values
         const formValue = creditosForm.value;
-        formValue.fechaInicio = formValue.fechaInicio.toISOString();
-        formValue.fechaFinal = formValue.fechaFinal.toISOString();
-        formValue.aval.fechaDeNacimiento = formValue.aval.fechaDeNacimiento.toISOString();
+
+        //transform into date strings
+        const fechaDesembolso = formValue.fechaDesembolso.toISOString();
+        const fechaInicio = formValue.fechaInicio.toISOString();
+        const fechaFinal = formValue.fechaFinal.toISOString();
+        const fechaDeNacimiento = formValue.aval.fechaDeNacimiento.toISOString();
+
+        //removing non used values (they have default in the database)
         const { id, status, ...rest } = formValue;
+
+        //calculating colocador depending on the type.
+        const colocador: Prisma.ColocadorCreateNestedOneWithoutCreditoInput =
+            formValue.referidoPor.toUpperCase() === ReferidoPor.COLOCADOR
+                ? { create: { usuario: { connect: { id: formValue.colocador } } } }
+                : { create: { cliente: { connect: { id: formValue.colocador } } } };
+
+        //delete id from the aval (is auto generated)
         delete rest.aval.id;
+
+        //generate the record that will be sent
         const creditoReturn: Prisma.CreditoCreateInput = {
             ...rest,
+            fechaDesembolso,
+            fechaInicio,
+            fechaFinal,
             cliente: { connect: { id: rest.cliente } },
-            aval: { create: { ...rest.aval, parentesco: { connect: { id: rest.aval.parentesco } } } },
+            aval: {
+                create: { ...rest.aval, parentesco: { connect: { id: rest.aval.parentesco } }, fechaDeNacimiento },
+            },
             modalidadDeSeguro: { connect: { id: rest.modalidadSeguro } },
             seguro: { connect: { id: rest.seguro } },
             producto: { connect: { id: rest.producto } },
             sucursal: { connect: { id: rest.sucursal } },
+            colocador,
         };
 
         return creditoReturn;

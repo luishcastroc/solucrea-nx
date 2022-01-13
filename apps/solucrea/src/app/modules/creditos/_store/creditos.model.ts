@@ -1,4 +1,3 @@
-import { IModalidadSeguroReturnDto } from './../../../../../../api/src/app/dtos/modalidad-seguro-return.dto';
 import {
     IClienteReturnDto,
     ICreditoReturnDto,
@@ -6,6 +5,7 @@ import {
     ISeguroReturnDto,
     ISucursalReturnDto,
     IUsuarioReturnDto,
+    IModalidadSeguroReturnDto,
 } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 
@@ -32,4 +32,7 @@ export interface CreditosStateModel {
     parentescos: IParentescoReturnDto[] | [];
     selectedOtro: boolean;
     segurosData: ISegurosData;
+    clientesCount: number;
+    turnosCount: number;
+    selectedClienteReferral: IClienteReturnDto | undefined;
 }

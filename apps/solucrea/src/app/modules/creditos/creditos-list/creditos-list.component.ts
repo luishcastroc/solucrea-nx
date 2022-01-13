@@ -1,16 +1,19 @@
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ModeCredito } from './../_store/creditos.actions';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, tap } from 'rxjs';
-import { CreditosState } from './../_store/creditos.state';
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
-import { ICreditoReturnDto } from 'api/dtos';
-import { Status } from '@prisma/client';
 import { HotToastService } from '@ngneat/hot-toast';
-import { GetAllCreditos } from 'app/modules/ajustes/_store';
-import { AuthUtils } from 'app/core/auth';
 import { Navigate } from '@ngxs/router-plugin';
+import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
+import { Status } from '@prisma/client';
+import { IClienteReturnDto, ICreditoReturnDto } from 'api/dtos';
+import { AuthUtils } from 'app/core/auth';
+import { GetAllCreditos } from 'app/modules/ajustes/_store';
+import { CajasMode } from 'app/modules/caja/_store/caja.actions';
+import { ClientesMode } from 'app/modules/clientes/_store/clientes.actions';
+import { Observable, tap } from 'rxjs';
+
+import { ModeCredito, GetClientesCount, GetTurnosCount } from './../_store/creditos.actions';
+import { CreditosState } from './../_store/creditos.state';
 
 @Component({
     selector: 'app-creditos-list',
@@ -22,6 +25,8 @@ export class CreditosListComponent implements OnInit {
     @Select(CreditosState.creditos) creditos$: Observable<ICreditoReturnDto[]>;
     @Select(CreditosState.creditosFiltered) creditosFiltered$: Observable<ICreditoReturnDto[]>;
     @Select(CreditosState.loading) loading$: Observable<boolean>;
+    @Select(CreditosState.clientesCount) clientesCount$: Observable<number>;
+    @Select(CreditosState.turnosCount) turnosCount$: Observable<number>;
     actions$: Actions;
     searchInput = new FormControl();
     values = [
@@ -38,7 +43,7 @@ export class CreditosListComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this._store.dispatch(new GetAllCreditos());
+        this._store.dispatch([new GetAllCreditos(), new GetClientesCount(), new GetTurnosCount()]);
 
         this.setActions();
     }
@@ -81,5 +86,21 @@ export class CreditosListComponent implements OnInit {
                 }
             })
         );
+    }
+
+    /**
+     *
+     * function to generate a new Cliente
+     */
+    newCliente() {
+        this._store.dispatch([new Navigate([`clientes/${AuthUtils.guid()}`]), new ClientesMode('new')]);
+    }
+
+    /**
+     * new Caja
+     *
+     */
+    newCaja(): void {
+        this._store.dispatch([new Navigate([`caja/${AuthUtils.guid()}`]), new CajasMode('new')]);
     }
 }

@@ -86,4 +86,11 @@ export class ClientesController {
         const { data } = search;
         return this.clientesService.getClientesByWhere(data);
     }
+
+    @UseGuards(RolesGuard)
+    @Roles(Role.ADMIN, Role.CAJERO, Role.DIRECTOR, Role.MANAGER, Role.SECRETARIO, Role.USUARIO)
+    @Get('clientes-count')
+    async getClientesCount(): Promise<number> {
+        return this.clientesService.getClientesCount();
+    }
 }

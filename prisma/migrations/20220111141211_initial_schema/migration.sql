@@ -127,19 +127,6 @@ CREATE TABLE `Generos` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `EstadosDeCredito` (
-    `id` VARCHAR(191) NOT NULL,
-    `nombre` VARCHAR(191) NOT NULL,
-    `descripcion` VARCHAR(191) NOT NULL,
-    `creadoPor` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
-    `fechaCreacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `actualizadoPor` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
-    `fechaActualizacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `Seguros` (
     `id` VARCHAR(191) NOT NULL,
     `nombre` VARCHAR(191) NOT NULL,
@@ -368,9 +355,11 @@ CREATE TABLE `Productos` (
     `penalizacion` DECIMAL(15, 2) NOT NULL DEFAULT 0,
     `comision` DECIMAL(15, 2) NOT NULL DEFAULT 0,
     `cargos` DECIMAL(15, 2) NOT NULL DEFAULT 0,
+    `activo` BOOLEAN NOT NULL DEFAULT true,
     `duracion` INTEGER NOT NULL,
     `numeroDePagos` INTEGER NOT NULL,
     `frecuencia` ENUM('DIARIO', 'SEMANAL', 'QUINCENAL', 'MENSUAL', 'BIMESTRAL', 'TRIMESTRAL', 'CUATRIMESTRAL', 'SEMESTRAL', 'ANUAL') NOT NULL,
+    `creditosActivos` INTEGER NOT NULL DEFAULT 1,
     `creadoPor` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
     `fechaCreacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `actualizadoPor` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
@@ -382,24 +371,36 @@ CREATE TABLE `Productos` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `Colocadores` (
+    `id` VARCHAR(191) NOT NULL,
+    `clienteId` VARCHAR(191) NULL,
+    `usuarioId` VARCHAR(191) NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Creditos` (
     `id` VARCHAR(191) NOT NULL,
+    `fechaDesembolso` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `fechaInicio` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `fechaFinal` DATETIME(3) NOT NULL,
-    `fechaLiquidacion` DATETIME(3) NOT NULL,
+    `fechaLiquidacion` DATETIME(3) NULL,
     `monto` DECIMAL(15, 2) NOT NULL,
+    `observaciones` VARCHAR(191) NULL,
     `status` ENUM('ABIERTO', 'CERRADO', 'SUSPENDIDO') NOT NULL,
+    `referidoPor` ENUM('COLOCADOR', 'CLIENTE') NOT NULL,
     `creadoPor` VARCHAR(191) NOT NULL,
     `fechaCreacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `actualizadoPor` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
     `fechaActualizacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `clienteId` VARCHAR(191) NOT NULL,
     `sucursalId` VARCHAR(191) NOT NULL,
-    `estadoDeCreditoId` VARCHAR(191) NOT NULL,
     `productosId` VARCHAR(191) NOT NULL,
     `segurosId` VARCHAR(191) NOT NULL,
     `avalId` VARCHAR(191) NOT NULL,
     `modalidadDeSeguroId` VARCHAR(191) NOT NULL,
+    `colocadorId` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -483,13 +484,16 @@ ALTER TABLE `Trabajos` ADD CONSTRAINT `Trabajos_actividadEconomicaId_fkey` FOREI
 ALTER TABLE `Avales` ADD CONSTRAINT `Avales_parentescoId_fkey` FOREIGN KEY (`parentescoId`) REFERENCES `Parentescos`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `Colocadores` ADD CONSTRAINT `Colocadores_clienteId_fkey` FOREIGN KEY (`clienteId`) REFERENCES `Clientes`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Colocadores` ADD CONSTRAINT `Colocadores_usuarioId_fkey` FOREIGN KEY (`usuarioId`) REFERENCES `Usuarios`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_clienteId_fkey` FOREIGN KEY (`clienteId`) REFERENCES `Clientes`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_sucursalId_fkey` FOREIGN KEY (`sucursalId`) REFERENCES `Sucursales`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_estadoDeCreditoId_fkey` FOREIGN KEY (`estadoDeCreditoId`) REFERENCES `EstadosDeCredito`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_productosId_fkey` FOREIGN KEY (`productosId`) REFERENCES `Productos`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -502,6 +506,9 @@ ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_modalidadDeSeguroId_fkey` FOREIG
 
 -- AddForeignKey
 ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_avalId_fkey` FOREIGN KEY (`avalId`) REFERENCES `Avales`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_colocadorId_fkey` FOREIGN KEY (`colocadorId`) REFERENCES `Colocadores`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Comisiones` ADD CONSTRAINT `Comisiones_creditoId_fkey` FOREIGN KEY (`creditoId`) REFERENCES `Creditos`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

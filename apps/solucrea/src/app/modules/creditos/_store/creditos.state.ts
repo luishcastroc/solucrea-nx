@@ -1,3 +1,4 @@
+import { IUsuarioReturnDto } from './../../../../../../api/src/app/dtos/usuario-return.dto';
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
@@ -23,11 +24,14 @@ import {
     ClearCreditosState,
     GetAllCreditosCliente,
     GetClienteData,
+    GetClientesCount,
     GetClienteWhere,
     GetCreditosConfiguration,
     GetSucursalesWhereCaja,
+    GetTurnosCount,
     ModeCredito,
     SelectCliente,
+    SelectClienteReferral,
     SelectModalidadSeguro,
     SelectParentesco,
     SelectProducto,
@@ -58,6 +62,9 @@ import { Producto, Role } from '.prisma/client';
         selectedOtro: false,
         segurosData: undefined,
         loading: false,
+        clientesCount: 0,
+        turnosCount: 0,
+        selectedClienteReferral: undefined,
     },
 })
 @Injectable()
@@ -121,6 +128,11 @@ export class CreditosState {
     }
 
     @Selector()
+    static selectedClienteReferral({ selectedClienteReferral }: CreditosStateModel): IClienteReturnDto {
+        return selectedClienteReferral;
+    }
+
+    @Selector()
     static sucursales({ sucursales }: CreditosStateModel): ISucursalReturnDto[] {
         return sucursales;
     }
@@ -153,6 +165,21 @@ export class CreditosState {
     @Selector()
     static segurosData({ segurosData }: CreditosStateModel): ISegurosData {
         return segurosData;
+    }
+
+    @Selector()
+    static colocadores({ colocadores }: CreditosStateModel): IUsuarioReturnDto[] {
+        return colocadores;
+    }
+
+    @Selector()
+    static clientesCount({ clientesCount }: CreditosStateModel): number {
+        return clientesCount;
+    }
+
+    @Selector()
+    static turnosCount({ turnosCount }: CreditosStateModel): number {
+        return turnosCount;
     }
 
     @Action(GetAllCreditosCliente)
@@ -230,7 +257,12 @@ export class CreditosState {
 
     @Action(SelectCliente)
     selectClienteForCredito(ctx: StateContext<CreditosStateModel>, { cliente }: SelectCliente) {
-        ctx.patchState({ selectedCliente: cliente });
+        ctx.patchState({ selectedCliente: cliente, clientes: undefined });
+    }
+
+    @Action(SelectClienteReferral)
+    selectClienteReferralForCredito(ctx: StateContext<CreditosStateModel>, { cliente }: SelectClienteReferral) {
+        ctx.patchState({ selectedClienteReferral: cliente, clientes: undefined });
     }
 
     @Action(SelectProducto)
@@ -251,6 +283,28 @@ export class CreditosState {
             tap((clientes: IClienteReturnDto[]) => {
                 ctx.patchState({
                     clientes,
+                });
+            })
+        );
+    }
+
+    @Action(GetClientesCount)
+    getClientesCount(ctx: StateContext<CreditosStateModel>) {
+        return this._clientesService.getClientesCount().pipe(
+            tap((clientesCount: number) => {
+                ctx.patchState({
+                    clientesCount,
+                });
+            })
+        );
+    }
+
+    @Action(GetTurnosCount)
+    getTurnosCount(ctx: StateContext<CreditosStateModel>) {
+        return this._clientesService.getClientesCount().pipe(
+            tap((turnosCount: number) => {
+                ctx.patchState({
+                    turnosCount,
                 });
             })
         );
@@ -290,7 +344,9 @@ export class CreditosState {
         if (id === null) {
             selectedSeguro = undefined;
         } else {
-            selectedSeguro = ctx.getState().productos.filter((producto: Producto) => producto.id === id)[0];
+            selectedSeguro = ctx
+                .getState()
+                .segurosData.seguros.filter((seguro: ISeguroReturnDto) => seguro.id === id)[0];
         }
         ctx.patchState({ selectedSeguro });
     }
@@ -311,11 +367,13 @@ export class CreditosState {
             sucursales: [],
             clientes: [],
             selectedCliente: undefined,
+            selectedClienteReferral: undefined,
             selectedModalidadDeSeguro: undefined,
             colocadores: [],
             parentescos: [],
             loading: false,
             segurosData: undefined,
+            clientesCount: 0,
         });
     }
 
@@ -332,6 +390,7 @@ export class CreditosState {
             selectedProducto: undefined,
             selectedOtro: false,
             segurosData: undefined,
+            clientesCount: 0,
         });
     }
 }

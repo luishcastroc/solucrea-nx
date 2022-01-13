@@ -4,4 +4,5 @@ export interface IDetails {
     cuota: number;
     apertura: number;
     total: number;
+    seguro: number;
 }

@@ -33,6 +33,14 @@ export class ClearCreditosDetails {
     static readonly type = '[Creditos] Clear Details State';
 }
 
+export class GetClientesCount {
+    static readonly type = '[Creditos] Get Clientes Count';
+}
+
+export class GetTurnosCount {
+    static readonly type = '[Creditos] Get Turnos Count';
+}
+
 export class GetClienteData {
     static readonly type = '[Creditos] Get Cliente Data';
     constructor(public id: string) {}
@@ -45,6 +53,11 @@ export class GetClienteWhere {
 
 export class SelectCliente {
     static readonly type = '[Creditos] Select Cliente';
+    constructor(public cliente: IClienteReturnDto) {}
+}
+
+export class SelectClienteReferral {
+    static readonly type = '[Creditos] Select Cliente Referral';
     constructor(public cliente: IClienteReturnDto) {}
 }
 

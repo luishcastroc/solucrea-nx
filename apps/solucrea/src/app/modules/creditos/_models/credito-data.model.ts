@@ -4,6 +4,7 @@ export interface ICreditoData {
     monto: number;
     montoSeguro?: number;
     cargos: number;
-    penalizacion: number;
     numeroDePagos: number;
+    comisionPorApertura: number;
+    modalidadSeguro: 'diferido' | 'contado' | 'sin seguro';
 }

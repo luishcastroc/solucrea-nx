@@ -63,4 +63,11 @@ export class CajaController {
     async deleteCaja(@Param('id') id: string): Promise<ICajaReturnDto> {
         return this.cajaService.deleteCaja({ id });
     }
+
+    @UseGuards(RolesGuard)
+    @Roles(Role.ADMIN, Role.CAJERO, Role.DIRECTOR, Role.MANAGER, Role.SECRETARIO, Role.USUARIO)
+    @Get('cajas-count')
+    async getCajasCount(): Promise<number> {
+        return this.cajaService.getCajasCount();
+    }
 }

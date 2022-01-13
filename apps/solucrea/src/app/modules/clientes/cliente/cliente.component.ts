@@ -322,10 +322,10 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
             curp: ['', [Validators.required, curpValidator()]],
             telefono1: ['', [Validators.required]],
             telefono2: [''],
-            multiplos: [''],
+            multiplos: [0],
             numeroCreditosCrecer: [''],
-            porcentajeDePagos: [''],
-            porcentajeDeMora: [''],
+            porcentajeDePagos: [0],
+            porcentajeDeMora: [0],
             direcciones: this._formBuilder.array([]),
         });
     }

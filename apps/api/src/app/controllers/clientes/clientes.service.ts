@@ -169,6 +169,7 @@ export class ClientesService {
                 data: clienteData,
             });
         } catch (e) {
+            console.log(e);
             if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al agregar al cliente' },
@@ -335,7 +336,23 @@ export class ClientesService {
         } catch (e) {
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
-                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error inhablilitando el cliente' },
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error obteniendo los clientes.' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
+            }
+        }
+    }
+
+    async getClientesCount(): Promise<number> {
+        try {
+            const clientesSum = await this.prisma.cliente.aggregate({ _count: true });
+            return clientesSum._count;
+        } catch (e) {
+            if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error contando los clientes' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {

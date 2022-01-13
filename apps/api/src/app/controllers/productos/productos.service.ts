@@ -49,8 +49,8 @@ export class ProductosService {
     }
 
     async createProducto(data: Prisma.ProductoCreateInput): Promise<Producto> {
-        const { id, ...rest } = data;
-        const producto = rest;
+        const { id, creditosActivos, ...rest } = data;
+        const producto = { ...rest, creditosActivos: Number(creditosActivos) };
         try {
             const newProducto = await this.prisma.producto.create({
                 data: producto,
@@ -58,6 +58,7 @@ export class ProductosService {
 
             return newProducto;
         } catch (e) {
+            console.log(e);
             if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando el nuevo producto' },

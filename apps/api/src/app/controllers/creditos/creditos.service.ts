@@ -8,6 +8,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 export class CreditosService {
     select = {
         id: true,
+        fechaDesembolso: true,
         fechaInicio: true,
         fechaFinal: true,
         fechaLiquidacion: true,
@@ -41,6 +42,8 @@ export class CreditosService {
         },
         seguro: { select: { id: true, nombre: true, monto: true } },
         modalidadDeSeguro: { select: { id: true, titulo: true, descripcion: true } },
+        observaciones: true,
+        colocador: true,
         aval: {
             select: {
                 id: true,

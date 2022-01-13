@@ -26,7 +26,7 @@ import { sortBy } from 'lodash';
     name: 'clientes',
     defaults: {
         clientes: [],
-        editMode: 'edit',
+        editMode: 'new',
         selectedCliente: undefined,
         selectedActividadEconomica: undefined,
         colonias: [],
@@ -226,7 +226,7 @@ export class ClientesState {
     clearState(ctx: StateContext<ClientesStateModel>) {
         ctx.patchState({
             clientes: [],
-            editMode: 'edit',
+            editMode: 'new',
             selectedCliente: undefined,
             selectedActividadEconomica: undefined,
             colonias: [],

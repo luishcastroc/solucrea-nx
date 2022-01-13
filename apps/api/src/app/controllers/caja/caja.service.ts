@@ -137,4 +137,20 @@ export class CajaService {
             }
         }
     }
+
+    async getCajasCount(): Promise<number> {
+        try {
+            const cajasSum = await this.prisma.caja.aggregate({ _count: true });
+            return cajasSum._count;
+        } catch (e) {
+            if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error contando los turnos' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
+            }
+        }
+    }
 }
