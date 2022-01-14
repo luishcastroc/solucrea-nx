@@ -6,7 +6,7 @@
     <ng-container *ngIf="(clientesCount$ | async) > 0; else noClientesTemplate">
         <ng-container *ngIf="(turnosCount$ | async) > 0; else noCajasTemplate">
             <div
-                class="py-8 px-6 sm:flex sm:flex-col sm:w-full sm:min-w-0 absolute inset-0"
+                class="py-8 px-6 flex flex-col w-full"
                 *ngIf="{ creditos: creditos$ | async, creditosFiltered: creditosFiltered$ | async } as data"
             >
                 <div class="flex flex-col flex-auto">
