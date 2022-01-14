@@ -37,9 +37,19 @@
                                     [placeholder]="'Buscar cliente'"
                                 />
                                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                                    <mat-option *ngFor="let cliente of clientes$ | async" [value]="cliente">
-                                        {{ cliente.nombre }} {{ cliente.apellidoPaterno }} {{ cliente.apellidoMaterno }}
-                                    </mat-option>
+                                    <ng-container *ngIf="clientes$ | async as clientes">
+                                        <ng-container *ngIf="clientes.length > 0; else noResultsTemplate">
+                                            <mat-option *ngFor="let cliente of clientes" [value]="cliente">
+                                                {{ cliente.nombre }} {{ cliente.apellidoPaterno }}
+                                                {{ cliente.apellidoMaterno }}
+                                            </mat-option>
+                                        </ng-container>
+                                        <ng-template #noResultsTemplate>
+                                            <mat-option class="font-bold" *ngIf="searchInput.value"
+                                                >No existen clientes con ese criterio</mat-option
+                                            >
+                                        </ng-template>
+                                    </ng-container>
                                 </mat-autocomplete>
                             </mat-form-field>
                         </div>
@@ -808,10 +818,19 @@
                                         [placeholder]="'Buscar cliente'"
                                     />
                                     <mat-autocomplete #referral="matAutocomplete" [displayWith]="displayFn">
-                                        <mat-option *ngFor="let cliente of clientes$ | async" [value]="cliente">
-                                            {{ cliente.nombre }} {{ cliente.apellidoPaterno }}
-                                            {{ cliente.apellidoMaterno }}
-                                        </mat-option>
+                                        <ng-container *ngIf="clientes$ | async as clientes">
+                                            <ng-container *ngIf="clientes.length > 0; else noResultsTemplate">
+                                                <mat-option *ngFor="let cliente of clientes" [value]="cliente">
+                                                    {{ cliente.nombre }} {{ cliente.apellidoPaterno }}
+                                                    {{ cliente.apellidoMaterno }}
+                                                </mat-option>
+                                            </ng-container>
+                                            <ng-template #noResultsTemplate>
+                                                <mat-option class="font-bold" *ngIf="searchInputReferral.value"
+                                                    >No existen clientes con ese criterio</mat-option
+                                                >
+                                            </ng-template></ng-container
+                                        >
                                     </mat-autocomplete>
                                 </mat-form-field>
                             </div>

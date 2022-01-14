@@ -13,26 +13,26 @@ import { ISegurosData } from '../_models';
 import { Producto } from '.prisma/client';
 
 export interface CreditosStateModel {
+    editMode: EditMode;
+    loading: boolean;
     creditos: ICreditoReturnDto[] | [];
     creditosFiltered: ICreditoReturnDto[] | [];
     clienteCreditos: ICreditoReturnDto[] | [];
     clienteCreditosFiltered: ICreditoReturnDto[] | [];
-    editMode: EditMode;
-    selectedCredito: ICreditoReturnDto | undefined;
-    selectedClienteCredito: ICreditoReturnDto | undefined;
-    loading: boolean;
     productos: Producto[] | [];
     sucursales: ISucursalReturnDto[] | [];
     clientes: IClienteReturnDto[] | [];
-    selectedCliente: IClienteReturnDto;
-    selectedProducto: Producto;
-    selectedModalidadDeSeguro: IModalidadSeguroReturnDto | undefined;
-    selectedSeguro: ISeguroReturnDto | undefined;
     colocadores: IUsuarioReturnDto[] | [];
     parentescos: IParentescoReturnDto[] | [];
-    selectedOtro: boolean;
     segurosData: ISegurosData;
+    selectedOtro: boolean;
     clientesCount: number;
     turnosCount: number;
     selectedClienteReferral: IClienteReturnDto | undefined;
+    selectedCredito: ICreditoReturnDto | undefined;
+    selectedClienteCredito: ICreditoReturnDto | undefined;
+    selectedModalidadDeSeguro: IModalidadSeguroReturnDto | undefined;
+    selectedCliente: IClienteReturnDto | undefined;
+    selectedProducto: Producto | undefined;
+    selectedSeguro: ISeguroReturnDto | undefined;
 }

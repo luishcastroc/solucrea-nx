@@ -279,11 +279,24 @@ export class CreditosState {
     @Action(GetClienteWhere)
     getClientesWhere(ctx: StateContext<CreditosStateModel>, { data }: GetClienteWhere) {
         const search = { data };
+        const { selectedCliente } = ctx.getState();
         return this._clientesService.getClientesWhere(search).pipe(
-            tap((clientes: IClienteReturnDto[]) => {
-                ctx.patchState({
-                    clientes,
-                });
+            tap((clientesReturn: IClienteReturnDto[]) => {
+                if (clientesReturn.length > 0) {
+                    const clientes = clientesReturn.filter((cliente) => {
+                        if ((selectedCliente && selectedCliente.id !== cliente.id) || !selectedCliente) {
+                            return cliente;
+                        }
+                    });
+
+                    ctx.patchState({
+                        clientes,
+                    });
+                } else {
+                    ctx.patchState({
+                        clientes: [],
+                    });
+                }
             })
         );
     }
