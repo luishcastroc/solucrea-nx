@@ -1,4 +1,3 @@
-import { IUsuarioReturnDto } from './../../../../../../api/src/app/dtos/usuario-return.dto';
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
@@ -8,10 +7,12 @@ import {
     IParentescoReturnDto,
     ISeguroReturnDto,
     ISucursalReturnDto,
+    IUsuarioReturnDto,
 } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 import { AjustesCreditosService, AjustesUsuarioService } from 'app/modules/ajustes/_services';
 import { GetAllCreditos } from 'app/modules/ajustes/_store';
+import { CajaService } from 'app/modules/caja/_services/caja.service';
 import { ClientesService } from 'app/modules/clientes';
 import { ParentescosService } from 'app/shared';
 import { sortBy } from 'lodash';
@@ -74,7 +75,8 @@ export class CreditosState {
         private _ajustesCreditosService: AjustesCreditosService,
         private _ajustesUsuarios: AjustesUsuarioService,
         private _clientesService: ClientesService,
-        private _parentescosService: ParentescosService
+        private _parentescosService: ParentescosService,
+        private _cajaService: CajaService
     ) {}
 
     @Selector()
@@ -314,7 +316,7 @@ export class CreditosState {
 
     @Action(GetTurnosCount)
     getTurnosCount(ctx: StateContext<CreditosStateModel>) {
-        return this._clientesService.getClientesCount().pipe(
+        return this._cajaService.getTurnosCount().pipe(
             tap((turnosCount: number) => {
                 ctx.patchState({
                     turnosCount,

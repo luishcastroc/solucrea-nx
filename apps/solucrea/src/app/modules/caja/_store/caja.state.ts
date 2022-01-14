@@ -14,7 +14,7 @@ import { CajaStateModel } from './caja.model';
     defaults: {
         cajas: [],
         sucursales: [],
-        editMode: 'edit',
+        editMode: 'new',
         selectedCaja: undefined,
         loading: false,
     },

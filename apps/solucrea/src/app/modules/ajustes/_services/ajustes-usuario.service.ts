@@ -4,7 +4,7 @@ import { Usuario, Prisma } from '@prisma/client';
 import { CreateUsuarioDto, UpdateUsuarioDto } from 'api/dtos';
 import { Observable } from 'rxjs';
 
-import { environment } from '../../../../environments/environment';
+import { environment } from 'apps/solucrea/src/environments/environment';
 
 @Injectable({
     providedIn: 'root',

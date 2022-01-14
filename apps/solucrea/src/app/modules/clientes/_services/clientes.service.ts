@@ -59,15 +59,6 @@ export class ClientesService {
     }
 
     /**
-     * Get turnos count
-     *
-     *@param data
-     */
-    getTurnosCount(): Observable<number> {
-        return this._httpClient.get<number>(`${this._environment.uri}/cajas-count`);
-    }
-
-    /**
      *  Get Cliente
      *
      * @param id

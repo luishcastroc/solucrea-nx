@@ -16,7 +16,7 @@ import { LayoutModule } from 'app/layout/layout.module';
 import { MarkdownModule } from 'ngx-markdown';
 
 import { FuseModule } from '../@fuse';
-import { environment } from '../environments/environment';
+import { environment } from 'apps/solucrea/src/environments/environment';
 import { AuthState } from './core/auth/store/auth.state';
 
 const routerConfig: ExtraOptions = {

@@ -4,7 +4,7 @@ import { Prisma } from '@prisma/client';
 import { CreateCajaDto, ICajaReturnDto } from 'api/dtos';
 import { Observable } from 'rxjs';
 
-import { environment } from '../../../../environments/environment';
+import { environment } from 'apps/solucrea/src/environments/environment';
 
 @Injectable({
     providedIn: 'root',
@@ -63,5 +63,14 @@ export class CajaService {
      */
     deleteCaja(id: string): Observable<ICajaReturnDto> {
         return this._httpClient.delete<ICajaReturnDto>(`${this._environment.uri}/caja/${id}`);
+    }
+
+    /**
+     * Get turnos count
+     *
+     *@param data
+     */
+    getTurnosCount(): Observable<number> {
+        return this._httpClient.get<number>(`${this._environment.uri}/cajas-count`);
     }
 }
