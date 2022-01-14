@@ -1,4 +1,4 @@
-<div class="flex flex-col min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
+<div class="flex flex-col min-w-0 w-full sm:absolute sm:inset-0 sm:overflow-hidden">
     <div class="flex flex-col flex-auto">
         <!-- Header -->
         <div
@@ -22,12 +22,25 @@
         <div class="flex-auto">
             <ng-container *ngIf="cajas$ | async as cajas; else loadingTemplate">
                 <div
-                    class="z-20 flex flex-col px-8 py-4 md:px-10 border-b justify-between w-full"
+                    class="z-20 flex flex-col px-4 py-4 md:px-10 border-b justify-between w-full"
                     *ngIf="cajas.length > 0; else noCajas"
                 >
                     <ng-container *ngFor="let caja of cajas">
-                        <div class="z-20 flex px-8 py-4 md:px-10 border-b justify-between w-full max-w-5/6">
-                            <div class="flex gap-6 xsm:flex-wrap sm:flex-wrap">
+                        <div
+                            class="
+                                z-20
+                                grid grid-cols-1
+                                md:grid-cols-2
+                                gap-4
+                                px-2
+                                py-4
+                                md:px-10
+                                border-b
+                                w-full
+                                md:max-w-5/6
+                            "
+                        >
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 w-full">
                                 <div class="flex flex-col">
                                     <div class="font-bold">Fecha Apertura:</div>
                                     <div class="mt-2">{{ caja.fechaApertura | date }}</div>

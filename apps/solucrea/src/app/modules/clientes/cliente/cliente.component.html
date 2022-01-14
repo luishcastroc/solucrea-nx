@@ -1,4 +1,4 @@
-<div class="flex flex-col flex-auto py-8 px-6">
+<div class="flex flex-col flex-auto py-8 px-6 min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
     <div class="flex justify-between border-b pb-3">
         <h1 class="text-4xl font-extrabold tracking-tight leading-none">Nuevo Cliente</h1>
         <button
@@ -281,7 +281,7 @@
                                         Direcciones
                                     </h3>
                                     <!-- Direcciones -->
-                                    <div class="space-y-4 grid grid-cols-6 gap-3 w-full" formArrayName="direcciones">
+                                    <div class="space-y-4 flex flex-col gap-3 w-full" formArrayName="direcciones">
                                         <ng-container
                                             *ngFor="
                                                 let direccion of direcciones.controls;
@@ -291,170 +291,176 @@
                                                 trackBy: trackByFn
                                             "
                                         >
-                                            <div class="col-span-5 grid grid-cols-2 md:grid-cols-4 gap-3 w-full">
-                                                <!-- Calle -->
-                                                <div>
-                                                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                                                        <mat-label *ngIf="first">Calle</mat-label>
-                                                        <mat-icon
-                                                            matPrefix
-                                                            class="hidden sm:flex icon-size-5"
-                                                            [svgIcon]="'heroicons_solid:location-marker'"
-                                                        ></mat-icon>
-                                                        <input
-                                                            matInput
-                                                            [formControl]="direccion.get('calle')"
-                                                            [placeholder]="'Calle'"
-                                                            [spellcheck]="false"
-                                                        />
-                                                    </mat-form-field>
-                                                    <ng-container *ngIf="direccion.get('calle').touched">
-                                                        <mat-error *ngIf="direccion.get('calle').errors?.required">
-                                                            La calle es requerida.
-                                                        </mat-error>
-                                                    </ng-container>
+                                            <div class="flex flex-row gap-10">
+                                                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 w-full">
+                                                    <!-- Calle -->
+                                                    <div>
+                                                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                                                            <mat-label *ngIf="first">Calle</mat-label>
+                                                            <mat-icon
+                                                                matPrefix
+                                                                class="hidden sm:flex icon-size-5"
+                                                                [svgIcon]="'heroicons_solid:location-marker'"
+                                                            ></mat-icon>
+                                                            <input
+                                                                matInput
+                                                                [formControl]="direccion.get('calle')"
+                                                                [placeholder]="'Calle'"
+                                                                [spellcheck]="false"
+                                                            />
+                                                        </mat-form-field>
+                                                        <ng-container *ngIf="direccion.get('calle').touched">
+                                                            <mat-error *ngIf="direccion.get('calle').errors?.required">
+                                                                La calle es requerida.
+                                                            </mat-error>
+                                                        </ng-container>
+                                                    </div>
+                                                    <!-- Número -->
+                                                    <div>
+                                                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                                                            <mat-label *ngIf="first">Número</mat-label>
+                                                            <mat-icon
+                                                                matPrefix
+                                                                class="hidden sm:flex icon-size-5"
+                                                                [svgIcon]="'heroicons_solid:location-marker'"
+                                                            ></mat-icon>
+                                                            <input
+                                                                matInput
+                                                                [formControl]="direccion.get('numero')"
+                                                                [placeholder]="'Número'"
+                                                            />
+                                                        </mat-form-field>
+                                                        <ng-container *ngIf="direccion.get('numero').touched">
+                                                            <mat-error *ngIf="direccion.get('numero').errors?.required">
+                                                                El numero es requerido.
+                                                            </mat-error>
+                                                        </ng-container>
+                                                    </div>
+                                                    <!-- Cruzamientos -->
+                                                    <div>
+                                                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                                                            <mat-label *ngIf="first">Cruzamientos</mat-label>
+                                                            <mat-icon
+                                                                matPrefix
+                                                                class="hidden sm:flex icon-size-5"
+                                                                [svgIcon]="'heroicons_solid:location-marker'"
+                                                            ></mat-icon>
+                                                            <input
+                                                                matInput
+                                                                [formControl]="direccion.get('cruzamientos')"
+                                                                [placeholder]="'Cruzamientos'"
+                                                            />
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <!-- Código Postal -->
+                                                    <div>
+                                                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                                                            <mat-label *ngIf="first">Código Postal</mat-label>
+                                                            <mat-icon
+                                                                matPrefix
+                                                                class="hidden sm:flex icon-size-5"
+                                                                [svgIcon]="'heroicons_solid:location-marker'"
+                                                            ></mat-icon>
+                                                            <input
+                                                                matInput
+                                                                [formControl]="direccion.get('codigoPostal')"
+                                                                [placeholder]="'Código Postal'"
+                                                                (change)="
+                                                                    getColonias(
+                                                                        direccion.get('codigoPostal').value,
+                                                                        i,
+                                                                        'CLIENTE'
+                                                                    )
+                                                                "
+                                                            />
+                                                        </mat-form-field>
+                                                        <ng-container *ngIf="direccion.get('codigoPostal').touched">
+                                                            <mat-error
+                                                                *ngIf="direccion.get('codigoPostal').errors?.required"
+                                                            >
+                                                                El codigo postal es requerido.
+                                                            </mat-error>
+                                                        </ng-container>
+                                                    </div>
+                                                    <!-- Estado -->
+                                                    <div>
+                                                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                                                            <mat-label *ngIf="first">Estado</mat-label>
+                                                            <mat-icon
+                                                                matPrefix
+                                                                class="hidden sm:flex icon-size-5"
+                                                                [svgIcon]="'heroicons_solid:location-marker'"
+                                                            ></mat-icon>
+                                                            <input
+                                                                matInput
+                                                                [formControl]="direccion.get('estado')"
+                                                                [placeholder]="'Estado'"
+                                                            />
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <!-- Ciudad -->
+                                                    <div>
+                                                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                                                            <mat-label *ngIf="first">Ciudad</mat-label>
+                                                            <mat-icon
+                                                                matPrefix
+                                                                class="hidden sm:flex icon-size-5"
+                                                                [svgIcon]="'heroicons_solid:location-marker'"
+                                                            ></mat-icon>
+                                                            <input
+                                                                matInput
+                                                                [formControl]="direccion.get('ciudad')"
+                                                                [placeholder]="'ciudad'"
+                                                            />
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <!-- Colonia -->
+                                                    <div>
+                                                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                                                            <mat-label *ngIf="first">Colonia</mat-label>
+                                                            <mat-icon
+                                                                class="icon-size-5"
+                                                                [svgIcon]="'heroicons_solid:location-marker'"
+                                                                matPrefix
+                                                            ></mat-icon>
+                                                            <mat-select
+                                                                [formControl]="direccion.get('colonia')"
+                                                                [compareWith]="compareColonias"
+                                                            >
+                                                                <mat-option
+                                                                    *ngFor="
+                                                                        let colonia of ubicacion[i]?.ubicacion.colonias
+                                                                    "
+                                                                    [value]="colonia.id"
+                                                                    >{{ colonia.descripcion }}</mat-option
+                                                                >
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                        <ng-container *ngIf="direccion.get('colonia').touched">
+                                                            <mat-error
+                                                                *ngIf="direccion.get('colonia').errors?.required"
+                                                            >
+                                                                La colonia es requerida.
+                                                            </mat-error>
+                                                        </ng-container>
+                                                    </div>
                                                 </div>
-                                                <!-- Número -->
-                                                <div>
-                                                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                                                        <mat-label *ngIf="first">Número</mat-label>
-                                                        <mat-icon
-                                                            matPrefix
-                                                            class="hidden sm:flex icon-size-5"
-                                                            [svgIcon]="'heroicons_solid:location-marker'"
-                                                        ></mat-icon>
-                                                        <input
-                                                            matInput
-                                                            [formControl]="direccion.get('numero')"
-                                                            [placeholder]="'Número'"
-                                                        />
-                                                    </mat-form-field>
-                                                    <ng-container *ngIf="direccion.get('numero').touched">
-                                                        <mat-error *ngIf="direccion.get('numero').errors?.required">
-                                                            El numero es requerido.
-                                                        </mat-error>
-                                                    </ng-container>
-                                                </div>
-                                                <!-- Cruzamientos -->
-                                                <div>
-                                                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                                                        <mat-label *ngIf="first">Cruzamientos</mat-label>
-                                                        <mat-icon
-                                                            matPrefix
-                                                            class="hidden sm:flex icon-size-5"
-                                                            [svgIcon]="'heroicons_solid:location-marker'"
-                                                        ></mat-icon>
-                                                        <input
-                                                            matInput
-                                                            [formControl]="direccion.get('cruzamientos')"
-                                                            [placeholder]="'Cruzamientos'"
-                                                        />
-                                                    </mat-form-field>
-                                                </div>
-                                                <!-- Código Postal -->
-                                                <div>
-                                                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                                                        <mat-label *ngIf="first">Código Postal</mat-label>
-                                                        <mat-icon
-                                                            matPrefix
-                                                            class="hidden sm:flex icon-size-5"
-                                                            [svgIcon]="'heroicons_solid:location-marker'"
-                                                        ></mat-icon>
-                                                        <input
-                                                            matInput
-                                                            [formControl]="direccion.get('codigoPostal')"
-                                                            [placeholder]="'Código Postal'"
-                                                            (change)="
-                                                                getColonias(
-                                                                    direccion.get('codigoPostal').value,
-                                                                    i,
-                                                                    'CLIENTE'
-                                                                )
-                                                            "
-                                                        />
-                                                    </mat-form-field>
-                                                    <ng-container *ngIf="direccion.get('codigoPostal').touched">
-                                                        <mat-error
-                                                            *ngIf="direccion.get('codigoPostal').errors?.required"
-                                                        >
-                                                            El codigo postal es requerido.
-                                                        </mat-error>
-                                                    </ng-container>
-                                                </div>
-                                                <!-- Estado -->
-                                                <div>
-                                                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                                                        <mat-label *ngIf="first">Estado</mat-label>
-                                                        <mat-icon
-                                                            matPrefix
-                                                            class="hidden sm:flex icon-size-5"
-                                                            [svgIcon]="'heroicons_solid:location-marker'"
-                                                        ></mat-icon>
-                                                        <input
-                                                            matInput
-                                                            [formControl]="direccion.get('estado')"
-                                                            [placeholder]="'Estado'"
-                                                        />
-                                                    </mat-form-field>
-                                                </div>
-                                                <!-- Ciudad -->
-                                                <div>
-                                                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                                                        <mat-label *ngIf="first">Ciudad</mat-label>
-                                                        <mat-icon
-                                                            matPrefix
-                                                            class="hidden sm:flex icon-size-5"
-                                                            [svgIcon]="'heroicons_solid:location-marker'"
-                                                        ></mat-icon>
-                                                        <input
-                                                            matInput
-                                                            [formControl]="direccion.get('ciudad')"
-                                                            [placeholder]="'ciudad'"
-                                                        />
-                                                    </mat-form-field>
-                                                </div>
-                                                <!-- Colonia -->
-                                                <div>
-                                                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                                                        <mat-label *ngIf="first">Colonia</mat-label>
+                                                <!-- Remover Dirección -->
+                                                <ng-container *ngIf="!(first && last)">
+                                                    <button
+                                                        class="w-8 h-8 min-h-8 self-center justify-self-center"
+                                                        mat-icon-button
+                                                        (click)="removeDireccionesField(i, direccion.get('id').value)"
+                                                        matTooltip="Borrar"
+                                                        [ngClass]="{ 'mt-6': first }"
+                                                    >
                                                         <mat-icon
                                                             class="icon-size-5"
-                                                            [svgIcon]="'heroicons_solid:location-marker'"
-                                                            matPrefix
+                                                            [svgIcon]="'heroicons_solid:trash'"
                                                         ></mat-icon>
-                                                        <mat-select
-                                                            [formControl]="direccion.get('colonia')"
-                                                            [compareWith]="compareColonias"
-                                                        >
-                                                            <mat-option
-                                                                *ngFor="let colonia of ubicacion[i]?.ubicacion.colonias"
-                                                                [value]="colonia.id"
-                                                                >{{ colonia.descripcion }}</mat-option
-                                                            >
-                                                        </mat-select>
-                                                    </mat-form-field>
-                                                    <ng-container *ngIf="direccion.get('colonia').touched">
-                                                        <mat-error *ngIf="direccion.get('colonia').errors?.required">
-                                                            La colonia es requerida.
-                                                        </mat-error>
-                                                    </ng-container>
-                                                </div>
+                                                    </button>
+                                                </ng-container>
                                             </div>
-                                            <!-- Remover Dirección -->
-                                            <ng-container *ngIf="!(first && last)">
-                                                <button
-                                                    class="w-8 h-8 min-h-8 self-center justify-self-center"
-                                                    mat-icon-button
-                                                    (click)="removeDireccionesField(i, direccion.get('id').value)"
-                                                    matTooltip="Borrar"
-                                                    [ngClass]="{ 'mt-6': first }"
-                                                >
-                                                    <mat-icon
-                                                        class="icon-size-5"
-                                                        [svgIcon]="'heroicons_solid:trash'"
-                                                    ></mat-icon>
-                                                </button>
-                                            </ng-container>
                                         </ng-container>
                                     </div>
                                     <div class="w-full flex-auto">

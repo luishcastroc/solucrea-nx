@@ -140,7 +140,10 @@ export class CajaService {
 
     async getCajasCount(): Promise<number> {
         try {
-            const cajasSum = await this.prisma.caja.aggregate({ _count: true });
+            const cajasSum = await this.prisma.caja.aggregate({
+                _count: true,
+                where: { fechaCierre: { equals: null } },
+            });
             return cajasSum._count;
         } catch (e) {
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {

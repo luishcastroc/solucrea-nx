@@ -1,7 +1,7 @@
 <div class="flex flex-auto flex-col min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
-    <div class="flex flex-col flex-auto">
+    <div class="flex flex-col">
         <!-- Header -->
-        <div class="flex flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b max-h-56">
+        <div class="flex flex-col justify-between py-8 px-6 md:px-8 border-b">
             <!-- Title -->
             <div>
                 <div class="text-4xl font-extrabold tracking-tight leading-none">Clientes</div>
@@ -24,7 +24,7 @@
             <!-- Main actions -->
             <div class="flex flex-col items-center gap-4 mt-4 flex-auto">
                 <!-- Search -->
-                <div class="flex-auto w-full">
+                <div class="w-full">
                     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full min-w-50">
                         <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
                         <input
@@ -35,7 +35,7 @@
                         />
                     </mat-form-field>
                 </div>
-                <div class="flex flex-auto flex-row gap-4 items-center">
+                <div class="grid grid-cols-1 gap-4 items-center">
                     <!-- Active or Innactive ones -->
                     <mat-radio-group
                         aria-labelledby="radio-group-label"
@@ -57,8 +57,19 @@
         <!-- Content -->
         <div class="flex-auto">
             <ng-container *ngFor="let cliente of searchResults$ | async">
-                <div class="z-20 flex px-8 py-4 md:px-10 border-b justify-between">
-                    <div class="flex gap-6 xsm:flex-wrap sm:flex-wrap">
+                <div
+                    class="
+                        z-20
+                        grid grid-cols-1
+                        gap-4
+                        md:grid-cols-[1fr_minmax(auto,_200px)]
+                        px-2
+                        py-4
+                        md:px-10
+                        border-b
+                    "
+                >
+                    <div class="grid px-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:w-5/6">
                         <div class="flex flex-col">
                             <div class="font-bold">Nombre:</div>
                             <div class="mt-2">{{ cliente.nombre }}</div>
