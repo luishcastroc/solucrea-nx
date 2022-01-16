@@ -5,14 +5,14 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { Status } from '@prisma/client';
-import { IClienteReturnDto, ICreditoReturnDto } from 'api/dtos';
+import { ICreditoReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth';
 import { GetAllCreditos } from 'app/modules/ajustes/_store';
 import { CajasMode } from 'app/modules/caja/_store/caja.actions';
 import { ClientesMode } from 'app/modules/clientes/_store/clientes.actions';
 import { Observable, tap } from 'rxjs';
 
-import { ModeCredito, GetClientesCount, GetTurnosCount } from './../_store/creditos.actions';
+import { GetClientesCount, GetTurnosCount, ModeCredito } from './../_store/creditos.actions';
 import { CreditosState } from './../_store/creditos.state';
 
 @Component({

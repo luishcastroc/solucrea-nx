@@ -9,9 +9,10 @@ import { ICreditoReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { Observable, tap } from 'rxjs';
 
-import { GetAllCreditosCliente, ModeCredito } from '../_store/creditos.actions';
+import { GetAllCreditosCliente, GetTurnosCount, ModeCredito } from '../_store/creditos.actions';
 import { CreditosState } from '../_store/creditos.state';
 import { Status } from '.prisma/client';
+import { CajasMode } from 'app/modules/caja/_store/caja.actions';
 
 @Component({
     selector: 'app-creditos-cliente-list',
@@ -22,6 +23,8 @@ export class CreditosClienteListComponent implements OnInit {
     @Select(CreditosState.creditosCliente) creditos$: Observable<ICreditoReturnDto[]>;
     @Select(CreditosState.creditosClienteFiltered) creditosFiltered$: Observable<ICreditoReturnDto[]>;
     @Select(CreditosState.loading) loading$: Observable<boolean>;
+    @Select(CreditosState.turnosCount) turnosCount$: Observable<number>;
+
     actions$: Actions;
     searchInput = new FormControl();
     values = [
@@ -41,7 +44,7 @@ export class CreditosClienteListComponent implements OnInit {
 
     ngOnInit(): void {
         this.clienteId = this._route.snapshot.paramMap.get('clienteId');
-        this._store.dispatch(new GetAllCreditosCliente(this.clienteId));
+        this._store.dispatch([new GetAllCreditosCliente(this.clienteId), new GetTurnosCount()]);
 
         this.setActions();
     }
@@ -87,5 +90,13 @@ export class CreditosClienteListComponent implements OnInit {
                 }
             })
         );
+    }
+
+    /**
+     * new Caja
+     *
+     */
+    newCaja(): void {
+        this._store.dispatch([new Navigate([`caja/${AuthUtils.guid()}`]), new CajasMode('new')]);
     }
 }

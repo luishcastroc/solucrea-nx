@@ -225,6 +225,9 @@ export class CreditosState {
             this._parentescosService.getParentescos(),
         ]).pipe(
             tap(([productos, segurosData, colocadores, parentescos]) => {
+                if (segurosData) {
+                    segurosData.modalidadesDeSeguro = sortBy(segurosData.modalidadesDeSeguro, 'titulo');
+                }
                 ctx.patchState({
                     productos: sortBy(productos, 'descripcion'),
                     segurosData,

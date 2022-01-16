@@ -35,6 +35,7 @@ import {
 import { CreditosState } from '../_store/creditos.state';
 import { SelectModalidadSeguro } from './../_store/creditos.actions';
 import { Producto } from '.prisma/client';
+import { Moment } from 'moment';
 
 @Component({
     selector: 'app-creditos-detail',
@@ -142,8 +143,8 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
         return this.creditosForm.get('seguro') as FormControl;
     }
 
-    get modalidadSeguro() {
-        return this.creditosForm.get('modalidadSeguro') as FormControl;
+    get modalidadDeSeguro() {
+        return this.creditosForm.get('modalidadDeSeguro') as FormControl;
     }
 
     get aval() {
@@ -347,9 +348,7 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
      * @param event
      */
     changeFechaDesembolso(e): void {
-        this.fechaInicio.setValue(
-            this._creditosService.addBusinessDays(this.fechaDesembolso.value, this.selectedProducto.duracion)
-        );
+        this.fechaInicio.setValue(this._creditosService.addBusinessDays(this.fechaDesembolso.value, 1));
         this.fechaFinal.setValue(
             this._creditosService.addBusinessDays(this.fechaInicio.value, this.selectedProducto.duracion)
         );
@@ -393,7 +392,7 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
             producto: [null, Validators.required],
             seguro: [null],
             colocador: [null, Validators.required],
-            modalidadSeguro: [null, Validators.required],
+            modalidadDeSeguro: [null, Validators.required],
             observaciones: [''],
             referidoPor: ['', Validators.required],
             aval: this._formBuilder.group({
@@ -474,7 +473,19 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
             };
 
             this.resumenOperacion = this._creditosService.calculateDetails(data);
+            console.log(this.resumenOperacion);
         }
+    }
+
+    /**
+     * Filter to cancel sundays
+     *
+     * @param date
+     */
+    myFilter(d: Moment | null): boolean {
+        const day = d?.weekday();
+        // Prevent Sunday from being selected.
+        return day !== 0;
     }
 
     ngOnDestroy(): void {

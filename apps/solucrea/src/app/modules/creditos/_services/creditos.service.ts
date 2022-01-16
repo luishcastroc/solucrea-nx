@@ -150,7 +150,7 @@ export class CreditosService {
         delete rest.aval.id;
 
         //generate the record that will be sent
-        const creditoReturn: Prisma.CreditoCreateInput = {
+        const creditoReturn = {
             ...rest,
             fechaDesembolso,
             fechaInicio,

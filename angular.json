@@ -1,10 +1,7 @@
 {
     "version": 1,
     "cli": {
-        "defaultCollection": "@angular-eslint/schematics",
-        "cache": {
-            "enabled": false
-        }
+        "defaultCollection": "@angular-eslint/schematics"
     },
     "projects": {
         "api": {

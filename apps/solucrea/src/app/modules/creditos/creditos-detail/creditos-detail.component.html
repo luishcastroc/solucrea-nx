@@ -15,7 +15,7 @@
     </div>
     <ng-container *ngIf="loading$ | async; then loadingTemplate; else formTemplate"></ng-container>
     <ng-template #formTemplate>
-        <form [formGroup]="creditosForm" class="flex flex-auto min-h-screen">
+        <form [formGroup]="creditosForm" class="flex flex-auto">
             <mat-stepper
                 [linear]="true"
                 #stepper
@@ -673,7 +673,7 @@
                                             matPrefix
                                         ></mat-icon>
                                         <mat-select
-                                            [formControlName]="'modalidadSeguro'"
+                                            [formControlName]="'modalidadDeSeguro'"
                                             (selectionChange)="selectModalidadDeSeguro($event.value)"
                                         >
                                             <mat-option
@@ -683,8 +683,8 @@
                                             >
                                         </mat-select>
                                     </mat-form-field>
-                                    <ng-container *ngIf="modalidadSeguro.touched">
-                                        <mat-error *ngIf="modalidadSeguro.errors?.required">
+                                    <ng-container *ngIf="modalidadDeSeguro.touched">
+                                        <mat-error *ngIf="modalidadDeSeguro.errors?.required">
                                             La modalidad de seguro es requerida.
                                         </mat-error>
                                     </ng-container>
@@ -750,6 +750,7 @@
                                     <input
                                         matInput
                                         [matDatepicker]="initDatepicker"
+                                        [matDatepickerFilter]="myFilter"
                                         [formControlName]="'fechaDesembolso'"
                                         [placeholder]="'Fecha de Desembolso'"
                                         (dateChange)="changeFechaDesembolso($event)"
@@ -760,6 +761,9 @@
                                 <ng-container *ngIf="fechaDesembolso.touched">
                                     <mat-error *ngIf="fechaDesembolso.errors?.required">
                                         La fecha de desembolso es requerida.
+                                    </mat-error>
+                                    <mat-error *ngIf="fechaDesembolso.errors?.matDatepickerFilter">
+                                        La fecha de desembolso no puede ser domingo.
                                     </mat-error>
                                 </ng-container>
                             </div>
@@ -944,7 +948,119 @@
                                     {{ selectedProducto.descripcion }}
                                 </div>
                             </div>
+                            <!-- Capital -->
+                            <div class="flex flex-col gap-2">
+                                <div class="flex gap-2">
+                                    <mat-icon
+                                        role="img"
+                                        class="mat-icon notranslate mat-icon-no-color"
+                                        aria-hidden="true"
+                                        [svgIcon]="'heroicons_outline:currency-dollar'"
+                                        matPrefix
+                                    >
+                                    </mat-icon>
+                                    <div class="leading-6 font-light">Pago a Capital:</div>
+                                </div>
+                                <div class="leading-6 font-bold">
+                                    {{ resumenOperacion.capital | currency }}
+                                </div>
+                            </div>
+                            <!-- Intereses -->
+                            <div class="flex flex-col gap-2">
+                                <div class="flex gap-2">
+                                    <mat-icon
+                                        role="img"
+                                        class="mat-icon notranslate mat-icon-no-color"
+                                        aria-hidden="true"
+                                        [svgIcon]="'heroicons_outline:currency-dollar'"
+                                        matPrefix
+                                    >
+                                    </mat-icon>
+                                    <div class="leading-6 font-light">Pago a Intereses:</div>
+                                </div>
+                                <div class="leading-6 font-bold">
+                                    {{ resumenOperacion.interes | currency }}
+                                </div>
+                            </div>
+                            <!-- Seguro -->
+                            <div class="flex flex-col gap-2">
+                                <div class="flex gap-2">
+                                    <mat-icon
+                                        role="img"
+                                        class="mat-icon notranslate mat-icon-no-color"
+                                        aria-hidden="true"
+                                        [svgIcon]="'heroicons_outline:currency-dollar'"
+                                        matPrefix
+                                    >
+                                    </mat-icon>
+                                    <div class="leading-6 font-light">Pago a Seguro:</div>
+                                </div>
+                                <div class="leading-6 font-bold">
+                                    {{ resumenOperacion.seguro | currency }}
+                                </div>
+                            </div>
+                            <!-- Cuota -->
+                            <div class="flex flex-col gap-2">
+                                <div class="flex gap-2">
+                                    <mat-icon
+                                        role="img"
+                                        class="mat-icon notranslate mat-icon-no-color"
+                                        aria-hidden="true"
+                                        [svgIcon]="'heroicons_outline:currency-dollar'"
+                                        matPrefix
+                                    >
+                                    </mat-icon>
+                                    <div class="leading-6 font-light">Cuota de recuperación:</div>
+                                </div>
+                                <div class="leading-6 font-bold">
+                                    {{ resumenOperacion.cuota | currency }}
+                                </div>
+                            </div>
+                            <!-- Comisión por Apertura -->
+                            <div class="flex flex-col gap-2">
+                                <div class="flex gap-2">
+                                    <mat-icon
+                                        role="img"
+                                        class="mat-icon notranslate mat-icon-no-color"
+                                        aria-hidden="true"
+                                        [svgIcon]="'heroicons_outline:currency-dollar'"
+                                        matPrefix
+                                    >
+                                    </mat-icon>
+                                    <div class="leading-6 font-light">Comisión por Apertura:</div>
+                                </div>
+                                <div class="leading-6 font-bold">
+                                    {{ resumenOperacion.apertura | currency }}
+                                </div>
+                            </div>
+                            <!-- Total hoy -->
+                            <div class="flex flex-col gap-2">
+                                <div class="flex gap-2">
+                                    <mat-icon
+                                        role="img"
+                                        class="mat-icon notranslate mat-icon-no-color"
+                                        aria-hidden="true"
+                                        [svgIcon]="'heroicons_outline:currency-dollar'"
+                                        matPrefix
+                                    >
+                                    </mat-icon>
+                                    <div class="leading-6 font-light">Total a pagar hoy:</div>
+                                </div>
+                                <div class="leading-6 font-bold">
+                                    {{ resumenOperacion.total | currency }}
+                                </div>
+                            </div>
                         </div>
+                        <!-- Observaciones -->
+                        <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full mt-4">
+                            <mat-label>Observaciones</mat-label>
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="'heroicons_outline:clipboard-list'"
+                                matPrefix
+                            ></mat-icon>
+                            <textarea [formControlName]="'observaciones'" matInput></textarea>
+                        </mat-form-field>
                     </div>
                     <div class="flex flex-auto justify-center">
                         <button mat-stroked-button type="button" matStepperPrevious>Anterior</button>

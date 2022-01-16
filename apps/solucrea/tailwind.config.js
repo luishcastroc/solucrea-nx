@@ -65,7 +65,7 @@ const themes = {
  */
 const config = {
     darkMode   : 'class',
-    content    : ['./apps/**/src/**/*.{html,scss,ts}'],
+    content    : ['./apps/solucrea/src/**/*.{html,scss,ts}'],
     important  : true,
     theme      : {
         fontSize: {

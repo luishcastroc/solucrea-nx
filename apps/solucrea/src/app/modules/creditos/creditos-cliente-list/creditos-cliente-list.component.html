@@ -3,68 +3,69 @@
     <mat-spinner> </mat-spinner>
 </ng-template>
 <ng-template #dataTemplate>
-    <div
-        class="flex flex-auto flex-col min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden"
-        *ngIf="{ creditos: creditos$ | async, creditosFiltered: creditosFiltered$ | async } as data"
-    >
-        <div class="flex flex-col flex-auto">
-            <!-- Header -->
-            <div class="flex flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b max-h-56">
-                <!-- Title -->
-                <div>
-                    <div class="text-4xl font-extrabold tracking-tight leading-none">Créditos del Cliente</div>
-                    <div class="ml-0.5 font-medium text-secondary" *ngIf="data.creditos as creditos">
-                        <ng-container *ngIf="creditos.length > 0">
-                            {{ creditos.length | number }}
-                        </ng-container>
-                        {{
-                            creditos.length
-                                | i18nPlural
-                                    : {
-                                          '=0': 'Sin créditos',
-                                          '=1': 'crédito',
-                                          other: 'créditos'
-                                      }
-                        }}
+    <ng-container *ngIf="(turnosCount$ | async) > 0; else noCajasTemplate">
+        <div
+            class="flex flex-auto flex-col min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden"
+            *ngIf="{ creditos: creditos$ | async, creditosFiltered: creditosFiltered$ | async } as data"
+        >
+            <div class="flex flex-col flex-auto">
+                <!-- Header -->
+                <div class="flex flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b max-h-56">
+                    <!-- Title -->
+                    <div>
+                        <div class="text-4xl font-extrabold tracking-tight leading-none">Créditos del Cliente</div>
+                        <div class="ml-0.5 font-medium text-secondary" *ngIf="data.creditos as creditos">
+                            <ng-container *ngIf="creditos.length > 0">
+                                {{ creditos.length | number }}
+                            </ng-container>
+                            {{
+                                creditos.length
+                                    | i18nPlural
+                                        : {
+                                              '=0': 'Sin créditos',
+                                              '=1': 'crédito',
+                                              other: 'créditos'
+                                          }
+                            }}
+                        </div>
                     </div>
-                </div>
 
-                <!-- Main actions -->
-                <div class="flex flex-col items-center gap-4 mt-4 flex-auto">
-                    <!-- Search -->
-                    <div class="flex-auto w-full" *ngIf="data.creditos.length > 0">
-                        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full min-w-50">
-                            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                            <input
-                                matInput
-                                [formControl]="searchInput"
-                                [autocomplete]="'off'"
-                                [placeholder]="'Buscar crédito'"
-                            />
-                        </mat-form-field>
-                    </div>
-                    <div class="flex flex-auto flex-row gap-4 items-center">
-                        <!-- Active or Innactive ones -->
-                        <mat-radio-group
-                            aria-labelledby="radio-group-label"
-                            class="grid grid-cols-3 gap-3"
-                            [(ngModel)]="status"
-                            *ngIf="data.creditos.length > 0"
-                        >
-                            <mat-radio-button *ngFor="let value of values" [value]="value.value">
-                                {{ value.display }}
-                            </mat-radio-button>
-                        </mat-radio-group>
-                        <!-- Add cliente button -->
-                        <button class="ml-4" mat-flat-button [color]="'primary'" (click)="openNewCredito()">
-                            <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                            <span class="ml-2 mr-1">Agregar</span>
-                        </button>
+                    <!-- Main actions -->
+                    <div class="flex flex-col items-center gap-4 mt-4 flex-auto">
+                        <!-- Search -->
+                        <div class="flex-auto w-full" *ngIf="data.creditos.length > 0">
+                            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full min-w-50">
+                                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                                <input
+                                    matInput
+                                    [formControl]="searchInput"
+                                    [autocomplete]="'off'"
+                                    [placeholder]="'Buscar crédito'"
+                                />
+                            </mat-form-field>
+                        </div>
+                        <div class="flex flex-auto flex-row gap-4 items-center">
+                            <!-- Active or Innactive ones -->
+                            <mat-radio-group
+                                aria-labelledby="radio-group-label"
+                                class="grid grid-cols-3 gap-3"
+                                [(ngModel)]="status"
+                                *ngIf="data.creditos.length > 0"
+                            >
+                                <mat-radio-button *ngFor="let value of values" [value]="value.value">
+                                    {{ value.display }}
+                                </mat-radio-button>
+                            </mat-radio-group>
+                            <!-- Add cliente button -->
+                            <button class="ml-4" mat-flat-button [color]="'primary'" (click)="openNewCredito()">
+                                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                                <span class="ml-2 mr-1">Agregar</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- Content -->
-            <!-- <div class="flex-auto">
+                <!-- Content -->
+                <!-- <div class="flex-auto">
             <ng-container *ngFor="let cliente of searchResults$ | async">
                 <div class="z-20 flex px-8 py-4 md:px-10 border-b justify-between">
                     <div class="flex gap-6 xsm:flex-wrap sm:flex-wrap">
@@ -131,6 +132,17 @@
                 </div>
             </ng-container>
         </div> -->
+            </div>
         </div>
-    </div>
+    </ng-container>
+    <ng-template #noCajasTemplate>
+        <div class="flex flex-row mt-5 items-center justify-center w-full">
+            <div class="font-bold">No existen turnos para otorgar créditos</div>
+            <!-- Add cliente button -->
+            <button class="ml-4" mat-flat-button [color]="'primary'" (click)="newCaja()">
+                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <span class="ml-2 mr-1">Agregar</span>
+            </button>
+        </div>
+    </ng-template>
 </ng-template>
