@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { ICreditoReturnDto } from 'api/dtos';
@@ -98,8 +99,44 @@ export class CreditosService {
 
     async createCredito(data: Prisma.CreditoCreateInput): Promise<ICreditoReturnDto> {
         try {
-            return this.prisma.credito.create({ data, select: this.select });
+            const creditosActivos = await this.prisma.credito.findMany({
+                where: {
+                    AND: [
+                        { clienteId: { equals: data.cliente.connect.id } },
+                        { productosId: { equals: data.producto.connect.id } },
+                        { fechaLiquidacion: { equals: null } },
+                    ],
+                },
+            });
+
+            console.log('creditosActivos: ', creditosActivos);
+
+            if (creditosActivos.length > 0) {
+                const producto = await this.prisma.producto.findFirst({
+                    select: { creditosActivos: true },
+                    where: { id: { equals: data.producto.connect.id } },
+                });
+
+                console.log('producto: ', producto);
+
+                if (creditosActivos.length + 1 > Number(producto.creditosActivos)) {
+                    throw new HttpException(
+                        {
+                            status: HttpStatus.PRECONDITION_FAILED,
+                            message: `Error el cliente solo puede tener ${producto.creditosActivos} ${
+                                Number(producto.creditosActivos) === 1 ? 'crédito activo' : 'créditos activos'
+                            }`,
+                        },
+                        HttpStatus.PRECONDITION_FAILED
+                    );
+                }
+            }
+
+            const creditoCreado = await this.prisma.credito.create({ data, select: this.select });
+
+            return creditoCreado;
         } catch (e) {
+            console.log('error: ', e);
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando el nuevo crédito' },

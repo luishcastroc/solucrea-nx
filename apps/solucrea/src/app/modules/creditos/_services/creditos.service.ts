@@ -64,7 +64,7 @@ export class CreditosService {
     /**
      * Get Sucursales with enough money
      *
-     * @returns ISucursalReturnDto[]
+     * @returns ISucursalReturnDto
      */
     getSucursalesWithCaja(minAmount: number, maxAmount: number): Observable<ISucursalReturnDto[]> {
         return this._httpClient.post<ISucursalReturnDto[]>(`${this._environment.uri}/sucursales/caja`, {
@@ -74,11 +74,21 @@ export class CreditosService {
     }
 
     /**
+     *
+     * @param  data
+     * @returns  ICreditoReturnDto
+     */
+    createCredito(data: Prisma.CreditoCreateInput): Observable<ICreditoReturnDto> {
+        return this._httpClient.post<ICreditoReturnDto>(`${this._environment.uri}/credito`, data);
+    }
+
+    /**
      * Calculate details
      *
      */
     calculateDetails(data: ICreditoData): IDetails {
         const { tasaInteres, monto, montoSeguro, numeroDePagos, comisionPorApertura, modalidadSeguro } = data;
+
         const capital = monto / numeroDePagos;
         const intereses = capital * (tasaInteres / 100);
         const seguroDiferido = modalidadSeguro === 'diferido' ? montoSeguro / numeroDePagos : 0;
@@ -159,7 +169,7 @@ export class CreditosService {
             aval: {
                 create: { ...rest.aval, parentesco: { connect: { id: rest.aval.parentesco } }, fechaDeNacimiento },
             },
-            modalidadDeSeguro: { connect: { id: rest.modalidadSeguro } },
+            modalidadDeSeguro: { connect: { id: rest.modalidadDeSeguro } },
             seguro: { connect: { id: rest.seguro } },
             producto: { connect: { id: rest.producto } },
             sucursal: { connect: { id: rest.sucursal } },

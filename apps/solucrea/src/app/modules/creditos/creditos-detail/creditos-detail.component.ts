@@ -237,10 +237,10 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
 
         this.selectedModalidadDeSeguro$ = this._store.select(CreditosState.selectedModalidadDeSeguro).pipe(
             tap((modalidad: IModalidadSeguroReturnDto) => {
-                if (modalidad) {
+                this.selectedModalidadDeSeguro = modalidad;
+                if (modalidad?.titulo !== 'Sin Seguro') {
                     this.seguro.enable();
                     this.seguro.setValidators(Validators.required);
-                    this.selectedModalidadDeSeguro = modalidad;
                 } else {
                     this.seguro.disable();
                     this.seguro.setValidators([]);

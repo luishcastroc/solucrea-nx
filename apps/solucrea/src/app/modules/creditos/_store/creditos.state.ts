@@ -23,6 +23,7 @@ import { CreditosService } from '../_services/creditos.service';
 import {
     ClearCreditosDetails,
     ClearCreditosState,
+    CreateCredito,
     GetAllCreditosCliente,
     GetClienteData,
     GetClientesCount,
@@ -349,11 +350,8 @@ export class CreditosState {
         const selectedModalidadDeSeguro = ctx
             .getState()
             .segurosData.modalidadesDeSeguro.filter((modalidad) => modalidad.id === id)[0];
-        if (selectedModalidadDeSeguro.titulo.includes('Sin Seguro')) {
-            ctx.patchState({ selectedModalidadDeSeguro: undefined });
-        } else {
-            ctx.patchState({ selectedModalidadDeSeguro });
-        }
+
+        ctx.patchState({ selectedModalidadDeSeguro });
     }
 
     @Action(SelectSeguro)
@@ -367,6 +365,18 @@ export class CreditosState {
                 .segurosData.seguros.filter((seguro: ISeguroReturnDto) => seguro.id === id)[0];
         }
         ctx.patchState({ selectedSeguro });
+    }
+
+    @Action(CreateCredito)
+    createCredito(ctx: StateContext<CreditosStateModel>, { data }: CreateCredito) {
+        return this._creditosService.createCredito(data).pipe(
+            tap((credito: ICreditoReturnDto) => {
+                const state = ctx.getState();
+                const clienteCreditos = [...state.clienteCreditos, credito];
+                const creditos = [...state.creditos, credito];
+                ctx.patchState({ clienteCreditos, creditos });
+            })
+        );
     }
 
     @Action(ClearCreditosState)

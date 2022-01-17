@@ -39,7 +39,7 @@ export class ClientesController {
 
     @UseGuards(RolesGuard)
     @UsePipes(new ValidationPipe())
-    @Roles(Role.ADMIN)
+    @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
     @Post('cliente')
     async createCliente(@Request() req, @Body() data: CreateClienteDto): Promise<Cliente> {
         const creadoPor = req.user.username;
@@ -48,7 +48,7 @@ export class ClientesController {
     }
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN)
+    @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
     @Put('cliente/:id')
     async editCliente(
         @Request() req,
@@ -64,7 +64,7 @@ export class ClientesController {
     }
 
     @UseGuards(RolesGuard)
-    @Roles(Role.ADMIN)
+    @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
     @Delete('cliente/:id')
     async deleteCliente(
         @Request() req,

@@ -778,8 +778,8 @@
                                     ></mat-icon>
                                     <mat-select [formControlName]="'referidoPor'">
                                         <mat-option>Elija una opción</mat-option>
-                                        <mat-option [value]="'colocador'">Colocador</mat-option
-                                        ><mat-option [value]="'cliente'">Cliente</mat-option>
+                                        <mat-option [value]="'COLOCADOR'">Colocador</mat-option
+                                        ><mat-option [value]="'CLIENTE'">Cliente</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -996,7 +996,11 @@
                                     <div class="leading-6 font-light">Pago a Seguro:</div>
                                 </div>
                                 <div class="leading-6 font-bold">
-                                    {{ resumenOperacion.seguro | currency }}
+                                    {{
+                                        resumenOperacion.seguro > 0
+                                            ? (resumenOperacion.seguro | currency)
+                                            : 'Sin Seguro'
+                                    }}
                                 </div>
                             </div>
                             <!-- Cuota -->

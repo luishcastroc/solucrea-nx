@@ -1,5 +1,5 @@
 import { IClienteReturnDto } from 'api/dtos';
-import { Status } from '@prisma/client';
+import { Prisma, Status } from '@prisma/client';
 import { EditMode } from 'app/core/models';
 
 export class GetAllCreditos {
@@ -84,4 +84,9 @@ export class SelectSeguro {
 export class GetSucursalesWhereCaja {
     static readonly type = '[Creditos] Get Sucursales Where Caja';
     constructor(public minAmount: number, public maxAmount: number) {}
+}
+
+export class CreateCredito {
+    static readonly type = '[Credito] Create Credito';
+    constructor(public data: Prisma.CreditoCreateInput) {}
 }
