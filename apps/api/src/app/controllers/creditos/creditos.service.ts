@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Credito, Prisma } from '@prisma/client';
 import { ICreditoReturnDto } from 'api/dtos';
 
 import { PrismaService } from '../../prisma/prisma.service';
@@ -15,10 +15,6 @@ export class CreditosService {
         fechaLiquidacion: true,
         monto: true,
         status: true,
-        creadoPor: true,
-        fechaCreacion: true,
-        actualizadoPor: true,
-        fechaActualizacion: true,
         sucursal: { select: { id: true, nombre: true } },
         producto: {
             select: {
@@ -44,7 +40,13 @@ export class CreditosService {
         seguro: { select: { id: true, nombre: true, monto: true } },
         modalidadDeSeguro: { select: { id: true, titulo: true, descripcion: true } },
         observaciones: true,
-        colocador: true,
+        colocador: {
+            select: {
+                id: true,
+                usuario: { select: { id: true, nombre: true, apellido: true } },
+                cliente: { select: { id: true, apellidoPaterno: true, apellidoMaterno: true, nombre: true } },
+            },
+        },
         aval: {
             select: {
                 id: true,
