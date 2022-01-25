@@ -270,16 +270,16 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                     // putting values into the Cliente form
                     this.clienteForm.patchValue({
                         ...selectedCliente,
-                        genero: selectedCliente.generoId,
-                        estadoCivil: selectedCliente.estadoCivilId,
-                        escolaridad: selectedCliente.escolaridadId,
-                        tipoDeVivienda: selectedCliente.tipoDeViviendaId,
+                        genero: selectedCliente.genero.id,
+                        estadoCivil: selectedCliente.estadoCivil.id,
+                        escolaridad: selectedCliente.escolaridad.id,
+                        tipoDeVivienda: selectedCliente.tipoDeVivienda.id,
                     });
 
                     // putting values into the Trabajo
                     this.trabajoForm.patchValue({
                         ...selectedCliente.trabajo,
-                        actividadEconomica: trabajo.actividadEconomicaId,
+                        actividadEconomica: trabajo.actividadEconomica.id,
                         direccion: {
                             ...trabajo.direccion,
                             colonia: trabajo.direccion.colonia.id,

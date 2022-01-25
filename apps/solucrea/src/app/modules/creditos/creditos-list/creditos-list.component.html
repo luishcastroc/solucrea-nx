@@ -70,9 +70,60 @@
                         </div>
                     </div>
                     <!-- Content -->
-                    <!-- <div class="flex-auto">
-            <ng-container *ngFor="let cliente of searchResults$ | async">
-                <div class="z-20 flex px-8 py-4 md:px-10 border-b justify-between">
+                    <div class="flex-auto">
+                        <ng-container *ngFor="let credito of creditosFiltered$ | async">
+                            {{ credito | json }}
+                            <div
+                                class="
+                                    z-20
+                                    grid grid-cols-1
+                                    gap-4
+                                    md:grid-cols-[1fr_minmax(auto,_200px)]
+                                    px-2
+                                    py-4
+                                    md:px-10
+                                    border-b
+                                "
+                            >
+                                <div class="grid px-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:w-5/6">
+                                    <div class="flex flex-col">
+                                        <div class="font-bold">Nombre del Cliente:</div>
+                                        <div class="mt-2">
+                                            {{ credito.cliente.nombre }} {{ credito.cliente.apellidoPaterno }}
+                                            {{ credito.cliente.apellidoMaterno }}
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <div class="font-bold">CURP:</div>
+                                        <div class="mt-2">
+                                            {{ credito.cliente.curp }}
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <div class="font-bold">RFC:</div>
+                                        <div class="mt-2">
+                                            {{ credito.cliente.rfc }}
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <div class="font-bold">Producto Otorgado:</div>
+                                        <div class="mt-2">{{ credito.producto.nombre }}</div>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <div class="font-bold">Monto Otorgado:</div>
+                                        <div class="mt-2">{{ credito.monto | currency }}</div>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <div class="font-bold">Fecha de Desembolso:</div>
+                                        <div class="mt-2">{{ credito.fechaDesembolso | date }}</div>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <div class="font-bold">Pagos Realizados:</div>
+                                        <div class="mt-2">{{ credito.pagos.length }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="z-20 flex px-8 py-4 md:px-10 border-b justify-between">
                     <div class="flex gap-6 xsm:flex-wrap sm:flex-wrap">
                         <div class="flex flex-col">
                             <div class="font-bold">Nombre:</div>
@@ -134,9 +185,9 @@
                             ></mat-icon>
                         </button>
                     </div>
-                </div>
-            </ng-container>
-        </div> -->
+                </div> -->
+                        </ng-container>
+                    </div>
                 </div>
             </div>
         </ng-container>

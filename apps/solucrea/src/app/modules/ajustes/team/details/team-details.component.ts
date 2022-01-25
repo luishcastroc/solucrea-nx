@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { HotToastService } from '@ngneat/hot-toast';
+import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
-import { Actions, ofActionCompleted, ofActionErrored, ofActionSuccessful, Store } from '@ngxs/store';
+import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { EditMode } from 'app/core/models';
 import { AddUsuario, AjustesUsuariosState, ClearUsuarioState, EditUsuario } from 'app/modules/ajustes/_store';
@@ -23,6 +23,7 @@ import { createPasswordStrengthValidator } from '../../validators/custom-ajustes
 export class TeamDetailsComponent implements OnInit, OnDestroy {
     editMode$: Observable<EditMode>;
     selectedUsuario$: Observable<Usuario>;
+    successToast$: Observable<HotToastClose>;
     actions$: Actions;
     editMode: EditMode;
     selectedUsuario: Usuario;
@@ -30,6 +31,8 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
     successMessage: string;
     errorMessage: string;
     roles: IRole[] = defaultRoles;
+
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
      * Constructor
@@ -112,15 +115,15 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
                 }
                 if (successful) {
                     const message = this.successMessage;
-                    this._toast.success(message, {
+                    this.successToast$ = this._toast.success(message, {
                         duration: 4000,
                         position: 'bottom-center',
-                    });
+                    }).afterClosed;
 
                     if (action instanceof AddUsuario) {
-                        setTimeout(() => {
+                        this.successToast$.pipe(takeUntil(this._unsubscribeAll)).subscribe((e) => {
                             this._store.dispatch(new Navigate(['/ajustes/usuarios/']));
-                        }, 3000);
+                        });
                     }
                 }
             })
@@ -195,6 +198,9 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
      */
     ngOnDestroy(): void {
         this._store.dispatch(new ClearUsuarioState());
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
     }
 
     /**

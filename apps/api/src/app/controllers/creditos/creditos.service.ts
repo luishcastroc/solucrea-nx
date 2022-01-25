@@ -1,75 +1,23 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Credito, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { ICreditoReturnDto } from 'api/dtos';
+import { selectCredito } from 'api/util';
 
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class CreditosService {
-    select = {
-        id: true,
-        fechaDesembolso: true,
-        fechaInicio: true,
-        fechaFinal: true,
-        fechaLiquidacion: true,
-        monto: true,
-        status: true,
-        sucursal: { select: { id: true, nombre: true } },
-        producto: {
-            select: {
-                id: true,
-                nombre: true,
-                descripcion: true,
-                montoMinimo: true,
-                montoMaximo: true,
-                interes: true,
-                interesMoratorio: true,
-                penalizacion: true,
-                comision: true,
-                cargos: true,
-                activo: true,
-                duracion: true,
-                numeroDePagos: true,
-                frecuencia: true,
-                creditosActivos: true,
-                diaSemana: true,
-                diaMes: true,
-            },
-        },
-        seguro: { select: { id: true, nombre: true, monto: true } },
-        modalidadDeSeguro: { select: { id: true, titulo: true, descripcion: true } },
-        observaciones: true,
-        colocador: {
-            select: {
-                id: true,
-                usuario: { select: { id: true, nombre: true, apellido: true } },
-                cliente: { select: { id: true, apellidoPaterno: true, apellidoMaterno: true, nombre: true } },
-            },
-        },
-        aval: {
-            select: {
-                id: true,
-                nombre: true,
-                apellidoPaterno: true,
-                apellidoMaterno: true,
-                telefono: true,
-                fechaDeNacimiento: true,
-                parentesco: true,
-                otro: true,
-                ocupacion: true,
-            },
-        },
-        pagos: { select: { id: true, monto: true, fechaDePago: true, observaciones: true } },
-    };
     constructor(private prisma: PrismaService) {}
 
-    async creditosCliente(creditoWhereUniqueInput: Prisma.CreditoWhereInput): Promise<ICreditoReturnDto[] | null> {
+    async creditosCliente(clienteId: string): Promise<ICreditoReturnDto[] | null> {
         try {
-            return this.prisma.credito.findMany({
-                where: creditoWhereUniqueInput,
-                select: this.select,
+            const creditosCliente = await this.prisma.credito.findMany({
+                where: { clienteId: { equals: clienteId } },
+                select: selectCredito,
             });
+
+            return creditosCliente;
         } catch (e) {
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
@@ -83,9 +31,10 @@ export class CreditosService {
     }
 
     async creditos(): Promise<ICreditoReturnDto[] | null> {
+        const select = selectCredito;
         try {
             return this.prisma.credito.findMany({
-                select: this.select,
+                select,
             });
         } catch (e) {
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
@@ -100,6 +49,7 @@ export class CreditosService {
     }
 
     async createCredito(data: Prisma.CreditoCreateInput): Promise<ICreditoReturnDto> {
+        const select = selectCredito;
         try {
             const creditosActivos = await this.prisma.credito.findMany({
                 where: {
@@ -111,15 +61,11 @@ export class CreditosService {
                 },
             });
 
-            console.log('creditosActivos: ', creditosActivos);
-
             if (creditosActivos.length > 0) {
                 const producto = await this.prisma.producto.findFirst({
                     select: { creditosActivos: true },
                     where: { id: { equals: data.producto.connect.id } },
                 });
-
-                console.log('producto: ', producto);
 
                 if (creditosActivos.length + 1 > Number(producto.creditosActivos)) {
                     throw new HttpException(
@@ -134,9 +80,44 @@ export class CreditosService {
                 }
             }
 
-            const creditoCreado = await this.prisma.credito.create({ data, select: this.select });
+            const creditoCreado = await this.prisma.credito.create({ data, select });
 
-            return creditoCreado;
+            if (creditoCreado) {
+                //once credito is created we retire the money from the sucursal
+                const caja = await this.prisma.caja.findFirst({
+                    where: {
+                        AND: [{ sucursalId: { equals: data.sucursal.connect.id } }, { fechaCierre: { equals: null } }],
+                    },
+                    select: { id: true },
+                });
+                //preparing movimiento
+                const movimiento: Prisma.MovimientoDeCajaCreateInput = {
+                    monto: creditoCreado.monto,
+                    tipo: 'RETIRO',
+                    observaciones: `Préstamo otorgado a ${creditoCreado.cliente.nombre} ${creditoCreado.cliente.apellidoMaterno} ${creditoCreado.cliente.apellidoPaterno}`,
+                    creadoPor: data.creadoPor,
+                    caja: { connect: { id: caja.id } },
+                };
+                //retiring the money.
+                const retiro = await this.prisma.movimientoDeCaja.create({ data: movimiento });
+
+                if (retiro) {
+                    return creditoCreado;
+                } else {
+                    throw new HttpException(
+                        {
+                            status: HttpStatus.INTERNAL_SERVER_ERROR,
+                            message: `Error generando el retiro para el crédito ${creditoCreado.id} verificar`,
+                        },
+                        HttpStatus.INTERNAL_SERVER_ERROR
+                    );
+                }
+            } else {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando crédito, verificar' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         } catch (e) {
             console.log('error: ', e);
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {

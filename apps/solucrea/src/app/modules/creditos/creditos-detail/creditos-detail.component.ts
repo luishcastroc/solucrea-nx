@@ -4,8 +4,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { HotToastService } from '@ngneat/hot-toast';
+import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
+import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import {
     IClienteReturnDto,
@@ -15,6 +16,7 @@ import {
     ISucursalReturnDto,
     IUsuarioReturnDto,
 } from 'api/dtos';
+import { Moment } from 'moment';
 import { debounceTime, distinctUntilChanged, filter, Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { IDetails, ISegurosData } from '../_models';
@@ -22,6 +24,7 @@ import { ICreditoData } from '../_models/credito-data.model';
 import { CreditosService } from '../_services/creditos.service';
 import {
     ClearCreditosDetails,
+    CreateCredito,
     GetClienteData,
     GetClienteWhere,
     GetCreditosConfiguration,
@@ -35,7 +38,6 @@ import {
 import { CreditosState } from '../_store/creditos.state';
 import { SelectModalidadSeguro } from './../_store/creditos.actions';
 import { Producto } from '.prisma/client';
-import { Moment } from 'moment';
 
 @Component({
     selector: 'app-creditos-detail',
@@ -58,6 +60,7 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
     selectedCliente$: Observable<IClienteReturnDto>;
     selectedOtro$: Observable<boolean>;
     selectedModalidadDeSeguro$: Observable<IModalidadSeguroReturnDto>;
+    successToast$: Observable<HotToastClose>;
 
     clienteId: string;
     creditoId: string;
@@ -272,27 +275,36 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
             })
         );
 
-        this._actions$.pipe(ofActionCompleted(SelectCliente), takeUntil(this._unsubscribeAll)).subscribe((result) => {
-            const { error, successful } = result.result;
-            const { action } = result;
-            this.loading = false;
-            if (error) {
-                const message = `${error['error'].message}`;
-                this._toast.error(message, {
-                    duration: 4000,
-                    position: 'bottom-center',
-                });
-            }
-            // if (successful) {
-            //     if (action instanceof SelectCliente) {
-            //         this.loading = false;
-            //     }
-            //     // this._toast.success(message, {
-            //     //     duration: 4000,
-            //     //     position: 'bottom-center',
-            //     // });
-            // }
-        });
+        this._actions$
+            .pipe(ofActionCompleted(SelectCliente, CreateCredito), takeUntil(this._unsubscribeAll))
+            .subscribe((result) => {
+                const { error, successful } = result.result;
+                const { action } = result;
+                let message;
+                this.loading = false;
+                if (error) {
+                    message = `${error['error'].message}`;
+                    this._toast.error(message, {
+                        duration: 4000,
+                        position: 'bottom-center',
+                    });
+                }
+                if (successful) {
+                    if (action instanceof CreateCredito) {
+                        message = 'Crédito agregado exitosamente.';
+                        this.successToast$ = this._toast.success(message, {
+                            duration: 4000,
+                            position: 'bottom-center',
+                        }).afterClosed;
+
+                        this.successToast$.pipe(takeUntil(this._unsubscribeAll)).subscribe((e) => {
+                            this._store.dispatch(
+                                new Navigate([this.clienteId ? `creditos/cliente/${this.clienteId}/` : 'creditos/'])
+                            );
+                        });
+                    }
+                }
+            });
 
         if (clienteId) {
             this._store.dispatch(new GetClienteData(clienteId));
@@ -446,7 +458,9 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
      *
      */
     desembolsar(): void {
-        console.log(this._creditosService.prepareCreditoRecord(this.creditosForm));
+        const creditosData = this._creditosService.prepareCreditoRecord(this.creditosForm);
+        console.log(creditosData);
+        this._store.dispatch(new CreateCredito(creditosData));
     }
 
     /**

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { HotToastService } from '@ngneat/hot-toast';
+import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
@@ -36,6 +36,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
     sucursalForm: FormGroup;
     editMode: EditMode;
     coloniasTemp$: Observable<IColoniaReturnDto>;
+    successToast$: Observable<HotToastClose>;
     phoneInputMask = createMask({
         mask: '(999)-999-99-99',
         autoUnmask: true,
@@ -114,15 +115,15 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
                 }
                 if (successful) {
                     const message = 'Sucursal salvada exitosamente.';
-                    this._toast.success(message, {
+                    this.successToast$ = this._toast.success(message, {
                         duration: 4000,
                         position: 'bottom-center',
-                    });
+                    }).afterClosed;
 
                     if (action instanceof AddSucursal) {
-                        setTimeout(() => {
+                        this.successToast$.pipe(takeUntil(this._unsubscribeAll)).subscribe((e) => {
                             this._store.dispatch(new Navigate(['/ajustes/sucursales/']));
-                        }, 2000);
+                        });
                     } else {
                         this.sucursalForm.markAsPristine();
                         // we enable the form

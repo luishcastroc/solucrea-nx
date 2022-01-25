@@ -1,3 +1,4 @@
+import { Genero, Escolaridad, EstadoCivil, TipoDeVivienda, ActividadEconomica } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime';
 
 import { IColonias } from './colonia-return.dto';
@@ -14,7 +15,7 @@ export interface ITrabajoReturn {
     id: string;
     nombre: string;
     antiguedad: number;
-    actividadEconomicaId: string;
+    actividadEconomica: Partial<ActividadEconomica>;
     telefono: string;
     direccion: IDireccionesReturnDto;
 }
@@ -27,10 +28,10 @@ export interface IClienteReturnDto {
     fechaDeNacimiento: Date;
     rfc: string;
     curp: string;
-    generoId: string;
-    escolaridadId: string;
-    estadoCivilId: string;
-    tipoDeViviendaId: string;
+    genero: Partial<Genero>;
+    escolaridad: Partial<Escolaridad>;
+    estadoCivil: Partial<EstadoCivil>;
+    tipoDeVivienda: Partial<TipoDeVivienda>;
     montoMinimo: Decimal | number;
     montoMaximo: Decimal | number;
     telefono1: string;

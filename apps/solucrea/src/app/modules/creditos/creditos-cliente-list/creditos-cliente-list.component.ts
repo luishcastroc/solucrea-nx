@@ -5,14 +5,15 @@ import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
-import { ICreditoReturnDto } from 'api/dtos';
+import { IClienteReturnDto, ICreditoReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth/auth.utils';
+import { CajasMode } from 'app/modules/caja/_store/caja.actions';
 import { Observable, tap } from 'rxjs';
 
-import { GetAllCreditosCliente, GetTurnosCount, ModeCredito } from '../_store/creditos.actions';
+import { GetAllCreditosCliente, GetClienteData, GetTurnosCount, ModeCredito } from '../_store/creditos.actions';
 import { CreditosState } from '../_store/creditos.state';
 import { Status } from '.prisma/client';
-import { CajasMode } from 'app/modules/caja/_store/caja.actions';
+import { createMask } from '@ngneat/input-mask';
 
 @Component({
     selector: 'app-creditos-cliente-list',
@@ -22,6 +23,7 @@ import { CajasMode } from 'app/modules/caja/_store/caja.actions';
 export class CreditosClienteListComponent implements OnInit {
     @Select(CreditosState.creditosCliente) creditos$: Observable<ICreditoReturnDto[]>;
     @Select(CreditosState.creditosClienteFiltered) creditosFiltered$: Observable<ICreditoReturnDto[]>;
+    @Select(CreditosState.selectedCliente) cliente$: Observable<IClienteReturnDto>;
     @Select(CreditosState.loading) loading$: Observable<boolean>;
     @Select(CreditosState.turnosCount) turnosCount$: Observable<number>;
 
@@ -34,6 +36,11 @@ export class CreditosClienteListComponent implements OnInit {
     ];
     status = Status.ABIERTO;
     clienteId: string;
+    phoneInputMask = createMask({
+        mask: '(999)-999-99-99',
+        autoUnmask: true,
+    });
+
     constructor(
         private _store: Store,
         private _dialog: MatDialog,
@@ -44,7 +51,11 @@ export class CreditosClienteListComponent implements OnInit {
 
     ngOnInit(): void {
         this.clienteId = this._route.snapshot.paramMap.get('clienteId');
-        this._store.dispatch([new GetAllCreditosCliente(this.clienteId), new GetTurnosCount()]);
+        this._store.dispatch([
+            new GetAllCreditosCliente(this.clienteId),
+            new GetTurnosCount(),
+            new GetClienteData(this.clienteId),
+        ]);
 
         this.setActions();
     }

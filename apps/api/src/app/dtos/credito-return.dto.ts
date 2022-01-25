@@ -1,3 +1,4 @@
+import { IClienteReturnDto } from './cliente-return.dto';
 import { Decimal } from '@prisma/client/runtime';
 import { Colocador } from '@prisma/client';
 import { IAvalReturnDto, ISucursalReturnDto } from 'api/dtos';
@@ -6,6 +7,7 @@ import { ModalidadDeSeguro, Pago, Producto, Seguro, Status } from '.prisma/clien
 
 export interface ICreditoReturnDto {
     id: string;
+    cliente: IClienteReturnDto;
     fechaDesembolso: Date | string;
     fechaInicio: Date | string;
     fechaFinal: Date | string;
@@ -20,4 +22,9 @@ export interface ICreditoReturnDto {
     modalidadDeSeguro: Partial<ModalidadDeSeguro>;
     aval: Partial<IAvalReturnDto>;
     pagos: Partial<Pago>[];
+}
+
+export interface ICreditoClienteReturnDto {
+    cliente: IClienteReturnDto;
+    creditos: Partial<ICreditoReturnDto>[];
 }

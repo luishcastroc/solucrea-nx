@@ -6,66 +6,18 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { IDireccionUpdateDto, ITrabajoDto } from '../../dtos/update-cliente.dto';
 import { isEmpty } from 'lodash';
 import { contains } from 'class-validator';
+import { selectCliente } from 'api/util';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 @Injectable()
 export class ClientesService {
-    select = {
-        id: true,
-        nombre: true,
-        apellidoPaterno: true,
-        apellidoMaterno: true,
-        fechaDeNacimiento: true,
-        rfc: true,
-        curp: true,
-        generoId: true,
-        escolaridadId: true,
-        estadoCivilId: true,
-        tipoDeViviendaId: true,
-        montoMinimo: true,
-        montoMaximo: true,
-        numeroCreditosCrecer: true,
-        multiplos: true,
-        porcentajeDePagos: true,
-        porcentajeDeMora: true,
-        telefono1: true,
-        telefono2: true,
-        direcciones: {
-            select: {
-                id: true,
-                calle: true,
-                numero: true,
-                cruzamientos: true,
-                colonia: { select: { id: true, descripcion: true, codigoPostal: true } },
-            },
-        },
-        trabajo: {
-            select: {
-                id: true,
-                nombre: true,
-                antiguedad: true,
-                actividadEconomicaId: true,
-                telefono: true,
-                direccion: {
-                    select: {
-                        id: true,
-                        calle: true,
-                        numero: true,
-                        cruzamientos: true,
-                        colonia: { select: { id: true, descripcion: true, codigoPostal: true } },
-                    },
-                },
-            },
-        },
-        activo: true,
-    };
-
     constructor(private prisma: PrismaService) {}
 
     async cliente(where: Prisma.ClienteWhereUniqueInput): Promise<IClienteReturnDto | null> {
+        const select = selectCliente;
         const clienteReturn = await this.prisma.cliente.findUnique({
             where,
-            select: this.select,
+            select,
         });
 
         if (!clienteReturn) {
@@ -79,9 +31,10 @@ export class ClientesService {
     }
 
     async clientes(): Promise<IClienteReturnDto[]> {
+        const select = selectCliente;
         try {
             const clientesReturn = await this.prisma.cliente.findMany({
-                select: this.select,
+                select,
             });
             if (!clientesReturn) {
                 return [];
@@ -99,7 +52,8 @@ export class ClientesService {
         }
     }
 
-    async createCliente(data: CreateClienteDto): Promise<Cliente> {
+    async createCliente(data: CreateClienteDto): Promise<IClienteReturnDto> {
+        const select = selectCliente;
         const existCliente = await this.prisma.cliente.findMany({
             where: { curp: data.curp, OR: [{ rfc: data.rfc }] },
         });
@@ -167,6 +121,7 @@ export class ClientesService {
         try {
             return await this.prisma.cliente.create({
                 data: clienteData,
+                select,
             });
         } catch (e) {
             console.log(e);
@@ -186,6 +141,7 @@ export class ClientesService {
         data: UpdateClienteDto;
     }): Promise<IClienteReturnDto> {
         const { where, data } = params;
+        const select = selectCliente;
 
         let dataToUpdate: Prisma.ClienteUpdateInput;
 
@@ -246,7 +202,7 @@ export class ClientesService {
             const updateStatement = await this.prisma.cliente.update({
                 data: dataToUpdate,
                 where,
-                select: this.select,
+                select,
             });
 
             return updateStatement;
@@ -267,6 +223,7 @@ export class ClientesService {
         data: Prisma.ClienteUpdateInput;
     }): Promise<IClienteReturnDto> {
         const { where, data } = params;
+        const select = selectCliente;
         data.activo = false;
         try {
             const cliente = await this.prisma.cliente.findUnique({ where });
@@ -282,7 +239,7 @@ export class ClientesService {
             const updateStatement = await this.prisma.cliente.update({
                 data,
                 where,
-                select: this.select,
+                select,
             });
 
             return updateStatement;
@@ -320,6 +277,7 @@ export class ClientesService {
     }
 
     async getClientesByWhere(data: string): Promise<IClienteReturnDto[]> {
+        const select = selectCliente;
         const where: Prisma.ClienteWhereInput = {
             OR: [
                 { nombre: { contains: data } },
@@ -332,7 +290,7 @@ export class ClientesService {
             ],
         };
         try {
-            return this.prisma.cliente.findMany({ where, select: this.select });
+            return this.prisma.cliente.findMany({ where, select });
         } catch (e) {
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(

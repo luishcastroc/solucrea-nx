@@ -388,7 +388,7 @@ CREATE TABLE `Creditos` (
     `fechaLiquidacion` DATETIME(3) NULL,
     `monto` DECIMAL(15, 2) NOT NULL,
     `observaciones` VARCHAR(191) NULL,
-    `status` ENUM('ABIERTO', 'CERRADO', 'SUSPENDIDO') NOT NULL,
+    `status` ENUM('ABIERTO', 'CERRADO', 'SUSPENDIDO', 'MORA') NOT NULL,
     `referidoPor` ENUM('COLOCADOR', 'CLIENTE') NOT NULL,
     `creadoPor` VARCHAR(191) NOT NULL,
     `fechaCreacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),

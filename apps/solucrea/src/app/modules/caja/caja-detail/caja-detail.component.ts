@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { HotToastService } from '@ngneat/hot-toast';
+import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
@@ -26,6 +26,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
     @Select(CajasState.sucursales) sucursales$: Observable<ISucursalReturnDto[]>;
     editMode$: Observable<EditMode>;
     selectedCaja$: Observable<ICajaReturnDto>;
+    successToast$: Observable<HotToastClose>;
     selectedCaja: ICajaReturnDto;
     editMode: EditMode;
     cajaForm: FormGroup;
@@ -157,16 +158,16 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
                             : this.editMode === 'cierre'
                             ? 'Turno cerrado exitosamente.'
                             : 'Turno editado exitosamente';
-                    this._toast.success(message, {
+                    this.successToast$ = this._toast.success(message, {
                         duration: 4000,
                         position: 'bottom-center',
-                    });
+                    }).afterClosed;
 
                     if (action instanceof AddCaja) {
                         this.cajaForm.disable();
-                        setTimeout(() => {
+                        this.successToast$.pipe(takeUntil(this._unsubscribeAll)).subscribe((e) => {
                             this._store.dispatch(new Navigate(['/caja']));
-                        }, 3000);
+                        });
                     } else if (action instanceof EditCaja && this.editMode === 'cierre') {
                         this.saldoFinal.disable();
                         this.fechaCierre.disable();
