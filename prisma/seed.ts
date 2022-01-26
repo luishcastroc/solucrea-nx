@@ -1,15 +1,21 @@
+import { PrismaClient } from '@prisma/client';
+
 import {
+    actividadesEconomicasCreate,
+    adminUsuario,
+    createCiudades,
+    createColonias,
+    createEstado,
+    escolaridadesCreate,
     estadosCivilesCreate,
     generosCreate,
-    escolaridadesCreate,
-    tiposDeViviendaCreate,
-    actividadesEconomicasCreate,
+    modalidadesDeSeguro,
     parentescos,
     seguros,
+    tiposDeViviendaCreate,
 } from './seed-data';
+
 /* eslint-disable prefer-arrow/prefer-arrow-functions */
-import { PrismaClient, ActividadEconomica } from '@prisma/client';
-import { adminUsuario, createEstado, createCiudades, createColonias, modalidadesDeSeguro } from './seed-data';
 const prisma = new PrismaClient();
 
 async function main() {

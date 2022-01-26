@@ -113,8 +113,8 @@ export class CreditosService {
     /**
      * Add Business Days
      *
-     * @param originalDate Moment
-     * @param numDaysToAdd number
+     * @param originalDate
+     * @param numDaysToAdd
      * @returns Moment
      */
     addBusinessDays(originalDate: Moment, numDaysToAdd: number): Moment {

@@ -5,4 +5,5 @@ export interface IDetails {
     apertura: number;
     total: number;
     seguro: number;
+    saldo?: number;
 }

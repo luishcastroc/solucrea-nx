@@ -1,16 +1,4 @@
 -- CreateTable
-CREATE TABLE `TiposDePago` (
-    `id` VARCHAR(191) NOT NULL,
-    `descripcion` VARCHAR(191) NOT NULL,
-    `creadoPor` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
-    `fechaCreacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `actualizadoPor` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
-    `fechaActualizacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `PeriodosDePago` (
     `id` VARCHAR(191) NOT NULL,
     `descripcion` VARCHAR(191) NOT NULL,
@@ -250,15 +238,16 @@ CREATE TABLE `Cajas` (
 CREATE TABLE `Pagos` (
     `id` VARCHAR(191) NOT NULL,
     `monto` DECIMAL(15, 2) NOT NULL,
+    `tipoDePago` ENUM('REGULAR', 'CAPITAL', 'LIQUIDACION') NOT NULL,
     `fechaDePago` DATETIME(3) NOT NULL,
     `observaciones` VARCHAR(191) NULL,
-    `creditoId` VARCHAR(191) NULL,
     `creadoPor` VARCHAR(191) NOT NULL,
     `fechaCreacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `actualizadoPor` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
     `fechaActualizacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `clienteId` VARCHAR(191) NOT NULL,
     `sucursalId` VARCHAR(191) NOT NULL,
+    `creditoId` VARCHAR(191) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

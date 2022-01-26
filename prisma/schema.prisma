@@ -13,17 +13,6 @@ generator client {
 
 // Catálogos Inicio
 
-model TipoDePago {
-    id                 String   @id @default(uuid())
-    descripcion        String
-    creadoPor          String   @default("ADMIN")
-    fechaCreacion      DateTime @default(now())
-    actualizadoPor     String   @default("ADMIN")
-    fechaActualizacion DateTime @default(now()) @updatedAt
-
-    @@map(name: "TiposDePago")
-}
-
 model PeriodoDePago {
     id                 String   @id @default(uuid())
     descripcion        String
@@ -155,15 +144,15 @@ model Seguro {
 }
 
 model ModalidadDeSeguro {
-    id                 String   @id @default(uuid())
+    id                 String    @id @default(uuid())
     titulo             String
     descripcion        String
-    creadoPor          String   @default("ADMIN")
-    fechaCreacion      DateTime @default(now())
-    actualizadoPor     String   @default("ADMIN")
-    fechaActualizacion DateTime @default(now()) @updatedAt
+    credito            Credito[]
+    creadoPor          String    @default("ADMIN")
+    fechaCreacion      DateTime  @default(now())
+    actualizadoPor     String    @default("ADMIN")
+    fechaActualizacion DateTime  @default(now()) @updatedAt
 
-    Credito Credito[]
     @@map(name: "ModalidadesDeSeguro")
 }
 
@@ -231,6 +220,12 @@ enum Status {
 enum ReferidoPor {
     COLOCADOR
     CLIENTE
+}
+
+enum TipoDePago {
+    REGULAR
+    CAPITAL
+    LIQUIDACION
 }
 
 // Catálogos Fin
@@ -326,18 +321,19 @@ model Caja {
 }
 
 model Pago {
-    id                 String   @id @default(uuid())
-    monto              Decimal  @db.Decimal(15, 2)
+    id                 String     @id @default(uuid())
+    monto              Decimal    @db.Decimal(15, 2)
+    tipoDePago         TipoDePago
     fechaDePago        DateTime
     observaciones      String?
-    Credito            Credito? @relation(fields: [creditoId], references: [id])
-    creditoId          String?
+    credito            Credito?   @relation(fields: [creditoId], references: [id])
     creadoPor          String
-    fechaCreacion      DateTime @default(now())
-    actualizadoPor     String   @default("ADMIN")
-    fechaActualizacion DateTime @default(now()) @updatedAt
+    fechaCreacion      DateTime   @default(now())
+    actualizadoPor     String     @default("ADMIN")
+    fechaActualizacion DateTime   @default(now()) @updatedAt
     clienteId          String
     sucursalId         String
+    creditoId          String?
 
     @@map(name: "Pagos")
 }

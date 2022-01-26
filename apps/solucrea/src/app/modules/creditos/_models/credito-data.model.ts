@@ -1,3 +1,5 @@
+import { Pago } from '@prisma/client';
+
 export interface ICreditoData {
     tasaInteres: number;
     interesMoratorio: number;
@@ -7,4 +9,5 @@ export interface ICreditoData {
     numeroDePagos: number;
     comisionPorApertura: number;
     modalidadSeguro: 'diferido' | 'contado' | 'sin seguro';
+    pagos?: Pago[];
 }
