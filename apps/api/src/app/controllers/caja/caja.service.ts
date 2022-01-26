@@ -4,7 +4,7 @@ import { Prisma } from '@prisma/client';
 import { CreateCajaDto, ICajaReturnDto } from 'api/dtos';
 import { isEmpty } from 'lodash';
 
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from 'api/prisma';
 
 @Injectable()
 export class CajaService {

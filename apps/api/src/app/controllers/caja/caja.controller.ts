@@ -1,8 +1,3 @@
-import { ICajaReturnDto } from 'api/dtos';
-import { CreateCajaDto } from './../../dtos/create-caja.dto';
-import { Roles } from '../../decorators/roles.decorator';
-import { RolesGuard } from '../../guards/roles.guard';
-import { CajaService } from './caja.service';
 import {
     Body,
     Controller,
@@ -16,7 +11,11 @@ import {
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
-import { Public } from '../../decorators/public.decorator';
+import { CajaService } from './caja.service';
+import { Public, Roles } from 'api/decorators';
+import { CreateCajaDto, ICajaReturnDto } from 'api/dtos';
+import { RolesGuard } from 'api/guards';
+
 import { Caja, Role } from '.prisma/client';
 
 @Controller()

@@ -1,10 +1,9 @@
-import { Controller, Get, Param, UseGuards, UsePipes, ValidationPipe, Post, Request, Body } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Request, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Prisma, Role } from '@prisma/client';
-import { ICreditoReturnDto } from 'api/dtos';
-
-import { Roles } from '../../decorators/roles.decorator';
-import { RolesGuard } from '../../guards/roles.guard';
 import { CreditosService } from './creditos.service';
+import { Roles } from 'api/decorators';
+import { ICreditoReturnDto } from 'api/dtos';
+import { RolesGuard } from 'api/guards';
 
 @Controller()
 export class CreditosController {

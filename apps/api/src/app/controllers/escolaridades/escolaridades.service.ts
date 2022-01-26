@@ -1,8 +1,7 @@
-import { IEscolaridadReturnDto } from './../../dtos/escolaridad-return.dto';
 import { Injectable } from '@nestjs/common';
-import { Escolaridad, Prisma } from '@prisma/client';
-
-import { PrismaService } from '../../prisma/prisma.service';
+import { Prisma } from '@prisma/client';
+import { IEscolaridadReturnDto } from 'api/dtos';
+import { PrismaService } from 'api/prisma';
 
 @Injectable()
 export class EscolaridadesService {

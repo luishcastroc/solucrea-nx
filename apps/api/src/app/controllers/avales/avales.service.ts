@@ -1,7 +1,7 @@
-import { CreateAvalDto } from './../../dtos/create-aval.dto';
-import { Aval, Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { Aval, Prisma } from '@prisma/client';
+import { CreateAvalDto } from 'api/dtos';
+import { PrismaService } from 'api/prisma';
 
 @Injectable()
 export class AvalesService {

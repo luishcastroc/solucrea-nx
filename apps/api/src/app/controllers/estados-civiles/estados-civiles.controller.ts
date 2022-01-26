@@ -1,12 +1,9 @@
-import { IEstadoCivilReturnDto } from './../../dtos/estado-civil-return.dto';
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { EstadoCivil, Role } from '@prisma/client';
-
-import { Public } from '../../decorators/public.decorator';
-import { Roles } from '../../decorators/roles.decorator';
-import { CreateEstadoCivilDto } from '../../dtos/create-estado-civil.dto';
-import { RolesGuard } from '../../guards/roles.guard';
 import { EstadosCivilesService } from './estados-civiles.service';
+import { Public, Roles } from 'api/decorators';
+import { CreateEstadoCivilDto, IEstadoCivilReturnDto } from 'api/dtos';
+import { RolesGuard } from 'api/guards';
 
 @Controller()
 export class EstadosCivilesController {

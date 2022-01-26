@@ -1,8 +1,7 @@
-import { ITipoDeViviendaReturnDto } from './../../dtos/tipo-de-vivienda-return.dto';
 import { Injectable } from '@nestjs/common';
-import { Prisma, TipoDeVivienda } from '@prisma/client';
-
-import { PrismaService } from '../../prisma/prisma.service';
+import { Prisma } from '@prisma/client';
+import { ITipoDeViviendaReturnDto } from 'api/dtos';
+import { PrismaService } from 'api/prisma';
 
 @Injectable()
 export class TiposViviendaService {

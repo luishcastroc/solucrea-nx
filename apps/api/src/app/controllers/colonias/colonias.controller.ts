@@ -1,11 +1,9 @@
-import { IColoniaReturnDto } from './../../dtos/colonia-return.dto';
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-
-import { Public } from '../../decorators/public.decorator';
-import { Roles } from '../../decorators/roles.decorator';
-import { RolesGuard } from '../../guards/roles.guard';
-import { CreateColoniaDto } from './../../dtos/create-colonia.dto';
 import { ColoniasService } from './colonias.service';
+import { Public, Roles } from 'api/decorators';
+import { CreateColoniaDto, IColoniaReturnDto } from 'api/dtos';
+import { RolesGuard } from 'api/guards';
+
 import { Colonia, Role } from '.prisma/client';
 
 @Controller()

@@ -2,9 +2,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { ICreditoReturnDto } from 'api/dtos';
+import { PrismaService } from 'api/prisma';
 import { selectCredito } from 'api/util';
-
-import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class CreditosService {

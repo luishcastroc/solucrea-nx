@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { IParentescoReturnDto } from 'api/dtos';
-
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from 'api/prisma';
 
 @Injectable()
 export class ParentescosService {

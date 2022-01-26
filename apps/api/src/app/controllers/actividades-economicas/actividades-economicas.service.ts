@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ActividadEconomica, Prisma } from '@prisma/client';
-
-import { IActividadEconomicaReturnDto } from '../../dtos/actividad-economica-return.dto';
-import { CreateActividadEconomicaDto } from '../../dtos/create-actividad-economica.dto';
-import { PrismaService } from '../../prisma/prisma.service';
+import { Prisma } from '@prisma/client';
+import { CreateActividadEconomicaDto, IActividadEconomicaReturnDto } from 'api/dtos';
+import { PrismaService } from 'api/prisma';
 
 @Injectable()
 export class ActividadesEconomicasService {

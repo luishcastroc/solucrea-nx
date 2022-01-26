@@ -11,13 +11,11 @@ import {
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
-import { Cliente, Prisma, Role } from '@prisma/client';
-
-import { Public } from '../../decorators/public.decorator';
-import { Roles } from '../../decorators/roles.decorator';
-import { RolesGuard } from '../../guards/roles.guard';
+import { Prisma, Role } from '@prisma/client';
 import { ClientesService } from './clientes.service';
-import { IClienteReturnDto, UpdateClienteDto, CreateClienteDto } from 'api/dtos';
+import { Public, Roles } from 'api/decorators';
+import { CreateClienteDto, IClienteReturnDto, UpdateClienteDto } from 'api/dtos';
+import { RolesGuard } from 'api/guards';
 
 @Controller('')
 export class ClientesController {
@@ -41,7 +39,7 @@ export class ClientesController {
     @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
     @Post('cliente')
-    async createCliente(@Request() req, @Body() data: CreateClienteDto): Promise<Cliente> {
+    async createCliente(@Request() req, @Body() data: CreateClienteDto): Promise<IClienteReturnDto> {
         const creadoPor = req.user.username;
         data.creadoPor = creadoPor;
         return this.clientesService.createCliente(data);

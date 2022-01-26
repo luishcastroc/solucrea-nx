@@ -1,11 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Genero, Role } from '@prisma/client';
-import { CreateSeguroDto, IModalidadSeguroReturnDto, ISeguroReturnDto } from 'api/dtos';
-
-import { Public } from '../../decorators/public.decorator';
-import { Roles } from '../../decorators/roles.decorator';
-import { RolesGuard } from '../../guards/roles.guard';
 import { SegurosService } from './seguros.service';
+import { Public, Roles } from 'api/decorators';
+import { CreateSeguroDto, IModalidadSeguroReturnDto, ISeguroReturnDto } from 'api/dtos';
+import { RolesGuard } from 'api/guards';
 
 @Controller()
 export class SegurosController {

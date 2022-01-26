@@ -99,10 +99,10 @@ export const selectCredito = {
             apellidoMaterno: true,
             telefono: true,
             fechaDeNacimiento: true,
-            parentesco: true,
+            parentesco: { select: { id: true, descripcion: true } },
             otro: true,
             ocupacion: true,
         },
     },
-    pagos: { select: { id: true, monto: true, fechaDePago: true, observaciones: true } },
+    pagos: { select: { id: true, monto: true, tipoDePago: true, fechaDePago: true, observaciones: true } },
 };

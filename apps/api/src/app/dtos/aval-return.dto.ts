@@ -7,7 +7,7 @@ export interface IAvalReturnDto {
     apellidoMaterno: string;
     telefono: string;
     fechaDeNacimiento: Date | string;
-    parentesco: Parentesco;
+    parentesco: Partial<Parentesco>;
     otro: string;
     ocupacion: string;
     creadoPor: string;

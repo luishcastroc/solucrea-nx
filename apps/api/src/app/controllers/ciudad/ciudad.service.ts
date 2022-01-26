@@ -1,6 +1,6 @@
 import { Ciudad, Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from 'api/prisma';
 
 @Injectable()
 export class CiudadService {

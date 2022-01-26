@@ -1,12 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Cliente, Direccion, Prisma } from '@prisma/client';
 import { CreateClienteDto, CreateDireccionDto, IClienteReturnDto, UpdateClienteDto } from 'api/dtos';
-
-import { PrismaService } from '../../prisma/prisma.service';
-import { IDireccionUpdateDto, ITrabajoDto } from '../../dtos/update-cliente.dto';
-import { isEmpty } from 'lodash';
-import { contains } from 'class-validator';
 import { selectCliente } from 'api/util';
+import { isEmpty } from 'lodash';
+
+import { IDireccionUpdateDto, ITrabajoDto } from '../../dtos/update-cliente.dto';
+import { PrismaService } from 'api/prisma';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 @Injectable()

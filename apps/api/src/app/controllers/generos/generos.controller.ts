@@ -1,12 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Genero, Role } from '@prisma/client';
-
-import { Public } from '../../decorators/public.decorator';
-import { Roles } from '../../decorators/roles.decorator';
-import { IGeneroReturnDto } from '../../dtos/genero-return.dto';
-import { RolesGuard } from '../../guards/roles.guard';
-import { CreateGeneroDto } from './../../dtos/create-genero.dto';
 import { GenerosService } from './generos.service';
+import { Public, Roles } from 'api/decorators';
+import { CreateGeneroDto, IGeneroReturnDto } from 'api/dtos';
+import { RolesGuard } from 'api/guards';
 
 @Controller()
 export class GenerosController {

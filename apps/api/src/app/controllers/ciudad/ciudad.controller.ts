@@ -1,11 +1,9 @@
-import { CreateCiudadDto } from './../../dtos/create-ciudad.dto';
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-
-import { Public } from '../../decorators/public.decorator';
-import { Roles } from '../../decorators/roles.decorator';
-
-import { RolesGuard } from '../../guards/roles.guard';
 import { CiudadService } from './ciudad.service';
+import { Public, Roles } from 'api/decorators';
+import { CreateCiudadDto } from 'api/dtos';
+import { RolesGuard } from 'api/guards';
+
 import { Ciudad, Role } from '.prisma/client';
 
 @Controller()

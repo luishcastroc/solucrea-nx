@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
+import { PrismaService } from 'api/prisma';
 
-import { PrismaService } from './../../prisma/prisma.service';
 import { EscolaridadesController } from './escolaridades.controller';
 import { EscolaridadesService } from './escolaridades.service';
 

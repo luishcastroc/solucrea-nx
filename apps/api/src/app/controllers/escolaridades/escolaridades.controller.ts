@@ -1,11 +1,9 @@
-import { IEscolaridadReturnDto } from './../../dtos/escolaridad-return.dto';
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Escolaridad, Role } from '@prisma/client';
-
-import { Roles } from '../../decorators/roles.decorator';
-import { RolesGuard } from '../../guards/roles.guard';
-import { Public } from '../../decorators/public.decorator';
 import { EscolaridadesService } from './escolaridades.service';
+import { Public, Roles } from 'api/decorators';
+import { IEscolaridadReturnDto } from 'api/dtos';
+import { RolesGuard } from 'api/guards';
 
 @Controller()
 export class EscolaridadesController {

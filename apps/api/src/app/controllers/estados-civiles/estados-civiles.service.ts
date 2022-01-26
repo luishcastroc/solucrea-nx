@@ -1,8 +1,7 @@
-import { IEstadoCivilReturnDto } from './../../dtos/estado-civil-return.dto';
 import { Injectable } from '@nestjs/common';
-import { EstadoCivil, Prisma } from '@prisma/client';
-
-import { PrismaService } from '../../prisma/prisma.service';
+import { Prisma } from '@prisma/client';
+import { IEstadoCivilReturnDto } from 'api/dtos';
+import { PrismaService } from 'api/prisma';
 
 @Injectable()
 export class EstadosCivilesService {

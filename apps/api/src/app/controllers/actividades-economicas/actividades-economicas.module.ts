@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
+import { PrismaService } from 'api/prisma';
 
-import { PrismaService } from '../../prisma/prisma.service';
 import { ActividadesEconomicasController } from './actividades-economicas.controller';
 import { ActividadesEconomicasService } from './actividades-economicas.service';
 

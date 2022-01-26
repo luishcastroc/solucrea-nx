@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-
-import { IGeneroReturnDto } from '../../dtos/genero-return.dto';
-import { PrismaService } from '../../prisma/prisma.service';
+import { IGeneroReturnDto } from 'api/dtos';
+import { PrismaService } from 'api/prisma';
 
 @Injectable()
 export class GenerosService {

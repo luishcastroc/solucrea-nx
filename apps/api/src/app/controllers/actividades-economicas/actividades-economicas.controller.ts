@@ -1,11 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-
-import { Public } from '../../decorators/public.decorator';
-import { Roles } from '../../decorators/roles.decorator';
-import { RolesGuard } from '../../guards/roles.guard';
 import { ActividadesEconomicasService } from './actividades-economicas.service';
-import { IActividadEconomicaReturnDto, CreateActividadEconomicaDto } from 'api/dtos';
+import { Public, Roles } from 'api/decorators';
+import { CreateActividadEconomicaDto, IActividadEconomicaReturnDto } from 'api/dtos';
+import { RolesGuard } from 'api/guards';
+
 import { Role } from '.prisma/client';
 
 @Controller()

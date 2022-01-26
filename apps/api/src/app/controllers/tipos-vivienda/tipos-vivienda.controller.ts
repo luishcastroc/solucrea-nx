@@ -1,11 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { Role, TipoDeVivienda } from '@prisma/client';
-
-import { Public } from '../../decorators/public.decorator';
-import { Roles } from '../../decorators/roles.decorator';
-import { RolesGuard } from '../../guards/roles.guard';
-import { ITipoDeViviendaReturnDto } from './../../dtos/tipo-de-vivienda-return.dto';
 import { TiposViviendaService } from './tipos-vivienda.service';
+import { Public, Roles } from 'api/decorators';
+import { ITipoDeViviendaReturnDto } from 'api/dtos';
+import { RolesGuard } from 'api/guards';
 
 @Controller()
 export class TiposViviendaController {

@@ -1,11 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Direccion, Prisma, Role } from '@prisma/client';
-
-import { Public } from '../../decorators/public.decorator';
-import { Roles } from '../../decorators/roles.decorator';
-import { CreateDireccionDto } from '../../dtos/create-direccion.dto';
-import { RolesGuard } from '../../guards/roles.guard';
 import { DireccionesService } from './direcciones.service';
+import { Public, Roles } from 'api/decorators';
+import { CreateDireccionDto } from 'api/dtos';
+import { RolesGuard } from 'api/guards';
 
 @Controller()
 export class DireccionesController {

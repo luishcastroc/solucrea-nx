@@ -1,11 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Genero, Prisma, Role } from '@prisma/client';
-import { IParentescoReturnDto } from 'api/dtos';
-
 import { ParentescosService } from './parentescos.service';
-import { Public } from '../../decorators/public.decorator';
-import { Roles } from '../../decorators/roles.decorator';
-import { RolesGuard } from '../../guards/roles.guard';
+import { Public, Roles } from 'api/decorators';
+import { IParentescoReturnDto } from 'api/dtos';
+import { RolesGuard } from 'api/guards';
 
 @Controller()
 export class ParentescosController {

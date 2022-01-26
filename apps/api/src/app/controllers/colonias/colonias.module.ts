@@ -1,5 +1,6 @@
-import { PrismaService } from '../../prisma/prisma.service';
 import { Module } from '@nestjs/common';
+import { PrismaService } from 'api/prisma';
+
 import { ColoniasController } from './colonias.controller';
 import { ColoniasService } from './colonias.service';
 

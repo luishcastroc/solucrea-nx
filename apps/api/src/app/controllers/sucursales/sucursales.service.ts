@@ -2,9 +2,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { CreateSucursalDto, ICajaReturnDto, ISucursalReturnDto, UpdateSucursalDto } from 'api/dtos';
+import { PrismaService } from 'api/prisma';
 import { isEmpty } from 'lodash';
-
-import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class SucursalesService {

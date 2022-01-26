@@ -1,10 +1,10 @@
-import { CreateAvalDto } from './../../dtos/create-aval.dto';
-import { Prisma } from '@prisma/client';
-import { Roles } from './../../decorators/roles.decorator';
-import { RolesGuard } from './../../guards/roles.guard';
-import { AvalesService } from './avales.service';
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { Public } from '../../decorators/public.decorator';
+import { Prisma } from '@prisma/client';
+import { AvalesService } from './avales.service';
+import { Public, Roles } from 'api/decorators';
+import { CreateAvalDto } from 'api/dtos';
+import { RolesGuard } from 'api/guards';
+
 import { Aval, Role } from '.prisma/client';
 
 @Controller()

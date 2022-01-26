@@ -11,16 +11,12 @@ import {
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
-import { Role, Usuario, Prisma } from '@prisma/client';
-
-import { AuthService } from '../../auth/auth.service';
-import { Public } from '../../decorators/public.decorator';
-import { Roles } from '../../decorators/roles.decorator';
-import { CreateUsuarioDto } from '../../dtos/create-usuario.dto';
-import { UpdateUsuarioDto } from '../../dtos/update-usuario.dto';
-import { LocalAuthGuard } from '../../guards/local.auth.guard';
-import { RolesGuard } from '../../guards/roles.guard';
+import { Prisma, Role, Usuario } from '@prisma/client';
+import { AuthService } from 'api/auth';
 import { UsuariosService } from './usuarios.service';
+import { Public, Roles } from 'api/decorators';
+import { CreateUsuarioDto, UpdateUsuarioDto } from 'api/dtos';
+import { LocalAuthGuard, RolesGuard } from 'api/guards';
 
 @Controller()
 export class UsuariosController {
