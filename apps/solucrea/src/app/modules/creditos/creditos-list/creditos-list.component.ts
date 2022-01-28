@@ -34,6 +34,7 @@ export class CreditosListComponent implements OnInit {
         { display: 'Abiertos', value: Status.ABIERTO },
         { display: 'Cerrados', value: Status.CERRADO },
         { display: 'Suspendidos', value: Status.SUSPENDIDO },
+        { display: 'Mora', value: Status.MORA },
     ];
     status = Status.ABIERTO;
     constructor(
