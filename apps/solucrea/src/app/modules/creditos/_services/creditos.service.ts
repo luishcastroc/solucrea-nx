@@ -10,6 +10,8 @@ import { forkJoin, map, Observable } from 'rxjs';
 
 import { ISegurosData } from '../_models';
 import { IDetails } from './../_models/details.model';
+import { Decimal } from '@prisma/client/runtime';
+import { sumBy } from 'lodash';
 
 @Injectable({
     providedIn: 'root',
@@ -87,7 +89,7 @@ export class CreditosService {
      *
      */
     calculateDetails(data: ICreditoData): IDetails {
-        const { tasaInteres, monto, montoSeguro, numeroDePagos, comisionPorApertura, modalidadSeguro } = data;
+        const { tasaInteres, monto, montoSeguro, numeroDePagos, comisionPorApertura, modalidadSeguro, pagos } = data;
 
         const capital = monto / numeroDePagos;
         const intereses = capital * (tasaInteres / 100);
@@ -98,6 +100,8 @@ export class CreditosService {
         const seguro =
             modalidadSeguro === 'diferido' ? seguroDiferido : modalidadSeguro === 'contado' ? montoSeguro : 0;
 
+        const saldo = pagos.length > 0 ? sumBy(pagos, (pago) => Number(pago.monto) - intereses) : 0;
+
         const details: IDetails = {
             capital,
             interes: intereses,
@@ -105,6 +109,7 @@ export class CreditosService {
             apertura,
             total,
             seguro,
+            saldo,
         };
 
         return details;

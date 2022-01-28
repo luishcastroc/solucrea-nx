@@ -22,12 +22,12 @@ import { createMask } from '@ngneat/input-mask';
 })
 export class CreditosClienteListComponent implements OnInit {
     @Select(CreditosState.creditosCliente) creditos$: Observable<ICreditoReturnDto[]>;
-    @Select(CreditosState.creditosClienteFiltered) creditosFiltered$: Observable<ICreditoReturnDto[]>;
     @Select(CreditosState.selectedCliente) cliente$: Observable<IClienteReturnDto>;
     @Select(CreditosState.loading) loading$: Observable<boolean>;
     @Select(CreditosState.turnosCount) turnosCount$: Observable<number>;
 
     actions$: Actions;
+    creditosFiltered$: Observable<ICreditoReturnDto[]>;
     searchInput = new FormControl();
     values = [
         { display: 'Abiertos', value: Status.ABIERTO },
@@ -58,6 +58,12 @@ export class CreditosClienteListComponent implements OnInit {
         ]);
 
         this.setActions();
+
+        this.creditosFiltered$ = this._store.select(CreditosState.creditosClienteFiltered).pipe(
+            tap((credito) => {
+                console.log(credito);
+            })
+        );
     }
 
     /**

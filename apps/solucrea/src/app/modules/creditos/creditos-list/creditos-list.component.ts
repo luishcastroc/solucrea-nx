@@ -23,10 +23,11 @@ import { CreditosState } from './../_store/creditos.state';
 })
 export class CreditosListComponent implements OnInit {
     @Select(CreditosState.creditos) creditos$: Observable<ICreditoReturnDto[]>;
-    @Select(CreditosState.creditosFiltered) creditosFiltered$: Observable<ICreditoReturnDto[]>;
     @Select(CreditosState.loading) loading$: Observable<boolean>;
     @Select(CreditosState.clientesCount) clientesCount$: Observable<number>;
     @Select(CreditosState.turnosCount) turnosCount$: Observable<number>;
+
+    creditosFiltered$: Observable<ICreditoReturnDto[]>;
     actions$: Actions;
     searchInput = new FormControl();
     values = [
@@ -46,6 +47,12 @@ export class CreditosListComponent implements OnInit {
         this._store.dispatch([new GetAllCreditos(), new GetClientesCount(), new GetTurnosCount()]);
 
         this.setActions();
+
+        this.creditosFiltered$ = this._store.select(CreditosState.creditosFiltered).pipe(
+            tap((credito) => {
+                console.log(credito);
+            })
+        );
     }
 
     /**

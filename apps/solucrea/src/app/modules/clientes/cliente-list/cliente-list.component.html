@@ -1,137 +1,124 @@
-<div class="py-8 px-6 flex flex-col flex-auto w-full">
-    <div class="flex flex-col">
-        <!-- Header -->
-        <div class="flex flex-col justify-between py-8 px-6 md:px-8 border-b">
-            <!-- Title -->
-            <div>
-                <div class="text-4xl font-extrabold tracking-tight leading-none">Clientes</div>
-                <div class="ml-0.5 font-medium text-secondary" *ngIf="clientes$ | async as clientes">
-                    <ng-container *ngIf="clientes.length > 0">
-                        {{ clientes.length | number }}
-                    </ng-container>
-                    {{
-                        clientes.length
-                            | i18nPlural
-                                : {
-                                      '=0': 'Sin clientes',
-                                      '=1': 'cliente',
-                                      other: 'clientes'
-                                  }
-                    }}
-                </div>
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+    <!-- Header -->
+    <div class="flex flex-col justify-between py-8 px-6 md:px-8 border-b">
+        <!-- Title -->
+        <div>
+            <div class="text-4xl font-extrabold tracking-tight leading-none">Clientes</div>
+            <div class="ml-0.5 font-medium text-secondary" *ngIf="clientes$ | async as clientes">
+                <ng-container *ngIf="clientes.length > 0">
+                    {{ clientes.length | number }}
+                </ng-container>
+                {{
+                    clientes.length
+                        | i18nPlural
+                            : {
+                                  '=0': 'Sin clientes',
+                                  '=1': 'cliente',
+                                  other: 'clientes'
+                              }
+                }}
             </div>
+        </div>
 
-            <!-- Main actions -->
-            <div class="flex flex-col items-center gap-4 mt-4 flex-auto">
-                <!-- Search -->
-                <div class="w-full">
-                    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full min-w-50">
-                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                        <input
-                            matInput
-                            [formControl]="searchInput"
-                            [autocomplete]="'off'"
-                            [placeholder]="'Buscar cliente'"
-                        />
-                    </mat-form-field>
+        <!-- Main actions -->
+        <div class="flex flex-col items-center gap-4 mt-4 flex-auto">
+            <!-- Search -->
+            <div class="w-full">
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full min-w-50">
+                    <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                    <input
+                        matInput
+                        [formControl]="searchInput"
+                        [autocomplete]="'off'"
+                        [placeholder]="'Buscar cliente'"
+                    />
+                </mat-form-field>
+            </div>
+            <div class="grid grid-cols-1 gap-4 items-center">
+                <!-- Active or Innactive ones -->
+                <mat-radio-group
+                    aria-labelledby="radio-group-label"
+                    class="grid grid-cols-2 gap-3"
+                    [(ngModel)]="active"
+                >
+                    <mat-radio-button *ngFor="let value of values" [value]="value">
+                        {{ value }}
+                    </mat-radio-button>
+                </mat-radio-group>
+                <!-- Add cliente button -->
+                <button class="ml-4" mat-flat-button [color]="'primary'" (click)="newCliente()">
+                    <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                    <span class="ml-2 mr-1">Agregar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Content -->
+    <div class="flex-auto overflow-y-auto">
+        <ng-container *ngFor="let cliente of searchResults$ | async">
+            <div class="z-20 grid grid-cols-1 gap-4 md:grid-cols-[1fr_minmax(auto,_200px)] px-2 py-4 md:px-10 border-b">
+                <div class="grid px-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:w-5/6">
+                    <div class="flex flex-col">
+                        <div class="font-bold">Nombre:</div>
+                        <div class="mt-2">{{ cliente.nombre }}</div>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="font-bold">Apellido Paterno:</div>
+                        <div class="mt-2">{{ cliente.apellidoPaterno }}</div>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="font-bold">Apellido Materno:</div>
+                        <div class="mt-2">{{ cliente.apellidoMaterno }}</div>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="font-bold">CURP:</div>
+                        <div class="mt-2">{{ cliente.curp }}</div>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="font-bold">RFC:</div>
+                        <div class="mt-2">{{ cliente.rfc }}</div>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="font-bold">Estatus:</div>
+                        <div class="mt-2">{{ cliente.activo ? 'Activo' : 'Inactivo' }}</div>
+                    </div>
                 </div>
-                <div class="grid grid-cols-1 gap-4 items-center">
-                    <!-- Active or Innactive ones -->
-                    <mat-radio-group
-                        aria-labelledby="radio-group-label"
-                        class="grid grid-cols-2 gap-3"
-                        [(ngModel)]="active"
+                <div class="order-1 sm:order-2 sm:ml-3 xsm:flex-col flex justify-center items-center">
+                    <button
+                        mat-icon-button
+                        aria-label="Créditos"
+                        #tooltip="matTooltip"
+                        matTooltip="Créditos"
+                        (click)="goToCreditos(cliente.id)"
+                        [matTooltipPosition]="'below'"
                     >
-                        <mat-radio-button *ngFor="let value of values" [value]="value">
-                            {{ value }}
-                        </mat-radio-button>
-                    </mat-radio-group>
-                    <!-- Add cliente button -->
-                    <button class="ml-4" mat-flat-button [color]="'primary'" (click)="newCliente()">
-                        <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                        <span class="ml-2 mr-1">Agregar</span>
+                        <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:cash'"></mat-icon>
+                    </button>
+                    <button
+                        mat-icon-button
+                        aria-label="Editar cliente"
+                        #tooltip="matTooltip"
+                        (click)="editCliente(cliente.id)"
+                        matTooltip="Editar cliente"
+                        [matTooltipPosition]="'below'"
+                    >
+                        <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:clipboard-list'"></mat-icon>
+                    </button>
+                    <button
+                        mat-icon-button
+                        aria-label="Inactivar cliente"
+                        (click)="cliente.activo ? inactivateClient(cliente.id) : activateClient(cliente.id)"
+                        #tooltip="matTooltip"
+                        matTooltip="{{ cliente.activo ? 'Inactivar cliente' : 'Activar cliente' }}"
+                        [matTooltipPosition]="'below'"
+                    >
+                        <mat-icon
+                            class="text-hint"
+                            [svgIcon]="cliente.activo ? 'heroicons_outline:trash' : 'heroicons_outline:badge-check'"
+                        ></mat-icon>
                     </button>
                 </div>
             </div>
-        </div>
-        <!-- Content -->
-        <div class="flex-auto">
-            <ng-container *ngFor="let cliente of searchResults$ | async">
-                <div
-                    class="
-                        z-20
-                        grid grid-cols-1
-                        gap-4
-                        md:grid-cols-[1fr_minmax(auto,_200px)]
-                        px-2
-                        py-4
-                        md:px-10
-                        border-b
-                    "
-                >
-                    <div class="grid px-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:w-5/6">
-                        <div class="flex flex-col">
-                            <div class="font-bold">Nombre:</div>
-                            <div class="mt-2">{{ cliente.nombre }}</div>
-                        </div>
-                        <div class="flex flex-col">
-                            <div class="font-bold">Apellido Paterno:</div>
-                            <div class="mt-2">{{ cliente.apellidoPaterno }}</div>
-                        </div>
-                        <div class="flex flex-col">
-                            <div class="font-bold">Apellido Materno:</div>
-                            <div class="mt-2">{{ cliente.apellidoMaterno }}</div>
-                        </div>
-                        <div class="flex flex-col">
-                            <div class="font-bold">CURP:</div>
-                            <div class="mt-2">{{ cliente.curp }}</div>
-                        </div>
-                        <div class="flex flex-col">
-                            <div class="font-bold">RFC:</div>
-                            <div class="mt-2">{{ cliente.rfc }}</div>
-                        </div>
-                        <div class="flex flex-col">
-                            <div class="font-bold">Estatus:</div>
-                            <div class="mt-2">{{ cliente.activo ? 'Activo' : 'Inactivo' }}</div>
-                        </div>
-                    </div>
-                    <div class="order-1 sm:order-2 sm:ml-3 xsm:flex-col flex justify-center items-center">
-                        <button
-                            mat-icon-button
-                            aria-label="Créditos"
-                            #tooltip="matTooltip"
-                            matTooltip="Créditos"
-                            (click)="goToCreditos(cliente.id)"
-                            [matTooltipPosition]="'below'"
-                        >
-                            <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:cash'"></mat-icon>
-                        </button>
-                        <button
-                            mat-icon-button
-                            aria-label="Editar cliente"
-                            #tooltip="matTooltip"
-                            (click)="editCliente(cliente.id)"
-                            matTooltip="Editar cliente"
-                            [matTooltipPosition]="'below'"
-                        >
-                            <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:clipboard-list'"></mat-icon>
-                        </button>
-                        <button
-                            mat-icon-button
-                            aria-label="Inactivar cliente"
-                            (click)="cliente.activo ? inactivateClient(cliente.id) : activateClient(cliente.id)"
-                            #tooltip="matTooltip"
-                            matTooltip="{{ cliente.activo ? 'Inactivar cliente' : 'Activar cliente' }}"
-                            [matTooltipPosition]="'below'"
-                        >
-                            <mat-icon
-                                class="text-hint"
-                                [svgIcon]="cliente.activo ? 'heroicons_outline:trash' : 'heroicons_outline:badge-check'"
-                            ></mat-icon>
-                        </button>
-                    </div>
-                </div>
-            </ng-container>
-        </div>
+        </ng-container>
     </div>
 </div>

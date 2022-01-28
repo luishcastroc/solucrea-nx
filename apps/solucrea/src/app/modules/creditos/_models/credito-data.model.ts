@@ -9,5 +9,5 @@ export interface ICreditoData {
     numeroDePagos: number;
     comisionPorApertura: number;
     modalidadSeguro: 'diferido' | 'contado' | 'sin seguro';
-    pagos?: Pago[];
+    pagos?: Partial<Pago>[];
 }
