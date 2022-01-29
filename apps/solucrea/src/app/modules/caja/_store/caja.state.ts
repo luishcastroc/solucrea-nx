@@ -128,6 +128,6 @@ export class CajasState {
 
     @Action(ClearCajasState)
     clearCajaState(ctx: StateContext<CajaStateModel>) {
-        ctx.patchState({ cajas: [], sucursales: [], editMode: 'edit', selectedCaja: undefined, loading: false });
+        ctx.patchState({ cajas: [], sucursales: [], editMode: 'new', selectedCaja: undefined, loading: false });
     }
 }

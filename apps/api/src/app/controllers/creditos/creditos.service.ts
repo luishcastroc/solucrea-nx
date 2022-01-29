@@ -79,6 +79,30 @@ export class CreditosService {
                 }
             }
 
+            const saldoInicialCaja = await this.prisma.caja.findFirst({
+                where: {
+                    AND: [{ sucursalId: { equals: data.sucursal.connect.id } }, { fechaCierre: { equals: null } }],
+                },
+                select: { id: true, saldoInicial: true },
+            });
+
+            const movimientos = await this.prisma.movimientoDeCaja.aggregate({
+                where: { cajaId: { equals: saldoInicialCaja.id } },
+                _sum: { monto: true },
+            });
+
+            const saldo = Number(saldoInicialCaja.saldoInicial) - Number(movimientos._sum.monto);
+
+            if (saldo < Number(data.monto)) {
+                throw new HttpException(
+                    {
+                        status: HttpStatus.PRECONDITION_FAILED,
+                        message: `Error no hay suficiente efectivo en sucursal para otorgar el monto $${data.monto} `,
+                    },
+                    HttpStatus.PRECONDITION_FAILED
+                );
+            }
+
             const creditoCreado = await this.prisma.credito.create({ data, select });
 
             if (creditoCreado) {
@@ -93,7 +117,7 @@ export class CreditosService {
                 const movimiento: Prisma.MovimientoDeCajaCreateInput = {
                     monto: creditoCreado.monto,
                     tipo: 'RETIRO',
-                    observaciones: `Préstamo otorgado a ${creditoCreado.cliente.nombre} ${creditoCreado.cliente.apellidoMaterno} ${creditoCreado.cliente.apellidoPaterno}`,
+                    observaciones: `Préstamo otorgado a ${creditoCreado.cliente.nombre} ${creditoCreado.cliente.apellidoPaterno} ${creditoCreado.cliente.apellidoMaterno}`,
                     creadoPor: data.creadoPor,
                     caja: { connect: { id: caja.id } },
                 };

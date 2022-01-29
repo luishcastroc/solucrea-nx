@@ -11,6 +11,7 @@ import { GetAllCreditos } from 'app/modules/ajustes/_store';
 import { CajasMode } from 'app/modules/caja/_store/caja.actions';
 import { ClientesMode } from 'app/modules/clientes/_store/clientes.actions';
 import { Observable, tap } from 'rxjs';
+import { CreditosService } from '../_services/creditos.service';
 
 import { GetClientesCount, GetTurnosCount, ModeCredito } from './../_store/creditos.actions';
 import { CreditosState } from './../_store/creditos.state';
@@ -41,7 +42,8 @@ export class CreditosListComponent implements OnInit {
         private _store: Store,
         private _dialog: MatDialog,
         private _actions$: Actions,
-        private _toast: HotToastService
+        private _toast: HotToastService,
+        private _creditosService: CreditosService
     ) {}
 
     ngOnInit(): void {

@@ -100,7 +100,7 @@ export class CreditosService {
         const seguro =
             modalidadSeguro === 'diferido' ? seguroDiferido : modalidadSeguro === 'contado' ? montoSeguro : 0;
 
-        const saldo = pagos.length > 0 ? sumBy(pagos, (pago) => Number(pago.monto) - intereses) : 0;
+        const saldo = monto - (pagos && pagos.length > 0 ? sumBy(pagos, (pago) => Number(pago.monto) - intereses) : 0);
 
         const details: IDetails = {
             capital,

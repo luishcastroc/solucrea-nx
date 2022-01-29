@@ -68,16 +68,7 @@
                 <div class="flex-auto overflow-y-auto">
                     <ng-container *ngFor="let credito of data.creditosFiltered">
                         <div
-                            class="
-                                z-20
-                                grid grid-cols-1
-                                gap-4
-                                md:grid-cols-[1fr_minmax(auto,_200px)]
-                                px-2
-                                py-4
-                                md:px-10
-                                border-b
-                            "
+                            class="z-20 grid grid-cols-1 gap-4 md:grid-cols-[1fr_minmax(auto,_200px)] px-2 py-4 md:px-10 border-b"
                         >
                             <div class="grid px-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:w-5/6">
                                 <div class="flex flex-col">
@@ -116,70 +107,48 @@
                                     <div class="mt-2">{{ credito.pagos.length }}</div>
                                 </div>
                             </div>
+                            <div class="order-1 sm:order-2 sm:ml-3 xsm:flex-col flex justify-center items-center">
+                                <button
+                                    mat-icon-button
+                                    aria-label="Pagos"
+                                    #tooltip="matTooltip"
+                                    matTooltip="Pagos"
+                                    [matTooltipPosition]="'below'"
+                                >
+                                    <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:cash'"></mat-icon>
+                                </button>
+                                <button
+                                    mat-icon-button
+                                    aria-label="Detalle"
+                                    #tooltip="matTooltip"
+                                    matTooltip="Detalle"
+                                    [matTooltipPosition]="'below'"
+                                >
+                                    <mat-icon
+                                        class="text-hint"
+                                        [svgIcon]="'heroicons_outline:clipboard-list'"
+                                    ></mat-icon>
+                                </button>
+                                <button
+                                    mat-icon-button
+                                    aria-label="Inactivar Credito"
+                                    #tooltip="matTooltip"
+                                    matTooltip="{{
+                                        credito.status === 'ABIERTO' ? 'Inactivar Credito' : 'Activar Credito'
+                                    }}"
+                                    [matTooltipPosition]="'below'"
+                                >
+                                    <mat-icon
+                                        class="text-hint"
+                                        [svgIcon]="
+                                            credito.status === 'ABIERTO'
+                                                ? 'heroicons_outline:trash'
+                                                : 'heroicons_outline:badge-check'
+                                        "
+                                    ></mat-icon>
+                                </button>
+                            </div>
                         </div>
-                        <!-- <div class="z-20 flex px-8 py-4 md:px-10 border-b justify-between">
-                    <div class="flex gap-6 xsm:flex-wrap sm:flex-wrap">
-                        <div class="flex flex-col">
-                            <div class="font-bold">Nombre:</div>
-                            <div class="mt-2">{{ cliente.nombre }}</div>
-                        </div>
-                        <div class="flex flex-col">
-                            <div class="font-bold">Apellido Paterno:</div>
-                            <div class="mt-2">{{ cliente.apellidoPaterno }}</div>
-                        </div>
-                        <div class="flex flex-col">
-                            <div class="font-bold">Apellido Materno:</div>
-                            <div class="mt-2">{{ cliente.apellidoMaterno }}</div>
-                        </div>
-                        <div class="flex flex-col">
-                            <div class="font-bold">CURP:</div>
-                            <div class="mt-2">{{ cliente.curp }}</div>
-                        </div>
-                        <div class="flex flex-col">
-                            <div class="font-bold">RFC:</div>
-                            <div class="mt-2">{{ cliente.rfc }}</div>
-                        </div>
-                        <div class="flex flex-col">
-                            <div class="font-bold">Estatus:</div>
-                            <div class="mt-2">{{ cliente.activo ? 'Activo' : 'Inactivo' }}</div>
-                        </div>
-                    </div>
-                    <div class="order-1 sm:order-2 sm:ml-3 xsm:flex-col flex justify-center items-center">
-                        <button
-                            mat-icon-button
-                            aria-label="Créditos"
-                            #tooltip="matTooltip"
-                            matTooltip="Créditos"
-                            (click)="goToCreditos(cliente.id)"
-                            [matTooltipPosition]="'below'"
-                        >
-                            <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:cash'"></mat-icon>
-                        </button>
-                        <button
-                            mat-icon-button
-                            aria-label="Editar cliente"
-                            #tooltip="matTooltip"
-                            (click)="editCliente(cliente.id)"
-                            matTooltip="Editar cliente"
-                            [matTooltipPosition]="'below'"
-                        >
-                            <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:clipboard-list'"></mat-icon>
-                        </button>
-                        <button
-                            mat-icon-button
-                            aria-label="Inactivar cliente"
-                            (click)="cliente.activo ? inactivateClient(cliente.id) : activateClient(cliente.id)"
-                            #tooltip="matTooltip"
-                            matTooltip="{{ cliente.activo ? 'Inactivar cliente' : 'Activar cliente' }}"
-                            [matTooltipPosition]="'below'"
-                        >
-                            <mat-icon
-                                class="text-hint"
-                                [svgIcon]="cliente.activo ? 'heroicons_outline:trash' : 'heroicons_outline:badge-check'"
-                            ></mat-icon>
-                        </button>
-                    </div>
-                </div> -->
                     </ng-container>
                 </div>
             </div>
