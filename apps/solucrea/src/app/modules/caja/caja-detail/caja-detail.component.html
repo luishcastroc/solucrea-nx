@@ -94,6 +94,20 @@
                             </mat-error>
                         </ng-container>
                     </div>
+                    <ng-container *ngIf="editMode === 'cierre' || editMode === 'edit'">
+                        <!-- Saldo Final -->
+                        <div>
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Saldo Actual</mat-label>
+                                <mat-icon
+                                    class="icon-size-5"
+                                    [svgIcon]="'heroicons_outline:currency-dollar'"
+                                    matPrefix
+                                ></mat-icon>
+                                <input [formControlName]="'saldoActual'" matInput [inputMask]="currencyInputMask" />
+                            </mat-form-field>
+                        </div>
+                    </ng-container>
                     <ng-container *ngIf="editMode === 'cierre'">
                         <!-- Fecha de Cierre -->
                         <div>

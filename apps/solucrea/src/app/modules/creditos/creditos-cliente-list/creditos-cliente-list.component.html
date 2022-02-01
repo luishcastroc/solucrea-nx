@@ -13,7 +13,7 @@
             } as data"
         >
             <!-- Header -->
-            <div class="flex flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b max-h-56">
+            <div class="flex flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b md:max-h-56">
                 <!-- Title -->
                 <div>
                     <div class="text-4xl font-extrabold tracking-tight leading-none">Créditos del Cliente</div>
@@ -47,11 +47,11 @@
                             />
                         </mat-form-field>
                     </div>
-                    <div class="flex flex-auto flex-row gap-4 items-center">
+                    <div class="flex flex-auto flex-col md:flex-row gap-4 items-center">
                         <!-- Active or Innactive ones -->
                         <mat-radio-group
                             aria-labelledby="radio-group-label"
-                            class="grid grid-cols-4 gap-3"
+                            class="grid grid-cols-4 gap-3 justify-items-center"
                             [(ngModel)]="status"
                             *ngIf="data.creditos.length > 0"
                         >
@@ -108,7 +108,16 @@
                 </mat-card>
                 <ng-container *ngFor="let credito of data.creditosFiltered">
                     <div
-                        class="z-20 grid grid-cols-1 gap-4 md:grid-cols-[1fr_minmax(auto,_200px)] px-2 py-4 md:px-10 border-b"
+                        class="
+                            z-20
+                            grid grid-cols-1
+                            gap-4
+                            md:grid-cols-[1fr_minmax(auto,_200px)]
+                            px-2
+                            py-4
+                            md:px-10
+                            border-b
+                        "
                     >
                         <div class="grid px-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:w-5/6">
                             <div class="flex flex-col">

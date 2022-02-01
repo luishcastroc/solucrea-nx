@@ -80,6 +80,10 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
         return this.cajaForm.controls['saldoFinal'];
     }
 
+    get saldoActual() {
+        return this.cajaForm.controls['saldoActual'];
+    }
+
     ngOnInit(): void {
         this.subscribeToActions();
         this.initializeData(this._route.snapshot.paramMap.get('id'));
@@ -99,6 +103,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
                 this.cajaForm = this.createCajaForm(edit);
 
                 if (edit === 'edit' || edit === 'cierre') {
+                    this.saldoActual.disable();
                     this._store.dispatch(new SelectCaja(id));
                 }
 
@@ -189,6 +194,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
                 fechaApertura: ['', Validators.required, futureDateValidator()],
                 sucursal: ['', Validators.required],
                 observaciones: [''],
+                saldoActual: [''],
             });
         } else {
             return this._formBuilder.group(
@@ -200,6 +206,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
                     observaciones: [''],
                     fechaCierre: ['', Validators.required],
                     saldoFinal: ['', Validators.required],
+                    saldoActual: [''],
                 },
                 { validators: checkIfEndDateBeforeStartDate() }
             );
@@ -214,13 +221,15 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
     saveCaja(editMode: EditMode): void {
         if (editMode === 'new') {
             const fechaApertura = (this.fechaApertura.value as Moment).toISOString();
-            const caja: CreateCajaDto = { ...this.cajaForm.value, fechaApertura };
+            const { saldoActual, ...rest } = this.cajaForm.value;
+            const caja: CreateCajaDto = { ...rest, fechaApertura };
             this._store.dispatch(new AddCaja(caja));
         } else if (editMode === 'edit') {
             let changedCaja = this._shared.getDirtyValues(this.cajaForm);
             if (changedCaja.fechaInicio) {
                 const fechaApertura = (this.fechaApertura.value as Moment).toISOString();
-                changedCaja = { ...changedCaja, fechaApertura };
+                const { saldoActual, ...rest } = changedCaja;
+                changedCaja = { ...rest, fechaApertura };
             }
             this._store.dispatch(new EditCaja(this.id.value, changedCaja));
         } else {

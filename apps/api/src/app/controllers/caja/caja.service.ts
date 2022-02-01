@@ -1,10 +1,12 @@
+import { Caja } from '.prisma/client';
 /* eslint-disable @typescript-eslint/naming-convention */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { CreateCajaDto, ICajaReturnDto } from 'api/dtos';
-import { isEmpty } from 'lodash';
+import { isEmpty, sumBy } from 'lodash';
 
 import { PrismaService } from 'api/prisma';
+import { UtilService } from 'api/util';
 
 @Injectable()
 export class CajaService {
@@ -16,9 +18,10 @@ export class CajaService {
         fechaCierre: true,
         creadoPor: true,
         sucursal: { select: { id: true, nombre: true } },
+        movimientos: { select: { id: true, monto: true, tipo: true, observaciones: true } },
     };
 
-    constructor(private prisma: PrismaService) {}
+    constructor(private prisma: PrismaService, private utilService: UtilService) {}
 
     async caja(cajaWhereUniqueInput: Prisma.CajaWhereUniqueInput): Promise<ICajaReturnDto | null> {
         const cajaReturn = await this.prisma.caja.findUnique({
@@ -32,17 +35,32 @@ export class CajaService {
                 HttpStatus.NOT_FOUND
             );
         }
-        return cajaReturn;
+
+        const saldoActual = this.utilService.getSaldoActual(cajaReturn);
+
+        const caja: ICajaReturnDto = { ...cajaReturn, saldoActual };
+
+        return caja;
     }
 
     async cajas(): Promise<ICajaReturnDto[]> {
         try {
-            return this.prisma.caja.findMany({
+            const cajas = await this.prisma.caja.findMany({
                 select: this.select,
                 where: {
                     fechaCierre: { equals: null },
                 },
             });
+
+            let cajasReturn;
+            if (cajas.length > 0) {
+                cajasReturn = cajas.map((caja) => {
+                    const saldoActual = this.utilService.getSaldoActual(caja);
+                    return { ...caja, saldoActual };
+                });
+            }
+
+            return cajasReturn;
         } catch {
             throw new HttpException(
                 { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error consultando las cajas' },

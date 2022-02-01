@@ -252,7 +252,7 @@
                                         [svgIcon]="'heroicons_outline:office-building'"
                                         matPrefix
                                     ></mat-icon>
-                                    <input [formControlName]="'creditosActivos'" matInput />
+                                    <input [formControlName]="'creditosActivos'" matInput type="number" />
                                 </mat-form-field>
                                 <ng-container *ngIf="creditosActivos.touched">
                                     <mat-error *ngIf="creditosActivos.errors?.required">

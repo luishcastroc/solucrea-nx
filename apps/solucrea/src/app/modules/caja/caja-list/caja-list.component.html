@@ -41,18 +41,27 @@
                             "
                         >
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 w-full">
+                                <!-- Fecha de Apertura -->
                                 <div class="flex flex-col">
                                     <div class="font-bold">Fecha Apertura:</div>
                                     <div class="mt-2">{{ caja.fechaApertura | date }}</div>
                                 </div>
+                                <!-- Saldo Inicial -->
                                 <div class="flex flex-col flex-auto">
                                     <div class="font-bold">Saldo Inicial:</div>
                                     <div class="mt-2">{{ caja.saldoInicial | currency: 'MXN':'symbol':'4.2-2' }}</div>
                                 </div>
+                                <!-- Saldo Actual -->
+                                <div class="flex flex-col flex-auto">
+                                    <div class="font-bold">Saldo Actual:</div>
+                                    <div class="mt-2">{{ caja.saldoActual | currency: 'MXN':'symbol':'4.2-2' }}</div>
+                                </div>
+                                <!-- Sucursal -->
                                 <div class="flex flex-col">
                                     <div class="font-bold">Sucursal:</div>
                                     <div class="mt-2">{{ caja.sucursal?.nombre }}</div>
                                 </div>
+                                <!-- Observaciones -->
                                 <div class="flex flex-col">
                                     <div class="font-bold">Observaciones:</div>
                                     <div class="mt-2">{{ caja.observaciones ? caja.observaciones : 'Ninguna' }}</div>

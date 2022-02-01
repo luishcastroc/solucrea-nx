@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { ICreditoReturnDto } from 'api/dtos';
+import { ICajaReturnDto, ICreditoReturnDto } from 'api/dtos';
 import { PrismaService } from 'api/prisma';
-import { selectCredito } from 'api/util';
+import { selectCredito, UtilService } from 'api/util';
 
 @Injectable()
 export class CreditosService {
-    constructor(private prisma: PrismaService) {}
+    constructor(private prisma: PrismaService, private utilService: UtilService) {}
 
     async creditosCliente(clienteId: string): Promise<ICreditoReturnDto[] | null> {
         try {
@@ -79,25 +79,34 @@ export class CreditosService {
                 }
             }
 
-            const saldoInicialCaja = await this.prisma.caja.findFirst({
+            const saldoInicialCaja: Partial<ICajaReturnDto> = await this.prisma.caja.findFirst({
                 where: {
                     AND: [{ sucursalId: { equals: data.sucursal.connect.id } }, { fechaCierre: { equals: null } }],
                 },
-                select: { id: true, saldoInicial: true },
+                select: {
+                    id: true,
+                    saldoInicial: true,
+                    movimientos: { select: { monto: true, tipo: true, observaciones: true } },
+                },
             });
 
-            const movimientos = await this.prisma.movimientoDeCaja.aggregate({
-                where: { cajaId: { equals: saldoInicialCaja.id } },
-                _sum: { monto: true },
-            });
+            if (!saldoInicialCaja) {
+                throw new HttpException(
+                    {
+                        status: HttpStatus.PRECONDITION_FAILED,
+                        message: `Error no hay un turno abierto para otorgar el monto $${data.monto}, verificar. `,
+                    },
+                    HttpStatus.PRECONDITION_FAILED
+                );
+            }
 
-            const saldo = Number(saldoInicialCaja.saldoInicial) - Number(movimientos._sum.monto);
+            const saldo = this.utilService.getSaldoActual(saldoInicialCaja);
 
             if (saldo < Number(data.monto)) {
                 throw new HttpException(
                     {
                         status: HttpStatus.PRECONDITION_FAILED,
-                        message: `Error no hay suficiente efectivo en sucursal para otorgar el monto $${data.monto} `,
+                        message: `Error no hay suficiente efectivo en sucursal para otorgar el monto $${data.monto}, verificar. `,
                     },
                     HttpStatus.PRECONDITION_FAILED
                 );
@@ -130,14 +139,14 @@ export class CreditosService {
                     throw new HttpException(
                         {
                             status: HttpStatus.INTERNAL_SERVER_ERROR,
-                            message: `Error generando el retiro para el crédito ${creditoCreado.id} verificar`,
+                            message: `Error generando el retiro para el crédito ${creditoCreado.id}, verificar.`,
                         },
                         HttpStatus.INTERNAL_SERVER_ERROR
                     );
                 }
             } else {
                 throw new HttpException(
-                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando crédito, verificar' },
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando crédito, verificar.' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             }
@@ -145,7 +154,7 @@ export class CreditosService {
             console.log('error: ', e);
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
-                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando el nuevo crédito' },
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando el nuevo crédito, verificar.' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {

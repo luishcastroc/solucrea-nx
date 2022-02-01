@@ -1,5 +1,5 @@
 import { Decimal } from '@prisma/client/runtime';
-import { Sucursal } from '@prisma/client';
+import { MovimientoDeCaja, Sucursal } from '@prisma/client';
 export interface ICajaReturnDto {
     id: string;
     saldoInicial: Decimal;
@@ -9,4 +9,5 @@ export interface ICajaReturnDto {
     creadoPor: string;
     sucursal: Partial<Sucursal>;
     saldoActual?: number;
+    movimientos?: Partial<MovimientoDeCaja>[];
 }

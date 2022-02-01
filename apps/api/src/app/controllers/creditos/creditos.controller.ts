@@ -32,7 +32,6 @@ export class CreditosController {
         data.creadoPor = creadoPor;
         data.status = 'ABIERTO';
         data.aval.create.creadoPor = creadoPor;
-        console.log(data);
         return this.creditosService.createCredito(data);
     }
 }
