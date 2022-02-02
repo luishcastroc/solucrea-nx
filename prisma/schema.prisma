@@ -473,6 +473,10 @@ model Credito {
     fechaFinal          DateTime
     fechaLiquidacion    DateTime?
     monto               Decimal           @db.Decimal(15, 2)
+    cuota               Decimal           @db.Decimal(15, 2)
+    cuotaCapital        Decimal           @db.Decimal(15, 2)
+    cuotaInteres        Decimal           @db.Decimal(15, 2)
+    cuotaSeguro         Decimal           @db.Decimal(15, 2)
     producto            Producto          @relation(fields: [productosId], references: [id])
     seguro              Seguro?           @relation(fields: [segurosId], references: [id])
     modalidadDeSeguro   ModalidadDeSeguro @relation(fields: [modalidadDeSeguroId], references: [id])
@@ -483,6 +487,7 @@ model Credito {
     status              Status
     referidoPor         ReferidoPor
     colocador           Colocador         @relation(fields: [colocadorId], references: [id])
+    saldo               Decimal?
     creadoPor           String
     fechaCreacion       DateTime          @default(now())
     actualizadoPor      String            @default("ADMIN")

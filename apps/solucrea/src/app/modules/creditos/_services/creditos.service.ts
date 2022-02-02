@@ -92,19 +92,19 @@ export class CreditosService {
         const { tasaInteres, monto, montoSeguro, numeroDePagos, comisionPorApertura, modalidadSeguro, pagos } = data;
 
         const capital = monto / numeroDePagos;
-        const intereses = capital * (tasaInteres / 100);
+        const interes = capital * (tasaInteres / 100);
         const seguroDiferido = modalidadSeguro === 'diferido' ? montoSeguro / numeroDePagos : 0;
-        const cuota = capital + intereses + seguroDiferido;
+        const cuota = capital + interes + seguroDiferido;
         const apertura = comisionPorApertura ? monto * (comisionPorApertura / 100) : 0;
         const total = apertura + (modalidadSeguro === 'contado' ? montoSeguro : 0);
         const seguro =
             modalidadSeguro === 'diferido' ? seguroDiferido : modalidadSeguro === 'contado' ? montoSeguro : 0;
 
-        const saldo = monto - (pagos && pagos.length > 0 ? sumBy(pagos, (pago) => Number(pago.monto) - intereses) : 0);
+        const saldo = monto - (pagos && pagos.length > 0 ? sumBy(pagos, (pago) => Number(pago.monto) - interes) : 0);
 
         const details: IDetails = {
             capital,
-            interes: intereses,
+            interes,
             cuota,
             apertura,
             total,

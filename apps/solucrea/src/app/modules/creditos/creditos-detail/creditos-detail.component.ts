@@ -126,6 +126,22 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
         return this.creditosForm.get('monto') as FormControl;
     }
 
+    get cuota() {
+        return this.creditosForm.get('cuota') as FormControl;
+    }
+
+    get cuotaCapital() {
+        return this.creditosForm.get('cuotaCapital') as FormControl;
+    }
+
+    get cuotaInteres() {
+        return this.creditosForm.get('cuotaInteres') as FormControl;
+    }
+
+    get cuotaSeguro() {
+        return this.creditosForm.get('cuotaSeguro') as FormControl;
+    }
+
     get status() {
         return this.creditosForm.get('status') as FormControl;
     }
@@ -399,6 +415,10 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
             fechaInicio: ['', Validators.required],
             fechaFinal: [null, Validators.required],
             monto: ['', Validators.required],
+            cuota: [''],
+            cuotaCapital: [''],
+            cuotaInteres: [''],
+            cuotaSeguro: [''],
             cliente: [null, Validators.required],
             sucursal: [null, Validators.required],
             producto: [null, Validators.required],
@@ -487,6 +507,10 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
             };
 
             this.resumenOperacion = this._creditosService.calculateDetails(data);
+            this.cuota.setValue(this.resumenOperacion.cuota);
+            this.cuotaCapital.setValue(this.resumenOperacion.capital);
+            this.cuotaInteres.setValue(this.resumenOperacion.interes);
+            this.cuotaSeguro.setValue(modalidadDeSeguro.includes('Diferido') ? this.resumenOperacion.seguro : 0);
             console.log(this.resumenOperacion);
         }
     }

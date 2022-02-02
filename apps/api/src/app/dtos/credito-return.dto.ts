@@ -22,6 +22,11 @@ export interface ICreditoReturnDto {
     modalidadDeSeguro: Partial<ModalidadDeSeguro>;
     aval: Partial<IAvalReturnDto>;
     pagos: Partial<Pago>[];
+    cuota: Decimal | number | string;
+    cuotaCapital: Decimal | number | string;
+    cuotaInteres: Decimal | number | string;
+    cuotaSeguro: Decimal | number | string;
+    saldo?: Decimal | number | string;
 }
 
 export interface ICreditoClienteReturnDto {
