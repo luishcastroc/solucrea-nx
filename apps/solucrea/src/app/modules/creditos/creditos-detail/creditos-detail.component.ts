@@ -480,6 +480,7 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
     desembolsar(): void {
         const creditosData = this._creditosService.prepareCreditoRecord(this.creditosForm);
         console.log(creditosData);
+        this.creditosForm.disable();
         this._store.dispatch(new CreateCredito(creditosData));
     }
 

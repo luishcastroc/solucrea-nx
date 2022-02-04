@@ -224,6 +224,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
             const { saldoActual, ...rest } = this.cajaForm.value;
             const caja: CreateCajaDto = { ...rest, fechaApertura };
             this._store.dispatch(new AddCaja(caja));
+            this.cajaForm.disable();
         } else if (editMode === 'edit') {
             let changedCaja = this._shared.getDirtyValues(this.cajaForm);
             if (changedCaja.fechaInicio) {

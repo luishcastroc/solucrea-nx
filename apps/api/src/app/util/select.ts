@@ -58,6 +58,10 @@ export const selectCredito = {
     fechaFinal: true,
     fechaLiquidacion: true,
     monto: true,
+    cuota: true,
+    cuotaCapital: true,
+    cuotaInteres: true,
+    cuotaSeguro: true,
     status: true,
     sucursal: { select: { id: true, nombre: true } },
     producto: {
