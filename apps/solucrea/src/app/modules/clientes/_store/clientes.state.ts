@@ -44,7 +44,7 @@ export class ClientesState {
     }
 
     @Selector()
-    static selectedCliente({ selectedCliente }: ClientesStateModel): IClienteReturnDto {
+    static selectedCliente({ selectedCliente }: ClientesStateModel): IClienteReturnDto | undefined {
         return selectedCliente;
     }
 
@@ -54,7 +54,7 @@ export class ClientesState {
     }
 
     @Selector()
-    static config({ config }: ClientesStateModel): IConfig {
+    static config({ config }: ClientesStateModel): IConfig | undefined {
         return config;
     }
 
@@ -71,7 +71,7 @@ export class ClientesState {
     @Selector()
     static selectedActividadEconomica({
         selectedActividadEconomica,
-    }: ClientesStateModel): IActividadEconomicaReturnDto {
+    }: ClientesStateModel): IActividadEconomicaReturnDto | undefined {
         return selectedActividadEconomica;
     }
 

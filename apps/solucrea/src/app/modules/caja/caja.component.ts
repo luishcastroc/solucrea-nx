@@ -1,9 +1,10 @@
-import { Subject, takeUntil } from 'rxjs';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
-import { ClearCajasState } from './_store/caja.actions';
-import { Component, OnDestroy, OnInit, ViewEncapsulation, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { Store } from '@ngxs/store';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
+import { Store } from '@ngxs/store';
+import { Subject, takeUntil } from 'rxjs';
+
+import { ClearCajasState } from 'app/modules/caja/_store';
 
 @Component({
     selector: 'app-caja',

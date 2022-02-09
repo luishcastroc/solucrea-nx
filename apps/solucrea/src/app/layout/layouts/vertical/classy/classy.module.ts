@@ -6,7 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
 import { FuseNavigationModule } from '@fuse/components/navigation';
-import { SearchModule } from 'app/layout/common/search/search.module';
 import { UserMenuModule } from 'app/layout/common/user-menu/user-menu.module';
 import { ClassyLayoutComponent } from 'app/layout/layouts/vertical/classy/classy.component';
 import { SharedModule } from 'app/shared/shared.module';
@@ -21,7 +20,6 @@ import { SharedModule } from 'app/shared/shared.module';
         MatIconModule,
         MatMenuModule,
         FuseNavigationModule,
-        SearchModule,
         UserMenuModule,
         SharedModule,
     ],

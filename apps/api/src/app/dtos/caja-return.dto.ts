@@ -10,4 +10,5 @@ export interface ICajaReturnDto {
     sucursal: Partial<Sucursal>;
     saldoActual?: number;
     movimientos?: Partial<MovimientoDeCaja>[];
+    observaciones: string;
 }

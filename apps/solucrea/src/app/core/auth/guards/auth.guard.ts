@@ -21,8 +21,8 @@ import { AuthState } from '../store/auth.state';
     providedIn: 'root',
 })
 export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
-    @Select(AuthState.isAuthenticated) isAuthenticated$: Observable<boolean>;
-    @Select(AuthState.user) user$: Observable<Usuario>;
+    @Select(AuthState.isAuthenticated) isAuthenticated$!: Observable<boolean>;
+    @Select(AuthState.user) user$!: Observable<Usuario>;
     /**
      * Constructor
      */
@@ -43,7 +43,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
         state: RouterStateSnapshot
     ): Observable<boolean> | Promise<boolean> | boolean {
         const redirectUrl = state.url === '/sign-out' ? '/' : state.url;
-        return this._check(redirectUrl, route.data.roles);
+        return this._check(redirectUrl, route.data['roles']);
     }
 
     /**
@@ -57,7 +57,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
         state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         const redirectUrl = state.url === '/sign-out' ? '/' : state.url;
-        return this._check(redirectUrl, childRoute.data.roles);
+        return this._check(redirectUrl, childRoute.data['roles']);
     }
 
     /**
@@ -67,7 +67,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
      * @param segments
      */
     canLoad(route: Route, segments: UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean {
-        return this._check('/', route.data.roles);
+        return this._check('/', route.data ? route.data['roles'] : null);
     }
 
     // -----------------------------------------------------------------------------------------------------

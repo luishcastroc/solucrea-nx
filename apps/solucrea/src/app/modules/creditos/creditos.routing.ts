@@ -1,5 +1,5 @@
 import { Route } from '@angular/router';
-import { DataCheckGuard } from 'app/core/auth/guards/data-check.guard';
+import { DataCheckGuard } from 'app/core/auth/guards';
 import { CreditosClienteListComponent } from './creditos-cliente-list/creditos-cliente-list.component';
 import { CreditosDetailComponent } from './creditos-detail/creditos-detail.component';
 import { CreditosListComponent } from './creditos-list/creditos-list.component';

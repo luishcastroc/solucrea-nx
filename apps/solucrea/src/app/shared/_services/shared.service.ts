@@ -13,7 +13,7 @@ export class SharedService {
      */
     getDirtyValues(form: any): any {
         const dirtyValues = {};
-        let prevId: string = null;
+        let prevId: string = '';
 
         Object.keys(form.controls).forEach((key) => {
             const currentControl = form.controls[key];

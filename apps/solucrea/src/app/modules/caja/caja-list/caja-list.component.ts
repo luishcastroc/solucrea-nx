@@ -5,9 +5,7 @@ import { ICajaReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { Observable } from 'rxjs';
 
-import { GetAll } from '../_store/caja.actions';
-import { CajasState } from '../_store/caja.state';
-import { CajasMode } from './../_store/caja.actions';
+import { CajasMode, CajasState, GetAll } from 'app/modules/caja/_store';
 
 @Component({
     selector: 'app-caja-list',
@@ -16,7 +14,8 @@ import { CajasMode } from './../_store/caja.actions';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CajaListComponent implements OnInit {
-    @Select(CajasState.cajas) cajas$: Observable<ICajaReturnDto[]>;
+    @Select(CajasState.cajas)
+    cajas$!: Observable<ICajaReturnDto[]>;
 
     constructor(private _store: Store) {}
 

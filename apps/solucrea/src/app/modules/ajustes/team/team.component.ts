@@ -14,8 +14,8 @@ import { SelectUsuario } from 'app/modules/ajustes/_store';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AjustesTeamComponent implements OnInit, OnDestroy {
-    @Select(AuthState.user) usuario$: Observable<Usuario>;
-    usuario: Usuario;
+    @Select(AuthState.user) usuario$!: Observable<Usuario | undefined>;
+    usuario: Usuario | undefined;
     private _unsubscribeAll: Subject<any>;
     /**
      * Constructor
@@ -32,7 +32,7 @@ export class AjustesTeamComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-        this.usuario$.pipe(takeUntil(this._unsubscribeAll)).subscribe((usuario: Usuario) => {
+        this.usuario$.pipe(takeUntil(this._unsubscribeAll)).subscribe((usuario: Usuario | undefined) => {
             if (usuario) {
                 this.usuario = usuario;
             }

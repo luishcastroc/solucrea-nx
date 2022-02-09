@@ -21,15 +21,15 @@ import { createPasswordStrengthValidator } from '../../validators/custom-ajustes
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TeamDetailsComponent implements OnInit, OnDestroy {
-    editMode$: Observable<EditMode>;
-    selectedUsuario$: Observable<Usuario>;
-    successToast$: Observable<HotToastClose>;
-    actions$: Actions;
-    editMode: EditMode;
-    selectedUsuario: Usuario;
-    usuarioForm: FormGroup;
-    successMessage: string;
-    errorMessage: string;
+    editMode$!: Observable<EditMode>;
+    selectedUsuario$!: Observable<Usuario | undefined>;
+    successToast$!: Observable<HotToastClose>;
+    actions$!: Actions;
+    editMode!: EditMode;
+    selectedUsuario!: Usuario | undefined;
+    usuarioForm!: FormGroup;
+    successMessage!: string;
+    errorMessage!: string;
     roles: IRole[] = defaultRoles;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -84,10 +84,12 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
                 this.editMode = edit;
 
                 this.selectedUsuario$ = this._store.select(AjustesUsuariosState.selectedUsuario).pipe(
-                    tap((usuario: Usuario) => {
+                    tap((usuario: Usuario | undefined) => {
                         if ((usuario && edit === 'edit') || edit === 'password') {
                             this.selectedUsuario = usuario;
-                            this.usuarioForm.patchValue(this.selectedUsuario);
+                            if (this.selectedUsuario) {
+                                this.usuarioForm.patchValue(this.selectedUsuario);
+                            }
                         }
                     })
                 );
@@ -179,7 +181,9 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
             usuario = { ...this.selectedUsuario, password };
         }
 
-        this._store.dispatch(new EditUsuario(this.selectedUsuario.id, usuario));
+        if (this.selectedUsuario) {
+            this._store.dispatch(new EditUsuario(this.selectedUsuario.id, usuario));
+        }
     }
 
     /**

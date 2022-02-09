@@ -5,14 +5,15 @@ import { Usuario } from '@prisma/client';
 import { InitialData } from 'app/app.types';
 import { forkJoin, map, Observable, of } from 'rxjs';
 
-import { AuthState } from './core/auth/store/auth.state';
-import { defaultNavigation } from './core/config/app.config';
+import { AuthState } from 'app/core/auth/store';
+import { defaultNavigation } from 'app/core/config/app.config';
 
 @Injectable({
     providedIn: 'root',
 })
 export class InitialDataResolver implements Resolve<any> {
-    @Select(AuthState.user) user$: Observable<Usuario>;
+    @Select(AuthState.user)
+    user$!: Observable<Usuario>;
     private _navigation = defaultNavigation;
     /**
      * Constructor

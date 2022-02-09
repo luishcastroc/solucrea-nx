@@ -18,11 +18,11 @@ import { Observable, tap } from 'rxjs';
     animations: fuseAnimations,
 })
 export class AjustesAccountComponent implements OnInit {
-    user$: Observable<Usuario>;
-    actions$: Actions;
+    user$!: Observable<Usuario | undefined>;
+    actions$!: Actions;
 
-    accountForm: FormGroup;
-    defaultUser: Usuario;
+    accountForm!: FormGroup;
+    defaultUser!: Usuario;
 
     /**
      * Constructor
@@ -47,7 +47,7 @@ export class AjustesAccountComponent implements OnInit {
         this.createUserForm();
 
         this.user$ = this._store.select(AjustesUsuariosState.selectedUsuario).pipe(
-            tap((user: Usuario) => {
+            tap((user: Usuario | undefined) => {
                 if (user) {
                     this.defaultUser = user;
                     this.accountForm.patchValue(this.defaultUser);

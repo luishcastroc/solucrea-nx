@@ -26,7 +26,7 @@
                                     <input [formControlName]="'nombre'" matInput />
                                 </mat-form-field>
                                 <ng-container *ngIf="nombre.touched">
-                                    <mat-error *ngIf="nombre.errors?.required"> El nombre es requerido. </mat-error>
+                                    <mat-error *ngIf="nombre.errors?.['required']"> El nombre es requerido. </mat-error>
                                 </ng-container>
                             </div>
                             <!-- Teléfono -->
@@ -41,7 +41,9 @@
                                     <input [formControlName]="'telefono'" matInput [inputMask]="phoneInputMask" />
                                 </mat-form-field>
                                 <ng-container *ngIf="telefono.touched">
-                                    <mat-error *ngIf="telefono.errors?.required"> El telefono es requerido. </mat-error>
+                                    <mat-error *ngIf="telefono.errors?.['required']">
+                                        El telefono es requerido.
+                                    </mat-error>
                                 </ng-container>
                             </div>
                         </div>
@@ -70,7 +72,7 @@
                                     />
                                 </mat-form-field>
                                 <ng-container *ngIf="calle.touched">
-                                    <mat-error *ngIf="calle.errors?.required"> La calle es requerida. </mat-error>
+                                    <mat-error *ngIf="calle.errors?.['required']"> La calle es requerida. </mat-error>
                                 </ng-container>
                             </div>
                             <!-- Número -->
@@ -85,7 +87,7 @@
                                     <input matInput formControlName="numero" [placeholder]="'Número'" />
                                 </mat-form-field>
                                 <ng-container *ngIf="numero.touched">
-                                    <mat-error *ngIf="numero.errors?.required"> El numero es requerido. </mat-error>
+                                    <mat-error *ngIf="numero.errors?.['required']"> El numero es requerido. </mat-error>
                                 </ng-container>
                             </div>
                             <!-- Cruzamientos -->
@@ -115,7 +117,9 @@
                                     />
                                 </mat-form-field>
                                 <ng-container *ngIf="cp.touched">
-                                    <mat-error *ngIf="cp.errors?.required"> El Codigo postal es requerido. </mat-error>
+                                    <mat-error *ngIf="cp.errors?.['required']">
+                                        El Codigo postal es requerido.
+                                    </mat-error>
                                 </ng-container>
                             </div>
                             <!-- Estado -->
@@ -156,7 +160,9 @@
                                     </mat-select>
                                 </mat-form-field>
                                 <ng-container *ngIf="colonia.touched">
-                                    <mat-error *ngIf="colonia.errors?.required"> La colonia es requerida. </mat-error>
+                                    <mat-error *ngIf="colonia.errors?.['required']">
+                                        La colonia es requerida.
+                                    </mat-error>
                                 </ng-container>
                             </div>
                         </div>

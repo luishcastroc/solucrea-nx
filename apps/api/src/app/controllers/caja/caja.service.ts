@@ -19,6 +19,7 @@ export class CajaService {
         creadoPor: true,
         sucursal: { select: { id: true, nombre: true } },
         movimientos: { select: { id: true, monto: true, tipo: true, observaciones: true } },
+        observaciones: true,
     };
 
     constructor(private prisma: PrismaService, private utilService: UtilService) {}

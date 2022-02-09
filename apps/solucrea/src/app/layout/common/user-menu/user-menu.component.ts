@@ -24,10 +24,11 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 export class UserMenuComponent implements OnInit, OnDestroy {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     static ngAcceptInputType_showAvatar: BooleanInput;
-    @Select(AuthState.user) user$: Observable<Usuario>;
+    @Select(AuthState.user)
+    user$!: Observable<Usuario | undefined>;
 
     @Input() showAvatar: boolean = true;
-    user: Usuario;
+    user: Usuario | undefined;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -45,7 +46,7 @@ export class UserMenuComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
         // Subscribe to user changes
-        this.user$.pipe(takeUntil(this._unsubscribeAll)).subscribe((user: Usuario) => {
+        this.user$.pipe(takeUntil(this._unsubscribeAll)).subscribe((user: Usuario | undefined) => {
             this.user = user;
 
             // Mark for check

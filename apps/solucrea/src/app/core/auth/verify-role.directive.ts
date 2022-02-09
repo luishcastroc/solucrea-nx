@@ -10,8 +10,8 @@ import { AuthState } from './store/auth.state';
     selector: '[verifyRole]',
 })
 export class VerifyRoleDirective implements OnInit, OnDestroy {
-    roles: Role[];
-    user: Usuario;
+    roles!: Role[];
+    user!: Usuario | undefined;
 
     private _unsubscribeAll: Subject<any>;
 

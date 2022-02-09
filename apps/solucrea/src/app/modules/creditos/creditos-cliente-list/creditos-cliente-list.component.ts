@@ -3,17 +3,22 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
+import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { IClienteReturnDto, ICreditoReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth/auth.utils';
-import { CajasMode } from 'app/modules/caja/_store/caja.actions';
+import { CajasMode } from 'app/modules/caja/_store';
+import {
+    CreditosState,
+    GetAllCreditosCliente,
+    GetClienteData,
+    GetTurnosCount,
+    ModeCredito,
+} from 'app/modules/creditos/_store/';
 import { Observable, tap } from 'rxjs';
 
-import { GetAllCreditosCliente, GetClienteData, GetTurnosCount, ModeCredito } from '../_store/creditos.actions';
-import { CreditosState } from '../_store/creditos.state';
 import { Status } from '.prisma/client';
-import { createMask } from '@ngneat/input-mask';
 
 @Component({
     selector: 'app-creditos-cliente-list',
@@ -21,13 +26,17 @@ import { createMask } from '@ngneat/input-mask';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditosClienteListComponent implements OnInit {
-    @Select(CreditosState.creditosCliente) creditos$: Observable<ICreditoReturnDto[]>;
-    @Select(CreditosState.selectedCliente) cliente$: Observable<IClienteReturnDto>;
-    @Select(CreditosState.loading) loading$: Observable<boolean>;
-    @Select(CreditosState.turnosCount) turnosCount$: Observable<number>;
+    @Select(CreditosState.creditosCliente)
+    creditos$!: Observable<ICreditoReturnDto[]>;
+    @Select(CreditosState.selectedCliente)
+    cliente$!: Observable<IClienteReturnDto>;
+    @Select(CreditosState.loading)
+    loading$!: Observable<boolean>;
+    @Select(CreditosState.turnosCount)
+    turnosCount$!: Observable<number>;
 
-    actions$: Actions;
-    creditosFiltered$: Observable<ICreditoReturnDto[]>;
+    actions$!: Actions;
+    creditosFiltered$!: Observable<ICreditoReturnDto[]>;
     searchInput = new FormControl();
     values = [
         { display: 'Abiertos', value: Status.ABIERTO },
@@ -36,7 +45,7 @@ export class CreditosClienteListComponent implements OnInit {
         { display: 'Mora', value: Status.MORA },
     ];
     status = Status.ABIERTO;
-    clienteId: string;
+    clienteId!: string | null;
     phoneInputMask = createMask({
         mask: '(999)-999-99-99',
         autoUnmask: true,
@@ -52,19 +61,21 @@ export class CreditosClienteListComponent implements OnInit {
 
     ngOnInit(): void {
         this.clienteId = this._route.snapshot.paramMap.get('clienteId');
-        this._store.dispatch([
-            new GetAllCreditosCliente(this.clienteId),
-            new GetTurnosCount(),
-            new GetClienteData(this.clienteId),
-        ]);
+        if (this.clienteId) {
+            this._store.dispatch([
+                new GetAllCreditosCliente(this.clienteId),
+                new GetTurnosCount(),
+                new GetClienteData(this.clienteId),
+            ]);
 
-        this.setActions();
+            this.setActions();
 
-        this.creditosFiltered$ = this._store.select(CreditosState.creditosClienteFiltered).pipe(
-            tap((credito) => {
-                console.log(credito);
-            })
-        );
+            this.creditosFiltered$ = this._store.select(CreditosState.creditosClienteFiltered).pipe(
+                tap((credito) => {
+                    console.log(credito);
+                })
+            );
+        }
     }
 
     /**

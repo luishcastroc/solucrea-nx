@@ -38,8 +38,10 @@
                                                 ></mat-icon>
                                                 <input [formControlName]="'apellidoPaterno'" matInput />
                                             </mat-form-field>
-                                            <ng-container *ngIf="clienteForm.get('apellidoPaterno').touched">
-                                                <mat-error *ngIf="clienteForm.get('apellidoPaterno').errors?.required">
+                                            <ng-container *ngIf="clienteForm.get('apellidoPaterno')?.touched">
+                                                <mat-error
+                                                    *ngIf="clienteForm.get('apellidoPaterno')?.errors?.['required']"
+                                                >
                                                     El Apellido paterno es requerido.
                                                 </mat-error>
                                             </ng-container>
@@ -55,8 +57,10 @@
                                                 ></mat-icon>
                                                 <input [formControlName]="'apellidoMaterno'" matInput />
                                             </mat-form-field>
-                                            <ng-container *ngIf="clienteForm.get('apellidoMaterno').touched">
-                                                <mat-error *ngIf="clienteForm.get('apellidoMaterno').errors?.required">
+                                            <ng-container *ngIf="clienteForm.get('apellidoMaterno')?.touched">
+                                                <mat-error
+                                                    *ngIf="clienteForm.get('apellidoMaterno')?.errors?.['required']"
+                                                >
                                                     El Apellido materno es requerido.
                                                 </mat-error>
                                             </ng-container>
@@ -72,8 +76,8 @@
                                                 ></mat-icon>
                                                 <input [formControlName]="'nombre'" matInput />
                                             </mat-form-field>
-                                            <ng-container *ngIf="clienteForm.get('nombre').touched">
-                                                <mat-error *ngIf="clienteForm.get('nombre').errors?.required">
+                                            <ng-container *ngIf="clienteForm.get('nombre')?.touched">
+                                                <mat-error *ngIf="clienteForm.get('nombre')?.errors?.['required']">
                                                     El Nombre paterno es requerido.
                                                 </mat-error>
                                             </ng-container>
@@ -97,9 +101,9 @@
                                                 </mat-datepicker-toggle>
                                                 <mat-datepicker #birthdayDatepicker></mat-datepicker>
                                             </mat-form-field>
-                                            <ng-container *ngIf="clienteForm.get('fechaDeNacimiento').touched">
+                                            <ng-container *ngIf="clienteForm.get('fechaDeNacimiento')?.touched">
                                                 <mat-error
-                                                    *ngIf="clienteForm.get('fechaDeNacimiento').errors?.required"
+                                                    *ngIf="clienteForm.get('fechaDeNacimiento')?.errors?.['required']"
                                                 >
                                                     La fecha de nacimiento es requerida.
                                                 </mat-error>
@@ -122,8 +126,8 @@
                                                     >
                                                 </mat-select>
                                             </mat-form-field>
-                                            <ng-container *ngIf="clienteForm.get('genero').touched">
-                                                <mat-error *ngIf="clienteForm.get('genero').errors?.required">
+                                            <ng-container *ngIf="clienteForm.get('genero')?.touched">
+                                                <mat-error *ngIf="clienteForm.get('genero')?.errors?.['required']">
                                                     el Genero es requerido.
                                                 </mat-error>
                                             </ng-container>
@@ -145,8 +149,8 @@
                                                     >
                                                 </mat-select>
                                             </mat-form-field>
-                                            <ng-container *ngIf="clienteForm.get('estadoCivil').touched">
-                                                <mat-error *ngIf="clienteForm.get('estadoCivil').errors?.required">
+                                            <ng-container *ngIf="clienteForm.get('estadoCivil')?.touched">
+                                                <mat-error *ngIf="clienteForm.get('estadoCivil')?.errors?.['required']">
                                                     El estado civil es requerido.
                                                 </mat-error>
                                             </ng-container>
@@ -168,8 +172,10 @@
                                                     >
                                                 </mat-select>
                                             </mat-form-field>
-                                            <ng-container *ngIf="clienteForm.get('tipoDeVivienda').touched">
-                                                <mat-error *ngIf="clienteForm.get('tipoDeVivienda').errors?.required">
+                                            <ng-container *ngIf="clienteForm.get('tipoDeVivienda')?.touched">
+                                                <mat-error
+                                                    *ngIf="clienteForm.get('tipoDeVivienda')?.errors?.['required']"
+                                                >
                                                     El tipo de vivienda es requerido.
                                                 </mat-error>
                                             </ng-container>
@@ -191,8 +197,8 @@
                                                     >
                                                 </mat-select>
                                             </mat-form-field>
-                                            <ng-container *ngIf="clienteForm.get('escolaridad').touched">
-                                                <mat-error *ngIf="clienteForm.get('escolaridad').errors?.required">
+                                            <ng-container *ngIf="clienteForm.get('escolaridad')?.touched">
+                                                <mat-error *ngIf="clienteForm.get('escolaridad')?.errors?.['required']">
                                                     La escolaridad es requerida.
                                                 </mat-error>
                                             </ng-container>
@@ -208,8 +214,8 @@
                                                 ></mat-icon>
                                                 <input [formControlName]="'curp'" matInput />
                                             </mat-form-field>
-                                            <ng-container *ngIf="clienteForm.get('curp').touched">
-                                                <mat-error *ngIf="clienteForm.get('curp').errors?.required">
+                                            <ng-container *ngIf="clienteForm.get('curp')?.touched">
+                                                <mat-error *ngIf="clienteForm.get('curp')?.errors?.['required']">
                                                     El CURP es requerido.
                                                 </mat-error>
                                             </ng-container>
@@ -225,8 +231,8 @@
                                                 ></mat-icon>
                                                 <input [formControlName]="'rfc'" matInput />
                                             </mat-form-field>
-                                            <ng-container *ngIf="clienteForm.get('rfc').touched">
-                                                <mat-error *ngIf="clienteForm.get('rfc').errors?.required">
+                                            <ng-container *ngIf="clienteForm.get('rfc')?.touched">
+                                                <mat-error *ngIf="clienteForm.get('rfc')?.errors?.['required']">
                                                     El RFC es requerido.
                                                 </mat-error>
                                             </ng-container>
@@ -246,8 +252,8 @@
                                                     [inputMask]="phoneInputMask"
                                                 />
                                             </mat-form-field>
-                                            <ng-container *ngIf="clienteForm.get('telefono1').touched">
-                                                <mat-error *ngIf="clienteForm.get('telefono1').errors?.required">
+                                            <ng-container *ngIf="clienteForm.get('telefono1')?.touched">
+                                                <mat-error *ngIf="clienteForm.get('telefono1')?.errors?.['required']">
                                                     El telefono es requerido.
                                                 </mat-error>
                                             </ng-container>
@@ -268,15 +274,7 @@
                                         </mat-form-field>
                                     </div>
                                     <h3
-                                        class="
-                                            text-3xl
-                                            font-extrabold
-                                            tracking-tight
-                                            leading-none
-                                            flex-auto
-                                            w-full
-                                            mt-4
-                                        "
+                                        class="text-3xl font-extrabold tracking-tight leading-none flex-auto w-full mt-4"
                                     >
                                         Direcciones
                                     </h3>
@@ -309,8 +307,10 @@
                                                                 [spellcheck]="false"
                                                             />
                                                         </mat-form-field>
-                                                        <ng-container *ngIf="direccion.get('calle').touched">
-                                                            <mat-error *ngIf="direccion.get('calle').errors?.required">
+                                                        <ng-container *ngIf="direccion.get('calle')?.touched">
+                                                            <mat-error
+                                                                *ngIf="direccion.get('calle')?.errors?.['required']"
+                                                            >
                                                                 La calle es requerida.
                                                             </mat-error>
                                                         </ng-container>
@@ -330,8 +330,10 @@
                                                                 [placeholder]="'Número'"
                                                             />
                                                         </mat-form-field>
-                                                        <ng-container *ngIf="direccion.get('numero').touched">
-                                                            <mat-error *ngIf="direccion.get('numero').errors?.required">
+                                                        <ng-container *ngIf="direccion.get('numero')?.touched">
+                                                            <mat-error
+                                                                *ngIf="direccion.get('numero')?.errors?.['required']"
+                                                            >
                                                                 El numero es requerido.
                                                             </mat-error>
                                                         </ng-container>
@@ -367,16 +369,16 @@
                                                                 [placeholder]="'Código Postal'"
                                                                 (change)="
                                                                     getColonias(
-                                                                        direccion.get('codigoPostal').value,
+                                                                        direccion.get('codigoPostal')?.value,
                                                                         i,
                                                                         'CLIENTE'
                                                                     )
                                                                 "
                                                             />
                                                         </mat-form-field>
-                                                        <ng-container *ngIf="direccion.get('codigoPostal').touched">
+                                                        <ng-container *ngIf="direccion.get('codigoPostal')?.touched">
                                                             <mat-error
-                                                                *ngIf="direccion.get('codigoPostal').errors?.required"
+                                                                *ngIf="direccion.get('codigoPostal')?.errors?.['required']"
                                                             >
                                                                 El codigo postal es requerido.
                                                             </mat-error>
@@ -429,16 +431,16 @@
                                                             >
                                                                 <mat-option
                                                                     *ngFor="
-                                                                        let colonia of ubicacion[i]?.ubicacion.colonias
+                                                                        let colonia of ubicacion[i]?.ubicacion?.colonias
                                                                     "
                                                                     [value]="colonia.id"
                                                                     >{{ colonia.descripcion }}</mat-option
                                                                 >
                                                             </mat-select>
                                                         </mat-form-field>
-                                                        <ng-container *ngIf="direccion.get('colonia').touched">
+                                                        <ng-container *ngIf="direccion.get('colonia')?.touched">
                                                             <mat-error
-                                                                *ngIf="direccion.get('colonia').errors?.required"
+                                                                *ngIf="direccion.get('colonia')?.errors?.['required']"
                                                             >
                                                                 La colonia es requerida.
                                                             </mat-error>
@@ -450,7 +452,7 @@
                                                     <button
                                                         class="w-8 h-8 min-h-8 self-center justify-self-center"
                                                         mat-icon-button
-                                                        (click)="removeDireccionesField(i, direccion.get('id').value)"
+                                                        (click)="removeDireccionesField(i, direccion.get('id')?.value)"
                                                         matTooltip="Borrar"
                                                         [ngClass]="{ 'mt-6': first }"
                                                     >
@@ -465,17 +467,7 @@
                                     </div>
                                     <div class="w-full flex-auto">
                                         <div
-                                            class="
-                                                group
-                                                inline-flex
-                                                items-center
-                                                mt-2
-                                                -ml-4
-                                                py-2
-                                                px-4
-                                                rounded
-                                                cursor-pointer
-                                            "
+                                            class="group inline-flex items-center mt-2 -ml-4 py-2 px-4 rounded cursor-pointer"
                                             (click)="addDireccionesField()"
                                         >
                                             <mat-icon
@@ -534,8 +526,8 @@
                                                     ></mat-icon>
                                                     <input [formControlName]="'nombre'" matInput />
                                                 </mat-form-field>
-                                                <ng-container *ngIf="trabajoForm.get('nombre').touched">
-                                                    <mat-error *ngIf="trabajoForm.get('nombre').errors?.required">
+                                                <ng-container *ngIf="trabajoForm.get('nombre')?.touched">
+                                                    <mat-error *ngIf="trabajoForm.get('nombre')?.errors?.['required']">
                                                         La calle es requerida.
                                                     </mat-error>
                                                 </ng-container>
@@ -555,8 +547,10 @@
                                                         [inputMask]="phoneInputMask"
                                                     />
                                                 </mat-form-field>
-                                                <ng-container *ngIf="trabajoForm.get('telefono').touched">
-                                                    <mat-error *ngIf="trabajoForm.get('telefono').errors?.required">
+                                                <ng-container *ngIf="trabajoForm.get('telefono')?.touched">
+                                                    <mat-error
+                                                        *ngIf="trabajoForm.get('telefono')?.errors?.['required']"
+                                                    >
                                                         El telefono es requerido.
                                                     </mat-error>
                                                 </ng-container>
@@ -572,8 +566,10 @@
                                                     ></mat-icon>
                                                     <input [formControlName]="'antiguedad'" matInput type="number" />
                                                 </mat-form-field>
-                                                <ng-container *ngIf="trabajoForm.get('antiguedad').touched">
-                                                    <mat-error *ngIf="trabajoForm.get('antiguedad').errors?.required">
+                                                <ng-container *ngIf="trabajoForm.get('antiguedad')?.touched">
+                                                    <mat-error
+                                                        *ngIf="trabajoForm.get('antiguedad')?.errors?.['required']"
+                                                    >
                                                         La antiguedad es requerida.
                                                     </mat-error>
                                                 </ng-container>
@@ -602,9 +598,9 @@
                                                         >
                                                     </mat-select>
                                                 </mat-form-field>
-                                                <ng-container *ngIf="trabajoForm.get('actividadEconomica').touched">
+                                                <ng-container *ngIf="trabajoForm.get('actividadEconomica')?.touched">
                                                     <mat-error
-                                                        *ngIf="trabajoForm.get('actividadEconomica').errors?.required"
+                                                        *ngIf="trabajoForm.get('actividadEconomica')?.errors?.['required']"
                                                     >
                                                         La actividad economica es requerida.
                                                     </mat-error>
@@ -612,28 +608,13 @@
                                             </div>
                                         </div>
                                         <h3
-                                            class="
-                                                text-3xl
-                                                font-extrabold
-                                                tracking-tight
-                                                leading-none
-                                                flex-auto
-                                                w-full
-                                                mt-4
-                                            "
+                                            class="text-3xl font-extrabold tracking-tight leading-none flex-auto w-full mt-4"
                                         >
                                             Dirección
                                         </h3>
                                         <!-- Dirección -->
                                         <div
-                                            class="
-                                                md:col-span-5
-                                                grid grid-cols-2
-                                                md:grid-cols-4
-                                                gap-3
-                                                w-full
-                                                md:max-w-5/6
-                                            "
+                                            class="md:col-span-5 grid grid-cols-2 md:grid-cols-4 gap-3 w-full md:max-w-5/6"
                                             formGroupName="direccion"
                                         >
                                             <!-- Calle -->
@@ -652,10 +633,12 @@
                                                         [spellcheck]="false"
                                                     />
                                                 </mat-form-field>
-                                                <ng-container *ngIf="trabajoForm.get('direccion').get('calle').touched">
+                                                <ng-container
+                                                    *ngIf="trabajoForm.get('direccion')?.get('calle')?.touched"
+                                                >
                                                     <mat-error
                                                         *ngIf="
-                                                            trabajoForm.get('direccion').get('calle').errors?.required
+                                                            trabajoForm.get('direccion')?.get('calle')?.errors?.['required']
                                                         "
                                                     >
                                                         La calle es requerida.
@@ -674,11 +657,11 @@
                                                     <input matInput formControlName="numero" [placeholder]="'Número'" />
                                                 </mat-form-field>
                                                 <ng-container
-                                                    *ngIf="trabajoForm.get('direccion').get('numero').touched"
+                                                    *ngIf="trabajoForm.get('direccion')?.get('numero')?.touched"
                                                 >
                                                     <mat-error
                                                         *ngIf="
-                                                            trabajoForm.get('direccion').get('numero').errors?.required
+                                                            trabajoForm.get('direccion')?.get('numero')?.errors?.['required']
                                                         "
                                                     >
                                                         El numero es requerido.
@@ -716,12 +699,12 @@
                                                     />
                                                 </mat-form-field>
                                                 <ng-container
-                                                    *ngIf="trabajoForm.get('direccion').get('codigoPostal').touched"
+                                                    *ngIf="trabajoForm.get('direccion')?.get('codigoPostal')?.touched"
                                                 >
                                                     <mat-error
                                                         *ngIf="
-                                                            trabajoForm.get('direccion').get('codigoPostal').errors
-                                                                ?.required
+                                                            trabajoForm.get('direccion')?.get('codigoPostal')?.errors
+                                                                ?.['required']
                                                         "
                                                     >
                                                         El codigo postal es requerido.
@@ -759,18 +742,20 @@
                                                     ></mat-icon>
                                                     <mat-select formControlName="colonia">
                                                         <mat-option
-                                                            *ngFor="let colonia of ubicacionTrabajo?.ubicacion.colonias"
+                                                            *ngFor="
+                                                                let colonia of ubicacionTrabajo?.ubicacion?.colonias
+                                                            "
                                                             [value]="colonia.id"
                                                             >{{ colonia.descripcion }}</mat-option
                                                         >
                                                     </mat-select>
                                                 </mat-form-field>
                                                 <ng-container
-                                                    *ngIf="trabajoForm.get('direccion').get('colonia').touched"
+                                                    *ngIf="trabajoForm.get('direccion')?.get('colonia')?.touched"
                                                 >
                                                     <mat-error
                                                         *ngIf="
-                                                            trabajoForm.get('direccion').get('colonia').errors?.required
+                                                            trabajoForm.get('direccion')?.get('colonia')?.errors?.['required']
                                                         "
                                                     >
                                                         La colonia es requerida.

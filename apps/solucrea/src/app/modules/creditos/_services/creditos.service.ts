@@ -1,17 +1,16 @@
-import { ICreditoData } from './../_models/credito-data.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Prisma, ReferidoPor } from '@prisma/client';
 import { ICreditoReturnDto, IModalidadSeguroReturnDto, ISeguroReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { environment } from 'apps/solucrea/src/environments/environment';
+import { sumBy } from 'lodash';
 import { Moment } from 'moment';
 import { forkJoin, map, Observable } from 'rxjs';
 
 import { ISegurosData } from '../_models';
+import { ICreditoData } from './../_models/credito-data.model';
 import { IDetails } from './../_models/details.model';
-import { Decimal } from '@prisma/client/runtime';
-import { sumBy } from 'lodash';
 
 @Injectable({
     providedIn: 'root',
@@ -93,12 +92,18 @@ export class CreditosService {
 
         const capital = monto / numeroDePagos;
         const interes = capital * (tasaInteres / 100);
-        const seguroDiferido = modalidadSeguro === 'diferido' ? montoSeguro / numeroDePagos : 0;
+        const seguroDiferido = modalidadSeguro === 'diferido' ? (montoSeguro ? montoSeguro : 0 / numeroDePagos) : 0;
         const cuota = capital + interes + seguroDiferido;
         const apertura = comisionPorApertura ? monto * (comisionPorApertura / 100) : 0;
-        const total = apertura + (modalidadSeguro === 'contado' ? montoSeguro : 0);
+        const total = apertura + (modalidadSeguro === 'contado' ? (montoSeguro ? montoSeguro : 0) : 0);
         const seguro =
-            modalidadSeguro === 'diferido' ? seguroDiferido : modalidadSeguro === 'contado' ? montoSeguro : 0;
+            modalidadSeguro === 'diferido'
+                ? seguroDiferido
+                : modalidadSeguro === 'contado'
+                ? montoSeguro
+                    ? montoSeguro
+                    : 0
+                : 0;
 
         const saldo = monto - (pagos && pagos.length > 0 ? sumBy(pagos, (pago) => Number(pago.monto) - interes) : 0);
 

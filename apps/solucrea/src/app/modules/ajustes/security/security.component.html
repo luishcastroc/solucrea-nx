@@ -14,7 +14,9 @@
                     <input [formControlName]="'currentPassword'" type="password" matInput />
                 </mat-form-field>
                 <ng-container *ngIf="currentPassword.touched">
-                    <mat-error *ngIf="currentPassword.errors?.required"> La contraseña actual es requerida. </mat-error>
+                    <mat-error *ngIf="currentPassword.errors?.['required']">
+                        La contraseña actual es requerida.
+                    </mat-error>
                 </ng-container>
             </div>
             <!-- New password -->
@@ -29,11 +31,11 @@
                     (#?!@$%^&*-).
                 </div>
                 <ng-container *ngIf="newPassword.touched">
-                    <mat-error *ngIf="newPassword.errors?.required"> La nueva contraseña es requerida. </mat-error>
-                    <mat-error *ngIf="newPassword.errors?.minlength">
+                    <mat-error *ngIf="newPassword.errors?.['required']"> La nueva contraseña es requerida. </mat-error>
+                    <mat-error *ngIf="newPassword.errors?.['minlength']">
                         La nueva contraseña debe tener mínimo 8 caracteres.
                     </mat-error>
-                    <mat-error *ngIf="newPassword.errors?.passwordStrength">
+                    <mat-error *ngIf="newPassword.errors?.['passwordStrength']">
                         la Contraseña debe incluir mínimo 8 caracteres. Al menos una mayúscula, una minúscula, un número
                         y un caracter especial (#?!@$%^&*-).
                     </mat-error>

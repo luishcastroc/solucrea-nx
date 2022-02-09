@@ -1,9 +1,10 @@
-import { Subject, takeUntil } from 'rxjs';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
-import { Store } from '@ngxs/store';
-import { Component, OnInit, ViewEncapsulation, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { ClearCreditosState } from './_store/creditos.actions';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
+import { Store } from '@ngxs/store';
+import { Subject, takeUntil } from 'rxjs';
+
+import { ClearCreditosState } from 'app/modules/creditos/_store/';
 
 @Component({
     selector: 'app-creditos',

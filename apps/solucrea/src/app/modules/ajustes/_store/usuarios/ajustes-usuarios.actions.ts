@@ -24,7 +24,7 @@ export class DeleteUsuario {
 
 export class SelectUsuario {
     static readonly type = '[Usuario] Select';
-    constructor(public usuario: Usuario) {}
+    constructor(public usuario: Usuario | undefined) {}
 }
 
 export class AjustesModeUsuario {

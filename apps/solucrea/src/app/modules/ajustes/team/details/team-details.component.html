@@ -14,7 +14,7 @@
                 <div class="text-secondary" [ngSwitch]="data.mode">
                     <ng-container *ngSwitchCase="'edit'"> Verificar que la información sea correcta. </ng-container>
                     <ng-container *ngSwitchCase="'password'">
-                        Cambiar contraseña de {{ selectedUsuario.nombreUsuario }}.
+                        Cambiar contraseña de {{ selectedUsuario?.nombreUsuario }}.
                     </ng-container>
                     <ng-container *ngSwitchCase="'new'"> Crear nuevo usuario Solucrea. </ng-container>
                 </div>
@@ -29,7 +29,7 @@
                             <input [formControlName]="'nombre'" matInput />
                         </mat-form-field>
                         <ng-container *ngIf="nombre.touched">
-                            <mat-error *ngIf="nombre.errors?.required"> El nombre es requerido. </mat-error>
+                            <mat-error *ngIf="nombre.errors?.['required']"> El nombre es requerido. </mat-error>
                         </ng-container>
                     </div>
                     <!-- Apellido -->
@@ -40,7 +40,7 @@
                             <input [formControlName]="'apellido'" matInput />
                         </mat-form-field>
                         <ng-container *ngIf="apellido.touched">
-                            <mat-error *ngIf="apellido.errors?.required"> El apellido es requerido. </mat-error>
+                            <mat-error *ngIf="apellido.errors?.['required']"> El apellido es requerido. </mat-error>
                         </ng-container>
                     </div>
                     <div class="sm:col-span-4">
@@ -53,7 +53,7 @@
                                     <input [formControlName]="'nombreUsuario'" matInput />
                                 </mat-form-field>
                                 <ng-container *ngIf="nombreUsuario.touched">
-                                    <mat-error *ngIf="nombreUsuario.errors?.required">
+                                    <mat-error *ngIf="nombreUsuario.errors?.['required']">
                                         El nombre de usuario es requerido.
                                     </mat-error>
                                 </ng-container>
@@ -77,13 +77,7 @@
                                                     {{ role.label }}
                                                 </div>
                                                 <div
-                                                    class="
-                                                        mt-1.5
-                                                        text-sm
-                                                        whitespace-normal
-                                                        leading-normal
-                                                        text-secondary
-                                                    "
+                                                    class="mt-1.5 text-sm whitespace-normal leading-normal text-secondary"
                                                 >
                                                     {{ role.description }}
                                                 </div>
@@ -92,7 +86,7 @@
                                     </mat-select>
                                 </mat-form-field>
                                 <ng-container *ngIf="role.touched">
-                                    <mat-error *ngIf="role.errors?.required"> El Rol es requerido. </mat-error>
+                                    <mat-error *ngIf="role.errors?.['required']"> El Rol es requerido. </mat-error>
                                 </ng-container>
                             </div>
                         </div>
@@ -109,11 +103,11 @@
                             (#?!@$%^&*-).
                         </div>
                         <ng-container *ngIf="password.touched">
-                            <mat-error *ngIf="password.errors?.required"> La contraseña es requerida. </mat-error>
-                            <mat-error *ngIf="password.errors?.minlength">
+                            <mat-error *ngIf="password.errors?.['required']"> La contraseña es requerida. </mat-error>
+                            <mat-error *ngIf="password.errors?.['minLength']">
                                 La nueva contraseña debe tener mínimo 8 caracteres.
                             </mat-error>
-                            <mat-error *ngIf="password.errors?.passwordStrength">
+                            <mat-error *ngIf="password.errors?.['passwordStrength']">
                                 la Contraseña debe incluir mínimo 8 caracteres. Al menos una mayúscula, una minúscula,
                                 un número y un caracter especial (#?!@$%^&*-).
                             </mat-error>
@@ -133,10 +127,10 @@
                             (#?!@$%^&*-).
                         </div>
                         <ng-container *ngIf="password.touched">
-                            <mat-error *ngIf="password.errors?.minlength">
+                            <mat-error *ngIf="password.errors?.['minlength']">
                                 La nueva contraseña debe tener mínimo 8 caracteres.
                             </mat-error>
-                            <mat-error *ngIf="password.errors?.passwordStrength">
+                            <mat-error *ngIf="password.errors?.['passwordStrength']">
                                 la Contraseña debe incluir mínimo 8 caracteres. Al menos una mayúscula, una minúscula,
                                 un número y un caracter especial (#?!@$%^&*-).
                             </mat-error>

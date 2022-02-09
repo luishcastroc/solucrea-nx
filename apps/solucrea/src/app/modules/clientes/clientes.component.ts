@@ -1,9 +1,10 @@
-import { Subject, takeUntil } from 'rxjs';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
-import { Component, OnInit, ViewEncapsulation, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { ClearClientesState } from './_store/clientes.actions';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
+import { Store } from '@ngxs/store';
+import { Subject, takeUntil } from 'rxjs';
+
+import { ClearClientesState } from 'app/modules/clientes/_store';
 
 @Component({
     selector: 'app-clientes',
@@ -11,7 +12,8 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
     encapsulation: ViewEncapsulation.None,
 })
 export class ClientesComponent implements OnInit, OnDestroy {
-    @ViewChild('drawer') drawer: MatDrawer;
+    @ViewChild('drawer')
+    drawer!: MatDrawer;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     private _unsubscribeAll: Subject<any> = new Subject<any>();

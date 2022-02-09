@@ -53,7 +53,7 @@ export class GetClienteWhere {
 
 export class SelectCliente {
     static readonly type = '[Creditos] Select Cliente';
-    constructor(public cliente: IClienteReturnDto) {}
+    constructor(public cliente: IClienteReturnDto | undefined) {}
 }
 
 export class SelectClienteReferral {
@@ -63,7 +63,7 @@ export class SelectClienteReferral {
 
 export class SelectProducto {
     static readonly type = '[Creditos] Select Producto';
-    constructor(public id: string) {}
+    constructor(public id: string | null) {}
 }
 
 export class SelectParentesco {

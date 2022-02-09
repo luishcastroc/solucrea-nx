@@ -25,9 +25,11 @@ import { ConfirmationDialogComponent } from 'app/shared';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AjustesCreditosListComponent implements OnInit, OnDestroy {
-    @Select(AjustesCreditosState.creditos) creditos$: Observable<Producto[]>;
-    @Select(AjustesCreditosState.loading) loading$: Observable<boolean>;
-    searchResults$: Observable<Producto[]>;
+    @Select(AjustesCreditosState.creditos)
+    creditos$!: Observable<Producto[]>;
+    @Select(AjustesCreditosState.loading)
+    loading$!: Observable<boolean>;
+    searchResults$!: Observable<Producto[]>;
     searchInput = new FormControl();
     actions$: Observable<Actions>;
     values = [
@@ -111,7 +113,7 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
     /**
      * Change radioButton
      */
-    changeActivo(e): void {
+    changeActivo(e: any): void {
         this._store.dispatch(new ChangeSearchFilterCreditos(e.value));
     }
 

@@ -11,11 +11,11 @@ export interface IColoniasState {
 }
 
 export interface ClientesStateModel {
-    clientes: IClienteReturnDto[] | null;
+    clientes: IClienteReturnDto[] | [];
     editMode: EditMode;
-    selectedCliente: IClienteReturnDto | null;
-    selectedActividadEconomica: IActividadEconomicaReturnDto;
+    selectedCliente: IClienteReturnDto | undefined;
+    selectedActividadEconomica: IActividadEconomicaReturnDto | undefined;
     colonias: IColoniasState[] | [];
-    config: IConfig;
+    config: IConfig | undefined;
     loading: boolean;
 }

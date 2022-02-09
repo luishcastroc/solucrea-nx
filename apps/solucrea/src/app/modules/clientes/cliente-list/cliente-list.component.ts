@@ -1,5 +1,4 @@
-import { ModeCredito } from './../../creditos/_store/creditos.actions';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
@@ -8,8 +7,7 @@ import { IClienteReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { map, Observable, startWith, Subject, takeUntil, withLatestFrom } from 'rxjs';
 
-import { ClientesMode, Edit, GetAll, Inactivate } from '../_store/clientes.actions';
-import { ClientesState } from '../_store/clientes.state';
+import { ClientesMode, ClientesState, Edit, GetAll, Inactivate } from 'app/modules/clientes/_store';
 
 @Component({
     selector: 'app-cliente-list',
@@ -18,12 +16,13 @@ import { ClientesState } from '../_store/clientes.state';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClienteListComponent implements OnInit, OnDestroy {
-    @Select(ClientesState.clientes) clientes$: Observable<IClienteReturnDto[]>;
+    @Select(ClientesState.clientes)
+    clientes$!: Observable<IClienteReturnDto[]>;
 
     values: string[] = ['Activos', 'Inactivos'];
     active: string = this.values[0];
-    clientes: IClienteReturnDto[];
-    searchResults$: Observable<IClienteReturnDto[]>;
+    clientes!: IClienteReturnDto[];
+    searchResults$!: Observable<IClienteReturnDto[]>;
     searchInput = new FormControl();
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();

@@ -43,7 +43,7 @@ export class CajasState {
     }
 
     @Selector()
-    static selectedCaja({ selectedCaja }: CajaStateModel): ICajaReturnDto {
+    static selectedCaja({ selectedCaja }: CajaStateModel): ICajaReturnDto | undefined {
         return selectedCaja;
     }
 

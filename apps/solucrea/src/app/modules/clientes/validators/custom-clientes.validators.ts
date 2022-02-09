@@ -1,10 +1,11 @@
-import { AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+
 export const curpValidator =
     (): ValidatorFn =>
     (control: AbstractControl): ValidationErrors | null => {
         const value = control.value?.toUpperCase();
 
-        const digitoVerificador = (curp17) => {
+        const digitoVerificador = (curp17: string) => {
             //Fuente https://consultas.curp.gob.mx/CurpSP/
             const diccionario = '0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
             let lngSuma = 0.0;
@@ -19,7 +20,7 @@ export const curpValidator =
             return lngDigito;
         };
 
-        const curpValida = (curp) => {
+        const curpValida = (curp: string) => {
             const re =
                 // eslint-disable-next-line max-len
                 /^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/;
@@ -51,7 +52,7 @@ export const rfcValidator =
     (control: AbstractControl): ValidationErrors | null => {
         const value = control.value?.toUpperCase();
 
-        const rfcValido = (rfc, aceptarGenerico = true) => {
+        const rfcValido = (rfc: string, aceptarGenerico = true) => {
             const re =
                 /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
             const valid = rfc.match(re);

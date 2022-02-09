@@ -34,15 +34,15 @@ import { ClientesService } from '../_services/clientes.service';
 import {
     Add,
     ClearClientesState,
+    ClientesState,
     Edit,
     GetColonias,
     GetConfig,
+    IColoniasState,
     RemoveColonia,
     SelectActividadEconomica,
     SelectCliente,
-} from '../_store/clientes.actions';
-import { IColoniasState } from '../_store/clientes.model';
-import { ClientesState } from '../_store/clientes.state';
+} from 'app/modules/clientes/_store';
 import { IConfig } from '../models/config.model';
 import { curpValidator, rfcValidator } from '../validators/custom-clientes.validators';
 
@@ -53,22 +53,28 @@ import { curpValidator, rfcValidator } from '../validators/custom-clientes.valid
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateComponent {
-    @Select(ClientesState.config) config$: Observable<IConfig>;
-    @Select(ClientesState.loading) loading$: Observable<boolean>;
-    @Select(ClientesState.editMode) editMode$: Observable<EditMode>;
-    @Select(ClientesState.colonias) colonias$: Observable<IColoniasState[]>;
-    @Select(ClientesState.selectedCliente) selectedCliente$: Observable<IClienteReturnDto>;
+    @Select(ClientesState.config)
+    config$!: Observable<IConfig>;
+    @Select(ClientesState.loading)
+    loading$!: Observable<boolean>;
+    @Select(ClientesState.editMode)
+    editMode$!: Observable<EditMode>;
+    @Select(ClientesState.colonias)
+    colonias$!: Observable<IColoniasState[]>;
+    @Select(ClientesState.selectedCliente)
+    selectedCliente$!: Observable<IClienteReturnDto>;
     @Select(ClientesState.selectedActividadEconomica)
-    selectedActividadEconomica$: Observable<IActividadEconomicaReturnDto>;
+    selectedActividadEconomica$!: Observable<IActividadEconomicaReturnDto>;
 
-    @ViewChild('stepper') private myStepper: MatStepper;
+    @ViewChild('stepper')
+    private myStepper!: MatStepper;
 
     ubicacion: IColoniasState[] = [];
-    ubicacionTrabajo: IColoniasState;
-    clienteForm: FormGroup;
-    trabajoForm: FormGroup;
-    editMode: EditMode;
-    deletedAddresses = [];
+    ubicacionTrabajo!: IColoniasState;
+    clienteForm!: FormGroup;
+    trabajoForm!: FormGroup;
+    editMode!: EditMode;
+    deletedAddresses: Array<any> = [];
     phoneInputMask = createMask({
         mask: '(999)-999-99-99',
         autoUnmask: true,
@@ -96,15 +102,15 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
     }
 
     get cpTrabajo() {
-        return this.trabajoForm.get('direccion').get('codigoPostal') as FormControl;
+        return this.trabajoForm.get('direccion')?.get('codigoPostal') as FormControl;
     }
 
     get ciudadTrabajo() {
-        return this.trabajoForm.get('direccion').get('ciudad') as FormControl;
+        return this.trabajoForm.get('direccion')?.get('ciudad') as FormControl;
     }
 
     get estadoTrabajo() {
-        return this.trabajoForm.get('direccion').get('estado') as FormControl;
+        return this.trabajoForm.get('direccion')?.get('estado') as FormControl;
     }
 
     @HostListener('window:beforeunload', ['$event'])
@@ -142,18 +148,18 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                 ubicacion.forEach((direccion, i) => {
                     if (direccion.tipoDireccion === 'CLIENTE') {
                         if (
-                            this.direcciones.controls[i].get('ciudad').value !== direccion.ubicacion.ciudad.descripcion
+                            this.direcciones.controls[i].get('ciudad')?.value !== direccion.ubicacion.ciudad.descripcion
                         ) {
                             this.direcciones.controls[i]
                                 .get('ciudad')
-                                .patchValue(direccion.ubicacion.ciudad.descripcion);
+                                ?.patchValue(direccion.ubicacion.ciudad.descripcion);
                         }
                         if (
-                            this.direcciones.controls[i].get('estado').value !== direccion.ubicacion.estado.descripcion
+                            this.direcciones.controls[i].get('estado')?.value !== direccion.ubicacion.estado.descripcion
                         ) {
                             this.direcciones.controls[i]
                                 .get('estado')
-                                .patchValue(direccion.ubicacion.estado.descripcion);
+                                ?.patchValue(direccion.ubicacion.estado.descripcion);
                         }
                         if (!isEqual(this.ubicacion[i], direccion)) {
                             this.ubicacion[i] = direccion;
@@ -178,8 +184,8 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((selectedActividadEconomica: IActividadEconomicaReturnDto) => {
                 if (selectedActividadEconomica) {
-                    this.trabajoForm.get('montoMinimo').patchValue(Number(selectedActividadEconomica.montoMin));
-                    this.trabajoForm.get('montoMaximo').patchValue(Number(selectedActividadEconomica.montoMax));
+                    this.trabajoForm.get('montoMinimo')?.patchValue(Number(selectedActividadEconomica.montoMin));
+                    this.trabajoForm.get('montoMaximo')?.patchValue(Number(selectedActividadEconomica.montoMax));
                 }
             });
     }
@@ -239,7 +245,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
      * Function to subscribe to editMode
      *
      */
-    subscribeToEditMode(id: string): void {
+    subscribeToEditMode(id: string | null): void {
         this.editMode$
             .pipe(
                 switchMap((editMode) => {
@@ -252,7 +258,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                 }),
                 takeUntil(this._unsubscribeAll)
             )
-            .subscribe((selectedCliente: IClienteReturnDto) => {
+            .subscribe((selectedCliente: IClienteReturnDto | null) => {
                 if (selectedCliente) {
                     const { direcciones, trabajo } = selectedCliente;
 
@@ -261,10 +267,10 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                         if (i > 0) {
                             this.addDireccionesField();
                         }
-                        this.direcciones.controls[i].get('id').setValue(direccion.id);
-                        this.direcciones.controls[i].get('codigoPostal').setValue(direccion.colonia.codigoPostal);
+                        this.direcciones.controls[i].get('id')?.setValue(direccion.id);
+                        this.direcciones.controls[i].get('codigoPostal')?.setValue(direccion.colonia.codigoPostal);
                         this.getColonias(direccion.colonia.codigoPostal, i, 'CLIENTE');
-                        this.direcciones.controls[i].get('colonia').setValue(direccion.colonia.id);
+                        this.direcciones.controls[i].get('colonia')?.setValue(direccion.colonia.id);
                     });
 
                     // putting values into the Cliente form
@@ -483,7 +489,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
         } else {
             let cliente = this._sharedService.getDirtyValues(this.clienteForm);
             const trabajo: ITrabajoDto = this._sharedService.getDirtyValues(this.trabajoForm);
-            let direcciones: IDireccionUpdateDto;
+            let direcciones: IDireccionUpdateDto = {};
 
             if (trabajo) {
                 cliente = { ...cliente, trabajo };
@@ -532,11 +538,11 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
      */
     disableCiudadAndEstado(): void {
         this.direcciones.controls.forEach((element) => {
-            element.get('ciudad').disable();
-            element.get('estado').disable();
+            element.get('ciudad')?.disable();
+            element.get('estado')?.disable();
         });
-        (this.trabajoForm.get('direccion') as FormGroup).get('ciudad').disable();
-        (this.trabajoForm.get('direccion') as FormGroup).get('estado').disable();
+        (this.trabajoForm.get('direccion') as FormGroup).get('ciudad')?.disable();
+        (this.trabajoForm.get('direccion') as FormGroup).get('estado')?.disable();
     }
 
     /**

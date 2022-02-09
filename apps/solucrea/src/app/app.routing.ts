@@ -1,11 +1,10 @@
-import { Role } from '@prisma/client';
-/* eslint-disable arrow-parens */
 import { Route } from '@angular/router';
-import { AuthGuard } from 'app/core/auth/guards/auth.guard';
-import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
-import { LayoutComponent } from 'app/layout/layout.component';
+import { Role } from '@prisma/client';
 import { InitialDataResolver } from 'app/app.resolvers';
+import { AuthGuard, NoAuthGuard } from 'app/core/auth/guards';
+import { LayoutComponent } from 'app/layout/layout.component';
 
+/* eslint-disable arrow-parens */
 // @formatter:off
 // tslint:disable:max-line-length
 export const appRoutes: Route[] = [

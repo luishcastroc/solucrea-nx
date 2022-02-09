@@ -13,13 +13,14 @@ import { AuthService } from 'app/core/auth/auth.service';
     animations: fuseAnimations,
 })
 export class AuthResetPasswordComponent implements OnInit {
-    @ViewChild('resetPasswordNgForm') resetPasswordNgForm: NgForm;
+    @ViewChild('resetPasswordNgForm')
+    resetPasswordNgForm!: NgForm;
 
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
         message: '',
     };
-    resetPasswordForm: FormGroup;
+    resetPasswordForm!: FormGroup;
     showAlert: boolean = false;
 
     /**
@@ -68,7 +69,7 @@ export class AuthResetPasswordComponent implements OnInit {
 
         // Send the request to the server
         this._authService
-            .resetPassword(this.resetPasswordForm.get('password').value)
+            .resetPassword(this.resetPasswordForm.get('password')?.value)
             .pipe(
                 finalize(() => {
                     // Re-enable the form

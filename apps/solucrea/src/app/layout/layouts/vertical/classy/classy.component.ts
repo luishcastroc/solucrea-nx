@@ -15,9 +15,9 @@ import { Observable, Subject, takeUntil } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy {
-    user$: Observable<Usuario>;
-    data: InitialData;
-    isScreenSmall: boolean;
+    user$: Observable<Usuario | undefined>;
+    data!: InitialData;
+    isScreenSmall!: boolean;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -53,7 +53,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         // Subscribe to the resolved route
         this._activatedRoute.data.subscribe((data: Data) => {
-            this.data = data.initialData;
+            this.data = data['initialData'];
         });
 
         // Subscribe to media changes

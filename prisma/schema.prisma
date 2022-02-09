@@ -322,6 +322,7 @@ model Caja {
 
 model Pago {
     id                 String     @id @default(uuid())
+    numeroDePago       Int
     monto              Decimal    @db.Decimal(15, 2)
     tipoDePago         TipoDePago
     fechaDePago        DateTime

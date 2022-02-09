@@ -96,7 +96,7 @@ export class AjustesUsuariosState {
                         usuarios,
                     });
                 }
-                if (authenticatedUser.id === user.id) {
+                if (authenticatedUser?.id === user.id) {
                     ctx.dispatch(new UpdateUsuario(user));
                 }
             })

@@ -1,9 +1,9 @@
 import {
+    IActividadEconomicaReturnDto,
+    IEscolaridadReturnDto,
+    IEstadoCivilReturnDto,
     IGeneroReturnDto,
     ITipoDeViviendaReturnDto,
-    IEstadoCivilReturnDto,
-    IEscolaridadReturnDto,
-    IActividadEconomicaReturnDto,
 } from 'api/dtos';
 
 export interface IConfig {

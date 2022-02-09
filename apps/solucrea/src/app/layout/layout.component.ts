@@ -15,10 +15,10 @@ import { AppConfig } from 'app/core/config/app.config';
     encapsulation: ViewEncapsulation.None,
 })
 export class LayoutComponent implements OnInit, OnDestroy {
-    config: AppConfig;
-    layout: Layout;
-    scheme: 'dark' | 'light';
-    theme: string;
+    config!: AppConfig;
+    layout!: Layout;
+    scheme!: 'dark' | 'light';
+    theme!: string;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -155,9 +155,9 @@ export class LayoutComponent implements OnInit, OnDestroy {
         const paths = route.pathFromRoot;
         paths.forEach((path) => {
             // Check if there is a 'layout' data
-            if (path.routeConfig && path.routeConfig.data && path.routeConfig.data.layout) {
+            if (path.routeConfig && path.routeConfig.data && path.routeConfig.data['layout']) {
                 // Set the layout
-                this.layout = path.routeConfig.data.layout;
+                this.layout = path.routeConfig.data['layout'];
             }
         });
     }

@@ -126,12 +126,12 @@ export class CreditosState {
     }
 
     @Selector()
-    static selectedCliente({ selectedCliente }: CreditosStateModel): IClienteReturnDto {
+    static selectedCliente({ selectedCliente }: CreditosStateModel): IClienteReturnDto | undefined {
         return selectedCliente;
     }
 
     @Selector()
-    static selectedClienteReferral({ selectedClienteReferral }: CreditosStateModel): IClienteReturnDto {
+    static selectedClienteReferral({ selectedClienteReferral }: CreditosStateModel): IClienteReturnDto | undefined {
         return selectedClienteReferral;
     }
 
@@ -146,7 +146,7 @@ export class CreditosState {
     }
 
     @Selector()
-    static selectedProducto({ selectedProducto }: CreditosStateModel): Producto {
+    static selectedProducto({ selectedProducto }: CreditosStateModel): Producto | undefined {
         return selectedProducto;
     }
 
@@ -156,17 +156,19 @@ export class CreditosState {
     }
 
     @Selector()
-    static selectedModalidadDeSeguro({ selectedModalidadDeSeguro }: CreditosStateModel): IModalidadSeguroReturnDto {
+    static selectedModalidadDeSeguro({
+        selectedModalidadDeSeguro,
+    }: CreditosStateModel): IModalidadSeguroReturnDto | undefined {
         return selectedModalidadDeSeguro;
     }
 
     @Selector()
-    static selectedSeguro({ selectedSeguro }: CreditosStateModel): ISeguroReturnDto {
+    static selectedSeguro({ selectedSeguro }: CreditosStateModel): ISeguroReturnDto | undefined {
         return selectedSeguro;
     }
 
     @Selector()
-    static segurosData({ segurosData }: CreditosStateModel): ISegurosData {
+    static segurosData({ segurosData }: CreditosStateModel): ISegurosData | undefined {
         return segurosData;
     }
 
@@ -349,7 +351,7 @@ export class CreditosState {
     selectModalidadSeguro(ctx: StateContext<CreditosStateModel>, { id }: SelectModalidadSeguro) {
         const selectedModalidadDeSeguro = ctx
             .getState()
-            .segurosData.modalidadesDeSeguro.filter((modalidad) => modalidad.id === id)[0];
+            .segurosData?.modalidadesDeSeguro.filter((modalidad) => modalidad.id === id)[0];
 
         ctx.patchState({ selectedModalidadDeSeguro });
     }
@@ -362,7 +364,7 @@ export class CreditosState {
         } else {
             selectedSeguro = ctx
                 .getState()
-                .segurosData.seguros.filter((seguro: ISeguroReturnDto) => seguro.id === id)[0];
+                .segurosData?.seguros.filter((seguro: ISeguroReturnDto) => seguro.id === id)[0];
         }
         ctx.patchState({ selectedSeguro });
     }

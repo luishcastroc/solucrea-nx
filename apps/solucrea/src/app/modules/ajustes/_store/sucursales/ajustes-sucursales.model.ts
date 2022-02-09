@@ -7,5 +7,5 @@ export interface AjustesSucursalesStateModel {
     editMode: EditMode;
     selectedSucursal: ISucursalReturnDto | undefined;
     loading: boolean;
-    colonias: IColoniaReturnDto;
+    colonias: IColoniaReturnDto | undefined;
 }

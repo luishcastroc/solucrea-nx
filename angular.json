@@ -174,8 +174,7 @@
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"],
-                        "tsConfig": ["apps/solucrea/tsconfig.app.json", "apps/solucrea/tsconfig.spec.json"]
+                        "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
                     }
                 }
             },

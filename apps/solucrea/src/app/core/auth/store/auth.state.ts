@@ -20,8 +20,8 @@ import { AuthStateModel } from './auth.model';
 @State<AuthStateModel>({
     name: 'auth',
     defaults: {
-        accessToken: null,
-        user: null,
+        accessToken: '',
+        user: undefined,
     },
 })
 @Injectable()
@@ -29,7 +29,7 @@ export class AuthState {
     constructor(private authService: AuthService) {}
 
     @Selector()
-    static accessToken(state: AuthStateModel): string | null {
+    static accessToken(state: AuthStateModel): string {
         return state.accessToken;
     }
 
@@ -39,7 +39,7 @@ export class AuthState {
     }
 
     @Selector()
-    static user(state: AuthStateModel): Usuario | null {
+    static user(state: AuthStateModel): Usuario | undefined {
         return state.user;
     }
 
@@ -83,8 +83,8 @@ export class AuthState {
     @Action(ClearAuthState)
     clearState(ctx: StateContext<AuthStateModel>) {
         ctx.setState({
-            accessToken: null,
-            user: null,
+            accessToken: '',
+            user: undefined,
         });
     }
 

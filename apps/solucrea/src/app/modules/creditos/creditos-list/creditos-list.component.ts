@@ -8,13 +8,12 @@ import { Status } from '@prisma/client';
 import { ICreditoReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth';
 import { GetAllCreditos } from 'app/modules/ajustes/_store';
-import { CajasMode } from 'app/modules/caja/_store/caja.actions';
-import { ClientesMode } from 'app/modules/clientes/_store/clientes.actions';
+import { CajasMode } from 'app/modules/caja/_store';
+import { ClientesMode } from 'app/modules/clientes/_store/';
+import { CreditosState, GetClientesCount, GetTurnosCount, ModeCredito } from 'app/modules/creditos/_store/';
 import { Observable, tap } from 'rxjs';
-import { CreditosService } from '../_services/creditos.service';
 
-import { GetClientesCount, GetTurnosCount, ModeCredito } from './../_store/creditos.actions';
-import { CreditosState } from './../_store/creditos.state';
+import { CreditosService } from '../_services/creditos.service';
 
 @Component({
     selector: 'app-creditos-list',
@@ -23,13 +22,17 @@ import { CreditosState } from './../_store/creditos.state';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditosListComponent implements OnInit {
-    @Select(CreditosState.creditos) creditos$: Observable<ICreditoReturnDto[]>;
-    @Select(CreditosState.loading) loading$: Observable<boolean>;
-    @Select(CreditosState.clientesCount) clientesCount$: Observable<number>;
-    @Select(CreditosState.turnosCount) turnosCount$: Observable<number>;
+    @Select(CreditosState.creditos)
+    creditos$!: Observable<ICreditoReturnDto[]>;
+    @Select(CreditosState.loading)
+    loading$!: Observable<boolean>;
+    @Select(CreditosState.clientesCount)
+    clientesCount$!: Observable<number>;
+    @Select(CreditosState.turnosCount)
+    turnosCount$!: Observable<number>;
 
-    creditosFiltered$: Observable<ICreditoReturnDto[]>;
-    actions$: Actions;
+    creditosFiltered$!: Observable<ICreditoReturnDto[]>;
+    actions$!: Actions;
     searchInput = new FormControl();
     values = [
         { display: 'Abiertos', value: Status.ABIERTO },

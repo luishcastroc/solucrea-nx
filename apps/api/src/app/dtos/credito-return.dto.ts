@@ -27,9 +27,16 @@ export interface ICreditoReturnDto {
     cuotaInteres: Decimal | number | string;
     cuotaSeguro: Decimal | number | string;
     saldo?: Decimal | number | string;
+    amortizacion?: IAmortizacion[];
 }
 
 export interface ICreditoClienteReturnDto {
     cliente: IClienteReturnDto;
     creditos: Partial<ICreditoReturnDto>[];
+}
+
+export interface IAmortizacion {
+    numeroDePago: number;
+    fechaDePago: Date | string;
+    status: 'PAGADO' | 'ADEUDA';
 }

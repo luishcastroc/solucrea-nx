@@ -57,7 +57,7 @@ export class AjustesSucursalesState {
     }
 
     @Selector()
-    static colonias({ colonias }: AjustesSucursalesStateModel): IColoniaReturnDto | [] {
+    static colonias({ colonias }: AjustesSucursalesStateModel): IColoniaReturnDto | undefined {
         return colonias;
     }
 

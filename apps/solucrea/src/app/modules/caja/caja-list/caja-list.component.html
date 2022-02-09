@@ -27,18 +27,7 @@
                 >
                     <ng-container *ngFor="let caja of cajas">
                         <div
-                            class="
-                                z-20
-                                grid grid-cols-1
-                                md:grid-cols-2
-                                gap-4
-                                px-2
-                                py-4
-                                md:px-10
-                                border-b
-                                w-full
-                                md:max-w-5/6
-                            "
+                            class="z-20 grid grid-cols-1 md:grid-cols-2 gap-4 px-2 py-4 md:px-10 border-b w-full md:max-w-5/6"
                         >
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 w-full">
                                 <!-- Fecha de Apertura -->
@@ -49,12 +38,14 @@
                                 <!-- Saldo Inicial -->
                                 <div class="flex flex-col flex-auto">
                                     <div class="font-bold">Saldo Inicial:</div>
-                                    <div class="mt-2">{{ caja.saldoInicial | currency: 'MXN':'symbol':'4.2-2' }}</div>
+                                    <div class="mt-2">
+                                        {{ caja.saldoInicial | currency }}
+                                    </div>
                                 </div>
                                 <!-- Saldo Actual -->
                                 <div class="flex flex-col flex-auto">
                                     <div class="font-bold">Saldo Actual:</div>
-                                    <div class="mt-2">{{ caja.saldoActual | currency: 'MXN':'symbol':'4.2-2' }}</div>
+                                    <div class="mt-2">{{ caja.saldoActual | currency }}</div>
                                 </div>
                                 <!-- Sucursal -->
                                 <div class="flex flex-col">
@@ -103,8 +94,8 @@
                             </div>
                         </div>
                     </ng-container>
-                    <ng-template #noCajas><div class="font-extrabold">No Hay Turnos abiertos.</div> </ng-template>
                 </div>
+                <ng-template #noCajas><div class="font-extrabold">No Hay Turnos abiertos.</div> </ng-template>
             </ng-container>
             <ng-template #loadingTemplate>
                 <div class="z-20 flex px-8 py-4 md:px-10 border-b justify-center">

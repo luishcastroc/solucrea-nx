@@ -27,16 +27,17 @@ import { TipoDireccion } from '.prisma/client';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SucursalesDetailsComponent implements OnInit, OnDestroy {
-    @Select(AjustesSucursalesState.loading) loading$: Observable<boolean>;
+    @Select(AjustesSucursalesState.loading)
+    loading$!: Observable<boolean>;
 
-    editMode$: Observable<EditMode>;
-    colonias$: Observable<IColoniaReturnDto>;
-    actions$: Actions;
-    selectedSucursal$: Observable<ISucursalReturnDto>;
-    sucursalForm: FormGroup;
-    editMode: EditMode;
-    coloniasTemp$: Observable<IColoniaReturnDto>;
-    successToast$: Observable<HotToastClose>;
+    editMode$!: Observable<EditMode>;
+    colonias$!: Observable<IColoniaReturnDto | undefined>;
+    actions$!: Actions;
+    selectedSucursal$!: Observable<ISucursalReturnDto | undefined>;
+    sucursalForm!: FormGroup;
+    editMode!: EditMode;
+    coloniasTemp$!: Observable<IColoniaReturnDto | []>;
+    successToast$!: Observable<HotToastClose>;
     phoneInputMask = createMask({
         mask: '(999)-999-99-99',
         autoUnmask: true,
@@ -66,27 +67,27 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
     }
 
     get cp() {
-        return this.sucursalForm.get('direccion').get('codigoPostal') as FormControl;
+        return this.sucursalForm.get('direccion')?.get('codigoPostal') as FormControl;
     }
 
     get colonia() {
-        return this.sucursalForm.get('direccion').get('colonia') as FormControl;
+        return this.sucursalForm.get('direccion')?.get('colonia') as FormControl;
     }
 
     get calle() {
-        return this.sucursalForm.get('direccion').get('calle') as FormControl;
+        return this.sucursalForm.get('direccion')?.get('calle') as FormControl;
     }
 
     get numero() {
-        return this.sucursalForm.get('direccion').get('numero') as FormControl;
+        return this.sucursalForm.get('direccion')?.get('numero') as FormControl;
     }
 
     get ciudad() {
-        return this.sucursalForm.get('direccion').get('ciudad') as FormControl;
+        return this.sucursalForm.get('direccion')?.get('ciudad') as FormControl;
     }
 
     get estado() {
-        return this.sucursalForm.get('direccion').get('estado') as FormControl;
+        return this.sucursalForm.get('direccion')?.get('estado') as FormControl;
     }
 
     ngOnInit(): void {
@@ -138,17 +139,19 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
      * Initialize the selectors for the mode and colonias
      *
      */
-    initializeData(id: string): void {
+    initializeData(id: string | null): void {
         this.editMode$ = this._store.select(AjustesSucursalesState.editMode).pipe(
             tap((edit) => {
                 this.editMode = edit;
 
                 if (edit === 'edit') {
-                    this._store.dispatch(new SelectSucursal(id));
+                    if (id) {
+                        this._store.dispatch(new SelectSucursal(id));
+                    }
                 }
 
                 this.colonias$ = this._store.select(AjustesSucursalesState.colonias).pipe(
-                    tap((colonias: IColoniaReturnDto) => {
+                    tap((colonias: IColoniaReturnDto | undefined) => {
                         if (colonias) {
                             this.ciudad.patchValue(colonias.ciudad.descripcion);
                             this.estado.patchValue(colonias.estado.descripcion);
@@ -157,7 +160,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
                 );
 
                 this.selectedSucursal$ = this._store.select(AjustesSucursalesState.selectedSucursal).pipe(
-                    tap((sucursal: ISucursalReturnDto) => {
+                    tap((sucursal: ISucursalReturnDto | undefined) => {
                         if (sucursal) {
                             this.sucursalForm.patchValue({
                                 ...sucursal,

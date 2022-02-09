@@ -24,10 +24,11 @@ import { IPanel } from './models/panel.model';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AjustesComponent implements OnInit, OnDestroy {
-    @ViewChild('drawer') drawer: MatDrawer;
+    @ViewChild('drawer')
+    drawer!: MatDrawer;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
-    panels: IPanel[];
+    panels!: IPanel[];
     selectedPanel: string = 'perfil';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 

@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
 
-import { DataCheckGuard } from '../../core/auth/guards/data-check.guard';
+import { DataCheckGuard } from '../../core/auth/guards';
 import { ClienteListComponent } from './cliente-list/cliente-list.component';
 import { ClienteComponent } from './cliente/cliente.component';
 import { ClientesComponent } from './clientes.component';

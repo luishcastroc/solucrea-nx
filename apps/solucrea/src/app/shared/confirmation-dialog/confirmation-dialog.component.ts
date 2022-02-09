@@ -8,8 +8,8 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmationDialogComponent implements OnInit {
-    title: string;
-    message: string;
+    title!: string;
+    message!: string;
     constructor(
         public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any

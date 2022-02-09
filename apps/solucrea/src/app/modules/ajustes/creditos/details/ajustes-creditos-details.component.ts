@@ -28,11 +28,12 @@ import { Producto } from '.prisma/client';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
-    @Select(AjustesCreditosState.loading) loading$: Observable<boolean>;
-    creditosForm: FormGroup;
-    editMode: EditMode;
-    editMode$: Observable<EditMode>;
-    selectedProducto$: Observable<Producto>;
+    @Select(AjustesCreditosState.loading)
+    loading$!: Observable<boolean>;
+    creditosForm!: FormGroup;
+    editMode!: EditMode;
+    editMode$!: Observable<EditMode>;
+    selectedProducto$!: Observable<Producto | undefined>;
     frecuencias: IFrecuencia[] = defaultFrecuencias;
     days: IDays[] = dias;
 
@@ -207,17 +208,17 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
      * Initialize the selectors for the mode and colonias
      *
      */
-    initializeData(id: string): void {
+    initializeData(id: string | null): void {
         this.editMode$ = this._store.select(AjustesCreditosState.editMode).pipe(
             tap((edit) => {
                 this.editMode = edit;
 
-                if (edit === 'edit') {
+                if (edit === 'edit' && id) {
                     this._store.dispatch(new SelectCredito(id));
                 }
 
                 this.selectedProducto$ = this._store.select(AjustesCreditosState.selectedCredito).pipe(
-                    tap((credito: Producto) => {
+                    tap((credito: Producto | undefined) => {
                         if (credito) {
                             this.creditosForm.patchValue({
                                 ...credito,

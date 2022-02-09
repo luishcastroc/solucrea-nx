@@ -14,13 +14,14 @@ import { AuthService } from 'app/core/auth/auth.service';
     animations: fuseAnimations,
 })
 export class AuthForgotPasswordComponent implements OnInit {
-    @ViewChild('forgotPasswordNgForm') forgotPasswordNgForm: NgForm;
+    @ViewChild('forgotPasswordNgForm')
+    forgotPasswordNgForm!: NgForm;
 
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
         message: '',
     };
-    forgotPasswordForm: FormGroup;
+    forgotPasswordForm!: FormGroup;
     showAlert: boolean = false;
 
     /**
@@ -63,7 +64,7 @@ export class AuthForgotPasswordComponent implements OnInit {
 
         // Forgot password
         this._authService
-            .forgotPassword(this.forgotPasswordForm.get('email').value)
+            .forgotPassword(this.forgotPasswordForm.get('email')?.value)
             .pipe(
                 finalize(() => {
                     // Re-enable the form

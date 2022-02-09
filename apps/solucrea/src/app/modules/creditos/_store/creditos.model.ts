@@ -24,7 +24,7 @@ export interface CreditosStateModel {
     clientes: IClienteReturnDto[] | [];
     colocadores: IUsuarioReturnDto[] | [];
     parentescos: IParentescoReturnDto[] | [];
-    segurosData: ISegurosData;
+    segurosData: ISegurosData | undefined;
     selectedOtro: boolean;
     clientesCount: number;
     turnosCount: number;

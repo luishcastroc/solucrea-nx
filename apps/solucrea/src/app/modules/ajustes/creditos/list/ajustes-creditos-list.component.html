@@ -50,17 +50,7 @@
                         <ng-container *ngIf="productos.length > 0; else noProducts">
                             <ng-container *ngFor="let producto of productos">
                                 <div
-                                    class="
-                                        grid grid-cols-1
-                                        gap-3
-                                        z-20
-                                        md:flex
-                                        px-2
-                                        py-4
-                                        md:px-10
-                                        border-b
-                                        justify-between
-                                    "
+                                    class="grid grid-cols-1 gap-3 z-20 md:flex px-2 py-4 md:px-10 border-b justify-between"
                                 >
                                     <div class="grid grid-cols-2 md:grid-cols-3 gap-6 w-full md:w-9/12">
                                         <div class="flex flex-col">
@@ -78,13 +68,13 @@
                                         <div class="flex flex-col">
                                             <div class="font-bold">Monto Minimo:</div>
                                             <div class="mt-2">
-                                                {{ producto.montoMinimo | currency: 'MXN':'symbol':'4.2-2' }}
+                                                {{ producto.montoMinimo | currency }}
                                             </div>
                                         </div>
                                         <div class="flex flex-col">
                                             <div class="font-bold">Monto Maximo:</div>
                                             <div class="mt-2">
-                                                {{ producto.montoMaximo | currency: 'MXN':'symbol':'4.2-2' }}
+                                                {{ producto.montoMaximo | currency }}
                                             </div>
                                         </div>
                                         <div class="flex flex-col min-w-40">

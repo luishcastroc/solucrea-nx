@@ -19,7 +19,7 @@ import { AuthState } from './../store/auth.state';
     providedIn: 'root',
 })
 export class NoAuthGuard implements CanActivate, CanActivateChild, CanLoad {
-    @Select(AuthState.isAuthenticated) isAuthenticated$: Observable<boolean>;
+    @Select(AuthState.isAuthenticated) isAuthenticated$!: Observable<boolean>;
     /**
      * Constructor
      */

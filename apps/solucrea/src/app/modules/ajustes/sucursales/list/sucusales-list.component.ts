@@ -24,10 +24,12 @@ import { map, Observable, startWith, tap, withLatestFrom } from 'rxjs';
     styleUrls: [],
 })
 export class SucusalesListComponent implements OnInit {
-    @Select(AjustesSucursalesState.sucursales) sucursales$: Observable<ISucursalReturnDto[]>;
-    @Select(AjustesSucursalesState.loading) loading$: Observable<boolean>;
-    actions$: Actions;
-    searchResults$: Observable<ISucursalReturnDto[]>;
+    @Select(AjustesSucursalesState.sucursales)
+    sucursales$!: Observable<ISucursalReturnDto[]>;
+    @Select(AjustesSucursalesState.loading)
+    loading$!: Observable<boolean>;
+    actions$!: Actions;
+    searchResults$!: Observable<ISucursalReturnDto[]>;
     searchInput = new FormControl();
     values = [
         { display: 'Activas', value: true },
@@ -124,7 +126,7 @@ export class SucusalesListComponent implements OnInit {
      * @param id
      *
      */
-    deleteSucursal({ id, nombre }: Sucursal): void {
+    deleteSucursal({ id, nombre }: Sucursal | ISucursalReturnDto): void {
         const confirmDialog = this._dialog.open(ConfirmationDialogComponent, {
             data: {
                 title: 'Confirmar desactivar Sucursal',
@@ -142,14 +144,14 @@ export class SucusalesListComponent implements OnInit {
      * Activate Sucursal
      *
      */
-    activateSucursal({ id }: Sucursal): void {
+    activateSucursal({ id }: Sucursal | ISucursalReturnDto): void {
         this._store.dispatch(new EditSucursal(id, { activa: true }));
     }
 
     /**
      * Change radioButton
      */
-    changeActiva(e): void {
+    changeActiva(e: any): void {
         this._store.dispatch(new ChangeSearchFilter(e.value));
     }
 

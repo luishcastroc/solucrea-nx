@@ -30,7 +30,9 @@
             <form
                 [formGroup]="cajaForm"
                 class="flex-auto flex flex-col max-w-3xl mt-8"
-                *ngIf="((editMode === 'edit' || editMode === 'cierre') && selectedCaja$ | async) || editMode === 'new'"
+                *ngIf="
+                    ((editMode === 'edit' || editMode === 'cierre') && (selectedCaja$ | async)) || editMode === 'new'
+                "
             >
                 <div class="grid md:grid-cols-3 grid-cols-1 gap-6">
                     <!-- Fecha de Apertura -->
@@ -51,11 +53,11 @@
                             <mat-datepicker-toggle matSuffix [for]="openDatepicker"> </mat-datepicker-toggle>
                             <mat-datepicker #openDatepicker></mat-datepicker>
                         </mat-form-field>
-                        <ng-container *ngIf="cajaForm.get('fechaApertura').touched">
-                            <mat-error *ngIf="cajaForm.get('fechaApertura').errors?.required">
+                        <ng-container *ngIf="cajaForm.get('fechaApertura')?.touched">
+                            <mat-error *ngIf="cajaForm.get('fechaApertura')?.errors?.['required']">
                                 La fecha de apertura es requerida.
                             </mat-error>
-                            <mat-error *ngIf="cajaForm.get('fechaApertura').errors?.futureDateValidator">
+                            <mat-error *ngIf="cajaForm.get('fechaApertura')?.errors?.['futureDateValidator']">
                                 La fecha de apertura no puede ser mayor a hoy.
                             </mat-error>
                         </ng-container>
@@ -71,8 +73,8 @@
                                 }}</mat-option>
                             </mat-select>
                         </mat-form-field>
-                        <ng-container *ngIf="cajaForm.get('sucursal').touched">
-                            <mat-error *ngIf="cajaForm.get('sucursal').errors?.required">
+                        <ng-container *ngIf="cajaForm.get('sucursal')?.touched">
+                            <mat-error *ngIf="cajaForm.get('sucursal')?.errors?.['required']">
                                 La sucursal es requerida.
                             </mat-error>
                         </ng-container>
@@ -88,8 +90,8 @@
                             ></mat-icon>
                             <input [formControlName]="'saldoInicial'" matInput [inputMask]="currencyInputMask" />
                         </mat-form-field>
-                        <ng-container *ngIf="cajaForm.get('saldoInicial').touched">
-                            <mat-error *ngIf="cajaForm.get('saldoInicial').errors?.required">
+                        <ng-container *ngIf="cajaForm.get('saldoInicial')?.touched">
+                            <mat-error *ngIf="cajaForm.get('saldoInicial')?.errors?.['required']">
                                 El saldo inicial es requerido.
                             </mat-error>
                         </ng-container>
@@ -127,11 +129,11 @@
                                 <mat-datepicker-toggle matSuffix [for]="openDatepicker"> </mat-datepicker-toggle>
                                 <mat-datepicker #openDatepicker></mat-datepicker>
                             </mat-form-field>
-                            <ng-container *ngIf="cajaForm.get('fechaCierre').touched">
-                                <mat-error *ngIf="cajaForm.get('fechaCierre').errors?.required">
+                            <ng-container *ngIf="cajaForm.get('fechaCierre')?.touched">
+                                <mat-error *ngIf="cajaForm.get('fechaCierre')?.errors?.['required']">
                                     La fecha de cierre es requerida.
                                 </mat-error>
-                                <mat-error *ngIf="cajaForm.errors?.checkIfEndDateBeforeStartDate">
+                                <mat-error *ngIf="cajaForm.errors?.['checkIfEndDateBeforeStartDate']">
                                     La fecha de cierre no puede ser menor a la fecha de apertura o en el futuro.
                                 </mat-error>
                             </ng-container>
@@ -147,8 +149,8 @@
                                 ></mat-icon>
                                 <input [formControlName]="'saldoFinal'" matInput [inputMask]="currencyInputMask" />
                             </mat-form-field>
-                            <ng-container *ngIf="cajaForm.get('saldoFinal').touched">
-                                <mat-error *ngIf="cajaForm.get('saldoFinal').errors?.required">
+                            <ng-container *ngIf="cajaForm.get('saldoFinal')?.touched">
+                                <mat-error *ngIf="cajaForm.get('saldoFinal')?.errors?.['required']">
                                     El saldo final es requerido.
                                 </mat-error>
                             </ng-container>

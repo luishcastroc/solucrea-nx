@@ -38,12 +38,14 @@ import { IRole } from '../../models/roles.model';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TeamListComponent implements OnInit, OnDestroy {
-    @Select(AjustesUsuariosState.usuarios) usuarios$: Observable<Usuario[]>;
-    @Select(AjustesUsuariosState.loading) loading$: Observable<boolean>;
+    @Select(AjustesUsuariosState.usuarios)
+    usuarios$!: Observable<Usuario[]>;
+    @Select(AjustesUsuariosState.loading)
+    loading$!: Observable<boolean>;
 
-    searchResults$: Observable<Usuario[]>;
+    searchResults$!: Observable<Usuario[]>;
     usuario = this._store.selectSnapshot(AuthState.user);
-    searchResults: Usuario[];
+    searchResults!: Usuario[];
     roles: IRole[] = defaultRoles;
     searchInput: FormControl = new FormControl();
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -66,7 +68,9 @@ export class TeamListComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-        this._store.dispatch(new GetAllUsuarios(this.usuario.id));
+        if (this.usuario) {
+            this._store.dispatch(new GetAllUsuarios(this.usuario.id));
+        }
 
         // generating a new observable from the searchInput based on the criteria
         this.searchResults$ = this.searchInput.valueChanges.pipe(

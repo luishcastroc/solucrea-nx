@@ -2,12 +2,11 @@ import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@ang
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
+import { IAlert } from '@fuse/components/alert/alert.model';
 import { FuseAlertService } from '@fuse/components/alert/alert.service';
 import { Actions, ofActionErrored, Store } from '@ngxs/store';
 import { Login } from 'app/core/auth/';
 import { Subject, takeUntil } from 'rxjs';
-
-import { IAlert } from '../../../../@fuse/components/alert/alert.model';
 
 @Component({
     selector: 'auth-sign-in',
@@ -16,8 +15,9 @@ import { IAlert } from '../../../../@fuse/components/alert/alert.model';
     animations: fuseAnimations,
 })
 export class AuthSignInComponent implements OnInit, OnDestroy {
-    @ViewChild('signInNgForm') signInNgForm: NgForm;
-    usuario: string = localStorage.getItem('usuario');
+    @ViewChild('signInNgForm')
+    signInNgForm!: NgForm;
+    usuario: string | null = localStorage.getItem('usuario');
 
     alert: IAlert = {
         appearance: 'outline',
@@ -29,8 +29,8 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
         showIcon: true,
         dismissTime: 4,
     };
-    signInForm: FormGroup;
-    private destroy$ = new Subject<void>();
+    signInForm!: FormGroup;
+    private destroy$ = new Subject<any>();
 
     /**
      * Constructor
@@ -74,16 +74,18 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
             this._fuseAlertService.show(this.alert);
         });
 
-        this.signInForm
-            .get('username')
-            .valueChanges.pipe(takeUntil(this.destroy$))
-            .subscribe((value) => {
-                if (value) {
-                    this.signInForm.get('rememberMe').enable();
-                } else {
-                    this.signInForm.get('rememberMe').disable();
-                }
-            });
+        if (this.signInForm) {
+            this.signInForm
+                .get('username')
+                ?.valueChanges.pipe(takeUntil(this.destroy$))
+                .subscribe((value) => {
+                    if (value) {
+                        this.signInForm.get('rememberMe')?.enable();
+                    } else {
+                        this.signInForm.get('rememberMe')?.disable();
+                    }
+                });
+        }
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -118,7 +120,7 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
      *
      * @param event
      */
-    recordarme(e): void {
+    recordarme(e: any): void {
         const { checked } = e;
         if (!checked) {
             localStorage.removeItem('usuario');

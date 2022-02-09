@@ -11,10 +11,8 @@ import { SharedService } from 'app/shared';
 import { Moment } from 'moment';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
-import { AddCaja, ClearCajasState, GetAllSucursales, SelectCaja } from '../_store/caja.actions';
-import { CajasState } from '../_store/caja.state';
+import { AddCaja, CajasState, ClearCajasState, EditCaja, GetAllSucursales, SelectCaja } from 'app/modules/caja/_store';
 import { checkIfEndDateBeforeStartDate, futureDateValidator } from '../validators/custom-caja.validators';
-import { EditCaja } from './../_store/caja.actions';
 
 @Component({
     selector: 'app-caja-detail',
@@ -23,13 +21,14 @@ import { EditCaja } from './../_store/caja.actions';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CajaDetailComponent implements OnInit, OnDestroy {
-    @Select(CajasState.sucursales) sucursales$: Observable<ISucursalReturnDto[]>;
-    editMode$: Observable<EditMode>;
-    selectedCaja$: Observable<ICajaReturnDto>;
-    successToast$: Observable<HotToastClose>;
-    selectedCaja: ICajaReturnDto;
-    editMode: EditMode;
-    cajaForm: FormGroup;
+    @Select(CajasState.sucursales)
+    sucursales$!: Observable<ISucursalReturnDto[]>;
+    editMode$!: Observable<EditMode>;
+    selectedCaja$!: Observable<ICajaReturnDto | undefined>;
+    successToast$!: Observable<HotToastClose>;
+    selectedCaja!: ICajaReturnDto;
+    editMode!: EditMode;
+    cajaForm!: FormGroup;
     currencyInputMask = createMask({
         alias: 'numeric',
         groupSeparator: ',',
@@ -94,7 +93,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
      * Initialize the selectors for the mode and colonias
      *
      */
-    initializeData(id: string): void {
+    initializeData(id: string | null): void {
         this.editMode$ = this._store.select(CajasState.editMode).pipe(
             tap((edit) => {
                 this.editMode = edit;
@@ -102,7 +101,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
                 this._store.dispatch(new GetAllSucursales());
                 this.cajaForm = this.createCajaForm(edit);
 
-                if (edit === 'edit' || edit === 'cierre') {
+                if ((edit === 'edit' || edit === 'cierre') && id) {
                     this.saldoActual.disable();
                     this._store.dispatch(new SelectCaja(id));
                 }
@@ -115,7 +114,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
                 }
 
                 this.selectedCaja$ = this._store.select(CajasState.selectedCaja).pipe(
-                    tap((caja: ICajaReturnDto) => {
+                    tap((caja: ICajaReturnDto | undefined) => {
                         if (caja) {
                             this.selectedCaja = caja;
                             this.cajaForm.patchValue({

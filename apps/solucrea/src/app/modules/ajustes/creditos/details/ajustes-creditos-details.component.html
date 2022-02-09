@@ -26,7 +26,7 @@
                                     <input [formControlName]="'nombre'" matInput />
                                 </mat-form-field>
                                 <ng-container *ngIf="nombre.touched">
-                                    <mat-error *ngIf="nombre.errors?.required"> El nombre es requerido. </mat-error>
+                                    <mat-error *ngIf="nombre.errors?.['required']"> El nombre es requerido. </mat-error>
                                 </ng-container>
                             </div>
                             <!-- Monto Mínimo -->
@@ -41,7 +41,7 @@
                                     <input [formControlName]="'montoMinimo'" matInput [inputMask]="currencyInputMask" />
                                 </mat-form-field>
                                 <ng-container *ngIf="montoMinimo.touched">
-                                    <mat-error *ngIf="montoMinimo.errors?.required">
+                                    <mat-error *ngIf="montoMinimo.errors?.['required']">
                                         El monto mínimo es requerido.
                                     </mat-error>
                                 </ng-container>
@@ -58,7 +58,7 @@
                                     <input [formControlName]="'montoMaximo'" matInput [inputMask]="currencyInputMask" />
                                 </mat-form-field>
                                 <ng-container *ngIf="montoMaximo.touched">
-                                    <mat-error *ngIf="montoMaximo.errors?.required">
+                                    <mat-error *ngIf="montoMaximo.errors?.['required']">
                                         El monto máximo es requerido.
                                     </mat-error>
                                 </ng-container>
@@ -75,7 +75,7 @@
                                     <input [formControlName]="'interes'" matInput [inputMask]="percentageInputMask" />
                                 </mat-form-field>
                                 <ng-container *ngIf="interes.touched">
-                                    <mat-error *ngIf="interes.errors?.required">
+                                    <mat-error *ngIf="interes.errors?.['required']">
                                         La tasa de interes es requerida.
                                     </mat-error>
                                 </ng-container>
@@ -96,7 +96,7 @@
                                     />
                                 </mat-form-field>
                                 <ng-container *ngIf="interesMoratorio.touched">
-                                    <mat-error *ngIf="interesMoratorio.errors?.required">
+                                    <mat-error *ngIf="interesMoratorio.errors?.['required']">
                                         La tasa de interes moratorio es requerida.
                                     </mat-error>
                                 </ng-container>
@@ -117,7 +117,7 @@
                                     />
                                 </mat-form-field>
                                 <ng-container *ngIf="penalizacion.touched">
-                                    <mat-error *ngIf="penalizacion.errors?.required">
+                                    <mat-error *ngIf="penalizacion.errors?.['required']">
                                         La penalización por liquidación anticipada es requerida.
                                     </mat-error>
                                 </ng-container>
@@ -134,7 +134,7 @@
                                     <input [formControlName]="'comision'" matInput [inputMask]="percentageInputMask" />
                                 </mat-form-field>
                                 <ng-container *ngIf="comision.touched">
-                                    <mat-error *ngIf="comision.errors?.required">
+                                    <mat-error *ngIf="comision.errors?.['required']">
                                         La comisión por apertura es requerida.
                                     </mat-error>
                                 </ng-container>
@@ -151,7 +151,7 @@
                                     <input [formControlName]="'cargos'" matInput [inputMask]="currencyInputMask" />
                                 </mat-form-field>
                                 <ng-container *ngIf="cargos.touched">
-                                    <mat-error *ngIf="cargos.errors?.required"> El cargo es requerido. </mat-error>
+                                    <mat-error *ngIf="cargos.errors?.['required']"> El cargo es requerido. </mat-error>
                                 </ng-container>
                             </div>
                             <!-- Duración -->
@@ -166,7 +166,9 @@
                                     <input [formControlName]="'duracion'" matInput type="number" />
                                 </mat-form-field>
                                 <ng-container *ngIf="duracion.touched">
-                                    <mat-error *ngIf="duracion.errors?.required"> La duración es requerida. </mat-error>
+                                    <mat-error *ngIf="duracion.errors?.['required']">
+                                        La duración es requerida.
+                                    </mat-error>
                                 </ng-container>
                             </div>
                             <!-- Numero de Pagos -->
@@ -181,7 +183,7 @@
                                     <input [formControlName]="'numeroDePagos'" matInput type="number" />
                                 </mat-form-field>
                                 <ng-container *ngIf="numeroDePagos.touched">
-                                    <mat-error *ngIf="numeroDePagos.errors?.required">
+                                    <mat-error *ngIf="numeroDePagos.errors?.['required']">
                                         El número de pagos es requerido.
                                     </mat-error>
                                 </ng-container>
@@ -216,7 +218,7 @@
                                     </mat-select>
                                 </mat-form-field>
                                 <ng-container *ngIf="frecuencia.touched">
-                                    <mat-error *ngIf="frecuencia.errors?.required">
+                                    <mat-error *ngIf="frecuencia.errors?.['required']">
                                         La frecuencia es requerida.
                                     </mat-error>
                                 </ng-container>
@@ -249,7 +251,7 @@
                                     <input [formControlName]="'creditosActivos'" matInput type="number" />
                                 </mat-form-field>
                                 <ng-container *ngIf="creditosActivos.touched">
-                                    <mat-error *ngIf="creditosActivos.errors?.required">
+                                    <mat-error *ngIf="creditosActivos.errors?.['required']">
                                         El numero de creditos activos es requerido.
                                     </mat-error>
                                 </ng-container>
@@ -266,7 +268,7 @@
                                     <textarea [formControlName]="'descripcion'" matInput></textarea>
                                 </mat-form-field>
                                 <ng-container *ngIf="descripcion.touched">
-                                    <mat-error *ngIf="descripcion.errors?.required">
+                                    <mat-error *ngIf="descripcion.errors?.['required']">
                                         La descripción es requerida.
                                     </mat-error>
                                 </ng-container>
