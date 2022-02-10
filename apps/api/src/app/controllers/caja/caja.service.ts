@@ -1,13 +1,11 @@
-import { Caja } from '.prisma/client';
-/* eslint-disable @typescript-eslint/naming-convention */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { getSaldoActual } from '@solucrea-utils';
 import { CreateCajaDto, ICajaReturnDto } from 'api/dtos';
-import { isEmpty, sumBy } from 'lodash';
-
 import { PrismaService } from 'api/prisma';
-import { UtilService } from 'api/util';
+import { isEmpty } from 'lodash';
 
+/* eslint-disable @typescript-eslint/naming-convention */
 @Injectable()
 export class CajaService {
     select = {
@@ -22,7 +20,7 @@ export class CajaService {
         observaciones: true,
     };
 
-    constructor(private prisma: PrismaService, private utilService: UtilService) {}
+    constructor(private prisma: PrismaService) {}
 
     async caja(cajaWhereUniqueInput: Prisma.CajaWhereUniqueInput): Promise<ICajaReturnDto | null> {
         const cajaReturn = await this.prisma.caja.findUnique({
@@ -37,7 +35,7 @@ export class CajaService {
             );
         }
 
-        const saldoActual = this.utilService.getSaldoActual(cajaReturn);
+        const saldoActual = getSaldoActual(cajaReturn);
 
         const caja: ICajaReturnDto = { ...cajaReturn, saldoActual };
 
@@ -56,7 +54,7 @@ export class CajaService {
             let cajasReturn;
             if (cajas.length > 0) {
                 cajasReturn = cajas.map((caja) => {
-                    const saldoActual = this.utilService.getSaldoActual(caja);
+                    const saldoActual = getSaldoActual(caja);
                     return { ...caja, saldoActual };
                 });
             }
