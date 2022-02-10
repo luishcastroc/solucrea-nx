@@ -4,13 +4,10 @@ import { FormGroup } from '@angular/forms';
 import { Prisma, ReferidoPor } from '@prisma/client';
 import { ICreditoReturnDto, IModalidadSeguroReturnDto, ISeguroReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { environment } from 'apps/solucrea/src/environments/environment';
-import { sumBy } from 'lodash';
 import { Moment } from 'moment';
 import { forkJoin, map, Observable } from 'rxjs';
 
-import { ISegurosData } from '../_models';
-import { ICreditoData } from './../_models/credito-data.model';
-import { IDetails } from './../_models/details.model';
+import { ISegurosData } from '@solucrea-utils';
 
 @Injectable({
     providedIn: 'root',
@@ -81,66 +78,6 @@ export class CreditosService {
      */
     createCredito(data: Prisma.CreditoCreateInput): Observable<ICreditoReturnDto> {
         return this._httpClient.post<ICreditoReturnDto>(`${this._environment.uri}/credito`, data);
-    }
-
-    /**
-     * Calculate details
-     *
-     */
-    calculateDetails(data: ICreditoData): IDetails {
-        const { tasaInteres, monto, montoSeguro, numeroDePagos, comisionPorApertura, modalidadSeguro, pagos } = data;
-
-        const capital = monto / numeroDePagos;
-        const interes = capital * (tasaInteres / 100);
-        const seguroDiferido = modalidadSeguro === 'diferido' ? (montoSeguro ? montoSeguro : 0 / numeroDePagos) : 0;
-        const cuota = capital + interes + seguroDiferido;
-        const apertura = comisionPorApertura ? monto * (comisionPorApertura / 100) : 0;
-        const total = apertura + (modalidadSeguro === 'contado' ? (montoSeguro ? montoSeguro : 0) : 0);
-        const seguro =
-            modalidadSeguro === 'diferido'
-                ? seguroDiferido
-                : modalidadSeguro === 'contado'
-                ? montoSeguro
-                    ? montoSeguro
-                    : 0
-                : 0;
-
-        const saldo = monto - (pagos && pagos.length > 0 ? sumBy(pagos, (pago) => Number(pago.monto) - interes) : 0);
-
-        const details: IDetails = {
-            capital,
-            interes,
-            cuota,
-            apertura,
-            total,
-            seguro,
-            saldo,
-        };
-
-        return details;
-    }
-
-    /**
-     * Add Business Days
-     *
-     * @param originalDate
-     * @param numDaysToAdd
-     * @returns Moment
-     */
-    addBusinessDays(originalDate: Moment, numDaysToAdd: number): Moment {
-        const sunday = 0;
-        let daysRemaining = numDaysToAdd;
-
-        const newDate = originalDate.clone();
-
-        while (daysRemaining > 0) {
-            newDate.add(1, 'days');
-            if (newDate.day() !== sunday) {
-                daysRemaining--;
-            }
-        }
-
-        return newDate;
     }
 
     /**

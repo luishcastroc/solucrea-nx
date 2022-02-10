@@ -18,7 +18,7 @@ import { ParentescosService } from 'app/shared';
 import { sortBy } from 'lodash';
 import { forkJoin, tap } from 'rxjs';
 
-import { ISegurosData } from '../_models';
+import { ISegurosData } from '@solucrea-utils';
 import { CreditosService } from '../_services/creditos.service';
 import {
     ClearCreditosDetails,

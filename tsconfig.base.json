@@ -17,6 +17,7 @@
         "skipDefaultLibCheck": true,
         "paths": {
             "@fuse/*": ["apps/solucrea/src/@fuse/*"],
+            "@solucrea-utils": ["libs/utils/src/index.ts"],
             "api/*": ["apps/api/src/app/*"],
             "app/*": ["apps/solucrea/src/app/*"]
         }

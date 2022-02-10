@@ -9,7 +9,7 @@ import {
 } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 
-import { ISegurosData } from '../_models';
+import { ISegurosData } from '@solucrea-utils';
 import { Producto } from '.prisma/client';
 
 export interface CreditosStateModel {

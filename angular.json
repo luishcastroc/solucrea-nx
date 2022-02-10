@@ -1,8 +1,5 @@
 {
     "version": 1,
-    "cli": {
-        "defaultCollection": "@angular-eslint/schematics"
-    },
     "projects": {
         "api": {
             "root": "apps/api",
@@ -58,7 +55,9 @@
         },
         "solucrea": {
             "projectType": "application",
-            "cache": { "enabled": false },
+            "cache": {
+                "enabled": false
+            },
             "schematics": {
                 "@schematics/angular:component": {
                     "style": "scss"
@@ -175,6 +174,29 @@
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
                         "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+                    }
+                }
+            },
+            "tags": []
+        },
+        "utils": {
+            "root": "libs/utils",
+            "sourceRoot": "libs/utils/src",
+            "projectType": "library",
+            "architect": {
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "outputs": ["{options.outputFile}"],
+                    "options": {
+                        "lintFilePatterns": ["libs/utils/**/*.ts"]
+                    }
+                },
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/utils"],
+                    "options": {
+                        "jestConfig": "libs/utils/jest.config.js",
+                        "passWithNoTests": true
                     }
                 }
             },

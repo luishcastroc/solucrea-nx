@@ -8,6 +8,7 @@ import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { ActionCompletion, Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
+import { addBusinessDays, calculateDetails, ICreditoData, IDetails, ISegurosData } from '@solucrea-utils';
 import {
     IClienteReturnDto,
     IModalidadSeguroReturnDto,
@@ -16,12 +17,6 @@ import {
     ISucursalReturnDto,
     IUsuarioReturnDto,
 } from 'api/dtos';
-import { Moment } from 'moment';
-import { debounceTime, distinctUntilChanged, filter, Observable, Subject, takeUntil, tap } from 'rxjs';
-
-import { IDetails, ISegurosData } from '../_models';
-import { ICreditoData } from '../_models/credito-data.model';
-import { CreditosService } from '../_services/creditos.service';
 import {
     ClearCreditosDetails,
     CreateCredito,
@@ -37,6 +32,10 @@ import {
     SelectProducto,
     SelectSeguro,
 } from 'app/modules/creditos/_store/';
+import { Moment } from 'moment';
+import { debounceTime, distinctUntilChanged, filter, Observable, Subject, takeUntil, tap } from 'rxjs';
+
+import { CreditosService } from '../_services/creditos.service';
 import { Producto } from '.prisma/client';
 
 @Component({
@@ -385,10 +384,8 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
      * @param event
      */
     changeFechaDesembolso(e: any): void {
-        this.fechaInicio.setValue(this._creditosService.addBusinessDays(this.fechaDesembolso.value, 1));
-        this.fechaFinal.setValue(
-            this._creditosService.addBusinessDays(this.fechaInicio.value, this.selectedProducto.duracion)
-        );
+        this.fechaInicio.setValue(addBusinessDays(this.fechaDesembolso.value, 1));
+        this.fechaFinal.setValue(addBusinessDays(this.fechaInicio.value, this.selectedProducto.duracion));
         this.fechaInicio.markAsTouched();
         this.fechaFinal.markAsTouched();
     }
@@ -516,7 +513,7 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
                     : 'sin seguro',
             };
 
-            this.resumenOperacion = this._creditosService.calculateDetails(data);
+            this.resumenOperacion = calculateDetails(data);
             this.cuota.setValue(this.resumenOperacion.cuota);
             this.cuotaCapital.setValue(this.resumenOperacion.capital);
             this.cuotaInteres.setValue(this.resumenOperacion.interes);
