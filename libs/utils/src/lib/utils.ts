@@ -1,3 +1,4 @@
+import { ICajaReturnDto } from 'api/dtos';
 import { sumBy } from 'lodash';
 import { Moment } from 'moment';
 
@@ -63,4 +64,34 @@ export const addBusinessDays = (originalDate: Moment, numDaysToAdd: number): Mom
     }
 
     return newDate;
+};
+
+/**
+ * Get Saldo Actual
+ *
+ * @param caja
+ * @returns number
+ */
+export const getSaldoActual = (caja: ICajaReturnDto | Partial<ICajaReturnDto>): number => {
+    const { movimientos } = caja;
+    const depositos = movimientos?.filter((movimiento) => movimiento.tipo === 'DEPOSITO');
+    const retiros = movimientos?.filter((movimiento) => movimiento.tipo === 'RETIRO');
+
+    let sumRetiros = 0;
+    let sumDepositos = 0;
+    if (retiros && depositos) {
+        if (retiros.length > 0) {
+            for (const retiro of retiros) {
+                sumRetiros += Number(retiro.monto);
+            }
+        }
+
+        if (depositos.length > 0) {
+            for (const deposito of depositos) {
+                sumDepositos += Number(deposito.monto);
+            }
+        }
+    }
+
+    return Number(caja.saldoInicial) + sumDepositos - sumRetiros;
 };

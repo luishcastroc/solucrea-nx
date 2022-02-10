@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { getSaldoActual } from '@solucrea-utils';
 import { ICajaReturnDto, ICreditoReturnDto } from 'api/dtos';
 import { PrismaService } from 'api/prisma';
-import { selectCredito, UtilService } from 'api/util';
+import { selectCredito } from 'api/util';
 
 @Injectable()
 export class CreditosService {
-    constructor(private prisma: PrismaService, private utilService: UtilService) {}
+    constructor(private prisma: PrismaService) {}
 
     async creditosCliente(clienteId: string): Promise<ICreditoReturnDto[] | null> {
         try {
@@ -100,7 +101,7 @@ export class CreditosService {
                 );
             }
 
-            const saldo = this.utilService.getSaldoActual(saldoInicialCaja);
+            const saldo = getSaldoActual(saldoInicialCaja);
 
             if (saldo < Number(data.monto)) {
                 throw new HttpException(
