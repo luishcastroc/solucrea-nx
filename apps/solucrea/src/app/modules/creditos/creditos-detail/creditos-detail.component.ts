@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { StepperOrientation, StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
@@ -307,7 +308,7 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
                 let message;
                 this.loading = false;
                 if (error) {
-                    message = `${error['error'].message}`;
+                    message = `${(error as HttpErrorResponse)['error'].message}`;
                     this._toast.error(message, {
                         duration: 4000,
                         position: 'bottom-center',

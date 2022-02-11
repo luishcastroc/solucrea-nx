@@ -11,10 +11,12 @@ import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FuseHorizontalNavigationBasicItemComponent implements OnInit, OnDestroy {
-    @Input() item: FuseNavigationItem;
-    @Input() name: string;
+    @Input()
+    item!: FuseNavigationItem;
+    @Input()
+    name!: string;
 
-    private _fuseHorizontalNavigationComponent: FuseHorizontalNavigationComponent;
+    private _fuseHorizontalNavigationComponent!: FuseHorizontalNavigationComponent;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**

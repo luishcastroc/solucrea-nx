@@ -16,9 +16,10 @@ import { createPasswordStrengthValidator } from '../validators/custom-ajustes.va
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AjustesSecurityComponent implements OnInit, OnDestroy {
-    @Select(AjustesUsuariosState.selectedUsuario) user$: Observable<Usuario>;
-    securityForm: FormGroup;
-    usuario: Usuario;
+    @Select(AjustesUsuariosState.selectedUsuario)
+    user$!: Observable<Usuario>;
+    securityForm!: FormGroup;
+    usuario!: Usuario;
     private _unsubscribeAll: Subject<any>;
 
     /**

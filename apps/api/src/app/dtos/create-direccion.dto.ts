@@ -4,16 +4,16 @@ import { IsEnum, IsNotEmpty } from 'class-validator';
 export class CreateDireccionDto implements Prisma.DireccionCreateInput {
     @IsNotEmpty({ message: 'Tipo de Dirección es requerido' })
     @IsEnum(TipoDireccion, { message: 'Tipo es inválido' })
-    tipo: TipoDireccion;
+    tipo!: TipoDireccion;
     @IsNotEmpty({ message: 'Calle es requerida' })
-    calle: string;
+    calle!: string;
     @IsNotEmpty({ message: 'Número es requerido' })
-    numero: string;
+    numero!: string;
     @IsNotEmpty({ message: 'Colonia es requerida' })
-    colonia: Prisma.ColoniaCreateNestedOneWithoutDireccionInput;
+    colonia!: Prisma.ColoniaCreateNestedOneWithoutDireccionInput;
     id?: string;
     cruzamientos?: string;
-    creadoPor: string;
+    creadoPor!: string;
     fechaCreacion?: string | Date;
     actualizadoPor?: string;
     fechaActualizacion?: string | Date;

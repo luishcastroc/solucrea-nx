@@ -12,7 +12,8 @@ import { ClearCreditosState } from 'app/modules/creditos/_store/';
     encapsulation: ViewEncapsulation.None,
 })
 export class CreditosComponent implements OnInit, OnDestroy {
-    @ViewChild('drawer') drawer: MatDrawer;
+    @ViewChild('drawer')
+    drawer!: MatDrawer;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     private _unsubscribeAll: Subject<any> = new Subject<any>();

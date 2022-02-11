@@ -3,11 +3,11 @@ import { IsNotEmpty } from 'class-validator';
 import { Prisma } from '@prisma/client';
 export class CreateSucursalDto {
     @IsNotEmpty({ message: 'Nombre es requerido.' })
-    nombre: string;
+    nombre!: string;
     @IsNotEmpty({ message: 'Teléfono es requerido.' })
-    telefono: string;
+    telefono!: string;
     @IsNotEmpty({ message: 'Dirección es requerida.' })
-    direccion: IDireccion;
+    direccion!: IDireccion;
     creadoPor?: string;
     fechaCreacion?: string | Date;
     actualizadoPor?: string;

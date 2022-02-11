@@ -2,13 +2,13 @@ import { IsNotEmpty } from 'class-validator';
 import { Prisma } from '@prisma/client';
 export class CreateCajaDto {
     @IsNotEmpty({ message: 'Saldo inicial es requerido.' })
-    saldoInicial: string | number | Prisma.Decimal;
+    saldoInicial!: string | number | Prisma.Decimal;
     @IsNotEmpty({ message: 'Fecha de apertura es requerida' })
-    fechaApertura: string | Date;
+    fechaApertura!: string | Date;
     @IsNotEmpty({ message: 'Sucursal es requerida.' })
-    sucursal: string;
+    sucursal!: string;
     observaciones?: string;
-    creadoPor: string;
+    creadoPor!: string;
     fechaCreacion?: string | Date;
     actualizadoPor?: string;
     fechaActualizacion?: string | Date;

@@ -26,7 +26,8 @@ import { FuseUtilsService } from '@fuse/services/utils/utils.service';
 })
 export class FuseHorizontalNavigationComponent implements OnChanges, OnInit, OnDestroy {
     @Input() name: string = this._fuseUtilsService.randomId();
-    @Input() navigation: FuseNavigationItem[];
+    @Input()
+    navigation!: FuseNavigationItem[];
 
     onRefreshed: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
     private _unsubscribeAll: Subject<any> = new Subject<any>();

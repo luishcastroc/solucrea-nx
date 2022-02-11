@@ -127,6 +127,8 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy {
                 filter((alert: IAlert) => {
                     if (alert) {
                         return this.name === alert.name;
+                    } else {
+                        return false;
                     }
                 }),
                 takeUntil(this._unsubscribeAll)
@@ -142,6 +144,8 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy {
                 filter((alert: IAlert) => {
                     if (alert) {
                         return this.name === alert.name;
+                    } else {
+                        return false;
                     }
                 }),
                 takeUntil(this._unsubscribeAll)
@@ -152,7 +156,7 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy {
                     this.message = message;
                     this.show();
 
-                    if (alert.dismissible && alert.dismissTime > 0) {
+                    if (alert.dismissible && alert.dismissTime && alert.dismissTime > 0) {
                         setTimeout(() => {
                             this.dismiss();
                         }, alert.dismissTime * 1000);

@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -108,7 +109,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
                 const { error, successful } = result.result;
                 const { action } = result;
                 if (error) {
-                    const message = `${error['error'].message}`;
+                    const message = `${(error as HttpErrorResponse)['error'].message}`;
                     this._toast.error(message, {
                         duration: 4000,
                         position: 'bottom-center',

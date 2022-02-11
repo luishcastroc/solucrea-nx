@@ -20,11 +20,12 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy {
     /* eslint-enable @typescript-eslint/naming-convention */
 
     @Input() fuseScrollbar: boolean = true;
-    @Input() fuseScrollbarOptions: PerfectScrollbar.Options;
+    @Input()
+    fuseScrollbarOptions!: PerfectScrollbar.Options;
 
-    private _animation: number;
-    private _options: PerfectScrollbar.Options;
-    private _ps: PerfectScrollbar;
+    private _animation!: number | null;
+    private _options!: PerfectScrollbar.Options;
+    private _ps!: PerfectScrollbar | null;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**

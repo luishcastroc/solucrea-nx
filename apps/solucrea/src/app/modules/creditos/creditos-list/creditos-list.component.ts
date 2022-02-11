@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -83,7 +84,7 @@ export class CreditosListComponent implements OnInit {
                 const { action } = result;
                 let message;
                 if (error) {
-                    message = `${error['error'].message}`;
+                    message = `${(error as HttpErrorResponse)['error'].message}`;
                     this._toast.error(message, {
                         duration: 4000,
                         position: 'bottom-center',

@@ -12,7 +12,8 @@ import { ClearCajasState } from 'app/modules/caja/_store';
     encapsulation: ViewEncapsulation.None,
 })
 export class CajaComponent implements OnInit, OnDestroy {
-    @ViewChild('drawer') drawer: MatDrawer;
+    @ViewChild('drawer')
+    drawer!: MatDrawer;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     private _unsubscribeAll: Subject<any> = new Subject<any>();

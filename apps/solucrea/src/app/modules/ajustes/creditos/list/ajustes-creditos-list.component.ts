@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -8,15 +9,15 @@ import { AuthUtils } from 'app/core/auth/auth.utils';
 import {
     AjustesCreditosState,
     AjustesModeCredito,
-    DeleteCredito,
-    GetAllCreditos,
-    EditCredito,
     ChangeSearchFilterCreditos,
+    DeleteCredito,
+    EditCredito,
+    GetAllCreditos,
 } from 'app/modules/ajustes/_store';
+import { ConfirmationDialogComponent } from 'app/shared';
 import { map, Observable, startWith, Subject, takeUntil, tap, withLatestFrom } from 'rxjs';
 
 import { Producto } from '.prisma/client';
-import { ConfirmationDialogComponent } from 'app/shared';
 
 @Component({
     selector: 'app-list',
@@ -74,8 +75,9 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
                 const { error, successful } = result.result;
                 const { action } = result;
                 let message;
+                console.log(error);
                 if (error) {
-                    message = `${error['error'].message}`;
+                    message = `${(error as HttpErrorResponse)['error'].message}`;
                     this._toast.error(message, {
                         duration: 4000,
                         position: 'bottom-center',

@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -55,7 +56,7 @@ export class ClienteListComponent implements OnInit, OnDestroy {
                 const { error, successful } = result.result;
                 const { action } = result;
                 if (error) {
-                    const message = `${error['error'].message}`;
+                    const message = `${(error as HttpErrorResponse)['error'].message}`;
                     this._toast.error(message, {
                         duration: 4000,
                         position: 'bottom-center',

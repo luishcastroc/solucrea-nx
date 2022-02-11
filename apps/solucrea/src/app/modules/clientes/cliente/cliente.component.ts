@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -26,11 +27,6 @@ import {
 } from 'api/dtos/';
 import { EditMode } from 'app/core/models';
 import { CanDeactivateComponent } from 'app/core/models/can-deactivate.model';
-import { SharedService } from 'app/shared';
-import { isEqual } from 'lodash';
-import { Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
-
-import { ClientesService } from '../_services/clientes.service';
 import {
     Add,
     ClearClientesState,
@@ -43,6 +39,11 @@ import {
     SelectActividadEconomica,
     SelectCliente,
 } from 'app/modules/clientes/_store';
+import { SharedService } from 'app/shared';
+import { isEqual } from 'lodash';
+import { Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
+
+import { ClientesService } from '../_services/clientes.service';
 import { IConfig } from '../models/config.model';
 import { curpValidator, rfcValidator } from '../validators/custom-clientes.validators';
 
@@ -200,7 +201,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
             const { error, successful } = result.result;
             const { action } = result;
             if (error) {
-                const message = `${error['error'].message}`;
+                const message = `${(error as HttpErrorResponse)['error'].message}`;
                 this._toast.error(message, {
                     duration: 4000,
                     position: 'bottom-center',
@@ -496,14 +497,16 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
             }
 
             if (cliente.direcciones && Object.values(cliente.direcciones).length > 0) {
-                const create = Object.values(cliente.direcciones)
+                const create = Object.values(cliente.direcciones as IDireccion[])
                     .filter((direccion: IDireccion) => !direccion.id)
-                    .map((direccion: CreateDireccionDto) => {
+                    .map((direccion: IDireccion) => {
                         const { id, ...rest } = direccion;
-                        const direccionReturn: CreateDireccionDto = { tipo: 'CLIENTE', ...rest };
+                        const direccionReturn: CreateDireccionDto = { ...rest, tipo: 'CLIENTE' } as CreateDireccionDto;
                         return direccionReturn;
                     });
-                const update = Object.values(cliente.direcciones).filter((direccion: IDireccion) => direccion.id);
+                const update = Object.values(cliente.direcciones as IDireccion[]).filter(
+                    (direccion: IDireccion) => direccion.id
+                );
 
                 // if there's a record that needs to be created add it to the object
                 if (create.length > 0) {

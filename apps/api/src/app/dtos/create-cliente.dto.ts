@@ -19,15 +19,15 @@ export class IDireccion {
 
 export class ITrabajo {
     @IsNotEmpty({ message: 'Nombre del trabajo es requerido' })
-    nombre: string;
+    nombre!: string;
     @IsNotEmpty({ message: 'Teléfono del trabajo es requerido' })
-    telefono: string;
+    telefono!: string;
     @IsNotEmpty({ message: 'Antiguedad en el trabajo es requerida' })
-    antiguedad: number;
+    antiguedad!: number;
     @IsNotEmpty({ message: 'Dirección del trabajo es requerido' })
-    direccion: IDireccion;
+    direccion!: IDireccion;
     @IsNotEmpty({ message: 'Actividad económica del trabajo es requerida' })
-    actividadEconomica: string;
+    actividadEconomica!: string;
     id?: string;
     creadoPor?: string;
     fechaCreacion?: Date;
@@ -37,34 +37,34 @@ export class ITrabajo {
 
 export class CreateClienteDto {
     @IsNotEmpty({ message: 'Nombre es requerido' })
-    nombre: string;
+    nombre!: string;
     @IsNotEmpty({ message: 'Apellido paterno es requerido' })
-    apellidoPaterno: string;
+    apellidoPaterno!: string;
     @IsNotEmpty({ message: 'Apellido materno es requerido' })
-    apellidoMaterno: string;
+    apellidoMaterno!: string;
     @IsNotEmpty({ message: 'Fecha de nacimiento es requerida' })
     @IsDateString({ strict: true }, { message: 'Fecha inválida favor de verificar' })
-    fechaDeNacimiento: string | Date;
+    fechaDeNacimiento!: string | Date;
     @IsNotEmpty({ message: 'RFC es requerido' })
-    rfc: string;
+    rfc!: string;
     @IsNotEmpty({ message: 'CURP es requerido' })
-    curp: string;
+    curp!: string;
     @IsNotEmpty({ message: 'Monto mínimo es requerido' })
-    montoMinimo: string | number | Prisma.Decimal;
+    montoMinimo!: string | number | Prisma.Decimal;
     @IsNotEmpty({ message: 'Monto máximo es requerido' })
-    montoMaximo: string | number | Prisma.Decimal;
+    montoMaximo!: string | number | Prisma.Decimal;
     @IsNotEmpty({ message: 'Estado civil es requerido' })
-    estadoCivil: Prisma.EstadoCivilCreateNestedOneWithoutClientesInput;
+    estadoCivil!: Prisma.EstadoCivilCreateNestedOneWithoutClientesInput;
     @IsNotEmpty({ message: 'Típo de vivienda es requerido' })
-    tipoDeVivienda: Prisma.TipoDeViviendaCreateNestedOneWithoutClientesInput;
+    tipoDeVivienda!: Prisma.TipoDeViviendaCreateNestedOneWithoutClientesInput;
     @IsNotEmpty({ message: 'Escolaridad es requerida' })
-    escolaridad: Prisma.EscolaridadCreateNestedOneWithoutClientesInput;
+    escolaridad!: Prisma.EscolaridadCreateNestedOneWithoutClientesInput;
     @IsNotEmpty({ message: 'Género es requerido' })
-    genero: Prisma.GeneroCreateNestedOneWithoutClientesInput;
+    genero!: Prisma.GeneroCreateNestedOneWithoutClientesInput;
     @IsNotEmpty({ message: 'Teléfono es requerido' })
-    telefono1: string;
+    telefono1!: string;
     @IsNotEmpty({ message: 'Trabajo es requerido' })
-    trabajo: ITrabajo;
+    trabajo!: ITrabajo;
     telefono2?: string;
     porcentajeDePagos?: number;
     porcentajeDeMora?: number;

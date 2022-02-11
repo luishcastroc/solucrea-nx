@@ -3,9 +3,9 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateColoniaDto implements Prisma.ColoniaCreateInput {
     @IsNotEmpty({ message: 'Código postal es requerido' })
-    codigoPostal: string;
+    codigoPostal!: string;
     @IsNotEmpty({ message: 'la descripción es requerida' })
-    descripcion: string;
+    descripcion!: string;
     id?: string;
     ciudad?: Prisma.CiudadCreateNestedOneWithoutColoniasInput;
     direccion?: Prisma.DireccionCreateNestedManyWithoutColoniaInput;

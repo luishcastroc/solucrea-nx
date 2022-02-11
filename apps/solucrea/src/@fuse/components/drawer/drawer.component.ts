@@ -50,8 +50,8 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy {
 
     private _animationsEnabled: boolean = false;
     private _hovered: boolean = false;
-    private _overlay: HTMLElement;
-    private _player: AnimationPlayer;
+    private _overlay!: HTMLElement | null;
+    private _player!: AnimationPlayer;
 
     /**
      * Constructor
@@ -366,7 +366,7 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy {
             // If the backdrop still exists...
             if (this._overlay) {
                 // Remove the backdrop
-                this._overlay.parentNode.removeChild(this._overlay);
+                this._overlay?.parentNode?.removeChild(this._overlay);
                 this._overlay = null;
             }
         });

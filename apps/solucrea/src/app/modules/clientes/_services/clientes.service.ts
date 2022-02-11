@@ -123,7 +123,7 @@ export class ClientesService {
             numeroCreditosCrecer,
         } = clienteForm.value;
 
-        const direcciones: IDireccion[] = direccionesCliente.map((dir) => ({
+        const direcciones: IDireccion[] = direccionesCliente.map((dir: Partial<IDireccion>) => ({
             tipo: dir.tipo,
             calle: dir.calle,
             numero: dir.numero,

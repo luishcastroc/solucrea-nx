@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -81,7 +82,7 @@ export class AjustesAccountComponent implements OnInit {
             tap((result) => {
                 const { error, successful } = result.result;
                 if (error) {
-                    const message = `${error['error'].message}`;
+                    const message = `${(error as HttpErrorResponse)['error'].message}`;
                     this._toast.error(message, {
                         duration: 4000,
                         position: 'bottom-center',

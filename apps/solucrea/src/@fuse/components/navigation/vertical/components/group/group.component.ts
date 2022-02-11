@@ -16,11 +16,15 @@ export class FuseVerticalNavigationGroupItemComponent implements OnInit, OnDestr
     static ngAcceptInputType_autoCollapse: BooleanInput;
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    @Input() autoCollapse: boolean;
-    @Input() item: FuseNavigationItem;
-    @Input() name: string;
+    /* eslint-enable @typescript-eslint/naming-convention */
+    @Input()
+    autoCollapse!: boolean;
+    @Input()
+    item!: FuseNavigationItem;
+    @Input()
+    name!: string;
 
-    private _fuseVerticalNavigationComponent: FuseVerticalNavigationComponent;
+    private _fuseVerticalNavigationComponent!: FuseVerticalNavigationComponent;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
