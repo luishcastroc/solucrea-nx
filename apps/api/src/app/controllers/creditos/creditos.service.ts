@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { getSaldoActual } from '@solucrea-utils';
-import { ICajaReturnDto, ICreditoReturnDto } from 'api/dtos';
+import { getSaldoActual, generateTablaAmorizacion, getFrecuencia } from '@solucrea-utils';
+import { ICajaReturnDto, ICreditoReturnDto, IAmortizacion } from 'api/dtos';
 import { PrismaService } from 'api/prisma';
 import { selectCredito } from 'api/util';
 
+/* eslint-disable @typescript-eslint/naming-convention */
 @Injectable()
 export class CreditosService {
     constructor(private prisma: PrismaService) {}
@@ -17,7 +17,20 @@ export class CreditosService {
                 select: selectCredito,
             });
 
-            return creditosCliente;
+            const creditosReturn = creditosCliente.map((credito: ICreditoReturnDto | null) => {
+                const frecuencia = getFrecuencia(credito.producto.frecuencia);
+                const amortizacion: IAmortizacion[] = generateTablaAmorizacion(
+                    credito.producto.numeroDePagos,
+                    frecuencia,
+                    credito.fechaInicio,
+                    credito.pagos
+                );
+                const creditoReturn = { ...credito, amortizacion };
+
+                return creditoReturn;
+            });
+
+            return creditosReturn;
         } catch (e) {
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
@@ -33,9 +46,24 @@ export class CreditosService {
     async creditos(): Promise<ICreditoReturnDto[] | null> {
         const select = selectCredito;
         try {
-            return this.prisma.credito.findMany({
+            const creditos = await this.prisma.credito.findMany({
                 select,
             });
+
+            const creditosReturn = creditos.map((credito: ICreditoReturnDto | null) => {
+                const frecuencia = getFrecuencia(credito.producto.frecuencia);
+                const amortizacion: IAmortizacion[] = generateTablaAmorizacion(
+                    credito.producto.numeroDePagos,
+                    frecuencia,
+                    credito.fechaInicio,
+                    credito.pagos
+                );
+                const creditoReturn = { ...credito, amortizacion };
+
+                return creditoReturn;
+            });
+
+            return creditosReturn;
         } catch (e) {
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(

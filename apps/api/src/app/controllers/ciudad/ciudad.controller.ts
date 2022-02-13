@@ -20,7 +20,7 @@ export class CiudadController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('ciudad/:id')
-    async getCiudad(@Param('id') id: number): Promise<Ciudad> {
+    async getCiudad(@Param('id') id: number): Promise<Ciudad | null> {
         return this.ciudadService.ciudad({ id });
     }
 

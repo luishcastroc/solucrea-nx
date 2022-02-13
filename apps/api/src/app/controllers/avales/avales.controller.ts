@@ -21,7 +21,7 @@ export class AvalesController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('aval/:id')
-    async getAval(@Param('id') id: string): Promise<Aval> {
+    async getAval(@Param('id') id: string): Promise<Aval | null> {
         return this.avalesService.aval({ id });
     }
 

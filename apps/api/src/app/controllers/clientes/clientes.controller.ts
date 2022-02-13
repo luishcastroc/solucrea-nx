@@ -31,7 +31,7 @@ export class ClientesController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('cliente/:id')
-    async getCliente(@Param('id') id: string): Promise<IClienteReturnDto> {
+    async getCliente(@Param('id') id: string): Promise<IClienteReturnDto | null> {
         return this.clientesService.cliente({ id });
     }
 
@@ -39,7 +39,7 @@ export class ClientesController {
     @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
     @Post('cliente')
-    async createCliente(@Request() req, @Body() data: CreateClienteDto): Promise<IClienteReturnDto> {
+    async createCliente(@Request() req: any, @Body() data: CreateClienteDto): Promise<IClienteReturnDto> {
         const creadoPor = req.user.username;
         data.creadoPor = creadoPor;
         return this.clientesService.createCliente(data);
@@ -49,7 +49,7 @@ export class ClientesController {
     @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
     @Put('cliente/:id')
     async editCliente(
-        @Request() req,
+        @Request() req: any,
         @Param('id') id: string,
         @Body() data: UpdateClienteDto
     ): Promise<IClienteReturnDto> {
@@ -65,7 +65,7 @@ export class ClientesController {
     @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
     @Delete('cliente/:id')
     async deleteCliente(
-        @Request() req,
+        @Request() req: any,
         @Param('id') id: string,
         @Body() data: Prisma.ClienteUpdateInput
     ): Promise<IClienteReturnDto> {

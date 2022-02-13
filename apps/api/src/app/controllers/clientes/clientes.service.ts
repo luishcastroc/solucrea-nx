@@ -26,7 +26,7 @@ export class ClientesService {
             );
         }
 
-        return clienteReturn;
+        return clienteReturn as IClienteReturnDto;
     }
 
     async clientes(): Promise<IClienteReturnDto[]> {
@@ -38,15 +38,15 @@ export class ClientesService {
             if (!clientesReturn) {
                 return [];
             }
-            return clientesReturn;
-        } catch ({ response }) {
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+            return clientesReturn as IClienteReturnDto[];
+        } catch (e: any) {
+            if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error consultando clientes' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: response.status, message: response.message }, response.status);
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
             }
         }
     }
@@ -65,7 +65,7 @@ export class ClientesService {
         const fechaDeNacimiento = new Date(data.fechaDeNacimiento);
         const { direcciones, trabajo } = data;
         const { direccion } = trabajo;
-        const direccionesCreate: Prisma.DireccionCreateManyClienteInput[] = direcciones.map(
+        const direccionesCreate: Prisma.DireccionCreateManyClienteInput[] | undefined = direcciones?.map(
             ({ numero, calle, cruzamientos, coloniaId, tipo }: Direccion) => ({
                 tipo,
                 numero,

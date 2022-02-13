@@ -20,7 +20,7 @@ export class ColoniasController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('colonia/:id')
-    async getColonia(@Param('id') id: string): Promise<Colonia> {
+    async getColonia(@Param('id') id: string): Promise<Colonia | null> {
         return this.coloniasService.colonia({ id });
     }
 

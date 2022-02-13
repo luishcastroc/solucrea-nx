@@ -32,7 +32,7 @@ export class CajaController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('caja/:id')
-    async getCaja(@Param('id') id: string): Promise<ICajaReturnDto> {
+    async getCaja(@Param('id') id: string): Promise<ICajaReturnDto | null> {
         return this.cajaService.caja({ id });
     }
 
@@ -40,7 +40,7 @@ export class CajaController {
     @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN, Role.CAJERO, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
     @Post('caja')
-    async createCaja(@Request() req, @Body() data: CreateCajaDto): Promise<ICajaReturnDto> {
+    async createCaja(@Request() req: any, @Body() data: CreateCajaDto): Promise<ICajaReturnDto> {
         const creadoPor = req.user.username;
         data.creadoPor = creadoPor;
         return this.cajaService.createCaja(data);

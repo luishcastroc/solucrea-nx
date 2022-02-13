@@ -21,7 +21,7 @@ export class ActividadesEconomicasController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('actividad-economica/:id')
-    async getActividadEconomica(@Param('id') id: string): Promise<IActividadEconomicaReturnDto> {
+    async getActividadEconomica(@Param('id') id: string): Promise<IActividadEconomicaReturnDto | null> {
         return this.actividadesEconomicasService.actividadEconomica({ id });
     }
 

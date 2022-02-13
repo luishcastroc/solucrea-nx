@@ -1,6 +1,7 @@
-import { ICajaReturnDto } from 'api/dtos';
+import { Frecuencia, Pago } from '@prisma/client';
+import { IAmortizacion, ICajaReturnDto } from 'api/dtos';
 import { sumBy } from 'lodash';
-import { Moment } from 'moment';
+import * as moment from 'moment';
 
 import { ICreditoData, IDetails } from './models';
 
@@ -50,7 +51,7 @@ export const calculateDetails = (data: ICreditoData): IDetails => {
  * @param numDaysToAdd
  * @returns Moment
  */
-export const addBusinessDays = (originalDate: Moment, numDaysToAdd: number): Moment => {
+export const addBusinessDays = (originalDate: moment.Moment, numDaysToAdd: number): moment.Moment => {
     const sunday = 0;
     let daysRemaining = numDaysToAdd;
 
@@ -94,4 +95,70 @@ export const getSaldoActual = (caja: ICajaReturnDto | Partial<ICajaReturnDto>): 
     }
 
     return Number(caja.saldoInicial) + sumDepositos - sumRetiros;
+};
+
+/**
+ * Generar Tabla Amortizacion
+ *
+ * @param numeroDePagos
+ * @param frecuencia
+ * @param fechaInicio
+ * @param pagos
+ * @returns tabla de amortización
+ */
+export const generateTablaAmorizacion = (
+    numeroDePagos: number,
+    frecuencia: number,
+    fechaInicio: string | Date,
+    pagos: Partial<Pago>[] | Pago[]
+): IAmortizacion[] => {
+    const amortizacion: IAmortizacion[] = [];
+    let fechaPagoAux = fechaInicio;
+    for (let i = 1; i < numeroDePagos + 1; i++) {
+        const status: 'PAGADO' | 'ADEUDA' = pagos.some((pago) => pago?.numeroDePago === i) ? 'PAGADO' : 'ADEUDA';
+        const fechaDePago: Date | string = addBusinessDays(moment(fechaPagoAux), frecuencia).toISOString();
+        amortizacion.push({ numeroDePago: i, fechaDePago, status });
+        fechaPagoAux = fechaDePago;
+    }
+    return amortizacion;
+};
+
+/**
+ *
+ * @param frecuencia
+ * @returns frecuencia en días
+ */
+export const getFrecuencia = (frecuencia: Frecuencia | undefined): number => {
+    let dias!: number;
+    switch (frecuencia) {
+        case 'DIARIO':
+            dias = 1;
+            break;
+        case 'SEMANAL':
+            dias = 7;
+            break;
+        case 'QUINCENAL':
+            dias = 15;
+            break;
+        case 'MENSUAL':
+            dias = 30;
+            break;
+        case 'BIMESTRAL':
+            dias = 60;
+            break;
+        case 'TRIMESTRAL':
+            dias = 90;
+            break;
+        case 'CUATRIMESTRAL':
+            dias = 120;
+            break;
+        case 'SEMESTRAL':
+            dias = 180;
+            break;
+        case 'ANUAL':
+            dias = 360;
+            break;
+    }
+
+    return dias;
 };

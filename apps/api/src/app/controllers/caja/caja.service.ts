@@ -35,9 +35,9 @@ export class CajaService {
             );
         }
 
-        const saldoActual = getSaldoActual(cajaReturn);
+        const saldoActual = getSaldoActual(cajaReturn as ICajaReturnDto);
 
-        const caja: ICajaReturnDto = { ...cajaReturn, saldoActual };
+        const caja: ICajaReturnDto = { ...(cajaReturn as ICajaReturnDto), saldoActual };
 
         return caja;
     }
@@ -54,12 +54,12 @@ export class CajaService {
             let cajasReturn;
             if (cajas.length > 0) {
                 cajasReturn = cajas.map((caja) => {
-                    const saldoActual = getSaldoActual(caja);
+                    const saldoActual = getSaldoActual(caja as ICajaReturnDto);
                     return { ...caja, saldoActual };
                 });
             }
 
-            return cajasReturn;
+            return cajasReturn as ICajaReturnDto[];
         } catch {
             throw new HttpException(
                 { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error consultando las cajas' },
@@ -89,15 +89,16 @@ export class CajaService {
         }
 
         try {
-            return await this.prisma.caja.create({ data: cajaCreate, select: this.select });
-        } catch ({ response }) {
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+            const cajaReturn = await this.prisma.caja.create({ data: cajaCreate, select: this.select });
+            return cajaReturn as ICajaReturnDto;
+        } catch (e: any) {
+            if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando el turno' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: response.status, message: response.message }, response.status);
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
             }
         }
     }
@@ -107,7 +108,7 @@ export class CajaService {
         data: Prisma.CajaUpdateInput;
     }): Promise<ICajaReturnDto> {
         const { where, data } = params;
-        const cajaUpdate: Prisma.CajaUpdateInput = { ...(data as Prisma.CajaUpdateInput) };
+        const cajaData: Prisma.CajaUpdateInput = { ...(data as Prisma.CajaUpdateInput) };
 
         if (isEmpty(data)) {
             throw new HttpException(
@@ -120,37 +121,39 @@ export class CajaService {
         }
 
         try {
-            return this.prisma.caja.update({
-                data: cajaUpdate,
+            const cajaUpdate = await this.prisma.caja.update({
+                data: cajaData,
                 where,
                 select: this.select,
             });
-        } catch ({ response }) {
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+            return cajaUpdate as ICajaReturnDto;
+        } catch (e: any) {
+            if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error actualizando el turno' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: response.status, message: response.message }, response.status);
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
             }
         }
     }
 
     async deleteCaja(where: Prisma.CajaWhereUniqueInput): Promise<ICajaReturnDto> {
         try {
-            return this.prisma.caja.delete({
+            const cajaDelete = await this.prisma.caja.delete({
                 where,
                 select: this.select,
             });
-        } catch ({ response }) {
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+            return cajaDelete as ICajaReturnDto;
+        } catch (e: any) {
+            if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error borrando el turno' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: response.status, message: response.message }, response.status);
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
             }
         }
     }
@@ -162,7 +165,7 @@ export class CajaService {
                 where: { fechaCierre: { equals: null } },
             });
             return cajasSum._count;
-        } catch (e) {
+        } catch (e: any) {
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error contando los turnos' },
