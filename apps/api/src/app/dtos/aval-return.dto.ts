@@ -1,4 +1,4 @@
-import { Parentesco } from '.prisma/client';
+import { Parentesco } from '@prisma/client';
 
 export interface IAvalReturnDto {
     id: string;

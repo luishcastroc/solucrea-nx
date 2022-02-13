@@ -1,5 +1,5 @@
 import { Frecuencia, Pago } from '@prisma/client';
-import { IAmortizacion, ICajaReturnDto } from 'api/dtos';
+import { IAmortizacion, ICajaReturnDto, StatusPago } from 'api/dtos';
 import { sumBy } from 'lodash';
 import * as moment from 'moment';
 
@@ -113,9 +113,14 @@ export const generateTablaAmorizacion = (
     pagos: Partial<Pago>[] | Pago[]
 ): IAmortizacion[] => {
     const amortizacion: IAmortizacion[] = [];
+    const today = moment();
     let fechaPagoAux = fechaInicio;
     for (let i = 1; i < numeroDePagos + 1; i++) {
-        const status: 'PAGADO' | 'ADEUDA' = pagos.some((pago) => pago?.numeroDePago === i) ? 'PAGADO' : 'ADEUDA';
+        const status: StatusPago = pagos.some((pago) => pago?.numeroDePago === i)
+            ? StatusPago.pagado
+            : today.isBefore(moment(fechaPagoAux))
+            ? StatusPago.corriente
+            : StatusPago.adeuda;
         const fechaDePago: Date | string = addBusinessDays(moment(fechaPagoAux), frecuencia).toISOString();
         amortizacion.push({ numeroDePago: i, fechaDePago, status });
         fechaPagoAux = fechaDePago;

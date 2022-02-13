@@ -1,9 +1,14 @@
-import { IClienteReturnDto } from './cliente-return.dto';
+import { Colocador, ModalidadDeSeguro, Pago, Producto, Seguro, Status } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime';
-import { Colocador } from '@prisma/client';
 import { IAvalReturnDto, ISucursalReturnDto } from 'api/dtos';
 
-import { ModalidadDeSeguro, Pago, Producto, Seguro, Status } from '.prisma/client';
+import { IClienteReturnDto } from './cliente-return.dto';
+
+export enum StatusPago {
+    pagado = 'PAGADO',
+    adeuda = 'ADEUDA',
+    corriente = 'CORRIENTE',
+}
 
 export interface ICreditoReturnDto {
     id: string;
@@ -38,5 +43,5 @@ export interface ICreditoClienteReturnDto {
 export interface IAmortizacion {
     numeroDePago: number;
     fechaDePago: Date | string;
-    status: 'PAGADO' | 'ADEUDA';
+    status: StatusPago;
 }
