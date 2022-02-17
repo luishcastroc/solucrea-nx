@@ -19,7 +19,7 @@ export class EscolaridadesController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('escolaridad/:id')
-    async getEscolaridad(@Param('id') id: string): Promise<IEscolaridadReturnDto> {
+    async getEscolaridad(@Param('id') id: string): Promise<IEscolaridadReturnDto | null> {
         return this.escolaridadesService.escolaridad({ id });
     }
 

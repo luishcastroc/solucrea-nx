@@ -12,14 +12,14 @@ export class CreditosController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
     @Get('creditos/cliente/:id')
-    async obtenerCreditosCliente(@Param('id') id: string): Promise<ICreditoReturnDto[]> {
+    async obtenerCreditosCliente(@Param('id') id: string): Promise<ICreditoReturnDto[] | null> {
         return this.creditosService.creditosCliente(id);
     }
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
     @Get('creditos')
-    async obtenerCreditos(): Promise<ICreditoReturnDto[]> {
+    async obtenerCreditos(): Promise<ICreditoReturnDto[] | null> {
         return this.creditosService.creditos();
     }
 
@@ -27,11 +27,13 @@ export class CreditosController {
     @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
     @Post('credito')
-    async createCredito(@Request() req, @Body() data: Prisma.CreditoCreateInput): Promise<ICreditoReturnDto> {
+    async createCredito(@Request() req: any, @Body() data: Prisma.CreditoCreateInput): Promise<ICreditoReturnDto> {
         const creadoPor = req.user.username.toUpperCase();
         data.creadoPor = creadoPor;
         data.status = 'ABIERTO';
-        data.aval.create.creadoPor = creadoPor;
+        if (data.aval && data.aval.create) {
+            data.aval.create.creadoPor = creadoPor;
+        }
         return this.creditosService.createCredito(data);
     }
 }

@@ -10,7 +10,7 @@ import { IUsuarioReturnDto } from '../dtos/usuario-return.dto';
 export class AuthService {
     constructor(private usuariosService: UsuariosService, private jwtService: JwtService) {}
 
-    async validarUsuario(usuarioDto: IUsuarioDto): Promise<IUsuarioReturnDto> {
+    async validarUsuario(usuarioDto: IUsuarioDto): Promise<IUsuarioReturnDto | null> {
         const user = await this.usuariosService.searchUsuarioByName({
             nombreUsuario: usuarioDto.nombreUsuario,
         });
@@ -19,7 +19,7 @@ export class AuthService {
             return null;
         }
 
-        const isMatch = await bcrypt.compare(usuarioDto.password, user.password);
+        const isMatch = await bcrypt.compare(usuarioDto.password, user.password as string);
 
         if (isMatch) {
             delete user.password;

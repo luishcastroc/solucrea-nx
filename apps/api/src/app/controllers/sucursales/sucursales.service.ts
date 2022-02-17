@@ -39,14 +39,14 @@ export class SucursalesService {
             }
 
             return sucursalReturn;
-        } catch ({ response }) {
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+        } catch (e: any) {
+            if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error consultando las sucursales' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: response.status, message: response.message }, response.status);
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
             }
         }
     }
@@ -67,11 +67,11 @@ export class SucursalesService {
         const direccion: Prisma.DireccionCreateNestedOneWithoutSucursalesInput = {
             create: {
                 tipo: 'SUCURSAL',
-                calle: direccionDto.calle,
-                numero: direccionDto.numero,
+                calle: direccionDto.calle as string,
+                numero: direccionDto.numero as string,
                 cruzamientos: direccionDto.cruzamientos,
                 colonia: { connect: { id: direccionDto.colonia } },
-                creadoPor,
+                creadoPor: creadoPor as string,
             },
         };
 
@@ -81,14 +81,14 @@ export class SucursalesService {
                 data,
                 select: this.select,
             });
-        } catch ({ response }) {
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+        } catch (e: any) {
+            if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando la sucursal' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: response.status, message: response.message }, response.status);
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
             }
         }
     }
@@ -131,14 +131,14 @@ export class SucursalesService {
                 where,
                 select: this.select,
             });
-        } catch ({ response }) {
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+        } catch (e: any) {
+            if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error actualizando la sucursal' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: response.status, message: response.message }, response.status);
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
             }
         }
     }
@@ -146,7 +146,10 @@ export class SucursalesService {
     async deleteSucursal(where: Prisma.SucursalWhereUniqueInput): Promise<ISucursalReturnDto> {
         try {
             //get sucursal
-            const sucursal: ISucursalReturnDto = await this.prisma.sucursal.findUnique({ where, select: this.select });
+            const sucursal: ISucursalReturnDto | null = await this.prisma.sucursal.findUnique({
+                where,
+                select: this.select,
+            });
 
             if (!sucursal) {
                 throw new HttpException(
@@ -158,7 +161,7 @@ export class SucursalesService {
             await this.prisma.sucursal.update({ where, data: { activa: false } });
             sucursal.activa = false;
             return sucursal;
-        } catch (e) {
+        } catch (e: any) {
             const { response } = e;
             if (!response || response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
@@ -171,7 +174,7 @@ export class SucursalesService {
         }
     }
 
-    async getSucursalesWithCaja(minAmount: number, maxAmount): Promise<Partial<ISucursalReturnDto>[]> {
+    async getSucursalesWithCaja(minAmount: number, maxAmount: number): Promise<Partial<ISucursalReturnDto>[]> {
         const cajas = await this.prisma.caja.findMany({
             where: { fechaCierre: { equals: null } },
             select: {
@@ -220,7 +223,7 @@ export class SucursalesService {
         let sucursalesReturn: Partial<ISucursalReturnDto>[] = [];
         for (const caja of availableCajas) {
             const sucursalWithCaja = await this.prisma.sucursal.findUnique({
-                where: { id: caja.sucursal.id },
+                where: { id: caja.sucursal?.id },
                 select: { id: true, nombre: true },
             });
             if (sucursalWithCaja) {

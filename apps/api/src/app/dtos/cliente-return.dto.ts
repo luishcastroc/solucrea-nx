@@ -7,7 +7,7 @@ export interface IDireccionesReturnDto {
     id: string;
     calle: string;
     numero: string;
-    cruzamientos: string;
+    cruzamientos: string | null;
     colonia: IColonias;
 }
 
@@ -35,7 +35,7 @@ export interface IClienteReturnDto {
     montoMinimo: Decimal | number;
     montoMaximo: Decimal | number;
     telefono1: string;
-    telefono2: string;
+    telefono2: string | null;
     numeroCreditosCrecer: number;
     porcentajeDePagos: Decimal | number;
     porcentajeDeMora: Decimal | number;

@@ -19,7 +19,7 @@ export class DireccionesController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('direccion/:id')
-    async getDireccion(@Param('id') id: string): Promise<Direccion> {
+    async getDireccion(@Param('id') id: string): Promise<Direccion | null> {
         return this.direccionesService.direccion({ id });
     }
 

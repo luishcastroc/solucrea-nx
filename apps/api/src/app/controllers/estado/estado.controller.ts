@@ -19,7 +19,7 @@ export class EstadoController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('estado/:id')
-    async getEstado(@Param('id') id: number): Promise<Estado> {
+    async getEstado(@Param('id') id: number): Promise<Estado | null> {
         return this.estadoService.estado({ id });
     }
 

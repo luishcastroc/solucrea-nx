@@ -113,15 +113,17 @@ export const generateTablaAmorizacion = (
     pagos: Partial<Pago>[] | Pago[]
 ): IAmortizacion[] => {
     const amortizacion: IAmortizacion[] = [];
-    const today = moment();
+    const isoDate = new Date().toISOString();
+    const today = moment(isoDate);
     let fechaPagoAux = fechaInicio;
     for (let i = 1; i < numeroDePagos + 1; i++) {
         const status: StatusPago = pagos.some((pago) => pago?.numeroDePago === i)
             ? StatusPago.pagado
-            : today.isBefore(moment(fechaPagoAux))
+            : today.isSameOrBefore(moment(fechaPagoAux))
             ? StatusPago.corriente
             : StatusPago.adeuda;
-        const fechaDePago: Date | string = addBusinessDays(moment(fechaPagoAux), frecuencia).toISOString();
+        const fechaDePago: Date | string =
+            i === 1 ? fechaPagoAux : addBusinessDays(moment(fechaPagoAux), frecuencia).toISOString();
         amortizacion.push({ numeroDePago: i, fechaDePago, status });
         fechaPagoAux = fechaDePago;
     }

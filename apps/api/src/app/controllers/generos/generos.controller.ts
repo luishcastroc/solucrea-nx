@@ -19,7 +19,7 @@ export class GenerosController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('genero/:id')
-    async getGenero(@Param('id') id: string): Promise<IGeneroReturnDto> {
+    async getGenero(@Param('id') id: string): Promise<IGeneroReturnDto | null> {
         return this.generosService.genero({ id });
     }
 

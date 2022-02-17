@@ -19,7 +19,7 @@ export class EstadosCivilesController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('estado-civil/:id')
-    async getEstadoCivil(@Param('id') id: string): Promise<IEstadoCivilReturnDto> {
+    async getEstadoCivil(@Param('id') id: string): Promise<IEstadoCivilReturnDto | null> {
         return this.estadosCivilesService.estadoCivil({ id });
     }
 

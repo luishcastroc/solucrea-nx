@@ -17,7 +17,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
             });
         } else {
             if (!message) {
-                message = exception.getResponse()['message'];
+                const exceptionResp = exception.getResponse();
+                message = exceptionResp['message' as keyof object];
             }
             switch (status) {
                 case 401:

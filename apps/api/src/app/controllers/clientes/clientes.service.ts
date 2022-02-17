@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Cliente, Direccion, Prisma } from '@prisma/client';
-import { CreateClienteDto, CreateDireccionDto, IClienteReturnDto, UpdateClienteDto } from 'api/dtos';
+import { Cliente, Direccion, Prisma, TipoDireccion } from '@prisma/client';
+import { CreateClienteDto, CreateDireccionDto, IClienteReturnDto, IDireccion, UpdateClienteDto } from 'api/dtos';
 import { selectCliente } from 'api/util';
 import { isEmpty } from 'lodash';
 
@@ -65,16 +65,17 @@ export class ClientesService {
         const fechaDeNacimiento = new Date(data.fechaDeNacimiento);
         const { direcciones, trabajo } = data;
         const { direccion } = trabajo;
-        const direccionesCreate: Prisma.DireccionCreateManyClienteInput[] | undefined = direcciones?.map(
-            ({ numero, calle, cruzamientos, coloniaId, tipo }: Direccion) => ({
-                tipo,
-                numero,
-                calle,
+        let direccionesCreate: Prisma.DireccionCreateManyClienteInput[] = [];
+        if (direcciones) {
+            direccionesCreate = direcciones.map(({ numero, calle, cruzamientos, coloniaId, tipo }: IDireccion) => ({
+                tipo: tipo as TipoDireccion,
+                numero: numero as string,
+                calle: calle as string,
                 cruzamientos,
-                coloniaId,
-                creadoPor: data.creadoPor,
-            })
-        );
+                coloniaId: coloniaId as string,
+                creadoPor: data.creadoPor as string,
+            }));
+        }
 
         const clienteData: Prisma.ClienteCreateInput = {
             apellidoPaterno: data.apellidoPaterno,
@@ -95,7 +96,7 @@ export class ClientesService {
             tipoDeVivienda: { connect: { id: data.tipoDeVivienda as string } },
             escolaridad: { connect: { id: data.escolaridad as string } },
             genero: { connect: { id: data.genero as string } },
-            creadoPor: data.creadoPor,
+            creadoPor: data.creadoPor as string,
             trabajo: {
                 create: {
                     nombre: trabajo.nombre,
@@ -104,15 +105,15 @@ export class ClientesService {
                     direccion: {
                         create: {
                             tipo: 'TRABAJO',
-                            calle: direccion.calle,
-                            numero: direccion.numero,
+                            calle: direccion.calle as string,
+                            numero: direccion.numero as string,
                             cruzamientos: direccion.cruzamientos,
                             colonia: { connect: { id: direccion.coloniaId } },
-                            creadoPor: data.creadoPor,
+                            creadoPor: data.creadoPor as string,
                         },
                     },
                     actividadEconomica: { connect: { id: trabajo.actividadEconomica } },
-                    creadoPor: data.creadoPor,
+                    creadoPor: data.creadoPor as string,
                 },
             },
         };
@@ -122,7 +123,7 @@ export class ClientesService {
                 data: clienteData,
                 select,
             });
-        } catch (e) {
+        } catch (e: any) {
             console.log(e);
             if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
@@ -142,7 +143,7 @@ export class ClientesService {
         const { where, data } = params;
         const select = selectCliente;
 
-        let dataToUpdate: Prisma.ClienteUpdateInput;
+        let dataToUpdate: Prisma.ClienteUpdateInput = {};
 
         if (isEmpty(data)) {
             throw new HttpException(
@@ -158,13 +159,16 @@ export class ClientesService {
             switch (field) {
                 case 'direcciones':
                     if (data[field]) {
-                        const direcciones = this.getDirecciones(data.direcciones, data.actualizadoPor);
+                        const direcciones = this.getDirecciones(
+                            data.direcciones as IDireccionUpdateDto,
+                            data.actualizadoPor as string
+                        );
                         dataToUpdate = { ...dataToUpdate, direcciones };
                     }
                     break;
                 case 'trabajo':
                     if (data[field]) {
-                        const trabajo = this.getTrabajo(data.trabajo);
+                        const trabajo = this.getTrabajo(data.trabajo as ITrabajoDto);
                         dataToUpdate = { ...dataToUpdate, trabajo };
                     }
                     break;
@@ -193,7 +197,7 @@ export class ClientesService {
                     }
                     break;
                 default:
-                    dataToUpdate = { ...dataToUpdate, [field]: data[field] };
+                    dataToUpdate = { ...dataToUpdate, [field]: data[field as keyof UpdateClienteDto] };
             }
         }
 
@@ -205,14 +209,14 @@ export class ClientesService {
             });
 
             return updateStatement;
-        } catch ({ response }) {
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+        } catch (e: any) {
+            if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error actualizando el cliente' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: response.status, message: response.message }, response.status);
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
             }
         }
     }
@@ -242,19 +246,19 @@ export class ClientesService {
             });
 
             return updateStatement;
-        } catch ({ response }) {
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+        } catch (e: any) {
+            if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error inhablilitando el cliente' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: response.status, message: response.message }, response.status);
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
             }
         }
     }
 
-    async searchClientesByCurp(where: Prisma.ClienteWhereUniqueInput): Promise<Cliente> {
+    async searchClientesByCurp(where: Prisma.ClienteWhereUniqueInput): Promise<Partial<Cliente>> {
         const clienteSearch = this.prisma.cliente.findUnique({
             where,
             include: {
@@ -272,7 +276,7 @@ export class ClientesService {
                 HttpStatus.NOT_FOUND
             );
         }
-        return clienteSearch;
+        return clienteSearch as Partial<Cliente>;
     }
 
     async getClientesByWhere(data: string): Promise<IClienteReturnDto[]> {
@@ -290,7 +294,7 @@ export class ClientesService {
         };
         try {
             return this.prisma.cliente.findMany({ where, select });
-        } catch (e) {
+        } catch (e: any) {
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error obteniendo los clientes.' },
@@ -306,7 +310,7 @@ export class ClientesService {
         try {
             const clientesSum = await this.prisma.cliente.aggregate({ _count: true });
             return clientesSum._count;
-        } catch (e) {
+        } catch (e: any) {
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error contando los clientes' },
@@ -322,7 +326,7 @@ export class ClientesService {
         data: IDireccionUpdateDto,
         actualizadoPor: string
     ): Prisma.DireccionUpdateManyWithoutClienteInput {
-        let direcciones: Prisma.DireccionUpdateManyWithoutClienteInput;
+        let direcciones: Prisma.DireccionUpdateManyWithoutClienteInput = {};
         const { deleteDireccion, create, update } = data;
         if (update && update.length > 0) {
             direcciones = {
@@ -374,10 +378,10 @@ export class ClientesService {
     }
 
     private getTrabajo(trabajo: ITrabajoDto): Prisma.TrabajoUpdateOneRequiredWithoutClienteInput {
-        let trabajoReturn: Prisma.TrabajoUpdateOneRequiredWithoutClienteInput;
+        let trabajoReturn: Prisma.TrabajoUpdateOneRequiredWithoutClienteInput = {};
         const { nombre, telefono, antiguedad, direccion, actividadEconomica } = trabajo;
-        let update: Prisma.TrabajoUpdateWithoutClienteInput;
-        let direccionUpdate: Prisma.DireccionUpdateWithoutTrabajoInput;
+        let update: Prisma.TrabajoUpdateWithoutClienteInput = {};
+        let direccionUpdate: Prisma.DireccionUpdateWithoutTrabajoInput = {};
 
         if (nombre) {
             update = { ...update, nombre };

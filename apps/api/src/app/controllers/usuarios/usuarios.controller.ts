@@ -25,7 +25,7 @@ export class UsuariosController {
     @Public()
     @UseGuards(LocalAuthGuard)
     @Post('auth/login')
-    async login(@Request() req) {
+    async login(@Request() req: any) {
         return this.authService.login(req.user);
     }
 
@@ -39,7 +39,7 @@ export class UsuariosController {
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN, Role.CAJERO, Role.SECRETARIO, Role.USUARIO)
     @Get('usuario/:id')
-    async getUsuario(@Param('id') id: string): Promise<Partial<Usuario>> {
+    async getUsuario(@Param('id') id: string): Promise<Partial<Usuario | null>> {
         return this.usuariosService.usuario({ id });
     }
 
@@ -57,7 +57,7 @@ export class UsuariosController {
     async editUsuario(
         @Param('id') id: string,
         @Body() data: UpdateUsuarioDto,
-        @Request() req
+        @Request() req: any
     ): Promise<Partial<Usuario>> {
         const role = req.user.role;
         data.actualizadoPor = req.user.username;

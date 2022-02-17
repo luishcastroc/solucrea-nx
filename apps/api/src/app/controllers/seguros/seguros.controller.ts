@@ -19,7 +19,7 @@ export class SegurosController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('seguro/:id')
-    async getSeguro(@Param('id') id: string): Promise<ISeguroReturnDto> {
+    async getSeguro(@Param('id') id: string): Promise<ISeguroReturnDto | null> {
         return this.segurosService.seguro({ id });
     }
 

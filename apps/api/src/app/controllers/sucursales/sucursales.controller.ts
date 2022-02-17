@@ -31,7 +31,7 @@ export class SucursalesController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('sucursal/:id')
-    async obtenerSucursal(@Param('id') id: string): Promise<ISucursalReturnDto> {
+    async obtenerSucursal(@Param('id') id: string): Promise<ISucursalReturnDto | null> {
         return this.sucursalesService.sucursal({ id });
     }
 
@@ -39,7 +39,7 @@ export class SucursalesController {
     @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN)
     @Post('sucursal')
-    async createSucursal(@Request() req, @Body() data: CreateSucursalDto): Promise<ISucursalReturnDto> {
+    async createSucursal(@Request() req: any, @Body() data: CreateSucursalDto): Promise<ISucursalReturnDto> {
         const creadoPor = req.user.username;
         data.creadoPor = creadoPor;
         return this.sucursalesService.createSucursal(data);

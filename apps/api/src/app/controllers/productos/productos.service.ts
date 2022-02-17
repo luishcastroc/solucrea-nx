@@ -16,14 +16,14 @@ export class ProductosService {
                 where,
             });
             return producto;
-        } catch ({ response }) {
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+        } catch (e: any) {
+            if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error obteniendo el credito' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: response.status, message: response.message }, response.status);
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
             }
         }
     }
@@ -33,7 +33,7 @@ export class ProductosService {
             const productos = await this.prisma.producto.findMany({});
 
             return productos;
-        } catch (e) {
+        } catch (e: any) {
             if (e?.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error obteniendo los creditos' },
@@ -57,7 +57,7 @@ export class ProductosService {
             });
 
             return newProducto;
-        } catch (e) {
+        } catch (e: any) {
             console.log(e);
             if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
@@ -83,7 +83,7 @@ export class ProductosService {
             });
 
             return producto;
-        } catch (e) {
+        } catch (e: any) {
             console.log(e);
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
@@ -104,7 +104,7 @@ export class ProductosService {
             });
 
             return innactiveCredito;
-        } catch (e) {
+        } catch (e: any) {
             if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error desactivando el credito' },

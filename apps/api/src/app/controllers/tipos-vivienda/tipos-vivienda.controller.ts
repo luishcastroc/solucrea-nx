@@ -19,7 +19,7 @@ export class TiposViviendaController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('tipo-de-vivienda/:id')
-    async getTipoDeVivienda(@Param('id') id: string): Promise<ITipoDeViviendaReturnDto> {
+    async getTipoDeVivienda(@Param('id') id: string): Promise<ITipoDeViviendaReturnDto | null> {
         return this.tiposViviendaService.tipoDeVivienda({ id });
     }
 

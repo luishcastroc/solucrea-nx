@@ -19,14 +19,14 @@ export class UsuariosService {
             }
             const { password, ...rest } = usuarioReturn;
             return rest;
-        } catch ({ response }) {
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+        } catch (e: any) {
+            if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al consultar usuario' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: response.status, message: response.message }, response.status);
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
             }
         }
     }
@@ -42,14 +42,14 @@ export class UsuariosService {
                 return rest;
             });
             return usuarioReturn;
-        } catch ({ response }) {
-            if (response === HttpStatus.INTERNAL_SERVER_ERROR) {
+        } catch (e: any) {
+            if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al consultar usuarios' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: response.status, message: response.message }, response.status);
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
             }
         }
     }
@@ -65,7 +65,7 @@ export class UsuariosService {
                 return rest;
             });
             return usuarioReturn;
-        } catch (e) {
+        } catch (e: any) {
             if (e.response.status === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al consultar usuarios' },
@@ -105,7 +105,7 @@ export class UsuariosService {
             // if someone with ADMIN role is trying to change the password most likely is from the screen
             // so we let it pass
             if (role !== 'ADMIN') {
-                const isMatch = await bcrypt.compare(data.oldPassword, usuario.password);
+                const isMatch = await bcrypt.compare(data.oldPassword as string | Buffer, usuario.password);
 
                 if (!isMatch) {
                     throw new HttpException(
@@ -128,14 +128,14 @@ export class UsuariosService {
             });
             const { password, ...rest } = usuarioActualizado;
             return rest;
-        } catch ({ response }) {
-            if (response.status === HttpStatus.INTERNAL_SERVER_ERROR) {
+        } catch (e: any) {
+            if (e.response.status === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al actualizar usuario' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: response.status, message: response.message }, response.status);
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
             }
         }
     }

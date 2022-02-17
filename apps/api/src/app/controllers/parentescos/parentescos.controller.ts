@@ -19,7 +19,7 @@ export class ParentescosController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('parentesco/:id')
-    async getParentesco(@Param('id') id: string): Promise<IParentescoReturnDto> {
+    async getParentesco(@Param('id') id: string): Promise<IParentescoReturnDto | null> {
         return this.parentescosService.parentesco({ id });
     }
 

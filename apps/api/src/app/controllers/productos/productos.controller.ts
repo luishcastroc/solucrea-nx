@@ -21,7 +21,7 @@ export class ProductosController {
     @UseGuards(RolesGuard)
     @Public()
     @Get('producto/:id')
-    async getProducto(@Param('id') id: string): Promise<Producto> {
+    async getProducto(@Param('id') id: string): Promise<Producto | null> {
         return this.productosService.producto({ id });
     }
 

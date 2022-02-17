@@ -41,12 +41,12 @@ export class ColoniasService {
         }
 
         const ciudad = {
-            id: singleColonia.ciudad.id,
-            descripcion: singleColonia.ciudad.descripcion,
+            id: singleColonia.ciudad?.id,
+            descripcion: singleColonia.ciudad?.descripcion,
         };
         const estado = {
-            id: singleColonia.ciudad.estado.id,
-            descripcion: singleColonia.ciudad.estado.descripcion,
+            id: singleColonia.ciudad?.estado.id,
+            descripcion: singleColonia.ciudad?.estado.descripcion,
         };
 
         const colonias = await this.prisma.colonia.findMany({
@@ -60,7 +60,7 @@ export class ColoniasService {
 
         const coloniasReturn = { ciudad, estado, colonias };
 
-        return coloniasReturn;
+        return coloniasReturn as IColoniaReturnDto;
     }
 
     async createColonia(data: Prisma.ColoniaCreateInput): Promise<Colonia> {
