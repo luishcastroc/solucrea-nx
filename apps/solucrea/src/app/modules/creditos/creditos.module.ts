@@ -23,8 +23,8 @@ import { CreditosDetailComponent } from './creditos-detail/creditos-detail.compo
 import { CreditosListComponent } from './creditos-list/creditos-list.component';
 import { CreditosComponent } from './creditos.component';
 import { creditosRoutes } from './creditos.routing';
-import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
     declarations: [CreditosComponent, CreditosListComponent, CreditosDetailComponent, CreditosClienteListComponent],
@@ -40,7 +40,6 @@ import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/m
         MatSelectModule,
         MatCardModule,
         MatDatepickerModule,
-        MatNativeDateModule,
         MatMomentDateModule,
         MatTooltipModule,
         MatAutocompleteModule,

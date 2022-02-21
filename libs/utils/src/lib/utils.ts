@@ -113,23 +113,30 @@ export const generateTablaAmorizacion = (
     pagos: Partial<Pago>[] | Pago[]
 ): IAmortizacion[] => {
     const amortizacion: IAmortizacion[] = [];
-    const isoDate = new Date().toISOString();
-    const today = moment(isoDate);
+    const today = moment();
     let fechaPagoAux = fechaInicio;
-    for (let i = 1; i < numeroDePagos + 1; i++) {
-        const status: StatusPago = pagos.some((pago) => pago?.numeroDePago === i)
-            ? StatusPago.pagado
-            : today.isSameOrBefore(moment(fechaPagoAux))
-            ? StatusPago.corriente
-            : StatusPago.adeuda;
-        const fechaDePago: Date | string =
-            i === 1 ? fechaPagoAux : addBusinessDays(moment(fechaPagoAux), frecuencia).toISOString();
+    let status: StatusPago = getPagoStatus(pagos, 1, today, fechaPagoAux);
+    amortizacion.push({ numeroDePago: 1, fechaDePago: moment(fechaPagoAux, moment.ISO_8601).toISOString(), status });
+    for (let i = 2; i < numeroDePagos + 1; i++) {
+        status = getPagoStatus(pagos, i, today, fechaPagoAux);
+        const fechaDePago: Date | string = addBusinessDays(moment(fechaPagoAux), frecuencia).toISOString();
         amortizacion.push({ numeroDePago: i, fechaDePago, status });
         fechaPagoAux = fechaDePago;
     }
     return amortizacion;
 };
 
+export const getPagoStatus = (
+    pagos: Partial<Pago>[] | Pago[],
+    numeroDePago: number,
+    today: moment.Moment,
+    fechaPago: string | Date
+): StatusPago =>
+    pagos.some((pago) => pago?.numeroDePago === numeroDePago)
+        ? StatusPago.pagado
+        : today.isSameOrBefore(fechaPago)
+        ? StatusPago.corriente
+        : StatusPago.adeuda;
 /**
  *
  * @param frecuencia

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,7 +32,6 @@ import { clientesRoutes } from './clientes.routing';
         MatButtonModule,
         MatTooltipModule,
         MatDatepickerModule,
-        MatNativeDateModule,
         MatMomentDateModule,
         MatRadioModule,
         MatSelectModule,

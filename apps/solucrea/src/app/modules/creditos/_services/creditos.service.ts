@@ -83,16 +83,18 @@ export class CreditosService {
     /**
      * Prepare record
      *
+     * @param creditosForm
+     * @returns Prisma.CreditoCreateInput
      */
     prepareCreditoRecord(creditosForm: FormGroup): Prisma.CreditoCreateInput {
         //getting all the values
         const formValue = creditosForm.value;
 
         //transform into date strings
-        const fechaDesembolso = formValue.fechaDesembolso.toISOString();
-        const fechaInicio = formValue.fechaInicio.toISOString();
-        const fechaFinal = formValue.fechaFinal.toISOString();
-        const fechaDeNacimiento = formValue.aval.fechaDeNacimiento.toISOString();
+        const fechaDesembolso = (formValue.fechaDesembolso as Moment).toISOString();
+        const fechaInicio = (formValue.fechaInicio as Moment).toISOString();
+        const fechaFinal = (formValue.fechaFinal as Moment).toISOString();
+        const fechaDeNacimiento = (formValue.aval.fechaDeNacimiento as Moment).toISOString();
 
         //removing non used values (they have default in the database)
         const { id, status, ...rest } = formValue;
