@@ -57,7 +57,6 @@ export class CreditosService {
 
             const creditosReturn = creditos.map((credito) => {
                 const frecuencia = getFrecuencia(credito?.producto.frecuencia);
-                console.log(credito?.fechaInicio);
                 const amortizacion: IAmortizacion[] = generateTablaAmorizacion(
                     credito?.producto.numeroDePagos as number,
                     frecuencia,

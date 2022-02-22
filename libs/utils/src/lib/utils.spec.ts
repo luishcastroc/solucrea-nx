@@ -1,7 +1,9 @@
+import { Pago } from '@prisma/client';
+import { IAmortizacion, StatusPago } from 'api/dtos';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { ICreditoData, IDetails } from './models';
-import { addBusinessDays, calculateDetails } from './utils';
+import { addBusinessDays, calculateDetails, generateTablaAmorizacion } from './utils';
 
 describe('Utils testing', () => {
     it('should return proper results', () => {
@@ -33,5 +35,45 @@ describe('Utils testing', () => {
         const dateResult: Moment = addBusinessDays(dateToCheck, 1);
 
         expect(dateResult.toISOString()).toEqual('2022-01-21T06:00:00.000Z');
+    });
+
+    it('should return one payment due', () => {
+        const fechaDeInicio = moment('2022-02-21')
+            .utc(true)
+            .utcOffset(0)
+            .set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+        const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(45, 1, fechaDeInicio.toISOString(), []);
+
+        expect(tablaDeAmortizacion.filter((data) => data.status === StatusPago.adeuda).length === 1).toBeTruthy();
+    });
+
+    it('should return no payment due', () => {
+        const fechaDeInicio = moment().utc(true).utcOffset(0).set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+        const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(45, 1, fechaDeInicio.toISOString(), []);
+
+        expect(tablaDeAmortizacion.filter((data) => data.status === StatusPago.adeuda).length === 0).toBeTruthy();
+    });
+
+    it('should return one payment made', () => {
+        const fechaDeInicio = moment('2022-02-21')
+            .utc(true)
+            .utcOffset(0)
+            .set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+        const pagos: Partial<Pago>[] | Pago[] = [
+            {
+                id: 'sdjhjh-sdsd-sdsd',
+                creditoId: 'jhjh-34hhjh34-3434',
+                numeroDePago: 1,
+                fechaDePago: fechaDeInicio.toDate(),
+            },
+        ];
+        const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
+            45,
+            1,
+            fechaDeInicio.toISOString(),
+            pagos
+        );
+
+        expect(tablaDeAmortizacion.filter((data) => data.status === StatusPago.adeuda).length === 0).toBeTruthy();
     });
 });
