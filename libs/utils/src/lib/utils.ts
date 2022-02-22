@@ -1,4 +1,5 @@
 import { Frecuencia, Pago } from '@prisma/client';
+import { Decimal } from '@prisma/client/runtime';
 import { IAmortizacion, ICajaReturnDto, StatusPago } from 'api/dtos';
 import { sumBy } from 'lodash';
 import * as moment from 'moment';
@@ -110,16 +111,18 @@ export const generateTablaAmorizacion = (
     numeroDePagos: number,
     frecuencia: number,
     fechaInicio: string | Date,
+    monto: Decimal,
     pagos: Partial<Pago>[] | Pago[]
 ): IAmortizacion[] => {
+    console.log(monto);
     const amortizacion: IAmortizacion[] = [];
     const today = moment().utc(true).utcOffset(0).set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
     let fechaPagoAux = fechaInicio;
-    let status: StatusPago = getPagoStatus(pagos, 1, today, fechaPagoAux);
+    let status: StatusPago = getPagoStatus(pagos, 1, monto, today, fechaPagoAux);
     amortizacion.push({ numeroDePago: 1, fechaDePago: moment(fechaPagoAux).toISOString(), status });
     for (let i = 2; i < numeroDePagos + 1; i++) {
         const fechaDePago: Date | string = addBusinessDays(moment(fechaPagoAux), frecuencia).toISOString();
-        status = getPagoStatus(pagos, i, today, fechaDePago);
+        status = getPagoStatus(pagos, i, monto, today, fechaDePago);
         amortizacion.push({ numeroDePago: i, fechaDePago, status });
         fechaPagoAux = fechaDePago;
     }
@@ -129,14 +132,25 @@ export const generateTablaAmorizacion = (
 export const getPagoStatus = (
     pagos: Partial<Pago>[] | Pago[],
     numeroDePago: number,
+    monto: Decimal,
     today: moment.Moment,
     fechaPago: string | Date
-): StatusPago =>
-    pagos.some((pago) => pago?.numeroDePago === numeroDePago)
-        ? StatusPago.pagado
-        : today.isSameOrBefore(fechaPago)
-        ? StatusPago.corriente
-        : StatusPago.adeuda;
+): StatusPago => {
+    if (
+        pagos.some(
+            (pago) =>
+                pago?.numeroDePago === numeroDePago &&
+                pago?.monto?.toNumber() === monto.toNumber() &&
+                pago?.tipoDePago === 'REGULAR'
+        )
+    ) {
+        return StatusPago.pagado;
+    } else if (today.isSameOrBefore(fechaPago)) {
+        return StatusPago.corriente;
+    } else {
+        return StatusPago.adeuda;
+    }
+};
 /**
  *
  * @param frecuencia

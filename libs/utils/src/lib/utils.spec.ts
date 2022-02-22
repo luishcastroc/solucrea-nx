@@ -1,4 +1,5 @@
-import { Pago } from '@prisma/client';
+import { Pago, Prisma } from '@prisma/client';
+import { Decimal } from '@prisma/client/runtime';
 import { IAmortizacion, StatusPago } from 'api/dtos';
 import * as moment from 'moment';
 import { Moment } from 'moment';
@@ -31,10 +32,10 @@ describe('Utils testing', () => {
     });
 
     it('should return the proper date', () => {
-        const dateToCheck = moment('2022-01-20');
+        const dateToCheck = moment('2022-01-20').utc(true).utcOffset(0);
         const dateResult: Moment = addBusinessDays(dateToCheck, 1);
 
-        expect(dateResult.toISOString()).toEqual('2022-01-21T06:00:00.000Z');
+        expect(dateResult.toISOString()).toEqual('2022-01-21T00:00:00.000Z');
     });
 
     it('should return one payment due', () => {
@@ -42,19 +43,32 @@ describe('Utils testing', () => {
             .utc(true)
             .utcOffset(0)
             .set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-        const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(45, 1, fechaDeInicio.toISOString(), []);
+        const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
+            45,
+            1,
+            fechaDeInicio.toISOString(),
+            new Prisma.Decimal(150.0),
+            []
+        );
 
         expect(tablaDeAmortizacion.filter((data) => data.status === StatusPago.adeuda).length === 1).toBeTruthy();
     });
 
     it('should return no payment due', () => {
         const fechaDeInicio = moment().utc(true).utcOffset(0).set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-        const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(45, 1, fechaDeInicio.toISOString(), []);
+        const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
+            45,
+            1,
+            fechaDeInicio.toISOString(),
+            new Prisma.Decimal(150.0),
+            []
+        );
 
         expect(tablaDeAmortizacion.filter((data) => data.status === StatusPago.adeuda).length === 0).toBeTruthy();
     });
 
     it('should return one payment made', () => {
+        const monto = new Prisma.Decimal(150.0);
         const fechaDeInicio = moment('2022-02-21')
             .utc(true)
             .utcOffset(0)
@@ -65,12 +79,15 @@ describe('Utils testing', () => {
                 creditoId: 'jhjh-34hhjh34-3434',
                 numeroDePago: 1,
                 fechaDePago: fechaDeInicio.toDate(),
+                monto,
+                tipoDePago: 'REGULAR',
             },
         ];
         const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
             45,
             1,
             fechaDeInicio.toISOString(),
+            monto,
             pagos
         );
 

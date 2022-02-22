@@ -25,6 +25,7 @@ export class CreditosService {
                     credito?.producto.numeroDePagos as number,
                     frecuencia,
                     credito?.fechaInicio as string | Date,
+                    credito?.cuota,
                     credito?.pagos as Partial<Pago>[] | Pago[]
                 );
                 const creditoReturn = {
@@ -61,6 +62,7 @@ export class CreditosService {
                     credito?.producto.numeroDePagos as number,
                     frecuencia,
                     credito?.fechaInicio as string | Date,
+                    credito?.cuota,
                     credito?.pagos as Partial<Pago>[] | Pago[]
                 );
                 const creditoReturn = {
