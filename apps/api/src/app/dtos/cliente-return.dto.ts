@@ -1,4 +1,4 @@
-import { Genero, Escolaridad, EstadoCivil, TipoDeVivienda, ActividadEconomica } from '@prisma/client';
+import { ActividadEconomica, Escolaridad, EstadoCivil, Genero, Prisma, TipoDeVivienda } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime';
 
 import { IColonias } from './colonia-return.dto';
@@ -32,14 +32,14 @@ export interface IClienteReturnDto {
     escolaridad: Partial<Escolaridad>;
     estadoCivil: Partial<EstadoCivil>;
     tipoDeVivienda: Partial<TipoDeVivienda>;
-    montoMinimo: Decimal | number;
-    montoMaximo: Decimal | number;
+    montoMinimo: Prisma.Decimal | number;
+    montoMaximo: Prisma.Decimal | number;
     telefono1: string;
     telefono2: string | null;
     numeroCreditosCrecer: number;
-    porcentajeDePagos: Decimal | number;
-    porcentajeDeMora: Decimal | number;
-    multiplos: Decimal | number;
+    porcentajeDePagos: Prisma.Decimal | number;
+    porcentajeDeMora: Prisma.Decimal | number;
+    multiplos: Prisma.Decimal | number;
     direcciones: IDireccionesReturnDto[];
     trabajo: ITrabajoReturn;
     activo: boolean;

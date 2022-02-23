@@ -43,7 +43,7 @@ describe('Utils testing', () => {
             .utcOffset(0)
             .set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
         const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
-            45,
+            1,
             1,
             fechaDeInicio.toISOString(),
             new Prisma.Decimal(150.0),
@@ -83,7 +83,7 @@ describe('Utils testing', () => {
             },
         ];
         const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
-            45,
+            1,
             1,
             fechaDeInicio.toISOString(),
             monto,

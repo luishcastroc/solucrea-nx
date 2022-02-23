@@ -1,5 +1,4 @@
-import { Frecuencia, Pago } from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime';
+import { Frecuencia, Pago, Prisma } from '@prisma/client';
 import { IAmortizacion, ICajaReturnDto, StatusPago } from 'api/dtos';
 import { sumBy } from 'lodash';
 import * as moment from 'moment';
@@ -111,7 +110,7 @@ export const generateTablaAmorizacion = (
     numeroDePagos: number,
     frecuencia: number,
     fechaInicio: string | Date,
-    monto: Decimal,
+    monto: Prisma.Decimal,
     pagos: Partial<Pago>[] | Pago[]
 ): IAmortizacion[] => {
     const amortizacion: IAmortizacion[] = [];
@@ -131,7 +130,7 @@ export const generateTablaAmorizacion = (
 export const getPagoStatus = (
     pagos: Partial<Pago>[] | Pago[],
     numeroDePago: number,
-    monto: Decimal,
+    monto: Prisma.Decimal,
     today: moment.Moment,
     fechaPago: string | Date
 ): StatusPago => {

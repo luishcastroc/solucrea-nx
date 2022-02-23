@@ -1,7 +1,7 @@
-import { Decimal } from '@prisma/client/runtime';
+import { Prisma } from '@prisma/client';
 
 export interface ISeguroReturnDto {
     id: string;
     nombre: string;
-    monto: Decimal;
+    monto: Prisma.Decimal;
 }

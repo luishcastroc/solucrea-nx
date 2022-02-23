@@ -1,4 +1,4 @@
-import { Colocador, ModalidadDeSeguro, Pago, Producto, Seguro, Status } from '@prisma/client';
+import { Colocador, ModalidadDeSeguro, Pago, Prisma, Producto, Seguro, Status } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime';
 import { IAvalReturnDto, ISucursalReturnDto } from 'api/dtos';
 
@@ -17,7 +17,7 @@ export interface ICreditoReturnDto {
     fechaInicio: Date | string;
     fechaFinal: Date | string;
     fechaLiquidacion: Date | string;
-    monto: Decimal | number | string;
+    monto: Prisma.Decimal | number | string;
     status: Status;
     sucursal: Partial<ISucursalReturnDto>;
     producto: Partial<Producto>;
@@ -27,11 +27,11 @@ export interface ICreditoReturnDto {
     modalidadDeSeguro: Partial<ModalidadDeSeguro>;
     aval: Partial<IAvalReturnDto>;
     pagos: Partial<Pago>[];
-    cuota: Decimal | number | string;
-    cuotaCapital: Decimal | number | string;
-    cuotaInteres: Decimal | number | string;
-    cuotaSeguro: Decimal | number | string;
-    saldo?: Decimal | number | string;
+    cuota: Prisma.Decimal | number | string;
+    cuotaCapital: Prisma.Decimal | number | string;
+    cuotaInteres: Prisma.Decimal | number | string;
+    cuotaSeguro: Prisma.Decimal | number | string;
+    saldo?: Prisma.Decimal | number | string;
     amortizacion?: IAmortizacion[];
 }
 

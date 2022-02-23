@@ -1,10 +1,10 @@
-import { Decimal } from '@prisma/client/runtime';
-import { MovimientoDeCaja, Sucursal } from '@prisma/client';
+import { MovimientoDeCaja, Prisma, Sucursal } from '@prisma/client';
+
 export interface ICajaReturnDto {
     id: string;
-    saldoInicial: Decimal;
+    saldoInicial: Prisma.Decimal;
     fechaApertura: string | Date;
-    saldoFinal: Decimal;
+    saldoFinal: Prisma.Decimal;
     fechaCierre: string | Date;
     creadoPor: string;
     sucursal: Partial<Sucursal>;
