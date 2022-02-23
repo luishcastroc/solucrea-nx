@@ -1,5 +1,4 @@
 import { Pago, Prisma } from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime';
 import { IAmortizacion, StatusPago } from 'api/dtos';
 import * as moment from 'moment';
 import { Moment } from 'moment';

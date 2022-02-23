@@ -114,7 +114,6 @@ export const generateTablaAmorizacion = (
     monto: Decimal,
     pagos: Partial<Pago>[] | Pago[]
 ): IAmortizacion[] => {
-    console.log(monto);
     const amortizacion: IAmortizacion[] = [];
     const today = moment().utc(true).utcOffset(0).set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
     let fechaPagoAux = fechaInicio;

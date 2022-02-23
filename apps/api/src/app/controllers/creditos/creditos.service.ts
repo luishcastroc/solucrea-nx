@@ -1,11 +1,9 @@
-import { IClienteReturnDto } from './../../dtos/cliente-return.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Pago, Prisma, Producto, Status, Seguro, Colocador, ModalidadDeSeguro } from '@prisma/client';
-import { getSaldoActual, generateTablaAmorizacion, getFrecuencia } from '@solucrea-utils';
-import { ICajaReturnDto, ICreditoReturnDto, IAmortizacion, ISucursalReturnDto, IAvalReturnDto } from 'api/dtos';
+import { Pago, Prisma } from '@prisma/client';
+import { generateTablaAmorizacion, getFrecuencia, getSaldoActual } from '@solucrea-utils';
+import { IAmortizacion, ICajaReturnDto, ICreditoReturnDto } from 'api/dtos';
 import { PrismaService } from 'api/prisma';
 import { selectCredito } from 'api/util';
-import { Decimal } from '@prisma/client/runtime';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 @Injectable()
@@ -193,7 +191,6 @@ export class CreditosService {
                 );
             }
         } catch (e: any) {
-            console.log('error: ', e);
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando el nuevo crédito, verificar.' },
