@@ -103,6 +103,8 @@ export const getSaldoActual = (caja: ICajaReturnDto | Partial<ICajaReturnDto>): 
  * @param numeroDePagos
  * @param frecuencia
  * @param fechaInicio
+ * @param monto
+ * @param interesMoratorio
  * @param pagos
  * @returns tabla de amortización
  */
@@ -111,17 +113,31 @@ export const generateTablaAmorizacion = (
     frecuencia: number,
     fechaInicio: string | Date,
     monto: Prisma.Decimal,
+    interesMoratorio: Prisma.Decimal,
     pagos: Partial<Pago>[] | Pago[]
 ): IAmortizacion[] => {
     const amortizacion: IAmortizacion[] = [];
     const today = moment().utc(true).utcOffset(0).set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
     let fechaPagoAux = fechaInicio;
     let status: StatusPago = getPagoStatus(pagos, 1, monto, today, fechaPagoAux);
-    amortizacion.push({ numeroDePago: 1, fechaDePago: moment(fechaPagoAux).toISOString(), status });
+    let montoCorriente =
+        status === StatusPago.corriente
+            ? monto
+            : new Prisma.Decimal(monto.toNumber() + monto.toNumber() * (interesMoratorio.toNumber() / 100));
+    amortizacion.push({
+        numeroDePago: 1,
+        fechaDePago: moment(fechaPagoAux).toISOString(),
+        monto: montoCorriente,
+        status,
+    });
     for (let i = 2; i < numeroDePagos + 1; i++) {
         const fechaDePago: Date | string = addBusinessDays(moment(fechaPagoAux), frecuencia).toISOString();
         status = getPagoStatus(pagos, i, monto, today, fechaDePago);
-        amortizacion.push({ numeroDePago: i, fechaDePago, status });
+        montoCorriente =
+            status === StatusPago.corriente
+                ? monto
+                : new Prisma.Decimal(monto.toNumber() + monto.toNumber() * (interesMoratorio.toNumber() / 100));
+        amortizacion.push({ numeroDePago: i, fechaDePago, monto: montoCorriente, status });
         fechaPagoAux = fechaDePago;
     }
     return amortizacion;

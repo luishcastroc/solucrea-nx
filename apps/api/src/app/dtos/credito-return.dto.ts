@@ -1,5 +1,4 @@
 import { Colocador, ModalidadDeSeguro, Pago, Prisma, Producto, Seguro, Status } from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime';
 import { IAvalReturnDto, ISucursalReturnDto } from 'api/dtos';
 
 import { IClienteReturnDto } from './cliente-return.dto';
@@ -43,5 +42,6 @@ export interface ICreditoClienteReturnDto {
 export interface IAmortizacion {
     numeroDePago: number;
     fechaDePago: Date | string;
+    monto: Prisma.Decimal;
     status: StatusPago;
 }

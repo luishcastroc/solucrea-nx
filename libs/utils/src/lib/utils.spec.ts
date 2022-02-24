@@ -46,6 +46,7 @@ describe('Utils testing', () => {
             1,
             1,
             fechaDeInicio.toISOString(),
+            new Prisma.Decimal(15),
             new Prisma.Decimal(150.0),
             []
         );
@@ -59,6 +60,7 @@ describe('Utils testing', () => {
             45,
             1,
             fechaDeInicio.toISOString(),
+            new Prisma.Decimal(15),
             new Prisma.Decimal(150.0),
             []
         );
@@ -68,10 +70,7 @@ describe('Utils testing', () => {
 
     it('should return one payment made', () => {
         const monto = new Prisma.Decimal(150.0);
-        const fechaDeInicio = moment('2022-02-21')
-            .utc(true)
-            .utcOffset(0)
-            .set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+        const fechaDeInicio = moment().utc(true).utcOffset(0).set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
         const pagos: Partial<Pago>[] | Pago[] = [
             {
                 id: 'sdjhjh-sdsd-sdsd',
@@ -86,6 +85,7 @@ describe('Utils testing', () => {
             1,
             1,
             fechaDeInicio.toISOString(),
+            new Prisma.Decimal(15),
             monto,
             pagos
         );

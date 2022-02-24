@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Pago, Prisma } from '@prisma/client';
+import { Pago, Prisma, Status } from '@prisma/client';
 import { generateTablaAmorizacion, getFrecuencia, getSaldoActual } from '@solucrea-utils';
-import { IAmortizacion, ICajaReturnDto, ICreditoReturnDto } from 'api/dtos';
+import { IAmortizacion, ICajaReturnDto, ICreditoReturnDto, StatusPago } from 'api/dtos';
 import { PrismaService } from 'api/prisma';
 import { selectCredito } from 'api/util';
 
@@ -24,11 +24,29 @@ export class CreditosService {
                     frecuencia,
                     credito?.fechaInicio as string | Date,
                     credito?.cuota,
+                    credito?.producto.interesMoratorio,
                     credito?.pagos as Partial<Pago>[] | Pago[]
                 );
+
+                let status;
+                if (amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length > 0) {
+                    status = Status.MORA;
+                } else if (
+                    amortizacion.filter((tabla) => tabla.status === StatusPago.pagado).length ===
+                    credito?.producto.numeroDePagos
+                ) {
+                    status = Status.CERRADO;
+                } else if (
+                    amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length === 0 &&
+                    amortizacion.some((tabla) => tabla.status === StatusPago.corriente)
+                ) {
+                    status = Status.ABIERTO;
+                }
+
                 const creditoReturn = {
                     ...credito,
                     amortizacion,
+                    status,
                 };
 
                 return creditoReturn;
@@ -61,11 +79,29 @@ export class CreditosService {
                     frecuencia,
                     credito?.fechaInicio as string | Date,
                     credito?.cuota,
+                    credito?.producto.interesMoratorio,
                     credito?.pagos as Partial<Pago>[] | Pago[]
                 );
+
+                let status;
+                if (amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length > 0) {
+                    status = Status.MORA;
+                } else if (
+                    amortizacion.filter((tabla) => tabla.status === StatusPago.pagado).length ===
+                    credito?.producto.numeroDePagos
+                ) {
+                    status = Status.CERRADO;
+                } else if (
+                    amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length === 0 &&
+                    amortizacion.some((tabla) => tabla.status === StatusPago.corriente)
+                ) {
+                    status = Status.ABIERTO;
+                }
+
                 const creditoReturn = {
                     ...credito,
                     amortizacion,
+                    status,
                 };
 
                 return creditoReturn as ICreditoReturnDto;
