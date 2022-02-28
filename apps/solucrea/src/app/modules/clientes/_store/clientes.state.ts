@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { IActividadEconomicaReturnDto, IClienteReturnDto, IColoniaReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
-import { forkJoin, tap } from 'rxjs';
+import { sortBy } from 'lodash';
+import { forkJoin, tap, Observable, of } from 'rxjs';
 
 import { ClientesService } from '../_services/clientes.service';
 import { IConfig } from '../models/config.model';
@@ -11,16 +12,16 @@ import {
     ClearClientesState,
     ClientesMode,
     Edit,
-    GetAll,
+    GetAllCount,
     GetColonias,
     GetConfig,
     Inactivate,
     RemoveColonia,
+    Search,
     SelectActividadEconomica,
     SelectCliente,
 } from './clientes.actions';
 import { ClientesStateModel, IColoniasState } from './clientes.model';
-import { sortBy } from 'lodash';
 
 @State<ClientesStateModel>({
     name: 'clientes',
@@ -30,6 +31,7 @@ import { sortBy } from 'lodash';
         selectedCliente: undefined,
         selectedActividadEconomica: undefined,
         colonias: [],
+        clientesCount: 0,
         config: undefined,
         loading: false,
     },
@@ -69,21 +71,43 @@ export class ClientesState {
     }
 
     @Selector()
+    static clientesCount({ clientesCount }: ClientesStateModel): number | undefined {
+        return clientesCount;
+    }
+
+    @Selector()
     static selectedActividadEconomica({
         selectedActividadEconomica,
     }: ClientesStateModel): IActividadEconomicaReturnDto | undefined {
         return selectedActividadEconomica;
     }
 
-    @Action(GetAll)
+    @Action(Search)
+    searchCliente(ctx: StateContext<ClientesStateModel>, { payload }: Search) {
+        ctx.patchState({ loading: true });
+        let clientesReturn: Observable<IClienteReturnDto[]>;
+        if (payload !== '') {
+            clientesReturn = this.clientesService.getClientesWhere({ data: payload }).pipe(
+                tap((clientes: IClienteReturnDto[]) => {
+                    console.log('clientes: ', clientes);
+                    ctx.patchState({ clientes, loading: false });
+                })
+            );
+        } else {
+            clientesReturn = of([]);
+            ctx.patchState({ clientes: [], loading: false });
+        }
+        return clientesReturn;
+    }
+
+    @Action(GetAllCount)
     getAllClientes(ctx: StateContext<ClientesStateModel>) {
         ctx.patchState({ loading: true });
-        return this.clientesService.getClientes().pipe(
-            tap((clientes: IClienteReturnDto[]) => {
-                if (clientes) {
-                    const sortedClientes = clientes.sort();
+        return this.clientesService.getClientesCount().pipe(
+            tap((clientesCount: number) => {
+                if (clientesCount) {
                     ctx.patchState({
-                        clientes: sortedClientes,
+                        clientesCount,
                         loading: false,
                     });
                 }

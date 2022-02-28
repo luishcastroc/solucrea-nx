@@ -1,14 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { IClienteReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth/auth.utils';
-import { map, Observable, startWith, Subject, takeUntil, withLatestFrom } from 'rxjs';
-
-import { ClientesMode, ClientesState, Edit, GetAll, Inactivate } from 'app/modules/clientes/_store';
+import { ClientesMode, ClientesState, Edit, GetAllCount, Inactivate, Search } from 'app/modules/clientes/_store';
+import { debounceTime, distinctUntilChanged, Observable, tap } from 'rxjs';
 
 @Component({
     selector: 'app-cliente-list',
@@ -16,31 +15,34 @@ import { ClientesMode, ClientesState, Edit, GetAll, Inactivate } from 'app/modul
     styleUrls: ['./cliente-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClienteListComponent implements OnInit, OnDestroy {
+export class ClienteListComponent implements OnInit, AfterViewInit {
     @Select(ClientesState.clientes)
-    clientes$!: Observable<IClienteReturnDto[]>;
+    searchResults$!: Observable<IClienteReturnDto[]>;
+    @Select(ClientesState.clientesCount)
+    clientesCount$!: Observable<number | undefined>;
 
     values: string[] = ['Activos', 'Inactivos'];
     active: string = this.values[0];
     clientes!: IClienteReturnDto[];
-    searchResults$!: Observable<IClienteReturnDto[]>;
+    searchValueChanges$!: Observable<string>;
+    actions$!: Observable<any>;
     searchInput = new FormControl();
-
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(private _store: Store, private _actions$: Actions, private _toast: HotToastService) {}
 
     ngOnInit(): void {
-        this._store.dispatch(new GetAll());
+        this._store.dispatch(new GetAllCount());
 
         this.subscribeToActions();
+    }
 
-        // generating a new observable from the searchInput based on the criteria
-        this.searchResults$ = this.searchInput.valueChanges.pipe(
-            startWith(''),
-            withLatestFrom(this.clientes$),
-            map(([value, clientes]) => this._filter(value, clientes)),
-            takeUntil(this._unsubscribeAll)
+    ngAfterViewInit(): void {
+        this.searchValueChanges$ = this.searchInput.valueChanges.pipe(
+            debounceTime(500),
+            distinctUntilChanged(),
+            tap((search) => {
+                this._store.dispatch(new Search(search));
+            })
         );
     }
 
@@ -50,9 +52,9 @@ export class ClienteListComponent implements OnInit, OnDestroy {
      *
      */
     subscribeToActions(): void {
-        this._actions$
-            .pipe(ofActionCompleted(Inactivate, Edit), takeUntil(this._unsubscribeAll))
-            .subscribe((result) => {
+        this.actions$ = this._actions$.pipe(
+            ofActionCompleted(Inactivate, Edit),
+            tap((result) => {
                 const { error, successful } = result.result;
                 const { action } = result;
                 if (error) {
@@ -75,7 +77,8 @@ export class ClienteListComponent implements OnInit, OnDestroy {
                     });
                     this.searchInput.updateValueAndValidity({ onlySelf: false, emitEvent: true });
                 }
-            });
+            })
+        );
     }
 
     /**
@@ -124,39 +127,5 @@ export class ClienteListComponent implements OnInit, OnDestroy {
      */
     activateClient(id: string) {
         this._store.dispatch(new Edit(id, { activo: true }));
-    }
-
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
-    }
-
-    /**
-     *
-     * @param value
-     * Function to filter results on clientes
-     *
-     */
-    private _filter(value: string, clientes: IClienteReturnDto[]): IClienteReturnDto[] {
-        //getting the value from the input
-        const filterValue = value.toLowerCase();
-        if (filterValue === '') {
-            return [];
-        }
-
-        // returning the filtered array
-        return clientes.filter(
-            (cliente) =>
-                (cliente.nombre.toLowerCase().includes(filterValue) ||
-                    cliente.apellidoPaterno.toLowerCase().includes(filterValue) ||
-                    cliente.apellidoMaterno.toLowerCase().includes(filterValue) ||
-                    cliente.rfc.toLowerCase().includes(filterValue) ||
-                    cliente.curp.toLowerCase().includes(filterValue)) &&
-                cliente.activo === (this.active === 'Activos' ? true : false)
-        );
     }
 }

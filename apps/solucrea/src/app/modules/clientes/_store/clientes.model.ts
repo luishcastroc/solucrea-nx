@@ -12,6 +12,7 @@ export interface IColoniasState {
 
 export interface ClientesStateModel {
     clientes: IClienteReturnDto[] | [];
+    clientesCount: number | undefined;
     editMode: EditMode;
     selectedCliente: IClienteReturnDto | undefined;
     selectedActividadEconomica: IActividadEconomicaReturnDto | undefined;

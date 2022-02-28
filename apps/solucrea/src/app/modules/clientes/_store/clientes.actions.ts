@@ -7,8 +7,8 @@ export class Add {
     constructor(public payload: CreateClienteDto) {}
 }
 
-export class GetAll {
-    static readonly type = '[Cliente] Get All';
+export class GetAllCount {
+    static readonly type = '[Cliente] Get All Count';
 }
 
 export class GetOne {

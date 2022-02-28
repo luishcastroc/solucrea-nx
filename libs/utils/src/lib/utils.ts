@@ -59,10 +59,13 @@ export const addBusinessDays = (originalDate: moment.Moment, numDaysToAdd: numbe
 
     while (daysRemaining > 0) {
         newDate.add(1, 'days');
+        console.log('day: ', newDate.day());
         if (newDate.day() !== sunday) {
             daysRemaining--;
         }
     }
+    console.log(newDate);
+    console.log(newDate.toISOString());
 
     return newDate;
 };
