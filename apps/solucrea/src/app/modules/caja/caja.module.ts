@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
-import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatButtonModule } from '@angular/material/button';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,7 +20,6 @@ import { CajaDetailComponent } from './caja-detail/caja-detail.component';
 import { CajaListComponent } from './caja-list/caja-list.component';
 import { CajaComponent } from './caja.component';
 import { cajaRoutes } from './caja.routing';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
     declarations: [CajaComponent, CajaListComponent, CajaDetailComponent],
@@ -39,9 +39,6 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
         SharedModule,
         InputMaskModule,
     ],
-    providers: [
-        { provide: MAT_DATE_LOCALE, useValue: 'es-MX' },
-        { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-    ],
+    providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-MX' }],
 })
 export class CajaModule {}

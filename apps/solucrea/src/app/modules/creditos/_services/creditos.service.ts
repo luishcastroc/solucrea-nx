@@ -92,9 +92,15 @@ export class CreditosService {
 
         //transform into date strings
         const fechaDesembolso = (formValue.fechaDesembolso as Moment).toISOString();
-        const fechaInicio = (formValue.fechaInicio as Moment).toISOString();
-        const fechaFinal = (formValue.fechaFinal as Moment).toISOString();
-        const fechaDeNacimiento = (formValue.aval.fechaDeNacimiento as Moment).toISOString();
+        const fechaInicio = (formValue.fechaInicio as Moment)
+            .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+            .toISOString();
+        const fechaFinal = (formValue.fechaFinal as Moment)
+            .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+            .toISOString();
+        const fechaDeNacimiento = (formValue.aval.fechaDeNacimiento as Moment)
+            .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+            .toISOString();
 
         //removing non used values (they have default in the database)
         const { id, status, ...rest } = formValue;

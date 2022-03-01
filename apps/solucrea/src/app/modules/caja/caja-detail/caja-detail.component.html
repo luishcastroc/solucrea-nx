@@ -176,7 +176,7 @@
                         type="submit"
                         [color]="'primary'"
                         class="ml-2"
-                        [disabled]="!cajaForm.touched || cajaForm.invalid"
+                        [disabled]="!cajaForm.touched || cajaForm.invalid || cajaForm.disabled"
                         (click)="saveCaja(editMode)"
                     >
                         Guardar

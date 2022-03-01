@@ -151,7 +151,7 @@
                     type="submit"
                     [color]="'primary'"
                     (click)="data.mode !== 'new' ? updateUsuario() : saveUsuario()"
-                    [disabled]="!usuarioForm.touched || usuarioForm.invalid"
+                    [disabled]="!usuarioForm.touched || usuarioForm.invalid || usuarioForm.disabled"
                 >
                     Guardar
                 </button>

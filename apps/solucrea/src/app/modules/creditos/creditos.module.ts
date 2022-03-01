@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,8 +25,6 @@ import { CreditosDetailComponent } from './creditos-detail/creditos-detail.compo
 import { CreditosListComponent } from './creditos-list/creditos-list.component';
 import { CreditosComponent } from './creditos.component';
 import { creditosRoutes } from './creditos.routing';
-import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
     declarations: [CreditosComponent, CreditosListComponent, CreditosDetailComponent, CreditosClienteListComponent],
@@ -48,9 +48,6 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
         SharedModule,
         InputMaskModule,
     ],
-    providers: [
-        { provide: MAT_DATE_LOCALE, useValue: 'es-MX' },
-        { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-    ],
+    providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-MX' }],
 })
 export class CreditosModule {}
