@@ -60,16 +60,7 @@
                                         Datos del Cliente
                                     </h2>
                                     <div
-                                        class="
-                                            grid grid-cols-1
-                                            md:grid-cols-4
-                                            gap-6
-                                            w-full
-                                            mt-3
-                                            content-center
-                                            border-b border-t
-                                            py-6
-                                        "
+                                        class="grid grid-cols-1 md:grid-cols-4 gap-6 w-full mt-3 content-center border-b border-t py-6"
                                     >
                                         <!-- Nombre -->
                                         <div class="flex flex-col gap-2">
@@ -179,15 +170,7 @@
                                         </div>
                                     </div>
                                     <div
-                                        class="
-                                            flex
-                                            felx-col
-                                            md:grid md:grid-cols-2
-                                            gap-6
-                                            flex-auto
-                                            justify-center
-                                            items-center
-                                        "
+                                        class="flex felx-col md:grid md:grid-cols-2 gap-6 flex-auto justify-center items-center"
                                     >
                                         <ng-container *ngIf="productos$ | async as productos">
                                             <ng-container *ngIf="productos.length > 0; else noProductosTemplate">
@@ -276,16 +259,7 @@
                                     Datos del Producto
                                 </h2>
                                 <div
-                                    class="
-                                        mt-2
-                                        grid grid-cols-1
-                                        md:grid-cols-4
-                                        content-center
-                                        gap-6
-                                        w-full
-                                        border-b border-t
-                                        py-8
-                                    "
+                                    class="mt-2 grid grid-cols-1 md:grid-cols-4 content-center gap-6 w-full border-b border-t py-8"
                                 >
                                     <!-- Descripción -->
                                     <div class="flex flex-col gap-2">
@@ -867,16 +841,7 @@
                             Datos Generales
                         </h2>
                         <div
-                            class="
-                                grid grid-cols-1
-                                md:grid-cols-4
-                                gap-6
-                                w-full
-                                mt-3
-                                content-center
-                                border-b border-t
-                                py-6
-                            "
+                            class="grid grid-cols-1 md:grid-cols-4 gap-6 w-full mt-3 content-center border-b border-t py-6"
                             *ngIf="resumenOperacion as details"
                         >
                             <!-- Nombre -->
@@ -1078,5 +1043,5 @@
     </ng-template>
 </div>
 <ng-template #loadingTemplate>
-    <mat-spinner> </mat-spinner>
+    <div class="flex flex-col flex-auto self-center"><mat-spinner> </mat-spinner></div>
 </ng-template>
