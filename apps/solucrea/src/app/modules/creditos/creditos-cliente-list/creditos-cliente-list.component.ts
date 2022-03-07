@@ -1,3 +1,4 @@
+import { GetCreditosCount } from './../_store/creditos.actions';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -20,6 +21,7 @@ import {
 import { Observable, tap } from 'rxjs';
 
 import { Status } from '.prisma/client';
+import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
     selector: 'app-creditos-cliente-list',
@@ -31,13 +33,14 @@ export class CreditosClienteListComponent implements OnInit {
     creditos$!: Observable<ICreditoReturnDto[]>;
     @Select(CreditosState.selectedCliente)
     cliente$!: Observable<IClienteReturnDto>;
+    @Select(CreditosState.creditosCount)
+    creditosCount$!: Observable<number>;
     @Select(CreditosState.loading)
     loading$!: Observable<boolean>;
     @Select(CreditosState.turnosCount)
     turnosCount$!: Observable<number>;
 
     actions$!: Actions;
-    creditosFiltered$!: Observable<ICreditoReturnDto[]>;
     searchInput = new FormControl();
     values = [
         { display: 'Abiertos', value: Status.ABIERTO },
@@ -64,18 +67,13 @@ export class CreditosClienteListComponent implements OnInit {
         this.clienteId = this._route.snapshot.paramMap.get('clienteId');
         if (this.clienteId) {
             this._store.dispatch([
-                new GetAllCreditosCliente(this.clienteId),
+                new GetAllCreditosCliente(this.clienteId, Status.ABIERTO),
                 new GetTurnosCount(),
+                new GetCreditosCount(this.clienteId),
                 new GetClienteData(this.clienteId),
             ]);
 
             this.setActions();
-
-            this.creditosFiltered$ = this._store.select(CreditosState.creditosClienteFiltered).pipe(
-                tap((credito) => {
-                    console.log(credito);
-                })
-            );
         }
     }
 
@@ -120,6 +118,14 @@ export class CreditosClienteListComponent implements OnInit {
                 }
             })
         );
+    }
+
+    /**
+     *
+     * Change filter for Creditos
+     */
+    changeFilter(e: MatRadioChange) {
+        this._store.dispatch(new GetAllCreditosCliente(this.clienteId, e.value));
     }
 
     /**

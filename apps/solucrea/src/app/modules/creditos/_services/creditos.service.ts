@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Prisma, ReferidoPor } from '@prisma/client';
+import { Prisma, ReferidoPor, Status } from '@prisma/client';
 import { ICreditoReturnDto, IModalidadSeguroReturnDto, ISeguroReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { environment } from 'apps/solucrea/src/environments/environment';
 import { Moment } from 'moment';
@@ -24,13 +24,22 @@ export class CreditosService {
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
     /**
+     * Get Créditos count
+     *
+     *
+     * @returns Number of créditos active and innactive.
+     */
+    getCreditosCount(id: string | null): Observable<number> {
+        return this._httpClient.get<number>(`${this._environment.uri}/creditos-count/${id}`);
+    }
+    /**
      * Get Creditos from Cliente
      *
      * @param id
      *
      */
-    getCreditosCliente(id: string): Observable<ICreditoReturnDto[]> {
-        return this._httpClient.get<ICreditoReturnDto[]>(`${this._environment.uri}/creditos/cliente/${id}`);
+    getCreditosCliente(id: string | null, status: Status): Observable<ICreditoReturnDto[]> {
+        return this._httpClient.get<ICreditoReturnDto[]>(`${this._environment.uri}/creditos/cliente/${id}/${status}`);
     }
 
     /**
@@ -38,8 +47,8 @@ export class CreditosService {
      *
      *
      */
-    getCreditos(): Observable<ICreditoReturnDto[]> {
-        return this._httpClient.get<ICreditoReturnDto[]>(`${this._environment.uri}/creditos`);
+    getCreditos(status: Status): Observable<ICreditoReturnDto[]> {
+        return this._httpClient.get<ICreditoReturnDto[]>(`${this._environment.uri}/creditos/${status}`);
     }
 
     /**

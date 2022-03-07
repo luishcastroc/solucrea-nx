@@ -89,7 +89,6 @@ export class ClientesState {
         if (payload !== '') {
             clientesReturn = this.clientesService.getClientesWhere({ data: payload }).pipe(
                 tap((clientes: IClienteReturnDto[]) => {
-                    console.log('clientes: ', clientes);
                     ctx.patchState({ clientes, loading: false });
                 })
             );

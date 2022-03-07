@@ -8,7 +8,7 @@
             class="absolute inset-0 flex flex-col min-w-0 overflow-hidden"
             *ngIf="{
                 creditos: creditos$ | async,
-                creditosFiltered: creditosFiltered$ | async,
+                creditosCount: creditosCount$ | async,
                 cliente: cliente$ | async
             } as data"
         >
@@ -17,12 +17,12 @@
                 <!-- Title -->
                 <div>
                     <div class="text-4xl font-extrabold tracking-tight leading-none">Créditos del Cliente</div>
-                    <div class="ml-0.5 font-medium text-secondary" *ngIf="data.creditos as creditos">
-                        <ng-container *ngIf="creditos.length > 0">
-                            {{ creditos.length | number }}
+                    <div class="ml-0.5 font-medium text-secondary" *ngIf="data.creditosCount as creditosCount">
+                        <ng-container *ngIf="creditosCount > 0">
+                            {{ creditosCount | number }}
                         </ng-container>
                         {{
-                            creditos.length
+                            creditosCount
                                 | i18nPlural
                                     : {
                                           '=0': 'Sin créditos',
@@ -36,7 +36,7 @@
                 <!-- Main actions -->
                 <div class="flex flex-col items-center gap-4 mt-4 flex-auto">
                     <!-- Search -->
-                    <div class="flex-auto w-full" *ngIf="data.creditos.length > 0">
+                    <div class="flex-auto w-full" *ngIf="data.creditosCount > 0">
                         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full min-w-50">
                             <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
                             <input
@@ -53,9 +53,13 @@
                             aria-labelledby="radio-group-label"
                             class="grid grid-cols-4 gap-3 justify-items-center"
                             [(ngModel)]="status"
-                            *ngIf="data.creditos.length > 0"
+                            *ngIf="data.creditosCount > 0"
                         >
-                            <mat-radio-button *ngFor="let value of values" [value]="value.value">
+                            <mat-radio-button
+                                *ngFor="let value of values"
+                                [value]="value.value"
+                                (change)="changeFilter($event)"
+                            >
                                 {{ value.display }}
                             </mat-radio-button>
                         </mat-radio-group>
@@ -106,7 +110,7 @@
                         </div>
                     </div>
                 </mat-card>
-                <ng-container *ngFor="let credito of data.creditosFiltered">
+                <ng-container *ngFor="let credito of data.creditos">
                     <div
                         class="z-20 grid grid-cols-1 gap-4 md:grid-cols-[1fr_minmax(auto,_200px)] px-2 py-4 md:px-10 border-b"
                     >

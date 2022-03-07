@@ -10,7 +10,7 @@ import { selectCredito } from 'api/util';
 export class CreditosService {
     constructor(private prisma: PrismaService) {}
 
-    async creditosCliente(clienteId: string): Promise<ICreditoReturnDto[] | null> {
+    async creditosCliente(clienteId: string, statusCredito: Status): Promise<ICreditoReturnDto[] | null> {
         try {
             const creditosCliente = await this.prisma.credito.findMany({
                 where: { clienteId: { equals: clienteId } },
@@ -49,10 +49,10 @@ export class CreditosService {
                     status,
                 };
 
-                return creditoReturn;
+                return creditoReturn as ICreditoReturnDto;
             });
 
-            return creditosReturn as ICreditoReturnDto[] | null;
+            return creditosReturn.filter((credito) => credito.status === statusCredito);
         } catch (e: any) {
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
@@ -65,7 +65,7 @@ export class CreditosService {
         }
     }
 
-    async creditos(): Promise<ICreditoReturnDto[] | null> {
+    async creditos(statusCredito: Status): Promise<ICreditoReturnDto[] | null> {
         const select = selectCredito;
         try {
             const creditos = await this.prisma.credito.findMany({
@@ -107,11 +107,32 @@ export class CreditosService {
                 return creditoReturn as ICreditoReturnDto;
             });
 
-            return creditosReturn;
+            return creditosReturn.filter((credito) => credito.status === statusCredito);
         } catch (e: any) {
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error consultando los créditos del cliente' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
+            }
+        }
+    }
+
+    async getCreditosCount(id: string | null): Promise<number> {
+        try {
+            if (id === 'null') {
+                id = null;
+            }
+            const creditosSum = id
+                ? await this.prisma.credito.aggregate({ where: { clienteId: { equals: id } }, _count: true })
+                : await this.prisma.credito.aggregate({ _count: true });
+            return creditosSum._count;
+        } catch (e: any) {
+            if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error contando los créditos' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {

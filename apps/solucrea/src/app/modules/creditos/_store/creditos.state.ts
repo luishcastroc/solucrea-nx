@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { ISegurosData } from '@solucrea-utils';
 import {
     IClienteReturnDto,
     ICreditoReturnDto,
@@ -11,24 +12,24 @@ import {
 } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 import { AjustesCreditosService, AjustesUsuarioService } from 'app/modules/ajustes/_services';
-import { GetAllCreditos } from 'app/modules/ajustes/_store';
 import { CajaService } from 'app/modules/caja/_services/caja.service';
 import { ClientesService } from 'app/modules/clientes';
 import { ParentescosService } from 'app/shared';
 import { sortBy } from 'lodash';
 import { forkJoin, tap } from 'rxjs';
 
-import { ISegurosData } from '@solucrea-utils';
 import { CreditosService } from '../_services/creditos.service';
 import {
     ClearCreditosDetails,
     ClearCreditosState,
     CreateCredito,
+    GetAllCreditos,
     GetAllCreditosCliente,
     GetClienteData,
     GetClientesCount,
     GetClienteWhere,
     GetCreditosConfiguration,
+    GetCreditosCount,
     GetSucursalesWhereCaja,
     GetTurnosCount,
     ModeCredito,
@@ -46,9 +47,7 @@ import { Producto, Role } from '.prisma/client';
     name: 'creditos',
     defaults: {
         creditos: [],
-        creditosFiltered: [],
         clienteCreditos: [],
-        clienteCreditosFiltered: [],
         editMode: 'new',
         selectedCredito: undefined,
         selectedClienteCredito: undefined,
@@ -64,6 +63,7 @@ import { Producto, Role } from '.prisma/client';
         selectedOtro: false,
         segurosData: undefined,
         loading: false,
+        creditosCount: 0,
         clientesCount: 0,
         turnosCount: 0,
         selectedClienteReferral: undefined,
@@ -96,18 +96,8 @@ export class CreditosState {
     }
 
     @Selector()
-    static creditosFiltered({ creditosFiltered }: CreditosStateModel): ICreditoReturnDto[] {
-        return creditosFiltered;
-    }
-
-    @Selector()
     static creditos({ creditos }: CreditosStateModel): ICreditoReturnDto[] {
         return creditos;
-    }
-
-    @Selector()
-    static creditosClienteFiltered({ clienteCreditosFiltered }: CreditosStateModel): ICreditoReturnDto[] {
-        return clienteCreditosFiltered;
     }
 
     @Selector()
@@ -178,6 +168,11 @@ export class CreditosState {
     }
 
     @Selector()
+    static creditosCount({ creditosCount }: CreditosStateModel): number {
+        return creditosCount;
+    }
+
+    @Selector()
     static clientesCount({ clientesCount }: CreditosStateModel): number {
         return clientesCount;
     }
@@ -188,16 +183,12 @@ export class CreditosState {
     }
 
     @Action(GetAllCreditosCliente)
-    getAllCreditosCliente(ctx: StateContext<CreditosStateModel>, { id }: GetAllCreditosCliente) {
+    getAllCreditosCliente(ctx: StateContext<CreditosStateModel>, { id, status }: GetAllCreditosCliente) {
         ctx.patchState({ loading: true });
-        return this._creditosService.getCreditosCliente(id).pipe(
+        return this._creditosService.getCreditosCliente(id, status).pipe(
             tap((clienteCreditos: ICreditoReturnDto[]) => {
-                const clienteCreditosFiltered = clienteCreditos.filter(
-                    (credito: ICreditoReturnDto) => credito.status === 'ABIERTO'
-                );
                 ctx.patchState({
                     clienteCreditos,
-                    clienteCreditosFiltered,
                     loading: false,
                 });
             })
@@ -205,14 +196,12 @@ export class CreditosState {
     }
 
     @Action(GetAllCreditos)
-    getAllCreditos(ctx: StateContext<CreditosStateModel>) {
+    getAllCreditos(ctx: StateContext<CreditosStateModel>, { status }: GetAllCreditos) {
         ctx.patchState({ loading: true });
-        return this._creditosService.getCreditos().pipe(
+        return this._creditosService.getCreditos(status).pipe(
             tap((creditos: ICreditoReturnDto[]) => {
-                const creditosFiltered = creditos.filter((credito: ICreditoReturnDto) => credito.status === 'ABIERTO');
                 ctx.patchState({
                     creditos,
-                    creditosFiltered,
                     loading: false,
                 });
             })
@@ -309,6 +298,17 @@ export class CreditosState {
         );
     }
 
+    @Action(GetCreditosCount)
+    getCreditosCount(ctx: StateContext<CreditosStateModel>, { id }: GetCreditosCount) {
+        return this._creditosService.getCreditosCount(id).pipe(
+            tap((creditosCount: number) => {
+                ctx.patchState({
+                    creditosCount,
+                });
+            })
+        );
+    }
+
     @Action(GetClientesCount)
     getClientesCount(ctx: StateContext<CreditosStateModel>) {
         return this._clientesService.getClientesCount().pipe(
@@ -385,9 +385,7 @@ export class CreditosState {
     clearState(ctx: StateContext<CreditosStateModel>) {
         ctx.patchState({
             creditos: [],
-            creditosFiltered: [],
             clienteCreditos: [],
-            clienteCreditosFiltered: [],
             editMode: 'new',
             selectedCredito: undefined,
             selectedClienteCredito: undefined,
@@ -404,6 +402,8 @@ export class CreditosState {
             loading: false,
             segurosData: undefined,
             clientesCount: 0,
+            creditosCount: 0,
+            turnosCount: 0,
         });
     }
 
@@ -421,6 +421,7 @@ export class CreditosState {
             selectedOtro: false,
             segurosData: undefined,
             clientesCount: 0,
+            creditosCount: 0,
         });
     }
 }

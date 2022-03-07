@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Request, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { Prisma, Role } from '@prisma/client';
+import { Prisma, Role, Status } from '@prisma/client';
 import { CreditosService } from './creditos.service';
 import { Roles } from 'api/decorators';
 import { ICreditoReturnDto } from 'api/dtos';
@@ -11,16 +11,26 @@ export class CreditosController {
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
-    @Get('creditos/cliente/:id')
-    async obtenerCreditosCliente(@Param('id') id: string): Promise<ICreditoReturnDto[] | null> {
-        return this.creditosService.creditosCliente(id);
+    @Get('creditos/cliente/:id/:status')
+    async obtenerCreditosCliente(
+        @Param('id') id: string,
+        @Param('status') status: Status
+    ): Promise<ICreditoReturnDto[] | null> {
+        return this.creditosService.creditosCliente(id, status);
     }
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
-    @Get('creditos')
-    async obtenerCreditos(): Promise<ICreditoReturnDto[] | null> {
-        return this.creditosService.creditos();
+    @Get('creditos/:status')
+    async obtenerCreditos(@Param('status') status: Status): Promise<ICreditoReturnDto[] | null> {
+        return this.creditosService.creditos(status);
+    }
+
+    @UseGuards(RolesGuard)
+    @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
+    @Get('creditos-count/:id')
+    async creditosCount(@Param('id') id: string | null): Promise<number> {
+        return this.creditosService.getCreditosCount(id);
     }
 
     @UseGuards(RolesGuard)

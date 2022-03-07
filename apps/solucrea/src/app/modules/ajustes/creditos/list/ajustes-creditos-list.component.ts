@@ -70,12 +70,10 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
     subscribeToActions(): Actions {
         return this._actions$.pipe(
             ofActionCompleted(GetAllCreditos, EditCredito, DeleteCredito, ChangeSearchFilterCreditos),
-            takeUntil(this._unsubscribeAll),
             tap((result) => {
                 const { error, successful } = result.result;
                 const { action } = result;
                 let message;
-                console.log(error);
                 if (error) {
                     message = `${(error as HttpErrorResponse)['error'].message}`;
                     this._toast.error(message, {
