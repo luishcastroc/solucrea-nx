@@ -17,42 +17,54 @@ export class CreditosService {
                 select: selectCredito,
             });
 
-            const creditosReturn = creditosCliente.map((credito) => {
-                const frecuencia = getFrecuencia(credito?.producto.frecuencia);
-                const amortizacion: IAmortizacion[] = generateTablaAmorizacion(
-                    credito?.producto.numeroDePagos as number,
-                    frecuencia,
-                    credito?.fechaInicio as string | Date,
-                    credito?.cuota,
-                    credito?.producto.interesMoratorio,
-                    credito?.pagos as Partial<Pago>[] | Pago[]
-                );
+            const creditosReturn = await Promise.all(
+                creditosCliente.map(async (credito) => {
+                    const frecuencia = getFrecuencia(credito?.producto.frecuencia);
+                    const amortizacion: IAmortizacion[] = generateTablaAmorizacion(
+                        credito?.producto.numeroDePagos as number,
+                        frecuencia,
+                        credito?.fechaInicio as string | Date,
+                        credito?.cuota,
+                        credito?.producto.interesMoratorio,
+                        credito?.pagos as Partial<Pago>[] | Pago[]
+                    );
 
-                let status;
-                if (amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length > 0) {
-                    status = Status.MORA;
-                } else if (
-                    amortizacion.filter((tabla) => tabla.status === StatusPago.pagado).length ===
-                    credito?.producto.numeroDePagos
-                ) {
-                    status = Status.CERRADO;
-                } else if (
-                    amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length === 0 &&
-                    amortizacion.some((tabla) => tabla.status === StatusPago.corriente)
-                ) {
-                    status = Status.ABIERTO;
+                    let status;
+                    if (amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length > 0) {
+                        status = Status.MORA;
+                    } else if (
+                        amortizacion.filter((tabla) => tabla.status === StatusPago.pagado).length ===
+                        credito?.producto.numeroDePagos
+                    ) {
+                        status = Status.CERRADO;
+                    } else if (
+                        amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length === 0 &&
+                        amortizacion.some((tabla) => tabla.status === StatusPago.corriente)
+                    ) {
+                        status = Status.ABIERTO;
+                    }
+
+                    const creditoReturn = {
+                        ...credito,
+                        amortizacion,
+                        status,
+                    };
+
+                    if (status !== credito.status) {
+                        await this.prisma.credito.update({ where: { id: credito.id }, data: { status } });
+                    }
+
+                    return creditoReturn as ICreditoReturnDto;
+                })
+            );
+
+            return creditosReturn.filter((credito) => {
+                if (statusCredito === 'ABIERTO' && (credito.status === 'ABIERTO' || credito.status === 'MORA')) {
+                    return credito;
+                } else if (statusCredito === credito.status) {
+                    return credito;
                 }
-
-                const creditoReturn = {
-                    ...credito,
-                    amortizacion,
-                    status,
-                };
-
-                return creditoReturn as ICreditoReturnDto;
             });
-
-            return creditosReturn.filter((credito) => credito.status === statusCredito);
         } catch (e: any) {
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
@@ -72,42 +84,54 @@ export class CreditosService {
                 select,
             });
 
-            const creditosReturn = creditos.map((credito) => {
-                const frecuencia = getFrecuencia(credito?.producto.frecuencia);
-                const amortizacion: IAmortizacion[] = generateTablaAmorizacion(
-                    credito?.producto.numeroDePagos as number,
-                    frecuencia,
-                    credito?.fechaInicio as string | Date,
-                    credito?.cuota,
-                    credito?.producto.interesMoratorio,
-                    credito?.pagos as Partial<Pago>[] | Pago[]
-                );
+            const creditosReturn = await Promise.all(
+                creditos.map(async (credito) => {
+                    const frecuencia = getFrecuencia(credito?.producto.frecuencia);
+                    const amortizacion: IAmortizacion[] = generateTablaAmorizacion(
+                        credito?.producto.numeroDePagos as number,
+                        frecuencia,
+                        credito?.fechaInicio as string | Date,
+                        credito?.cuota,
+                        credito?.producto.interesMoratorio,
+                        credito?.pagos as Partial<Pago>[] | Pago[]
+                    );
 
-                let status;
-                if (amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length > 0) {
-                    status = Status.MORA;
-                } else if (
-                    amortizacion.filter((tabla) => tabla.status === StatusPago.pagado).length ===
-                    credito?.producto.numeroDePagos
-                ) {
-                    status = Status.CERRADO;
-                } else if (
-                    amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length === 0 &&
-                    amortizacion.some((tabla) => tabla.status === StatusPago.corriente)
-                ) {
-                    status = Status.ABIERTO;
+                    let status;
+                    if (amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length > 0) {
+                        status = Status.MORA;
+                    } else if (
+                        amortizacion.filter((tabla) => tabla.status === StatusPago.pagado).length ===
+                        credito?.producto.numeroDePagos
+                    ) {
+                        status = Status.CERRADO;
+                    } else if (
+                        amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length === 0 &&
+                        amortizacion.some((tabla) => tabla.status === StatusPago.corriente)
+                    ) {
+                        status = Status.ABIERTO;
+                    }
+
+                    const creditoReturn = {
+                        ...credito,
+                        amortizacion,
+                        status,
+                    };
+
+                    if (status !== credito.status) {
+                        await this.prisma.credito.update({ where: { id: credito.id }, data: { status } });
+                    }
+
+                    return creditoReturn as ICreditoReturnDto;
+                })
+            );
+
+            return creditosReturn.filter((credito) => {
+                if (statusCredito === 'ABIERTO' && (credito.status === 'ABIERTO' || credito.status === 'MORA')) {
+                    return credito;
+                } else if (statusCredito === credito.status) {
+                    return credito;
                 }
-
-                const creditoReturn = {
-                    ...credito,
-                    amortizacion,
-                    status,
-                };
-
-                return creditoReturn as ICreditoReturnDto;
             });
-
-            return creditosReturn.filter((credito) => credito.status === statusCredito);
         } catch (e: any) {
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
