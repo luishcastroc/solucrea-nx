@@ -26,7 +26,7 @@ import { ChangeSearchFilter } from '.';
     defaults: {
         sucursales: [],
         sucursalesFiltered: [],
-        editMode: 'edit',
+        editMode: 'new',
         selectedSucursal: undefined,
         loading: false,
         colonias: undefined,
@@ -173,7 +173,7 @@ export class AjustesSucursalesState {
     @Action(ClearSucursalState)
     clearSucursalState(ctx: StateContext<AjustesSucursalesStateModel>) {
         ctx.patchState({
-            editMode: 'edit',
+            editMode: 'new',
             selectedSucursal: undefined,
             loading: false,
             colonias: undefined,

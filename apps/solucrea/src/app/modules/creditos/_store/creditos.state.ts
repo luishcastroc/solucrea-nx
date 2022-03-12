@@ -35,6 +35,7 @@ import {
     ModeCredito,
     SelectCliente,
     SelectClienteReferral,
+    SelectCredito,
     SelectModalidadSeguro,
     SelectParentesco,
     SelectProducto,
@@ -47,10 +48,8 @@ import { Producto, Role } from '.prisma/client';
     name: 'creditos',
     defaults: {
         creditos: [],
-        clienteCreditos: [],
         editMode: 'new',
         selectedCredito: undefined,
-        selectedClienteCredito: undefined,
         selectedProducto: undefined,
         productos: [],
         sucursales: [],
@@ -98,11 +97,6 @@ export class CreditosState {
     @Selector()
     static creditos({ creditos }: CreditosStateModel): ICreditoReturnDto[] {
         return creditos;
-    }
-
-    @Selector()
-    static creditosCliente({ clienteCreditos }: CreditosStateModel): ICreditoReturnDto[] {
-        return clienteCreditos;
     }
 
     @Selector()
@@ -186,9 +180,9 @@ export class CreditosState {
     getAllCreditosCliente(ctx: StateContext<CreditosStateModel>, { id, status }: GetAllCreditosCliente) {
         ctx.patchState({ loading: true });
         return this._creditosService.getCreditosCliente(id, status).pipe(
-            tap((clienteCreditos: ICreditoReturnDto[]) => {
+            tap((creditos: ICreditoReturnDto[]) => {
                 ctx.patchState({
-                    clienteCreditos,
+                    creditos,
                     loading: false,
                 });
             })
@@ -337,6 +331,12 @@ export class CreditosState {
         ctx.patchState({ editMode: payload });
     }
 
+    @Action(SelectCredito)
+    selectCredito(ctx: StateContext<CreditosStateModel>, { id }: SelectCredito) {
+        const selectedCredito = ctx.getState().creditos.filter((credito: ICreditoReturnDto) => credito.id === id)[0];
+        ctx.patchState({ selectedCredito });
+    }
+
     @Action(SelectParentesco)
     selectParentesco(ctx: StateContext<CreditosStateModel>, { id }: SelectParentesco) {
         const parentesco = ctx.getState().parentescos.filter((par: IParentescoReturnDto) => par.id === id)[0];
@@ -374,9 +374,8 @@ export class CreditosState {
         return this._creditosService.createCredito(data).pipe(
             tap((credito: ICreditoReturnDto) => {
                 const state = ctx.getState();
-                const clienteCreditos = [...state.clienteCreditos, credito];
                 const creditos = [...state.creditos, credito];
-                ctx.patchState({ clienteCreditos, creditos });
+                ctx.patchState({ creditos });
             })
         );
     }
@@ -385,10 +384,8 @@ export class CreditosState {
     clearState(ctx: StateContext<CreditosStateModel>) {
         ctx.patchState({
             creditos: [],
-            clienteCreditos: [],
             editMode: 'new',
             selectedCredito: undefined,
-            selectedClienteCredito: undefined,
             selectedProducto: undefined,
             selectedSeguro: undefined,
             productos: [],

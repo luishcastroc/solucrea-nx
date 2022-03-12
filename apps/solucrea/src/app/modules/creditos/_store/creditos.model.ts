@@ -16,7 +16,6 @@ export interface CreditosStateModel {
     editMode: EditMode;
     loading: boolean;
     creditos: ICreditoReturnDto[] | [];
-    clienteCreditos: ICreditoReturnDto[] | [];
     productos: Producto[] | [];
     sucursales: ISucursalReturnDto[] | [];
     clientes: IClienteReturnDto[] | [];
@@ -29,7 +28,6 @@ export interface CreditosStateModel {
     turnosCount: number;
     selectedClienteReferral: IClienteReturnDto | undefined;
     selectedCredito: ICreditoReturnDto | undefined;
-    selectedClienteCredito: ICreditoReturnDto | undefined;
     selectedModalidadDeSeguro: IModalidadSeguroReturnDto | undefined;
     selectedCliente: IClienteReturnDto | undefined;
     selectedProducto: Producto | undefined;

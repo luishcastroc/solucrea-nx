@@ -139,35 +139,27 @@
                         <div class="order-1 sm:order-2 sm:ml-3 xsm:flex-col flex justify-center items-center">
                             <button
                                 mat-icon-button
-                                aria-label="Pagos"
-                                #tooltip="matTooltip"
-                                matTooltip="Pagos"
-                                [matTooltipPosition]="'below'"
-                            >
-                                <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:cash'"></mat-icon>
-                            </button>
-                            <button
-                                mat-icon-button
                                 aria-label="Detalle"
                                 #tooltip="matTooltip"
                                 matTooltip="Detalle"
                                 [matTooltipPosition]="'below'"
+                                (click)="goToDetails(credito.id)"
                             >
-                                <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:clipboard-list'"></mat-icon>
+                                <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:cash'"></mat-icon>
                             </button>
                             <button
                                 mat-icon-button
                                 aria-label="Inactivar Credito"
                                 #tooltip="matTooltip"
                                 matTooltip="{{
-                                    credito.status === 'ABIERTO' ? 'Inactivar Credito' : 'Activar Credito'
+                                    credito.status === 'ABIERTO' || 'MORA' ? 'Inactivar Credito' : 'Activar Credito'
                                 }}"
                                 [matTooltipPosition]="'below'"
                             >
                                 <mat-icon
                                     class="text-hint"
                                     [svgIcon]="
-                                        credito.status === 'ABIERTO'
+                                        credito.status === 'ABIERTO' || 'MORA'
                                             ? 'heroicons_outline:trash'
                                             : 'heroicons_outline:badge-check'
                                     "

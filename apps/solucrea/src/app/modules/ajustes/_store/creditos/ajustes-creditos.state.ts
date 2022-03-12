@@ -22,7 +22,7 @@ import { ChangeSearchFilterCreditos } from '.';
     defaults: {
         creditos: [],
         creditosFiltered: [],
-        editMode: 'edit',
+        editMode: 'new',
         selectedCredito: undefined,
         loading: false,
     },
@@ -128,7 +128,7 @@ export class AjustesCreditosState {
     @Action(ClearCreditoState)
     clearCreditosState(ctx: StateContext<AjustesCreditosStateModel>) {
         ctx.patchState({
-            editMode: 'edit',
+            editMode: 'new',
             selectedCredito: undefined,
             loading: false,
         });

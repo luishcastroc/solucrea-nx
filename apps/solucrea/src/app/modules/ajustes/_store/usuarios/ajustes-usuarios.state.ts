@@ -22,7 +22,7 @@ import { Usuario } from '.prisma/client';
     name: 'ajustesUsuarios',
     defaults: {
         usuarios: [],
-        editMode: 'edit',
+        editMode: 'new',
         selectedUsuario: undefined,
         loading: false,
     },
@@ -139,7 +139,7 @@ export class AjustesUsuariosState {
     @Action(ClearUsuarioState)
     clearUsuarioState(ctx: StateContext<AjustesUsuariosStateModel>) {
         ctx.patchState({
-            editMode: 'edit',
+            editMode: 'new',
             selectedUsuario: undefined,
             loading: false,
         });

@@ -82,6 +82,11 @@ export class SelectSeguro {
     constructor(public id: string) {}
 }
 
+export class SelectCredito {
+    static readonly type = '[Creditos] Select Crédito';
+    constructor(public id: string) {}
+}
+
 export class GetSucursalesWhereCaja {
     static readonly type = '[Creditos] Get Sucursales Where Caja';
     constructor(public minAmount: number, public maxAmount: number) {}

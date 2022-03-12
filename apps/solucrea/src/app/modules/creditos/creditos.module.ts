@@ -25,9 +25,11 @@ import { CreditosDetailComponent } from './creditos-detail/creditos-detail.compo
 import { CreditosListComponent } from './creditos-list/creditos-list.component';
 import { CreditosComponent } from './creditos.component';
 import { creditosRoutes } from './creditos.routing';
+import { CreditosInfoComponent } from './creditos-info/creditos-info.component';
+import { CreditosNewComponent } from './creditos-new/creditos-new.component';
 
 @NgModule({
-    declarations: [CreditosComponent, CreditosListComponent, CreditosDetailComponent, CreditosClienteListComponent],
+    declarations: [CreditosComponent, CreditosListComponent, CreditosDetailComponent, CreditosClienteListComponent, CreditosInfoComponent, CreditosNewComponent],
     imports: [
         RouterModule.forChild(creditosRoutes),
         CommonModule,

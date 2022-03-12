@@ -1,4 +1,4 @@
-import { GetCreditosCount } from './../_store/creditos.actions';
+import { GetCreditosCount, SelectCredito } from '../_store/creditos.actions';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -29,7 +29,7 @@ import { MatRadioChange } from '@angular/material/radio';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditosClienteListComponent implements OnInit {
-    @Select(CreditosState.creditosCliente)
+    @Select(CreditosState.creditos)
     creditos$!: Observable<ICreditoReturnDto[]>;
     @Select(CreditosState.selectedCliente)
     cliente$!: Observable<IClienteReturnDto>;
@@ -125,6 +125,18 @@ export class CreditosClienteListComponent implements OnInit {
      */
     changeFilter(e: MatRadioChange) {
         this._store.dispatch(new GetAllCreditosCliente(this.clienteId, e.value));
+    }
+
+    /**
+     *
+     * Go to Credito details
+     */
+    goToDetails(id: string) {
+        this._store.dispatch([
+            new Navigate([`creditos/cliente/${this.clienteId}/detail/${id}`]),
+            new ModeCredito('edit'),
+            new SelectCredito(id),
+        ]);
     }
 
     /**
