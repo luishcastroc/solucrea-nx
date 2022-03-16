@@ -33,7 +33,7 @@
         "workspace-schematic": "nx workspace-schematic",
         "help": "nx help",
         "postinstall": "node ./decorate-angular-cli.js && npx prisma generate",
-        "deploy:api": "npm ci --legacy-peer-deps && npx prisma generate && nx build api --prod && npm run start:api:prod"
+        "deploy:api": "npm i --legacy-peer-deps && npx prisma generate && nx build api --prod && npm run start:api:prod"
     },
     "dependencies": {
         "@angular/animations": "13.2.6",
