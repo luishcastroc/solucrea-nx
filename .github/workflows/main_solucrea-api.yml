@@ -24,7 +24,7 @@ jobs:
             - name: npm install, build
               run: |
                   npm ci
-                  npm nx build api --prod --if-present
+                  npm run nx build api --prod --if-present
 
             - name: Upload artifact for deployment job
               uses: actions/upload-artifact@v2
