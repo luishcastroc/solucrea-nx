@@ -10,7 +10,6 @@
         "prebuild": "rimraf dist/apps",
         "ng": "nx",
         "start": "ng serve",
-        "start:api:prod": "node dist/apps/api",
         "build": "ng build",
         "test": "ng test",
         "lint": "nx workspace-lint && ng lint",
@@ -32,8 +31,7 @@
         "dep-graph": "nx dep-graph",
         "workspace-schematic": "nx workspace-schematic",
         "help": "nx help",
-        "postinstall": "node ./decorate-angular-cli.js && npx prisma generate",
-        "deploy:api": "npm i --legacy-peer-deps && npx prisma generate && nx build api --prod && npm run start:api:prod"
+        "postinstall": "node ./decorate-angular-cli.js && npx prisma generate"
     },
     "dependencies": {
         "@angular/animations": "13.2.6",
