@@ -12,6 +12,80 @@
             <mat-icon svgIcon="heroicons_outline:arrow-left"></mat-icon>
         </button>
     </div>
+    <!-- Content -->
+    <div class="flex-auto overflow-y-auto" *ngIf="selectedCredito$ | async as credito">
+        <mat-card class="mb-8">
+            <div class="z-20 grid grid-cols-1 gap-4 md:grid-cols-5 px-2 py-4 md:px-10">
+                <!-- Nombre del Cliente -->
+                <div class="flex flex-col">
+                    <div class="font-bold">Nombre Cliente:</div>
+                    <div class="mt-2">
+                        {{ credito.cliente?.nombre }} {{ credito.cliente?.apellidoPaterno }}
+                        {{ credito.cliente?.apellidoMaterno }}
+                    </div>
+                </div>
+                <!-- Teléfono -->
+                <div class="flex flex-col">
+                    <div class="font-bold">Teléfono:</div>
+                    <div class="mt-2">
+                        ({{ credito.cliente?.telefono1 | slice: 0:3 }})-{{ credito.cliente?.telefono1 | slice: 3:6 }}-{{
+                            credito.cliente?.telefono1 | slice: 6:8
+                        }}-{{ credito.cliente?.telefono1 | slice: 8:10 }}
+                    </div>
+                </div>
+                <!-- Fecha de Nacimiento -->
+                <div class="flex flex-col">
+                    <div class="font-bold">RFC:</div>
+                    <div class="mt-2">
+                        {{ credito.cliente?.fechaDeNacimiento | date }}
+                    </div>
+                </div>
+                <!-- CURP del Cliente -->
+                <div class="flex flex-col">
+                    <div class="font-bold">CURP:</div>
+                    <div class="mt-2">
+                        {{ credito.cliente?.curp }}
+                    </div>
+                </div>
+                <!-- RFC del Cliente -->
+                <div class="flex flex-col">
+                    <div class="font-bold">RFC:</div>
+                    <div class="mt-2">
+                        {{ credito.cliente?.rfc }}
+                    </div>
+                </div>
+                <!-- Sucursal -->
+                <div class="flex flex-col">
+                    <div class="font-bold">Sucursal:</div>
+                    <div class="mt-2">
+                        {{ credito.sucursal?.nombre }}
+                    </div>
+                </div>
+                <!-- Nombre del Producto -->
+                <div class="flex flex-col">
+                    <div class="font-bold">Nombre del Producto:</div>
+                    <div class="mt-2">
+                        {{ credito.producto?.nombre }}
+                    </div>
+                </div>
+                <!-- Tasa de Interés -->
+                <div class="flex flex-col">
+                    <div class="font-bold">Tasa de Interés:</div>
+                    <div class="mt-2">{{ credito.producto?.interes }}%</div>
+                </div>
+                <!-- Monto Otorgado -->
+                <div class="flex flex-col">
+                    <div class="font-bold">Monto Otorgado:</div>
+                    <div class="mt-2">{{ credito.monto | currency }}</div>
+                </div>
+                <!-- Monto Otorgado -->
+                <div class="flex flex-col">
+                    <div class="font-bold">Cuota:</div>
+                    <div class="mt-2">{{ credito.cuota | currency }}</div>
+                </div>
+            </div>
+        </mat-card>
+    </div>
 </div>
 <ng-container *ngIf="loading$ | async; then loadingTemplate; else formTemplate"></ng-container>
 <ng-template #formTemplate></ng-template>

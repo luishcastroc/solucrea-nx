@@ -32,7 +32,6 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this._store.dispatch(new GetCreditosConfiguration());
         this.clienteId = this._route.snapshot.paramMap.get('clienteId');
 
         // Subscribe to media changes
