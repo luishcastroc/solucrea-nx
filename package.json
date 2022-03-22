@@ -31,6 +31,7 @@
         "dep-graph": "nx dep-graph",
         "workspace-schematic": "nx workspace-schematic",
         "help": "nx help",
+        "pro.migrate": "dotenv -e .env.production prisma migrate dev",
         "postinstall": "node ./decorate-angular-cli.js && npx prisma generate"
     },
     "dependencies": {
@@ -67,6 +68,8 @@
         "class-transformer": "^0.4.0",
         "class-validator": "^0.13.1",
         "crypto-js": "4.1.1",
+        "dotenv": "^16.0.0",
+        "dotenv-cli": "^5.0.0",
         "highlight.js": "11.4.0",
         "inputmask": "^5.0.6",
         "lodash-es": "4.17.21",
