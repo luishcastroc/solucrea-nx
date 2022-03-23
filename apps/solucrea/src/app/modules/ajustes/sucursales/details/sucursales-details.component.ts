@@ -30,6 +30,7 @@ import { TipoDireccion } from '.prisma/client';
 export class SucursalesDetailsComponent implements OnInit, OnDestroy {
     @Select(AjustesSucursalesState.loading)
     loading$!: Observable<boolean>;
+    loading = false;
 
     editMode$!: Observable<EditMode>;
     colonias$!: Observable<IColoniaReturnDto | undefined>;
@@ -108,6 +109,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
             .subscribe((result) => {
                 const { error, successful } = result.result;
                 const { action } = result;
+                this.loading = false;
                 if (error) {
                     const message = `${(error as HttpErrorResponse)['error'].message}`;
                     this._toast.error(message, {
@@ -217,6 +219,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
      *
      */
     saveSucursal(): void {
+        this.loading = true;
         if (this.editMode === 'new') {
             this.sucursalForm.disable();
             this._store.dispatch(new AddSucursal(this.sucursalForm.value));

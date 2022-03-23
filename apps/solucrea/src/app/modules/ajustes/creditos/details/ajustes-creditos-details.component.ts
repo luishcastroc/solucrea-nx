@@ -31,6 +31,7 @@ import { Producto } from '.prisma/client';
 export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
     @Select(AjustesCreditosState.loading)
     loading$!: Observable<boolean>;
+    loading = false;
     creditosForm!: FormGroup;
     editMode!: EditMode;
     editMode$!: Observable<EditMode>;
@@ -174,6 +175,7 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
             .subscribe((result) => {
                 const { error, successful } = result.result;
                 const { action } = result;
+                this.loading = false;
                 if (error) {
                     const message = `${(error as HttpErrorResponse)['error'].message}`;
                     this._toast.error(message, {
@@ -237,6 +239,7 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
      *
      */
     saveCredito(): void {
+        this.loading = true;
         if (this.editMode === 'new') {
             this.creditosForm.disable();
             const diaSemana = this.diaSemana.value === '' ? null : this.diaSemana.value;

@@ -10,7 +10,7 @@
                 *ngIf="{ creditos: creditos$ | async, creditosCount: creditosCount$ | async } as data"
             >
                 <!-- Header -->
-                <div class="flex flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b md:max-h-56">
+                <div class="flex flex-col py-8 px-6 md:px-8 border-b md:max-h-56">
                     <!-- Title -->
                     <div>
                         <div class="text-4xl font-extrabold tracking-tight leading-none">Créditos</div>
@@ -33,7 +33,7 @@
                     <!-- Main actions -->
                     <div class="flex flex-col items-center gap-4 mt-4 flex-auto">
                         <!-- Search -->
-                        <div class="flex-auto w-full" *ngIf="data.creditosCount > 0">
+                        <div class="w-full" *ngIf="data.creditosCount > 0">
                             <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full min-w-50">
                                 <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
                                 <input
@@ -48,7 +48,7 @@
                             <!-- Active or Innactive ones -->
                             <mat-radio-group
                                 aria-labelledby="radio-group-label"
-                                class="grid grid-cols-4 gap-3 justify-items-center"
+                                class="grid grid-cols-3 gap-3 justify-items-center"
                                 [(ngModel)]="status"
                                 *ngIf="data.creditosCount > 0"
                             >

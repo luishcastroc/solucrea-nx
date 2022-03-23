@@ -32,6 +32,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
     successMessage!: string;
     errorMessage!: string;
     roles: IRole[] = defaultRoles;
+    loading = false;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -109,6 +110,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
             tap((result) => {
                 const { error, successful } = result.result;
                 const { action } = result;
+                this.loading = false;
                 if (error) {
                     const message = `${(error as HttpErrorResponse)['error'].message}`;
                     this._toast.error(message, {
@@ -183,6 +185,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
         }
 
         if (this.selectedUsuario) {
+            this.loading = true;
             this._store.dispatch(new EditUsuario(this.selectedUsuario.id, usuario));
         }
     }
@@ -195,6 +198,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
         this.usuarioForm.disable();
         const id = this._route.snapshot.paramMap.get('id');
         const usuario = { id, ...this.usuarioForm.value };
+        this.loading = true;
         this._store.dispatch(new AddUsuario(usuario));
     }
 
