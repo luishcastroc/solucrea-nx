@@ -1,10 +1,11 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { IAlert } from '@fuse/components/alert/alert.model';
 import { FuseAlertService } from '@fuse/components/alert/alert.service';
-import { Actions, ofActionErrored, Store } from '@ngxs/store';
+import { Actions, ofActionCompleted, ofActionErrored, Store } from '@ngxs/store';
 import { Login } from 'app/core/auth/';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -18,6 +19,7 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
     @ViewChild('signInNgForm')
     signInNgForm!: NgForm;
     usuario: string | null = localStorage.getItem('usuario');
+    loading = false;
 
     alert: IAlert = {
         appearance: 'outline',
@@ -63,15 +65,29 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
             ],
         });
 
-        this._actions$.pipe(ofActionErrored(Login), takeUntil(this.destroy$)).subscribe(() => {
+        this._actions$.pipe(ofActionCompleted(Login), takeUntil(this.destroy$)).subscribe((result) => {
+            const { error, successful } = result.result;
+            const { action } = result;
+            const httpError = error as HttpErrorResponse;
+            this.loading = false;
             this.signInForm.enable();
             this.signInNgForm.resetForm();
-            this.alert = {
-                ...this.alert,
-                type: 'error',
-                message: 'El usuario o contraseña son erroneos, favor de verificar.',
-            };
-            this._fuseAlertService.show(this.alert);
+            let message: string;
+            if (error) {
+                if (httpError['error'].message) {
+                    message = httpError['error'].message;
+                } else if (httpError['status'] === 0) {
+                    message = 'El Servicio no está disponible, verificar.';
+                } else {
+                    message = httpError['message'];
+                }
+                this.alert = {
+                    ...this.alert,
+                    type: 'error',
+                    message,
+                };
+                this._fuseAlertService.show(this.alert);
+            }
         });
 
         if (this.signInForm) {
@@ -109,6 +125,8 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
         this._fuseAlertService.dismiss(this.alert);
 
         const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
+
+        this.loading = true;
 
         // Sign in
         this._store.dispatch(new Login({ username, password, redirectURL, rememberMe }));

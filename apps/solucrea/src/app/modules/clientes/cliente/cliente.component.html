@@ -773,6 +773,7 @@
                                                 [color]="'primary'"
                                                 (click)="saveCliente()"
                                                 class="ml-2"
+                                                [class.spinner]="loading"
                                                 [disabled]="
                                                     (editMode === 'new' &&
                                                         !trabajoForm.touched &&

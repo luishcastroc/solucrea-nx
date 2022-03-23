@@ -101,6 +101,8 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
         autoUnmask: true,
     });
 
+    desembolsando = false;
+
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     constructor(
         private _store: Store,
@@ -303,6 +305,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
                 const { action } = result;
                 let message;
                 this.loading = false;
+                this.desembolsando = false;
                 if (error) {
                     message = `${(error as HttpErrorResponse)['error'].message}`;
                     this._toast.error(message, {
@@ -483,6 +486,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
     desembolsar(): void {
         const creditosData = this._creditosService.prepareCreditoRecord(this.creditosForm);
         this.creditosForm.disable();
+        this.desembolsando = true;
         this._store.dispatch(new CreateCredito(creditosData));
     }
 

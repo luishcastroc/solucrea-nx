@@ -80,6 +80,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
         mask: '(999)-999-99-99',
         autoUnmask: true,
     });
+    loading = false;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -200,6 +201,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
         this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(Add, Edit)).subscribe((result) => {
             const { error, successful } = result.result;
             const { action } = result;
+            this.loading = false;
             if (error) {
                 const message = `${(error as HttpErrorResponse)['error'].message}`;
                 this._toast.error(message, {
@@ -482,6 +484,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
      *
      */
     saveCliente(): void {
+        this.loading = true;
         if (this.editMode === 'new') {
             this.clienteForm.disable();
             this.trabajoForm.disable();

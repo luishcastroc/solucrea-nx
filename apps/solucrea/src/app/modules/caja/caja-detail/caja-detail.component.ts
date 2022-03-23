@@ -27,6 +27,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
     editMode$!: Observable<EditMode>;
     selectedCaja$!: Observable<ICajaReturnDto | undefined>;
     successToast$!: Observable<HotToastClose>;
+    loading = false;
     selectedCaja!: ICajaReturnDto;
     editMode!: EditMode;
     cajaForm!: FormGroup;
@@ -149,6 +150,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
             .subscribe((result) => {
                 const { error, successful } = result.result;
                 const { action } = result;
+                this.loading = false;
                 if (error) {
                     const message = `${(error as HttpErrorResponse)['error'].message}`;
                     this._toast.error(message, {
@@ -219,6 +221,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
      * @param editMode
      */
     saveCaja(editMode: EditMode): void {
+        this.loading = true;
         if (editMode === 'new') {
             const fechaApertura = (this.fechaApertura.value as Moment).toISOString();
             const { saldoActual, ...rest } = this.cajaForm.value;

@@ -1020,8 +1020,15 @@
                 </div>
                 <div class="flex flex-auto justify-center">
                     <button mat-stroked-button type="button" matStepperPrevious>Anterior</button>
-                    <button class="ml-4" mat-flat-button type="button" [color]="'primary'" (click)="desembolsar()">
-                        Desembolsar
+                    <button
+                        class="ml-4"
+                        mat-flat-button
+                        type="button"
+                        [class.spinner]="desembolsando"
+                        [color]="'primary'"
+                        (click)="desembolsar()"
+                    >
+                        {{ desembolsando ? 'Desembolsando...' : 'Desembolsar' }}
                     </button>
                 </div></mat-step
             >
