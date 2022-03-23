@@ -77,7 +77,6 @@ export const selectCredito = {
             comision: true,
             cargos: true,
             activo: true,
-            duracion: true,
             numeroDePagos: true,
             frecuencia: true,
             creditosActivos: true,

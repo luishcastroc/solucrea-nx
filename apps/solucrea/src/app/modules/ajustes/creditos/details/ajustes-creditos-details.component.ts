@@ -109,10 +109,6 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
         return this.creditosForm.get('cargos') as FormControl;
     }
 
-    get duracion() {
-        return this.creditosForm.get('duracion') as FormControl;
-    }
-
     get numeroDePagos() {
         return this.creditosForm.get('numeroDePagos') as FormControl;
     }
@@ -155,7 +151,6 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
             penalizacion: ['', Validators.required],
             comision: ['', Validators.required],
             cargos: ['', Validators.required],
-            duracion: ['', Validators.required],
             numeroDePagos: ['', Validators.required],
             frecuencia: ['', Validators.required],
             creditosActivos: ['', Validators.required],

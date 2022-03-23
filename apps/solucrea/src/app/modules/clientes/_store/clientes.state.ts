@@ -253,6 +253,7 @@ export class ClientesState {
             selectedCliente: undefined,
             selectedActividadEconomica: undefined,
             colonias: [],
+            clientesCount: 0,
             config: undefined,
             loading: false,
         });

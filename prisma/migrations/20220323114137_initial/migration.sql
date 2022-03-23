@@ -346,7 +346,6 @@ CREATE TABLE `Productos` (
     `comision` DECIMAL(15, 2) NOT NULL DEFAULT 0,
     `cargos` DECIMAL(15, 2) NOT NULL DEFAULT 0,
     `activo` BOOLEAN NOT NULL DEFAULT true,
-    `duracion` INTEGER NOT NULL,
     `numeroDePagos` INTEGER NOT NULL,
     `frecuencia` ENUM('DIARIO', 'SEMANAL', 'QUINCENAL', 'MENSUAL', 'BIMESTRAL', 'TRIMESTRAL', 'CUATRIMESTRAL', 'SEMESTRAL', 'ANUAL') NOT NULL,
     `creditosActivos` INTEGER NOT NULL DEFAULT 1,
@@ -455,9 +454,6 @@ ALTER TABLE `Cajas` ADD CONSTRAINT `Cajas_sucursalId_fkey` FOREIGN KEY (`sucursa
 ALTER TABLE `Pagos` ADD CONSTRAINT `Pagos_creditoId_fkey` FOREIGN KEY (`creditoId`) REFERENCES `Creditos`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Clientes` ADD CONSTRAINT `Clientes_trabajoId_fkey` FOREIGN KEY (`trabajoId`) REFERENCES `Trabajos`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `Clientes` ADD CONSTRAINT `Clientes_estadoCivilId_fkey` FOREIGN KEY (`estadoCivilId`) REFERENCES `EstadosCiviles`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -470,28 +466,22 @@ ALTER TABLE `Clientes` ADD CONSTRAINT `Clientes_escolaridadId_fkey` FOREIGN KEY 
 ALTER TABLE `Clientes` ADD CONSTRAINT `Clientes_generoId_fkey` FOREIGN KEY (`generoId`) REFERENCES `Generos`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Trabajos` ADD CONSTRAINT `Trabajos_direccionId_fkey` FOREIGN KEY (`direccionId`) REFERENCES `Direcciones`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Clientes` ADD CONSTRAINT `Clientes_trabajoId_fkey` FOREIGN KEY (`trabajoId`) REFERENCES `Trabajos`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Trabajos` ADD CONSTRAINT `Trabajos_actividadEconomicaId_fkey` FOREIGN KEY (`actividadEconomicaId`) REFERENCES `ActividadesEconomicas`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Avales` ADD CONSTRAINT `Avales_parentescoId_fkey` FOREIGN KEY (`parentescoId`) REFERENCES `Parentescos`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Trabajos` ADD CONSTRAINT `Trabajos_direccionId_fkey` FOREIGN KEY (`direccionId`) REFERENCES `Direcciones`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Colocadores` ADD CONSTRAINT `Colocadores_clienteId_fkey` FOREIGN KEY (`clienteId`) REFERENCES `Clientes`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `Avales` ADD CONSTRAINT `Avales_parentescoId_fkey` FOREIGN KEY (`parentescoId`) REFERENCES `Parentescos`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Colocadores` ADD CONSTRAINT `Colocadores_usuarioId_fkey` FOREIGN KEY (`usuarioId`) REFERENCES `Usuarios`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_clienteId_fkey` FOREIGN KEY (`clienteId`) REFERENCES `Clientes`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_sucursalId_fkey` FOREIGN KEY (`sucursalId`) REFERENCES `Sucursales`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_productosId_fkey` FOREIGN KEY (`productosId`) REFERENCES `Productos`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Colocadores` ADD CONSTRAINT `Colocadores_clienteId_fkey` FOREIGN KEY (`clienteId`) REFERENCES `Clientes`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_segurosId_fkey` FOREIGN KEY (`segurosId`) REFERENCES `Seguros`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -500,19 +490,28 @@ ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_segurosId_fkey` FOREIGN KEY (`se
 ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_modalidadDeSeguroId_fkey` FOREIGN KEY (`modalidadDeSeguroId`) REFERENCES `ModalidadesDeSeguro`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_sucursalId_fkey` FOREIGN KEY (`sucursalId`) REFERENCES `Sucursales`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_clienteId_fkey` FOREIGN KEY (`clienteId`) REFERENCES `Clientes`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_avalId_fkey` FOREIGN KEY (`avalId`) REFERENCES `Avales`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_productosId_fkey` FOREIGN KEY (`productosId`) REFERENCES `Productos`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_colocadorId_fkey` FOREIGN KEY (`colocadorId`) REFERENCES `Colocadores`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Comisiones` ADD CONSTRAINT `Comisiones_creditoId_fkey` FOREIGN KEY (`creditoId`) REFERENCES `Creditos`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Comisiones` ADD CONSTRAINT `Comisiones_usuarioId_fkey` FOREIGN KEY (`usuarioId`) REFERENCES `Usuarios`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Comisiones` ADD CONSTRAINT `Comisiones_sucursalId_fkey` FOREIGN KEY (`sucursalId`) REFERENCES `Sucursales`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Comisiones` ADD CONSTRAINT `Comisiones_usuarioId_fkey` FOREIGN KEY (`usuarioId`) REFERENCES `Usuarios`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Comisiones` ADD CONSTRAINT `Comisiones_creditoId_fkey` FOREIGN KEY (`creditoId`) REFERENCES `Creditos`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Comisiones` ADD CONSTRAINT `Comisiones_esquemaComisionId_fkey` FOREIGN KEY (`esquemaComisionId`) REFERENCES `EsquemasComision`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

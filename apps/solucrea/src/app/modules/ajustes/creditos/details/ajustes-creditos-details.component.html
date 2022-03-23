@@ -154,23 +154,6 @@
                                     <mat-error *ngIf="cargos.errors?.['required']"> El cargo es requerido. </mat-error>
                                 </ng-container>
                             </div>
-                            <!-- Duración -->
-                            <div>
-                                <mat-form-field class="fuse-mat-no-subscript w-full">
-                                    <mat-label>Duración (días)</mat-label>
-                                    <mat-icon
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_outline:office-building'"
-                                        matPrefix
-                                    ></mat-icon>
-                                    <input [formControlName]="'duracion'" matInput type="number" />
-                                </mat-form-field>
-                                <ng-container *ngIf="duracion.touched">
-                                    <mat-error *ngIf="duracion.errors?.['required']">
-                                        La duración es requerida.
-                                    </mat-error>
-                                </ng-container>
-                            </div>
                             <!-- Numero de Pagos -->
                             <div>
                                 <mat-form-field class="fuse-mat-no-subscript w-full">

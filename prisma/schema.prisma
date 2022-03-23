@@ -438,7 +438,6 @@ model Producto {
     comision           Decimal    @default(0) @db.Decimal(15, 2)
     cargos             Decimal    @default(0) @db.Decimal(15, 2)
     activo             Boolean    @default(true)
-    duracion           Int
     numeroDePagos      Int
     frecuencia         Frecuencia
     creditos           Credito[]

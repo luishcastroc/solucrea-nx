@@ -9,7 +9,14 @@ import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { ActionCompletion, Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { Producto } from '@prisma/client';
-import { addBusinessDays, calculateDetails, ICreditoData, IDetails, ISegurosData } from '@solucrea-utils';
+import {
+    addBusinessDays,
+    calculateDetails,
+    ICreditoData,
+    IDetails,
+    ISegurosData,
+    getFrecuencia,
+} from '@solucrea-utils';
 import {
     IClienteReturnDto,
     IModalidadSeguroReturnDto,
@@ -41,7 +48,6 @@ import {
 @Component({
     selector: 'app-creditos-new',
     templateUrl: './creditos-new.component.html',
-    styleUrls: ['./creditos-new.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditosNewComponent implements OnInit, OnDestroy {
@@ -384,8 +390,10 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
      * @param event
      */
     changeFechaDesembolso(e: any): void {
+        const frecuencia = getFrecuencia(this.selectedProducto.frecuencia);
+        const duracion = frecuencia * this.selectedProducto.numeroDePagos;
         this.fechaInicio.setValue(addBusinessDays(this.fechaDesembolso.value, 1));
-        this.fechaFinal.setValue(addBusinessDays(this.fechaInicio.value, this.selectedProducto.duracion));
+        this.fechaFinal.setValue(addBusinessDays(this.fechaInicio.value, duracion));
         this.fechaInicio.markAsTouched();
         this.fechaFinal.markAsTouched();
     }
