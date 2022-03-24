@@ -8,7 +8,6 @@ import { CreditosState } from '../_store';
 @Component({
     selector: 'app-creditos-info',
     templateUrl: './creditos-info.component.html',
-    styleUrls: ['./creditos-info.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditosInfoComponent implements OnInit {

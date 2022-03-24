@@ -14,8 +14,9 @@
     </div>
     <!-- Content -->
     <div class="flex-auto overflow-y-auto" *ngIf="selectedCredito$ | async as credito">
-        <mat-card class="mb-8">
-            <div class="z-20 grid grid-cols-1 gap-4 md:grid-cols-5 px-2 py-4 md:px-10">
+        <mat-card class="mb-8 flex-auto">
+            <h1 class="px-2 py-4 md:px-10 text-3xl font-extrabold tracking-tight leading-none">Generales</h1>
+            <div class="z-20 grid grid-cols-2 gap-4 md:grid-cols-5 px-2 py-4 md:px-10">
                 <!-- Nombre del Cliente -->
                 <div class="flex flex-col">
                     <div class="font-bold">Nombre Cliente:</div>
@@ -40,18 +41,18 @@
                         {{ credito.cliente?.fechaDeNacimiento | date }}
                     </div>
                 </div>
-                <!-- CURP del Cliente -->
-                <div class="flex flex-col">
-                    <div class="font-bold">CURP:</div>
-                    <div class="mt-2">
-                        {{ credito.cliente?.curp }}
-                    </div>
-                </div>
                 <!-- RFC del Cliente -->
                 <div class="flex flex-col">
                     <div class="font-bold">RFC:</div>
                     <div class="mt-2">
                         {{ credito.cliente?.rfc }}
+                    </div>
+                </div>
+                <!-- CURP del Cliente -->
+                <div class="flex flex-col col-span-2">
+                    <div class="font-bold">CURP:</div>
+                    <div class="mt-2">
+                        {{ credito.cliente?.curp }}
                     </div>
                 </div>
                 <!-- Sucursal -->
@@ -83,7 +84,50 @@
                     <div class="font-bold">Cuota:</div>
                     <div class="mt-2">{{ credito.cuota | currency }}</div>
                 </div>
+                <!-- Fecha Desembolso -->
+                <div class="flex flex-col">
+                    <div class="font-bold">Fecha de Desembolso:</div>
+                    <div class="mt-2">{{ credito.fechaDesembolso | date }}</div>
+                </div>
+                <!-- Pagos Realizados -->
+                <div class="flex flex-col">
+                    <div class="font-bold">Pagos Realizados:</div>
+                    <div class="mt-2">{{ credito.pagos?.length }}</div>
+                </div>
+                <!-- Status -->
+                <div class="flex flex-col">
+                    <div class="font-bold">Estado:</div>
+                    <div class="mt-2">{{ credito.status }}</div>
+                </div>
             </div>
+            <h2 class="px-2 py-4 md:px-10 text-3xl font-extrabold tracking-tight leading-none">Aval</h2>
+            <div class="z-20 grid grid-cols-2 gap-4 md:grid-cols-5 px-2 py-4 md:px-10">
+                <!-- Nombre del Aval -->
+                <div class="flex flex-col">
+                    <div class="font-bold">Nombre:</div>
+                    <div class="mt-2">
+                        {{ credito.aval?.nombre }} {{ credito.aval?.apellidoPaterno }}
+                        {{ credito.aval?.apellidoMaterno }}
+                    </div>
+                </div>
+                <!-- Teléfono -->
+                <div class="flex flex-col">
+                    <div class="font-bold">Teléfono:</div>
+                    <div class="mt-2">
+                        ({{ credito.aval?.telefono | slice: 0:3 }})-{{ credito.aval?.telefono | slice: 3:6 }}-{{
+                            credito.aval?.telefono | slice: 6:8
+                        }}-{{ credito.aval?.telefono | slice: 8:10 }}
+                    </div>
+                </div>
+                <!-- Parentesco -->
+                <div class="flex flex-col">
+                    <div class="font-bold">Parentesco:</div>
+                    <div class="mt-2">
+                        {{ credito.aval?.parentesco?.descripcion }}
+                    </div>
+                </div>
+            </div>
+            <h2 class="px-2 py-4 md:px-10 text-3xl font-extrabold tracking-tight leading-none">Amortización</h2>
         </mat-card>
     </div>
 </div>

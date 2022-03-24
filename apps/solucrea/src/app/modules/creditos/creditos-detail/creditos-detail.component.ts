@@ -12,7 +12,6 @@ import { EditMode } from 'app/core/models';
 @Component({
     selector: 'app-creditos-detail',
     templateUrl: './creditos-detail.component.html',
-    styleUrls: ['./creditos-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditosDetailComponent implements OnInit, OnDestroy {
