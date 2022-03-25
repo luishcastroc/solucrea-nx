@@ -13,7 +13,7 @@
         </button>
     </div>
     <!-- Content -->
-    <div class="flex-auto overflow-y-auto" *ngIf="selectedCredito$ | async as credito">
+    <div class="flex flex-auto overflow-y-auto" *ngIf="selectedCredito$ | async as credito">
         <mat-card class="mb-8 flex-auto">
             <h1 class="px-2 py-4 md:px-10 text-3xl font-extrabold tracking-tight leading-none">Generales</h1>
             <div class="z-20 grid grid-cols-2 gap-4 md:grid-cols-5 px-2 py-4 md:px-10">
@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <!-- CURP del Cliente -->
-                <div class="flex flex-col col-span-2">
+                <div class="flex flex-col col-span-2 md:col-auto">
                     <div class="font-bold">CURP:</div>
                     <div class="mt-2">
                         {{ credito.cliente?.curp }}
@@ -127,7 +127,6 @@
                     </div>
                 </div>
             </div>
-            <h2 class="px-2 py-4 md:px-10 text-3xl font-extrabold tracking-tight leading-none">Amortización</h2>
         </mat-card>
     </div>
 </div>
