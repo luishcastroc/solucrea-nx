@@ -14,120 +14,128 @@
     </div>
     <!-- Content -->
     <div class="flex flex-auto overflow-y-auto" *ngIf="selectedCredito$ | async as credito">
-        <mat-card class="mb-8 flex-auto">
-            <h1 class="px-2 py-4 md:px-10 text-3xl font-extrabold tracking-tight leading-none">Generales</h1>
-            <div class="z-20 grid grid-cols-2 gap-4 md:grid-cols-5 px-2 py-4 md:px-10">
-                <!-- Nombre del Cliente -->
-                <div class="flex flex-col">
-                    <div class="font-bold">Nombre Cliente:</div>
-                    <div class="mt-2">
-                        {{ credito.cliente?.nombre }} {{ credito.cliente?.apellidoPaterno }}
-                        {{ credito.cliente?.apellidoMaterno }}
+        <mat-stepper [linear]="true" #stepper class="mb-8 flex-auto">
+            <mat-step [stepControl]="clienteForm"
+                ><ng-template matStepLabel>Datos Generales</ng-template>
+                <div class="mt-8 z-20 grid grid-cols-2 gap-4 md:grid-cols-5 px-2 py-4 md:px-10">
+                    <!-- Nombre del Cliente -->
+                    <div class="flex flex-col">
+                        <div class="font-bold">Nombre Cliente:</div>
+                        <div class="mt-2">
+                            {{ credito.cliente?.nombre }} {{ credito.cliente?.apellidoPaterno }}
+                            {{ credito.cliente?.apellidoMaterno }}
+                        </div>
+                    </div>
+                    <!-- Teléfono -->
+                    <div class="flex flex-col">
+                        <div class="font-bold">Teléfono:</div>
+                        <div class="mt-2">
+                            ({{ credito.cliente?.telefono1 | slice: 0:3 }})-{{
+                                credito.cliente?.telefono1 | slice: 3:6
+                            }}-{{ credito.cliente?.telefono1 | slice: 6:8 }}-{{
+                                credito.cliente?.telefono1 | slice: 8:10
+                            }}
+                        </div>
+                    </div>
+                    <!-- Fecha de Nacimiento -->
+                    <div class="flex flex-col">
+                        <div class="font-bold">Fecha de Nacimiento:</div>
+                        <div class="mt-2">
+                            {{ credito.cliente?.fechaDeNacimiento | date }}
+                        </div>
+                    </div>
+                    <!-- RFC del Cliente -->
+                    <div class="flex flex-col">
+                        <div class="font-bold">RFC:</div>
+                        <div class="mt-2">
+                            {{ credito.cliente?.rfc }}
+                        </div>
+                    </div>
+                    <!-- CURP del Cliente -->
+                    <div class="flex flex-col col-span-2 md:col-auto">
+                        <div class="font-bold">CURP:</div>
+                        <div class="mt-2">
+                            {{ credito.cliente?.curp }}
+                        </div>
+                    </div>
+                    <!-- Sucursal -->
+                    <div class="flex flex-col">
+                        <div class="font-bold">Sucursal:</div>
+                        <div class="mt-2">
+                            {{ credito.sucursal?.nombre }}
+                        </div>
+                    </div>
+                    <!-- Nombre del Producto -->
+                    <div class="flex flex-col">
+                        <div class="font-bold">Nombre del Producto:</div>
+                        <div class="mt-2">
+                            {{ credito.producto?.nombre }}
+                        </div>
+                    </div>
+                    <!-- Tasa de Interés -->
+                    <div class="flex flex-col">
+                        <div class="font-bold">Tasa de Interés:</div>
+                        <div class="mt-2">{{ credito.producto?.interes }}%</div>
+                    </div>
+                    <!-- Monto Otorgado -->
+                    <div class="flex flex-col">
+                        <div class="font-bold">Monto Otorgado:</div>
+                        <div class="mt-2">{{ credito.monto | currency }}</div>
+                    </div>
+                    <!-- Monto Otorgado -->
+                    <div class="flex flex-col">
+                        <div class="font-bold">Cuota:</div>
+                        <div class="mt-2">{{ credito.cuota | currency }}</div>
+                    </div>
+                    <!-- Fecha Desembolso -->
+                    <div class="flex flex-col">
+                        <div class="font-bold">Fecha de Desembolso:</div>
+                        <div class="mt-2">{{ credito.fechaDesembolso | date }}</div>
+                    </div>
+                    <!-- Pagos Realizados -->
+                    <div class="flex flex-col">
+                        <div class="font-bold">Pagos Realizados:</div>
+                        <div class="mt-2">{{ credito.pagos?.length }}</div>
+                    </div>
+                    <!-- Status -->
+                    <div class="flex flex-col">
+                        <div class="font-bold">Estado:</div>
+                        <div class="mt-2">{{ credito.status }}</div>
                     </div>
                 </div>
-                <!-- Teléfono -->
-                <div class="flex flex-col">
-                    <div class="font-bold">Teléfono:</div>
-                    <div class="mt-2">
-                        ({{ credito.cliente?.telefono1 | slice: 0:3 }})-{{ credito.cliente?.telefono1 | slice: 3:6 }}-{{
-                            credito.cliente?.telefono1 | slice: 6:8
-                        }}-{{ credito.cliente?.telefono1 | slice: 8:10 }}
+                <h2 class="px-2 py-4 md:px-10 text-3xl font-extrabold tracking-tight leading-none">Aval</h2>
+                <div class="z-20 grid grid-cols-2 gap-4 md:grid-cols-5 px-2 py-4 md:px-10">
+                    <!-- Nombre del Aval -->
+                    <div class="flex flex-col">
+                        <div class="font-bold">Nombre:</div>
+                        <div class="mt-2">
+                            {{ credito.aval?.nombre }} {{ credito.aval?.apellidoPaterno }}
+                            {{ credito.aval?.apellidoMaterno }}
+                        </div>
                     </div>
-                </div>
-                <!-- Fecha de Nacimiento -->
-                <div class="flex flex-col">
-                    <div class="font-bold">Fecha de Nacimiento:</div>
-                    <div class="mt-2">
-                        {{ credito.cliente?.fechaDeNacimiento | date }}
+                    <!-- Teléfono -->
+                    <div class="flex flex-col">
+                        <div class="font-bold">Teléfono:</div>
+                        <div class="mt-2">
+                            ({{ credito.aval?.telefono | slice: 0:3 }})-{{ credito.aval?.telefono | slice: 3:6 }}-{{
+                                credito.aval?.telefono | slice: 6:8
+                            }}-{{ credito.aval?.telefono | slice: 8:10 }}
+                        </div>
                     </div>
-                </div>
-                <!-- RFC del Cliente -->
-                <div class="flex flex-col">
-                    <div class="font-bold">RFC:</div>
-                    <div class="mt-2">
-                        {{ credito.cliente?.rfc }}
+                    <!-- Parentesco -->
+                    <div class="flex flex-col">
+                        <div class="font-bold">Parentesco:</div>
+                        <div class="mt-2">
+                            {{ credito.aval?.parentesco?.descripcion }}
+                        </div>
                     </div>
-                </div>
-                <!-- CURP del Cliente -->
-                <div class="flex flex-col col-span-2 md:col-auto">
-                    <div class="font-bold">CURP:</div>
-                    <div class="mt-2">
-                        {{ credito.cliente?.curp }}
-                    </div>
-                </div>
-                <!-- Sucursal -->
-                <div class="flex flex-col">
-                    <div class="font-bold">Sucursal:</div>
-                    <div class="mt-2">
-                        {{ credito.sucursal?.nombre }}
-                    </div>
-                </div>
-                <!-- Nombre del Producto -->
-                <div class="flex flex-col">
-                    <div class="font-bold">Nombre del Producto:</div>
-                    <div class="mt-2">
-                        {{ credito.producto?.nombre }}
-                    </div>
-                </div>
-                <!-- Tasa de Interés -->
-                <div class="flex flex-col">
-                    <div class="font-bold">Tasa de Interés:</div>
-                    <div class="mt-2">{{ credito.producto?.interes }}%</div>
-                </div>
-                <!-- Monto Otorgado -->
-                <div class="flex flex-col">
-                    <div class="font-bold">Monto Otorgado:</div>
-                    <div class="mt-2">{{ credito.monto | currency }}</div>
-                </div>
-                <!-- Monto Otorgado -->
-                <div class="flex flex-col">
-                    <div class="font-bold">Cuota:</div>
-                    <div class="mt-2">{{ credito.cuota | currency }}</div>
-                </div>
-                <!-- Fecha Desembolso -->
-                <div class="flex flex-col">
-                    <div class="font-bold">Fecha de Desembolso:</div>
-                    <div class="mt-2">{{ credito.fechaDesembolso | date }}</div>
-                </div>
-                <!-- Pagos Realizados -->
-                <div class="flex flex-col">
-                    <div class="font-bold">Pagos Realizados:</div>
-                    <div class="mt-2">{{ credito.pagos?.length }}</div>
-                </div>
-                <!-- Status -->
-                <div class="flex flex-col">
-                    <div class="font-bold">Estado:</div>
-                    <div class="mt-2">{{ credito.status }}</div>
-                </div>
-            </div>
-            <h2 class="px-2 py-4 md:px-10 text-3xl font-extrabold tracking-tight leading-none">Aval</h2>
-            <div class="z-20 grid grid-cols-2 gap-4 md:grid-cols-5 px-2 py-4 md:px-10">
-                <!-- Nombre del Aval -->
-                <div class="flex flex-col">
-                    <div class="font-bold">Nombre:</div>
-                    <div class="mt-2">
-                        {{ credito.aval?.nombre }} {{ credito.aval?.apellidoPaterno }}
-                        {{ credito.aval?.apellidoMaterno }}
-                    </div>
-                </div>
-                <!-- Teléfono -->
-                <div class="flex flex-col">
-                    <div class="font-bold">Teléfono:</div>
-                    <div class="mt-2">
-                        ({{ credito.aval?.telefono | slice: 0:3 }})-{{ credito.aval?.telefono | slice: 3:6 }}-{{
-                            credito.aval?.telefono | slice: 6:8
-                        }}-{{ credito.aval?.telefono | slice: 8:10 }}
-                    </div>
-                </div>
-                <!-- Parentesco -->
-                <div class="flex flex-col">
-                    <div class="font-bold">Parentesco:</div>
-                    <div class="mt-2">
-                        {{ credito.aval?.parentesco?.descripcion }}
-                    </div>
-                </div>
-            </div>
-        </mat-card>
+                </div></mat-step
+            ><mat-step [stepControl]="clienteForm"
+                ><ng-template matStepLabel>Amortización</ng-template></mat-step
+            ></mat-stepper
+        >
+        <!-- <mat-card class="mb-8 flex-auto">
+        </mat-card> -->
     </div>
 </div>
 <ng-container *ngIf="loading$ | async; then loadingTemplate; else formTemplate"></ng-container>
