@@ -23,7 +23,7 @@ mat-spinner {
     }
 }
 
-.spinner:before {
+.spinner-loading:before {
     content: '';
     box-sizing: border-box;
     position: absolute;

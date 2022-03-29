@@ -69,7 +69,14 @@
                     </div>
                 </div>
                 <!-- Content -->
-                <div class="flex-auto overflow-y-auto">
+                <div
+                    class="flex-auto overflow-hidden"
+                    fuseScrollbar
+                    [fuseScrollbarOptions]="{
+                        wheelPropagation: inner,
+                        suppressScrollX: true
+                    }"
+                >
                     <ng-container *ngFor="let credito of data.creditos">
                         <div
                             class="z-20 grid grid-cols-1 gap-4 md:grid-cols-[1fr_minmax(auto,_200px)] px-2 py-4 md:px-10 border-b"

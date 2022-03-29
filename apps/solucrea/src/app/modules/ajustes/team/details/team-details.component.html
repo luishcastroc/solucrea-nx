@@ -149,7 +149,7 @@
                     class="ml-4"
                     mat-flat-button
                     type="submit"
-                    [class.spinner]="loading"
+                    [class.spinner-loading]="loading"
                     [color]="'primary'"
                     (click)="data.mode !== 'new' ? updateUsuario() : saveUsuario()"
                     [disabled]="!usuarioForm.touched || usuarioForm.invalid || usuarioForm.disabled"

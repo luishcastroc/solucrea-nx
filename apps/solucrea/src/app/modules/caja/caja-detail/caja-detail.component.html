@@ -176,7 +176,7 @@
                         type="submit"
                         [color]="'primary'"
                         class="ml-2"
-                        [class.spinner]="loading"
+                        [class.spinner-loading]="loading"
                         [disabled]="!cajaForm.touched || cajaForm.invalid || cajaForm.disabled"
                         (click)="saveCaja(editMode)"
                     >

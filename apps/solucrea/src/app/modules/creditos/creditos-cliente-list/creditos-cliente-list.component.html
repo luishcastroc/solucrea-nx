@@ -72,7 +72,14 @@
                 </div>
             </div>
             <!-- Content -->
-            <div class="flex-auto overflow-y-auto">
+            <div
+                class="flex-auto overflow-hidden"
+                fuseScrollbar
+                [fuseScrollbarOptions]="{
+                    wheelPropagation: inner,
+                    suppressScrollX: true
+                }"
+            >
                 <mat-card class="mb-8">
                     <div class="z-20 grid grid-cols-1 gap-4 md:grid-cols-5 px-2 py-4 md:px-10">
                         <!-- Nombre del Cliente -->

@@ -15,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
+import { FuseScrollbarModule } from '@fuse/directives/scrollbar/public-api';
 import { InputMaskModule } from '@ngneat/input-mask';
 import { NgxsModule } from '@ngxs/store';
 
@@ -22,14 +23,21 @@ import { SharedModule } from './../../shared/shared.module';
 import { CreditosState } from './_store/creditos.state';
 import { CreditosClienteListComponent } from './creditos-cliente-list/creditos-cliente-list.component';
 import { CreditosDetailComponent } from './creditos-detail/creditos-detail.component';
+import { CreditosInfoComponent } from './creditos-info/creditos-info.component';
 import { CreditosListComponent } from './creditos-list/creditos-list.component';
+import { CreditosNewComponent } from './creditos-new/creditos-new.component';
 import { CreditosComponent } from './creditos.component';
 import { creditosRoutes } from './creditos.routing';
-import { CreditosInfoComponent } from './creditos-info/creditos-info.component';
-import { CreditosNewComponent } from './creditos-new/creditos-new.component';
 
 @NgModule({
-    declarations: [CreditosComponent, CreditosListComponent, CreditosDetailComponent, CreditosClienteListComponent, CreditosInfoComponent, CreditosNewComponent],
+    declarations: [
+        CreditosComponent,
+        CreditosListComponent,
+        CreditosDetailComponent,
+        CreditosClienteListComponent,
+        CreditosInfoComponent,
+        CreditosNewComponent,
+    ],
     imports: [
         RouterModule.forChild(creditosRoutes),
         CommonModule,
@@ -49,6 +57,7 @@ import { CreditosNewComponent } from './creditos-new/creditos-new.component';
         MatStepperModule,
         SharedModule,
         InputMaskModule,
+        FuseScrollbarModule,
     ],
     providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-MX' }],
 })

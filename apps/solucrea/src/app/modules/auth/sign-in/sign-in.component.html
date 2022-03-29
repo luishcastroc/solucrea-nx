@@ -79,7 +79,7 @@
                     mat-flat-button
                     [color]="'primary'"
                     [disabled]="signInForm.disabled || signInForm.invalid"
-                    [class.spinner]="loading"
+                    [class.spinner-loading]="loading"
                     (click)="signIn()"
                 >
                     <span *ngIf="!signInForm.disabled"> Ingresar </span>
