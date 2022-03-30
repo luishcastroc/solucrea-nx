@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ExtraOptions, PreloadAllModules, RouterModule } from '@angular/router';
@@ -18,6 +18,9 @@ import { MarkdownModule } from 'ngx-markdown';
 import { FuseModule } from '../@fuse';
 import { environment } from 'apps/solucrea/src/environments/environment';
 import { AuthState } from './core/auth/store/auth.state';
+import localeEsMx from '@angular/common/locales/es-MX';
+import { registerLocaleData } from '@angular/common';
+registerLocaleData(localeEsMx, 'es-Mx');
 
 const routerConfig: ExtraOptions = {
     scrollPositionRestoration: 'enabled',
@@ -53,6 +56,7 @@ const routerConfig: ExtraOptions = {
         NgxsReduxDevtoolsPluginModule.forRoot(),
         HotToastModule.forRoot(),
     ],
+    providers: [{ provide: LOCALE_ID, useValue: 'es-Mx' }],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

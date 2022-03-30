@@ -1,5 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    OnDestroy,
+    OnInit,
+    ViewEncapsulation,
+    ChangeDetectorRef,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
@@ -44,7 +51,8 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
         private _store: Store,
         private _actions$: Actions,
         private _route: ActivatedRoute,
-        private _toast: HotToastService
+        private _toast: HotToastService,
+        private _cdr: ChangeDetectorRef
     ) {}
 
     get password() {
@@ -111,6 +119,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
                 const { error, successful } = result.result;
                 const { action } = result;
                 this.loading = false;
+                this._cdr.markForCheck();
                 if (error) {
                     const message = `${(error as HttpErrorResponse)['error'].message}`;
                     this._toast.error(message, {

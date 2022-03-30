@@ -50,7 +50,8 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private _toast: HotToastService,
         private _route: ActivatedRoute,
-        private _shared: SharedService
+        private _shared: SharedService,
+        private _cdr: ChangeDetectorRef
     ) {}
 
     get id() {
@@ -151,6 +152,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
                 const { error, successful } = result.result;
                 const { action } = result;
                 this.loading = false;
+                this._cdr.markForCheck();
                 if (error) {
                     const message = `${(error as HttpErrorResponse)['error'].message}`;
                     this._toast.error(message, {

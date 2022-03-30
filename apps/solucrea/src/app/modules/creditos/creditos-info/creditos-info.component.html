@@ -90,12 +90,12 @@
                             <!-- Monto Otorgado -->
                             <div class="flex flex-col">
                                 <div class="font-bold">Monto Otorgado:</div>
-                                <div class="mt-2">{{ credito.monto | currency }}</div>
+                                <div class="mt-2">{{ credito.monto | currency: 'MXN':'symbol' }}</div>
                             </div>
                             <!-- Monto Otorgado -->
                             <div class="flex flex-col">
                                 <div class="font-bold">Cuota:</div>
-                                <div class="mt-2">{{ credito.cuota | currency }}</div>
+                                <div class="mt-2">{{ credito.cuota | currency: 'MXN':'symbol' }}</div>
                             </div>
                             <!-- Fecha Desembolso -->
                             <div class="flex flex-col">
@@ -158,7 +158,35 @@
                             suppressScrollX: true
                         }"
                     >
-                        <div *ngFor="let pago of credito.amortizacion">{{ pago | json }}</div>
+                        <div class="hidden md:grid md:grid-cols-4 md:mb-4">
+                            <span class="font-bold text-center">Numero de Pago</span
+                            ><span class="font-bold text-center">Fecha de Pago</span
+                            ><span class="font-bold text-center">Monto</span
+                            ><span class="font-bold text-center">Estatus</span>
+                        </div>
+                        <div
+                            class="grid grid-cols-1 mb-4 pb-8 hover:bg-fuse-bg-default md:mb-0 md:pb-0 md:grid-cols-4 gap-3 border-b-2 min-h-8 cursor-pointer"
+                            *ngFor="let pago of credito.amortizacion"
+                        >
+                            <div class="grid grid-cols-2 md:grid-cols-1">
+                                <div class="font-bold md:hidden">Numero de Pago:</div>
+                                <div class="text-center">{{ pago.numeroDePago }}</div>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-1">
+                                <div class="font-bold md:hidden">Fecha de Pago:</div>
+                                <div class="text-center">{{ pago.fechaDePago | date: 'dd-MMMM-YYYY' }}</div>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-1">
+                                <div class="font-bold md:hidden">Monto:</div>
+                                <div class="text-center">{{ pago.monto | currency: 'MXN':'symbol' }}</div>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-1">
+                                <div class="font-bold md:hidden">Estado del Pago:</div>
+                                <div class="text-center font-bold" [class.text-red-600]="pago.status === 'ADEUDA'">
+                                    {{ pago.status }}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="flex flex-auto basis-30 items-end">
                         <button mat-stroked-button type="button" matStepperPrevious>Anterior</button>

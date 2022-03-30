@@ -39,13 +39,13 @@
                                 <div class="flex flex-col flex-auto">
                                     <div class="font-bold">Saldo Inicial:</div>
                                     <div class="mt-2">
-                                        {{ caja.saldoInicial | currency }}
+                                        {{ caja.saldoInicial | currency: 'MXN':'symbol' }}
                                     </div>
                                 </div>
                                 <!-- Saldo Actual -->
                                 <div class="flex flex-col flex-auto">
                                     <div class="font-bold">Saldo Actual:</div>
-                                    <div class="mt-2">{{ caja.saldoActual | currency }}</div>
+                                    <div class="mt-2">{{ caja.saldoActual | currency: 'MXN':'symbol' }}</div>
                                 </div>
                                 <!-- Sucursal -->
                                 <div class="flex flex-col">

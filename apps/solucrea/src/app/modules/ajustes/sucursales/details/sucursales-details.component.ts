@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
@@ -53,7 +53,8 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
         private _actions$: Actions,
         private _sharedService: SharedService,
         private _toast: HotToastService,
-        private _route: ActivatedRoute
+        private _route: ActivatedRoute,
+        private _cdr: ChangeDetectorRef
     ) {}
 
     get id() {
@@ -110,6 +111,8 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
                 const { error, successful } = result.result;
                 const { action } = result;
                 this.loading = false;
+                // Mark for check
+                this._cdr.markForCheck();
                 if (error) {
                     const message = `${(error as HttpErrorResponse)['error'].message}`;
                     this._toast.error(message, {

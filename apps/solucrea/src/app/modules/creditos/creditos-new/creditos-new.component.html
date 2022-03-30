@@ -414,7 +414,7 @@
                                         <div class="leading-6 font-light">Monto Mínimo:</div>
                                     </div>
                                     <div class="leading-6 font-bold ml-4">
-                                        {{ producto.montoMinimo | currency }}
+                                        {{ producto.montoMinimo | currency: 'MXN':'symbol' }}
                                     </div>
                                 </div>
                                 <!-- Monto Máximo -->
@@ -431,7 +431,7 @@
                                         <div class="leading-6 font-light">Monto Máximo:</div>
                                     </div>
                                     <div class="leading-6 font-bold ml-4">
-                                        {{ producto.montoMaximo | currency }}
+                                        {{ producto.montoMaximo | currency: 'MXN':'symbol' }}
                                     </div>
                                 </div>
                             </div>
@@ -705,7 +705,7 @@
                                 </mat-error>
                                 <mat-error *ngIf="monto.errors?.min || monto.errors?.max">
                                     La Cantidad debe estar entre {{ selectedProducto.montoMinimo | currency }} y
-                                    {{ selectedProducto.montoMaximo | currency }}.
+                                    {{ selectedProducto.montoMaximo | currency: 'MXN':'symbol' }}.
                                 </mat-error>
                             </ng-container>
                         </div>
@@ -867,7 +867,7 @@
                                 <div class="leading-6 font-light">Monto a Otorgar:</div>
                             </div>
                             <div class="leading-6 font-bold">
-                                {{ monto.value | currency }}
+                                {{ monto.value | currency: 'MXN':'symbol' }}
                             </div>
                         </div>
                         <!-- Seguro -->
@@ -918,7 +918,7 @@
                                 <div class="leading-6 font-light">Pago a Capital:</div>
                             </div>
                             <div class="leading-6 font-bold">
-                                {{ resumenOperacion.capital | currency }}
+                                {{ resumenOperacion.capital | currency: 'MXN':'symbol' }}
                             </div>
                         </div>
                         <!-- Intereses -->
@@ -935,7 +935,7 @@
                                 <div class="leading-6 font-light">Pago a Intereses:</div>
                             </div>
                             <div class="leading-6 font-bold">
-                                {{ resumenOperacion.interes | currency }}
+                                {{ resumenOperacion.interes | currency: 'MXN':'symbol' }}
                             </div>
                         </div>
                         <!-- Seguro -->
@@ -952,7 +952,11 @@
                                 <div class="leading-6 font-light">Pago a Seguro:</div>
                             </div>
                             <div class="leading-6 font-bold">
-                                {{ resumenOperacion.seguro > 0 ? (resumenOperacion.seguro | currency) : 'Sin Seguro' }}
+                                {{
+                                    resumenOperacion.seguro > 0
+                                        ? (resumenOperacion.seguro | currency: 'MXN':'symbol')
+                                        : 'Sin Seguro'
+                                }}
                             </div>
                         </div>
                         <!-- Cuota -->
@@ -969,7 +973,7 @@
                                 <div class="leading-6 font-light">Cuota de recuperación:</div>
                             </div>
                             <div class="leading-6 font-bold">
-                                {{ resumenOperacion.cuota | currency }}
+                                {{ resumenOperacion.cuota | currency: 'MXN':'symbol' }}
                             </div>
                         </div>
                         <!-- Comisión por Apertura -->
@@ -986,7 +990,7 @@
                                 <div class="leading-6 font-light">Comisión por Apertura:</div>
                             </div>
                             <div class="leading-6 font-bold">
-                                {{ resumenOperacion.apertura | currency }}
+                                {{ resumenOperacion.apertura | currency: 'MXN':'symbol' }}
                             </div>
                         </div>
                         <!-- Total hoy -->
@@ -1003,7 +1007,7 @@
                                 <div class="leading-6 font-light">Total a pagar hoy:</div>
                             </div>
                             <div class="leading-6 font-bold">
-                                {{ resumenOperacion.total | currency }}
+                                {{ resumenOperacion.total | currency: 'MXN':'symbol' }}
                             </div>
                         </div>
                     </div>
