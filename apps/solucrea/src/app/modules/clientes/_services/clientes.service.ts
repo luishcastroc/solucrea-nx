@@ -154,7 +154,7 @@ export class ClientesService {
 
         const trabajo = {
             nombre: trabajoNombre,
-            antiguedad,
+            antiguedad: Number(antiguedad),
             telefono,
             actividadEconomica,
             direccion,

@@ -80,6 +80,9 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
         mask: '(999)-999-99-99',
         autoUnmask: true,
     });
+    yearsInputMask = createMask({ alias: 'decimal', allowMinus: false, digits: 0 });
+    capsInputMAsk = createMask({ casing: 'upper' });
+    titleInputMask = createMask({ casing: 'title' });
     loading = false;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -203,6 +206,8 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
             const { error, successful } = result.result;
             const { action } = result;
             this.loading = false;
+            this.clienteForm.enable();
+            this.trabajoForm.enable();
             this._cdr.markForCheck();
             if (error) {
                 const message = `${(error as HttpErrorResponse)['error'].message}`;
@@ -213,8 +218,6 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
             }
             if (successful) {
                 // we enable the form
-                this.clienteForm.enable();
-                this.trabajoForm.enable();
                 this.clienteForm.markAsPristine();
                 this.trabajoForm.markAsPristine();
                 this.clienteForm.markAsUntouched();

@@ -36,7 +36,12 @@
                                                     [svgIcon]="'heroicons_solid:user'"
                                                     matPrefix
                                                 ></mat-icon>
-                                                <input [formControlName]="'apellidoPaterno'" matInput />
+                                                <input
+                                                    [formControlName]="'apellidoPaterno'"
+                                                    matInput
+                                                    type="text"
+                                                    [inputMask]="titleInputMask"
+                                                />
                                             </mat-form-field>
                                             <ng-container *ngIf="clienteForm.get('apellidoPaterno')?.touched">
                                                 <mat-error
@@ -55,7 +60,12 @@
                                                     [svgIcon]="'heroicons_solid:user'"
                                                     matPrefix
                                                 ></mat-icon>
-                                                <input [formControlName]="'apellidoMaterno'" matInput />
+                                                <input
+                                                    [formControlName]="'apellidoMaterno'"
+                                                    matInput
+                                                    type="text"
+                                                    [inputMask]="titleInputMask"
+                                                />
                                             </mat-form-field>
                                             <ng-container *ngIf="clienteForm.get('apellidoMaterno')?.touched">
                                                 <mat-error
@@ -74,7 +84,12 @@
                                                     [svgIcon]="'heroicons_solid:user'"
                                                     matPrefix
                                                 ></mat-icon>
-                                                <input [formControlName]="'nombre'" matInput />
+                                                <input
+                                                    [formControlName]="'nombre'"
+                                                    matInput
+                                                    type="text"
+                                                    [inputMask]="titleInputMask"
+                                                />
                                             </mat-form-field>
                                             <ng-container *ngIf="clienteForm.get('nombre')?.touched">
                                                 <mat-error *ngIf="clienteForm.get('nombre')?.errors?.['required']">
@@ -212,7 +227,12 @@
                                                     [svgIcon]="'heroicons_outline:document-text'"
                                                     matPrefix
                                                 ></mat-icon>
-                                                <input [formControlName]="'curp'" matInput />
+                                                <input
+                                                    [formControlName]="'curp'"
+                                                    matInput
+                                                    type="text"
+                                                    [inputMask]="capsInputMAsk"
+                                                />
                                             </mat-form-field>
                                             <ng-container *ngIf="clienteForm.get('curp')?.touched">
                                                 <mat-error *ngIf="clienteForm.get('curp')?.errors?.['required']">
@@ -229,7 +249,12 @@
                                                     [svgIcon]="'heroicons_outline:document-text'"
                                                     matPrefix
                                                 ></mat-icon>
-                                                <input [formControlName]="'rfc'" matInput />
+                                                <input
+                                                    [formControlName]="'rfc'"
+                                                    matInput
+                                                    type="text"
+                                                    [inputMask]="capsInputMAsk"
+                                                />
                                             </mat-form-field>
                                             <ng-container *ngIf="clienteForm.get('rfc')?.touched">
                                                 <mat-error *ngIf="clienteForm.get('rfc')?.errors?.['required']">
@@ -250,6 +275,7 @@
                                                     [formControlName]="'telefono1'"
                                                     matInput
                                                     [inputMask]="phoneInputMask"
+                                                    type="tel"
                                                 />
                                             </mat-form-field>
                                             <ng-container *ngIf="clienteForm.get('telefono1')?.touched">
@@ -270,6 +296,7 @@
                                                 [formControlName]="'telefono2'"
                                                 matInput
                                                 [inputMask]="phoneInputMask"
+                                                type="tel"
                                             />
                                         </mat-form-field>
                                     </div>
@@ -524,7 +551,7 @@
                                                         [svgIcon]="'heroicons_solid:user'"
                                                         matPrefix
                                                     ></mat-icon>
-                                                    <input [formControlName]="'nombre'" matInput />
+                                                    <input [formControlName]="'nombre'" matInput type="text" />
                                                 </mat-form-field>
                                                 <ng-container *ngIf="trabajoForm.get('nombre')?.touched">
                                                     <mat-error *ngIf="trabajoForm.get('nombre')?.errors?.['required']">
@@ -545,6 +572,7 @@
                                                         [formControlName]="'telefono'"
                                                         matInput
                                                         [inputMask]="phoneInputMask"
+                                                        type="tel"
                                                     />
                                                 </mat-form-field>
                                                 <ng-container *ngIf="trabajoForm.get('telefono')?.touched">
@@ -564,7 +592,12 @@
                                                         [svgIcon]="'heroicons_solid:clock'"
                                                         matPrefix
                                                     ></mat-icon>
-                                                    <input [formControlName]="'antiguedad'" matInput type="number" />
+                                                    <input
+                                                        [formControlName]="'antiguedad'"
+                                                        matInput
+                                                        type="text"
+                                                        [inputMask]="yearsInputMask"
+                                                    />
                                                 </mat-form-field>
                                                 <ng-container *ngIf="trabajoForm.get('antiguedad')?.touched">
                                                     <mat-error
