@@ -466,7 +466,12 @@
                                         [svgIcon]="'heroicons_solid:user'"
                                         matPrefix
                                     ></mat-icon>
-                                    <input [formControlName]="'apellidoPaterno'" matInput />
+                                    <input
+                                        [formControlName]="'apellidoPaterno'"
+                                        matInput
+                                        type="text"
+                                        [inputMask]="titleInputMask"
+                                    />
                                 </mat-form-field>
                                 <ng-container *ngIf="aval.get('apellidoPaterno').touched">
                                     <mat-error *ngIf="aval.get('apellidoPaterno').errors?.required">
@@ -483,7 +488,12 @@
                                         [svgIcon]="'heroicons_solid:user'"
                                         matPrefix
                                     ></mat-icon>
-                                    <input [formControlName]="'apellidoMaterno'" matInput />
+                                    <input
+                                        [formControlName]="'apellidoMaterno'"
+                                        matInput
+                                        type="text"
+                                        [inputMask]="titleInputMask"
+                                    />
                                 </mat-form-field>
                                 <ng-container *ngIf="aval.get('apellidoMaterno').touched">
                                     <mat-error *ngIf="aval.get('apellidoMaterno').errors?.required">
@@ -500,7 +510,12 @@
                                         [svgIcon]="'heroicons_solid:user'"
                                         matPrefix
                                     ></mat-icon>
-                                    <input [formControlName]="'nombre'" matInput />
+                                    <input
+                                        [formControlName]="'nombre'"
+                                        matInput
+                                        type="text"
+                                        [inputMask]="titleInputMask"
+                                    />
                                 </mat-form-field>
                                 <ng-container *ngIf="aval.get('nombre').touched">
                                     <mat-error *ngIf="aval.get('nombre').errors?.required">
@@ -568,7 +583,12 @@
                                         [svgIcon]="'heroicons_solid:user'"
                                         matPrefix
                                     ></mat-icon>
-                                    <input [formControlName]="'otro'" matInput />
+                                    <input
+                                        [formControlName]="'otro'"
+                                        matInput
+                                        type="text"
+                                        [inputMask]="titleInputMask"
+                                    />
                                 </mat-form-field>
                                 <ng-container *ngIf="aval.get('otro').touched">
                                     <mat-error *ngIf="aval.get('otro').errors?.required">
@@ -585,7 +605,12 @@
                                         [svgIcon]="'heroicons_solid:user'"
                                         matPrefix
                                     ></mat-icon>
-                                    <input [formControlName]="'ocupacion'" matInput />
+                                    <input
+                                        [formControlName]="'ocupacion'"
+                                        matInput
+                                        type="text"
+                                        [inputMask]="titleInputMask"
+                                    />
                                 </mat-form-field>
                                 <ng-container *ngIf="aval.get('ocupacion').touched">
                                     <mat-error *ngIf="aval.get('ocupacion').errors?.required">
@@ -602,7 +627,12 @@
                                         [svgIcon]="'heroicons_solid:phone'"
                                         matPrefix
                                     ></mat-icon>
-                                    <input [formControlName]="'telefono'" matInput [inputMask]="phoneInputMask" />
+                                    <input
+                                        [formControlName]="'telefono'"
+                                        matInput
+                                        [inputMask]="phoneInputMask"
+                                        type="tel"
+                                    />
                                 </mat-form-field>
                                 <ng-container *ngIf="aval.get('telefono').touched">
                                     <mat-error *ngIf="aval.get('telefono').errors?.required">

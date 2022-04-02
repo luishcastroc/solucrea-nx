@@ -107,6 +107,8 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
         autoUnmask: true,
     });
 
+    titleInputMask = createMask({ casing: 'title' });
+
     desembolsando = false;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
