@@ -3,7 +3,13 @@ import { IAmortizacion, StatusPago } from 'api/dtos';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { ICreditoData, IDetails } from './models';
-import { addBusinessDays, calculateDetails, generateTablaAmorizacion } from './utils';
+import {
+    addBusinessDays,
+    calculateDetails,
+    generateTablaAmorizacion,
+    getSaldoVencido,
+    getPagoNoIntereses,
+} from './utils';
 
 describe('Utils testing', () => {
     it('should return proper results', () => {
@@ -30,6 +36,65 @@ describe('Utils testing', () => {
         expect(calculateDetails(data)).toEqual(results);
     });
 
+    it('should return saldo vencido', () => {
+        const amortizacion: IAmortizacion[] = [
+            {
+                monto: new Prisma.Decimal(100),
+                fechaDePago: moment('2022-02-21')
+                    .utc(true)
+                    .utcOffset(0)
+                    .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+                    .toDate(),
+                numeroDePago: 1,
+                status: StatusPago.adeuda,
+            },
+            {
+                monto: new Prisma.Decimal(100),
+                fechaDePago: moment('2022-02-21')
+                    .utc(true)
+                    .utcOffset(0)
+                    .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+                    .toDate(),
+                numeroDePago: 2,
+                status: StatusPago.adeuda,
+            },
+        ];
+
+        const saldoVencido = getSaldoVencido(amortizacion);
+
+        expect(saldoVencido).toEqual(200);
+    });
+
+    it('should return pago para no generar intereses', () => {
+        const cuota: Prisma.Decimal = new Prisma.Decimal(90);
+        const amortizacion: IAmortizacion[] = [
+            {
+                monto: new Prisma.Decimal(100),
+                fechaDePago: moment('2022-02-21')
+                    .utc(true)
+                    .utcOffset(0)
+                    .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+                    .toDate(),
+                numeroDePago: 1,
+                status: StatusPago.adeuda,
+            },
+            {
+                monto: new Prisma.Decimal(100),
+                fechaDePago: moment('2022-02-21')
+                    .utc(true)
+                    .utcOffset(0)
+                    .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+                    .toDate(),
+                numeroDePago: 2,
+                status: StatusPago.adeuda,
+            },
+        ];
+
+        const saldoVencido = getPagoNoIntereses(amortizacion, cuota);
+
+        expect(saldoVencido).toEqual(290);
+    });
+
     it('should return the proper date', () => {
         const dateToCheck = moment('2022-01-20').utc(true).utcOffset(0);
         const dateResult: Moment = addBusinessDays(dateToCheck, 1);
@@ -43,6 +108,7 @@ describe('Utils testing', () => {
             .utcOffset(0)
             .set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
         const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
+            'b2d06964-b529-11ec-b909-0242ac120002',
             1,
             1,
             fechaDeInicio.toISOString(),
@@ -57,6 +123,7 @@ describe('Utils testing', () => {
     it('should return no payment due', () => {
         const fechaDeInicio = moment().utc(true).utcOffset(0).set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
         const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
+            'b2d06964-b529-11ec-b909-0242ac120002',
             45,
             1,
             fechaDeInicio.toISOString(),
@@ -74,7 +141,7 @@ describe('Utils testing', () => {
         const pagos: Partial<Pago>[] | Pago[] = [
             {
                 id: 'sdjhjh-sdsd-sdsd',
-                creditoId: 'jhjh-34hhjh34-3434',
+                creditoId: 'b2d06964-b529-11ec-b909-0242ac120002',
                 numeroDePago: 1,
                 fechaDePago: fechaDeInicio.toDate(),
                 monto,
@@ -82,6 +149,7 @@ describe('Utils testing', () => {
             },
         ];
         const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
+            'b2d06964-b529-11ec-b909-0242ac120002',
             1,
             1,
             fechaDeInicio.toISOString(),

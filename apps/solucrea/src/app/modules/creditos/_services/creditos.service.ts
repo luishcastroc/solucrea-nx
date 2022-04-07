@@ -52,6 +52,15 @@ export class CreditosService {
     }
 
     /**
+     * Get Credito
+     *
+     *
+     */
+    getCredito(id: string): Observable<ICreditoReturnDto> {
+        return this._httpClient.get<ICreditoReturnDto>(`${this._environment.uri}/credito/${id}`);
+    }
+
+    /**
      *Get Seguros Data
      *
      * @returns ISegurosData

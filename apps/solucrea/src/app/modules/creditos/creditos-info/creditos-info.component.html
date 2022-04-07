@@ -1,4 +1,4 @@
-<div class="py-8 flex flex-col flex-auto w-full">
+<div class="flex flex-col flex-auto w-full">
     <div class="flex justify-between border-b pb-3">
         <h1 class="text-4xl font-extrabold tracking-tight leading-none">Detalles Crédito</h1>
         <button
@@ -112,6 +112,21 @@
                                 <div class="font-bold">Estado:</div>
                                 <div class="mt-2">{{ credito.status }}</div>
                             </div>
+                            <!-- Saldo -->
+                            <div class="flex flex-col">
+                                <div class="font-bold">Saldo al día de hoy:</div>
+                                <div class="mt-2">{{ credito.saldo | currency: 'MXN':'symbol' }}</div>
+                            </div>
+                            <!-- Saldo Vencido -->
+                            <div class="flex flex-col">
+                                <div class="font-bold">Saldo Vencido:</div>
+                                <div class="mt-2">{{ credito.saldoVencido | currency: 'MXN':'symbol' }}</div>
+                            </div>
+                            <!-- Pago No Intereses -->
+                            <div class="flex flex-col">
+                                <div class="font-bold">Pago para no generar interés:</div>
+                                <div class="mt-2">{{ credito.pagoNoIntereses | currency: 'MXN':'symbol' }}</div>
+                            </div>
                         </div>
                         <h2 class="text-3xl font-extrabold tracking-tight leading-none">Aval</h2>
                         <div class="z-20 grid grid-cols-2 gap-4 md:grid-cols-5">
@@ -143,15 +158,16 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex basis-40 items-end">
+                    <div class="flex basis-40 gap-3 items-end">
                         <button mat-flat-button type="button" [color]="'primary'" matStepperNext>Siguiente</button>
+                        <button mat-stroked-button type="button" matStepperPrevious>Pagar</button>
                     </div>
                 </div> </mat-step
             ><mat-step [stepControl]="clienteForm"
                 ><ng-template matStepLabel>Amortización</ng-template>
                 <div class="z-20 flex flex-col px-2 py-4 md:px-10">
                     <div
-                        class="p-4 overflow-hidden basis-100"
+                        class="p-4 overflow-hidden basis-120"
                         fuseScrollbar
                         [fuseScrollbarOptions]="{
                             wheelPropagation: inner,
@@ -167,6 +183,7 @@
                         <div
                             class="grid grid-cols-1 mb-4 pb-8 hover:bg-fuse-bg-default md:mb-0 md:pb-0 md:grid-cols-4 gap-3 border-b-2 min-h-8 cursor-pointer"
                             *ngFor="let pago of credito.amortizacion"
+                            (click)="goToPago(pago)"
                         >
                             <div class="grid grid-cols-2 md:grid-cols-1">
                                 <div class="font-bold md:hidden">Numero de Pago:</div>
@@ -188,8 +205,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex flex-auto basis-30 items-end">
-                        <button mat-stroked-button type="button" matStepperPrevious>Anterior</button>
+                    <div class="flex flex-auto gap-3 basis-30 items-end">
+                        <button mat-flat-button type="button" [color]="'primary'" matStepperPrevious>Anterior</button>
+                        <button mat-stroked-button type="button" matStepperPrevious>Pagar</button>
                     </div>
                 </div>
             </mat-step></mat-stepper

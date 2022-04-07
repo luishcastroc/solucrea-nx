@@ -1,4 +1,4 @@
-import { ICreditoReturnDto } from 'api/dtos';
+import { IAmortizacion, ICreditoReturnDto } from 'api/dtos';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
@@ -24,5 +24,9 @@ export class CreditosInfoComponent implements OnInit {
      */
     back(): void {
         this.location.back();
+    }
+
+    goToPago(pago: IAmortizacion) {
+        console.log(pago);
     }
 }

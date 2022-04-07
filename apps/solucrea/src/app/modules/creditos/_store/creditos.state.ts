@@ -1,3 +1,4 @@
+import { selectCredito } from './../../../../../../api/src/app/util/select';
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { ISegurosData } from '@solucrea-utils';
@@ -333,8 +334,13 @@ export class CreditosState {
 
     @Action(SelectCredito)
     selectCredito(ctx: StateContext<CreditosStateModel>, { id }: SelectCredito) {
-        const selectedCredito = ctx.getState().creditos.filter((credito: ICreditoReturnDto) => credito.id === id)[0];
-        ctx.patchState({ selectedCredito });
+        return this._creditosService.getCredito(id).pipe(
+            tap((selectedCredito) => {
+                if (selectCredito) {
+                    ctx.patchState({ selectedCredito });
+                }
+            })
+        );
     }
 
     @Action(SelectParentesco)

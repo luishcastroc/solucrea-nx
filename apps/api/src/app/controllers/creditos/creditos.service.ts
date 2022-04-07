@@ -1,6 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Pago, Prisma, Status } from '@prisma/client';
-import { generateTablaAmorizacion, getFrecuencia, getSaldoActual } from '@solucrea-utils';
+import {
+    generateTablaAmorizacion,
+    getFrecuencia,
+    getPagoNoIntereses,
+    getSaldoActual,
+    getSaldoVencido,
+} from '@solucrea-utils';
 import { IAmortizacion, ICajaReturnDto, ICreditoReturnDto, StatusPago } from 'api/dtos';
 import { PrismaService } from 'api/prisma';
 import { selectCredito } from 'api/util';
@@ -21,6 +27,7 @@ export class CreditosService {
                 creditosCliente.map(async (credito) => {
                     const frecuencia = getFrecuencia(credito?.producto.frecuencia);
                     const amortizacion: IAmortizacion[] = generateTablaAmorizacion(
+                        credito?.id,
                         credito?.producto.numeroDePagos as number,
                         frecuencia,
                         credito?.fechaInicio as string | Date,
@@ -44,10 +51,19 @@ export class CreditosService {
                         status = Status.ABIERTO;
                     }
 
+                    const saldoVencido = getSaldoVencido(amortizacion);
+                    const saldo = amortizacion.reduce(
+                        (acc, curr) =>
+                            acc + (curr.status === 'ADEUDA' || curr.status === 'CORRIENTE' ? curr.monto.toNumber() : 0),
+                        0
+                    );
+
                     const creditoReturn = {
                         ...credito,
                         amortizacion,
                         status,
+                        saldo,
+                        saldoVencido,
                     };
 
                     if (status !== credito.status) {
@@ -88,6 +104,7 @@ export class CreditosService {
                 creditos.map(async (credito) => {
                     const frecuencia = getFrecuencia(credito?.producto.frecuencia);
                     const amortizacion: IAmortizacion[] = generateTablaAmorizacion(
+                        credito?.id,
                         credito?.producto.numeroDePagos as number,
                         frecuencia,
                         credito?.fechaInicio as string | Date,
@@ -111,10 +128,19 @@ export class CreditosService {
                         status = Status.ABIERTO;
                     }
 
+                    const saldoVencido = getSaldoVencido(amortizacion);
+                    const saldo = amortizacion.reduce(
+                        (acc, curr) =>
+                            acc + (curr.status === 'ADEUDA' || curr.status === 'CORRIENTE' ? curr.monto.toNumber() : 0),
+                        0
+                    );
+
                     const creditoReturn = {
                         ...credito,
                         amortizacion,
                         status,
+                        saldo,
+                        saldoVencido,
                     };
 
                     if (status !== credito.status) {
@@ -136,6 +162,71 @@ export class CreditosService {
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error consultando los créditos del cliente' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
+            }
+        }
+    }
+
+    async getCredito(id: string): Promise<ICreditoReturnDto | null> {
+        const select = selectCredito;
+        try {
+            const credito = await this.prisma.credito.findUnique({ where: { id }, select });
+
+            const frecuencia = getFrecuencia(credito?.producto.frecuencia);
+            const amortizacion: IAmortizacion[] = generateTablaAmorizacion(
+                credito?.id as string,
+                credito?.producto.numeroDePagos as number,
+                frecuencia,
+                credito?.fechaInicio as string | Date,
+                credito?.cuota as Prisma.Decimal,
+                credito?.producto.interesMoratorio as Prisma.Decimal,
+                credito?.pagos as Partial<Pago>[] | Pago[]
+            );
+
+            let status;
+            if (amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length > 0) {
+                status = Status.MORA;
+            } else if (
+                amortizacion.filter((tabla) => tabla.status === StatusPago.pagado).length ===
+                credito?.producto.numeroDePagos
+            ) {
+                status = Status.CERRADO;
+            } else if (
+                amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length === 0 &&
+                amortizacion.some((tabla) => tabla.status === StatusPago.corriente)
+            ) {
+                status = Status.ABIERTO;
+            }
+
+            const saldoVencido = getSaldoVencido(amortizacion);
+            const pagoNoIntereses = getPagoNoIntereses(amortizacion, credito?.cuota as Prisma.Decimal);
+            const saldo = amortizacion.reduce(
+                (acc, curr) =>
+                    acc + (curr.status === 'ADEUDA' || curr.status === 'CORRIENTE' ? curr.monto.toNumber() : 0),
+                0
+            );
+
+            const creditoReturn = {
+                ...credito,
+                amortizacion,
+                status,
+                saldo,
+                saldoVencido,
+                pagoNoIntereses,
+            };
+
+            if (status !== credito?.status) {
+                await this.prisma.credito.update({ where: { id: credito?.id }, data: { status } });
+            }
+
+            return creditoReturn as ICreditoReturnDto;
+        } catch (e: any) {
+            if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error consultando créditos del cliente' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {

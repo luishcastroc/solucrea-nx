@@ -28,6 +28,13 @@ export class CreditosController {
 
     @UseGuards(RolesGuard)
     @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
+    @Get('credito/:id')
+    async obtenerCredito(@Param('id') id: string): Promise<ICreditoReturnDto | null> {
+        return this.creditosService.getCredito(id);
+    }
+
+    @UseGuards(RolesGuard)
+    @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
     @Get('creditos-count/:id')
     async creditosCount(@Param('id') id: string | null): Promise<number> {
         return this.creditosService.getCreditosCount(id);

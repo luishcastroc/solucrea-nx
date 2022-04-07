@@ -1,3 +1,4 @@
+import { Decimal } from '@prisma/client/runtime';
 import { Frecuencia, Pago, Prisma } from '@prisma/client';
 import { IAmortizacion, ICajaReturnDto, StatusPago } from 'api/dtos';
 import { sumBy } from 'lodash';
@@ -100,6 +101,7 @@ export const getSaldoActual = (caja: ICajaReturnDto | Partial<ICajaReturnDto>): 
 /**
  * Generar Tabla Amortizacion
  *
+ * @param creditoId
  * @param numeroDePagos
  * @param frecuencia
  * @param fechaInicio
@@ -109,6 +111,7 @@ export const getSaldoActual = (caja: ICajaReturnDto | Partial<ICajaReturnDto>): 
  * @returns tabla de amortización
  */
 export const generateTablaAmorizacion = (
+    creditoId: string,
     numeroDePagos: number,
     frecuencia: number,
     fechaInicio: string | Date,
@@ -119,7 +122,7 @@ export const generateTablaAmorizacion = (
     const amortizacion: IAmortizacion[] = [];
     const today = moment().utc(true).utcOffset(0).set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
     let fechaPagoAux = fechaInicio;
-    let status: StatusPago = getPagoStatus(pagos, 1, monto, today, fechaPagoAux);
+    let status: StatusPago = getPagoStatus(creditoId, pagos, 1, monto, today, fechaPagoAux);
     let montoCorriente =
         status === StatusPago.corriente
             ? monto
@@ -132,7 +135,7 @@ export const generateTablaAmorizacion = (
     });
     for (let i = 2; i < numeroDePagos + 1; i++) {
         const fechaDePago: Date | string = addBusinessDays(moment(fechaPagoAux), frecuencia).toISOString();
-        status = getPagoStatus(pagos, i, monto, today, fechaDePago);
+        status = getPagoStatus(creditoId, pagos, i, monto, today, fechaDePago);
         montoCorriente =
             status === StatusPago.corriente
                 ? monto
@@ -143,7 +146,39 @@ export const generateTablaAmorizacion = (
     return amortizacion;
 };
 
+/**
+ *
+ * @param amortizacion
+ * @returns get saldo vencido
+ */
+export const getSaldoVencido = (amortizacion: IAmortizacion[]): number => {
+    const mora = amortizacion.filter((pago) => pago.status === 'ADEUDA');
+    return mora.length > 0 ? mora.reduce((acc, obj) => acc + obj.monto.toNumber(), 0) : 0;
+};
+
+/**
+ *
+ * @param amortizacion
+ * @param cuota
+ * @returns pago para no generar intereses
+ */
+export const getPagoNoIntereses = (amortizacion: IAmortizacion[], cuota: Decimal): number => {
+    const vencido = getSaldoVencido(amortizacion);
+    return cuota.toNumber() + vencido;
+};
+
+/**
+ *
+ * @param creditoId
+ * @param pagos
+ * @param numeroDePago
+ * @param monto
+ * @param today
+ * @param fechaPago
+ * @returns StatusPago
+ */
 export const getPagoStatus = (
+    creditoId: string,
     pagos: Partial<Pago>[] | Pago[],
     numeroDePago: number,
     monto: Prisma.Decimal,
@@ -155,7 +190,8 @@ export const getPagoStatus = (
             (pago) =>
                 pago?.numeroDePago === numeroDePago &&
                 pago?.monto?.toNumber() === monto.toNumber() &&
-                pago?.tipoDePago === 'REGULAR'
+                pago?.tipoDePago === 'REGULAR' &&
+                pago?.creditoId === creditoId
         )
     ) {
         return StatusPago.pagado;

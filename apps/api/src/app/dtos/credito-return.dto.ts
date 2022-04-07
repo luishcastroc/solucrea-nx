@@ -10,7 +10,7 @@ export enum StatusPago {
 }
 
 export interface ICreditoReturnDto {
-    id: string;
+    id: string | undefined;
     cliente: IClienteReturnDto;
     fechaDesembolso: Date | string;
     fechaInicio: Date | string;
@@ -32,6 +32,8 @@ export interface ICreditoReturnDto {
     cuotaSeguro: Prisma.Decimal | number | string;
     saldo?: Prisma.Decimal | number | string;
     amortizacion?: IAmortizacion[];
+    saldoVencido?: number;
+    pagoNoIntereses?: number;
 }
 
 export interface ICreditoClienteReturnDto {
