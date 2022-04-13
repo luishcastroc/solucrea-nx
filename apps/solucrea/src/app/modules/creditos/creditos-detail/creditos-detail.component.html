@@ -1,8 +1,9 @@
 <div class="py-8 px-6 flex flex-col w-full">
-    <ng-container *ngIf="(editMode$ | async) === 'new'; else detailTemplate">
-        <app-creditos-new [clienteId]="clienteId"></app-creditos-new>
-    </ng-container>
-    <ng-template #detailTemplate>
-        <app-creditos-info class="flex flex-auto"></app-creditos-info>
-    </ng-template>
+    <div [ngSwitch]="editMode$ | async">
+        <ng-container *ngSwitchCase="'edit'"
+            ><app-creditos-info class="flex flex-auto"></app-creditos-info
+        ></ng-container>
+        <ng-container *ngSwitchCase="'pago'"><app-creditos-pago></app-creditos-pago></ng-container>
+        <ng-container *ngSwitchDefault><app-creditos-new [clienteId]="clienteId"></app-creditos-new></ng-container>
+    </div>
 </div>

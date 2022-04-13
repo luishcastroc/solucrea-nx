@@ -4,7 +4,6 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,6 +25,7 @@ import { CreditosDetailComponent } from './creditos-detail/creditos-detail.compo
 import { CreditosInfoComponent } from './creditos-info/creditos-info.component';
 import { CreditosListComponent } from './creditos-list/creditos-list.component';
 import { CreditosNewComponent } from './creditos-new/creditos-new.component';
+import { CreditosPagoComponent } from './creditos-pago/creditos-pago.component';
 import { CreditosComponent } from './creditos.component';
 import { creditosRoutes } from './creditos.routing';
 
@@ -37,6 +37,7 @@ import { creditosRoutes } from './creditos.routing';
         CreditosClienteListComponent,
         CreditosInfoComponent,
         CreditosNewComponent,
+        CreditosPagoComponent,
     ],
     imports: [
         RouterModule.forChild(creditosRoutes),
@@ -59,6 +60,5 @@ import { creditosRoutes } from './creditos.routing';
         InputMaskModule,
         FuseScrollbarModule,
     ],
-    providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-MX' }],
 })
 export class CreditosModule {}

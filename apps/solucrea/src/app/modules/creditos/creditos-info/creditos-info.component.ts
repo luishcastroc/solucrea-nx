@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Location } from '@angular/common';
-import { CreditosState } from '../_store';
+import { CreditosState, ModeCredito } from '../_store';
 
 @Component({
     selector: 'app-creditos-info',
@@ -27,6 +27,6 @@ export class CreditosInfoComponent implements OnInit {
     }
 
     goToPago(pago: IAmortizacion) {
-        console.log(pago);
+        this._store.dispatch(new ModeCredito('pago'));
     }
 }

@@ -1,1 +1,1 @@
-export type EditMode = 'new' | 'edit' | 'password' | 'cierre';
+export type EditMode = 'new' | 'edit' | 'password' | 'cierre' | 'pago';

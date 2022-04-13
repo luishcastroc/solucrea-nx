@@ -120,28 +120,36 @@ export const generateTablaAmorizacion = (
     pagos: Partial<Pago>[] | Pago[]
 ): IAmortizacion[] => {
     const amortizacion: IAmortizacion[] = [];
-    const today = moment().utc(true).utcOffset(0).set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+    const today = moment().utc(true).utcOffset(0).local(true);
     let fechaPagoAux = fechaInicio;
-    let status: StatusPago = getPagoStatus(creditoId, pagos, 1, monto, today, fechaPagoAux);
+    let status: StatusPago = getPagoStatus(
+        creditoId,
+        pagos,
+        1,
+        monto,
+        today,
+        moment(fechaPagoAux).utcOffset(0).local(true).format('YYYY-MM-DD')
+    );
     let montoCorriente =
         status === StatusPago.corriente
             ? monto
             : new Prisma.Decimal(monto.toNumber() + monto.toNumber() * (interesMoratorio.toNumber() / 100));
     amortizacion.push({
         numeroDePago: 1,
-        fechaDePago: moment(fechaPagoAux).toISOString(),
+        fechaDePago: moment(fechaPagoAux).utcOffset(0).local(true).format('YYYY-MM-DD'),
         monto: montoCorriente,
         status,
     });
     for (let i = 2; i < numeroDePagos + 1; i++) {
-        const fechaDePago: Date | string = addBusinessDays(moment(fechaPagoAux), frecuencia).toISOString();
+        const fechaPlusDays = addBusinessDays(moment(fechaPagoAux), frecuencia);
+        const fechaDePago: Date | string = fechaPlusDays.utcOffset(0).local(true).format('YYYY-MM-DD');
         status = getPagoStatus(creditoId, pagos, i, monto, today, fechaDePago);
         montoCorriente =
             status === StatusPago.corriente
                 ? monto
                 : new Prisma.Decimal(monto.toNumber() + monto.toNumber() * (interesMoratorio.toNumber() / 100));
         amortizacion.push({ numeroDePago: i, fechaDePago, monto: montoCorriente, status });
-        fechaPagoAux = fechaDePago;
+        fechaPagoAux = fechaPlusDays.toISOString();
     }
     return amortizacion;
 };
@@ -195,7 +203,7 @@ export const getPagoStatus = (
         )
     ) {
         return StatusPago.pagado;
-    } else if (today.isSameOrBefore(fechaPago)) {
+    } else if (moment(today.format('YYYY-MM-DD')).isSameOrBefore(moment(fechaPago).format('YYYY-MM-DD'))) {
         return StatusPago.corriente;
     } else {
         return StatusPago.adeuda;

@@ -1,0 +1,25 @@
+<div class="flex flex-col flex-auto w-full">
+    <div class="flex justify-between border-b pb-3">
+        <h1 class="text-4xl font-extrabold tracking-tight leading-none">Pagos</h1>
+        <button
+            mat-icon-button
+            aria-label="Regresar"
+            (click)="back()"
+            #tooltip="matTooltip"
+            matTooltip="Regresar"
+            [matTooltipPosition]="'below'"
+        >
+            <mat-icon svgIcon="heroicons_outline:arrow-left"></mat-icon>
+        </button>
+    </div>
+    <!-- Content -->
+    <div
+        class="flex flex-auto overflow-hidden"
+        *ngIf="selectedCredito$ | async as credito"
+        fuseScrollbar
+        [fuseScrollbarOptions]="{
+            wheelPropagation: inner,
+            suppressScrollX: true
+        }"
+    ></div>
+</div>

@@ -51,7 +51,7 @@
                             <div class="flex flex-col">
                                 <div class="font-bold">Fecha de Nacimiento:</div>
                                 <div class="mt-2">
-                                    {{ credito.cliente?.fechaDeNacimiento | date }}
+                                    {{ credito.cliente?.fechaDeNacimiento | date: 'd MMM yyyy':'UTC' }}
                                 </div>
                             </div>
                             <!-- RFC del Cliente -->
@@ -100,7 +100,7 @@
                             <!-- Fecha Desembolso -->
                             <div class="flex flex-col">
                                 <div class="font-bold">Fecha de Desembolso:</div>
-                                <div class="mt-2">{{ credito.fechaDesembolso | date }}</div>
+                                <div class="mt-2">{{ credito.fechaDesembolso | date: 'd MMM yyyy':'UTC' }}</div>
                             </div>
                             <!-- Pagos Realizados -->
                             <div class="flex flex-col">
@@ -160,7 +160,7 @@
                     </div>
                     <div class="flex basis-40 gap-3 items-end">
                         <button mat-flat-button type="button" [color]="'primary'" matStepperNext>Siguiente</button>
-                        <button mat-stroked-button type="button" matStepperPrevious>Pagar</button>
+                        <button mat-stroked-button type="button" (click)="goToPago()">Pagar</button>
                     </div>
                 </div> </mat-step
             ><mat-step [stepControl]="clienteForm"
@@ -191,7 +191,7 @@
                             </div>
                             <div class="grid grid-cols-2 md:grid-cols-1">
                                 <div class="font-bold md:hidden">Fecha de Pago:</div>
-                                <div class="text-center">{{ pago.fechaDePago | date: 'dd-MMMM-YYYY' }}</div>
+                                <div class="text-center">{{ pago.fechaDePago | date }}</div>
                             </div>
                             <div class="grid grid-cols-2 md:grid-cols-1">
                                 <div class="font-bold md:hidden">Monto:</div>
@@ -207,7 +207,7 @@
                     </div>
                     <div class="flex flex-auto gap-3 basis-30 items-end">
                         <button mat-flat-button type="button" [color]="'primary'" matStepperPrevious>Anterior</button>
-                        <button mat-stroked-button type="button" matStepperPrevious>Pagar</button>
+                        <button mat-stroked-button type="button" (click)="goToPago()">Pagar</button>
                     </div>
                 </div>
             </mat-step></mat-stepper

@@ -20,6 +20,8 @@ import { environment } from 'apps/solucrea/src/environments/environment';
 import { AuthState } from './core/auth/store/auth.state';
 import localeEsMx from '@angular/common/locales/es-MX';
 import { registerLocaleData } from '@angular/common';
+import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 registerLocaleData(localeEsMx, 'es-Mx');
 
 const routerConfig: ExtraOptions = {
@@ -56,7 +58,16 @@ const routerConfig: ExtraOptions = {
         NgxsReduxDevtoolsPluginModule.forRoot(),
         HotToastModule.forRoot(),
     ],
-    providers: [{ provide: LOCALE_ID, useValue: 'es-Mx' }],
+    providers: [
+        { provide: LOCALE_ID, useValue: 'es-Mx' },
+        { provide: MAT_DATE_LOCALE, useValue: 'es-MX' },
+        { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+        {
+            provide: DateAdapter,
+            useClass: MomentDateAdapter,
+            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+        },
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

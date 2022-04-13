@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -39,6 +38,5 @@ import { cajaRoutes } from './caja.routing';
         SharedModule,
         InputMaskModule,
     ],
-    providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-MX' }],
 })
 export class CajaModule {}

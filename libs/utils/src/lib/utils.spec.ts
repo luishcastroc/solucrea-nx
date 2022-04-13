@@ -103,15 +103,13 @@ describe('Utils testing', () => {
     });
 
     it('should return one payment due', () => {
-        const fechaDeInicio = moment('2022-02-21')
-            .utc(true)
-            .utcOffset(0)
-            .set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+        const today = moment().utc(true).utcOffset(0).set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+        const fechaDeInicio = today.subtract(1, 'day');
         const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
             'b2d06964-b529-11ec-b909-0242ac120002',
             1,
             1,
-            fechaDeInicio.toISOString(),
+            fechaDeInicio.local(true).format('YYYY-MM-DD'),
             new Prisma.Decimal(15),
             new Prisma.Decimal(150.0),
             []
