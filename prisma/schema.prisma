@@ -227,6 +227,11 @@ enum TipoDePago {
     LIQUIDACION
 }
 
+enum TipoPenalizacion {
+    MONTO
+    PORCENTAJE
+}
+
 // Catálogos Fin
 
 // Modelos Funcionales
@@ -427,25 +432,26 @@ model Aval {
 }
 
 model Producto {
-    id                 String     @id @default(uuid())
+    id                 String           @id @default(uuid())
     nombre             String
     descripcion        String
-    montoMinimo        Decimal    @db.Decimal(15, 2)
-    montoMaximo        Decimal    @db.Decimal(15, 2)
-    interes            Decimal    @db.Decimal(15, 2)
-    interesMoratorio   Decimal    @db.Decimal(15, 2)
-    penalizacion       Decimal    @default(0) @db.Decimal(15, 2)
-    comision           Decimal    @default(0) @db.Decimal(15, 2)
-    cargos             Decimal    @default(0) @db.Decimal(15, 2)
-    activo             Boolean    @default(true)
+    montoMinimo        Decimal          @db.Decimal(15, 2)
+    montoMaximo        Decimal          @db.Decimal(15, 2)
+    interes            Decimal          @db.Decimal(15, 2)
+    interesMoratorio   Decimal          @db.Decimal(15, 2)
+    tipoPenalizacion   TipoPenalizacion @default(PORCENTAJE)
+    penalizacion       Decimal          @default(0) @db.Decimal(15, 2)
+    comision           Decimal          @default(0) @db.Decimal(15, 2)
+    cargos             Decimal          @default(0) @db.Decimal(15, 2)
+    activo             Boolean          @default(true)
     numeroDePagos      Int
     frecuencia         Frecuencia
     creditos           Credito[]
-    creditosActivos    Int        @default(1)
-    creadoPor          String     @default("ADMIN")
-    fechaCreacion      DateTime   @default(now())
-    actualizadoPor     String     @default("ADMIN")
-    fechaActualizacion DateTime   @default(now()) @updatedAt
+    creditosActivos    Int              @default(1)
+    creadoPor          String           @default("ADMIN")
+    fechaCreacion      DateTime         @default(now())
+    actualizadoPor     String           @default("ADMIN")
+    fechaActualizacion DateTime         @default(now()) @updatedAt
     diaSemana          Int?
     diaMes             Int?
 

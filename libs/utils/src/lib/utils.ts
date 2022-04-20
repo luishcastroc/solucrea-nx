@@ -141,8 +141,8 @@ export const generateTablaAmorizacion = (
         status,
     });
     for (let i = 2; i < numeroDePagos + 1; i++) {
-        const fechaPlusDays = addBusinessDays(moment(fechaPagoAux), frecuencia);
-        const fechaDePago: Date | string = fechaPlusDays.utcOffset(0).local(true).format('YYYY-MM-DD');
+        const fechaPlusDays = addBusinessDays(moment(fechaPagoAux).utcOffset(0).local(true), frecuencia);
+        const fechaDePago: Date | string = fechaPlusDays.local(true).format('YYYY-MM-DD');
         status = getPagoStatus(creditoId, pagos, i, monto, today, fechaDePago);
         montoCorriente =
             status === StatusPago.corriente

@@ -342,7 +342,11 @@
                                         <div class="leading-6 font-light">Penalización incumplimiento de plazo:</div>
                                     </div>
                                     <div class="leading-6 font-bold ml-4">
-                                        {{ producto.penalizacion / 100 | percent: '1.2' }}
+                                        {{
+                                            producto.tipoPenalizacion === 'PORCENTAJE'
+                                                ? (producto.penalizacion / 100 | percent: '1.2')
+                                                : (producto.penalizacion | currency: 'MXN':'symbol')
+                                        }}
                                     </div>
                                 </div>
                                 <!-- Cargos -->

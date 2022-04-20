@@ -1,12 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    OnDestroy,
-    OnInit,
-    ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -27,7 +20,7 @@ import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { dias } from '../../_config/dias';
 import { defaultFrecuencias } from '../../_config/frecuencias';
-import { Producto } from '.prisma/client';
+import { Producto, TipoPenalizacion } from '.prisma/client';
 
 @Component({
     selector: 'app-details',
@@ -105,6 +98,10 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
         return this.creditosForm.get('interesMoratorio') as FormControl;
     }
 
+    get tipoPenalizacion() {
+        return this.creditosForm.get('tipoPenalizacion') as FormControl;
+    }
+
     get penalizacion() {
         return this.creditosForm.get('penalizacion') as FormControl;
     }
@@ -156,6 +153,7 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
             montoMaximo: ['', Validators.required],
             interes: ['', Validators.required],
             interesMoratorio: ['', Validators.required],
+            tipoPenalizacion: [TipoPenalizacion.PORCENTAJE, Validators.required],
             penalizacion: ['', Validators.required],
             comision: ['', Validators.required],
             cargos: ['', Validators.required],

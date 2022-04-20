@@ -152,6 +152,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
                 const { error, successful } = result.result;
                 const { action } = result;
                 this.loading = false;
+                this.cajaForm.enable();
                 this._cdr.markForCheck();
                 if (error) {
                     const message = `${(error as HttpErrorResponse)['error'].message}`;
@@ -173,7 +174,6 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
                     }).afterClosed;
 
                     if (action instanceof AddCaja) {
-                        this.cajaForm.disable();
                         this.successToast$.pipe(takeUntil(this._unsubscribeAll)).subscribe((e) => {
                             this._store.dispatch(new Navigate(['/caja']));
                         });
@@ -224,12 +224,12 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
      */
     saveCaja(editMode: EditMode): void {
         this.loading = true;
+        this.cajaForm.disable();
         if (editMode === 'new') {
             const fechaApertura = (this.fechaApertura.value as Moment).toISOString();
             const { saldoActual, ...rest } = this.cajaForm.value;
             const caja: CreateCajaDto = { ...rest, fechaApertura };
             this._store.dispatch(new AddCaja(caja));
-            this.cajaForm.disable();
         } else if (editMode === 'edit') {
             let changedCaja = this._shared.getDirtyValues(this.cajaForm);
             if (changedCaja.fechaInicio) {

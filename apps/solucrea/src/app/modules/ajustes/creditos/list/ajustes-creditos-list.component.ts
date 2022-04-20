@@ -83,11 +83,11 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
                 }
                 if (successful) {
                     if (action instanceof DeleteCredito) {
-                        message = 'Sucursal desactivada exitosamente.';
+                        message = 'Crédito desactivado exitosamente.';
                         this._store.dispatch(new ChangeSearchFilterCreditos(this.activo));
                     }
                     if (action instanceof EditCredito) {
-                        message = 'Sucursal activada exitosamente.';
+                        message = 'Crédito activado exitosamente.';
                         this._store.dispatch(new ChangeSearchFilterCreditos(this.activo));
                     }
                     if (!(action instanceof GetAllCreditos) && !(action instanceof ChangeSearchFilterCreditos)) {

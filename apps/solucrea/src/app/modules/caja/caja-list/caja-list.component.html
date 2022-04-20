@@ -33,7 +33,7 @@
                                 <!-- Fecha de Apertura -->
                                 <div class="flex flex-col">
                                     <div class="font-bold">Fecha Apertura:</div>
-                                    <div class="mt-2">{{ caja.fechaApertura | date }}</div>
+                                    <div class="mt-2">{{ caja.fechaApertura | date: 'd MMM yyyy':'UTC' }}</div>
                                 </div>
                                 <!-- Saldo Inicial -->
                                 <div class="flex flex-col flex-auto">

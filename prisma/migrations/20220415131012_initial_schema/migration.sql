@@ -342,6 +342,7 @@ CREATE TABLE `Productos` (
     `montoMaximo` DECIMAL(15, 2) NOT NULL,
     `interes` DECIMAL(15, 2) NOT NULL,
     `interesMoratorio` DECIMAL(15, 2) NOT NULL,
+    `tipoPenalizacion` ENUM('MONTO', 'PORCENTAJE') NOT NULL DEFAULT 'PORCENTAJE',
     `penalizacion` DECIMAL(15, 2) NOT NULL DEFAULT 0,
     `comision` DECIMAL(15, 2) NOT NULL DEFAULT 0,
     `cargos` DECIMAL(15, 2) NOT NULL DEFAULT 0,

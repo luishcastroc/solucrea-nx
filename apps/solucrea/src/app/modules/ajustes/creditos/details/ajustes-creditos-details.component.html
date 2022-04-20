@@ -101,6 +101,26 @@
                                     </mat-error>
                                 </ng-container>
                             </div>
+                            <!-- Típo de Penalización -->
+                            <div>
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>Típo de Penalización</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:calculator'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <mat-select [formControlName]="'tipoPenalizacion'">
+                                        <mat-option [value]="'MONTO'">Monto</mat-option>
+                                        <mat-option [value]="'PORCENTAJE'">Porcentaje</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <ng-container *ngIf="tipoPenalizacion.touched">
+                                    <mat-error *ngIf="tipoPenalizacion.errors?.['required']">
+                                        El típo de penalización es requerido.
+                                    </mat-error>
+                                </ng-container>
+                            </div>
                             <!-- Penalización -->
                             <div>
                                 <mat-form-field class="fuse-mat-no-subscript w-full">
@@ -111,9 +131,16 @@
                                         matPrefix
                                     ></mat-icon>
                                     <input
+                                        *ngIf="tipoPenalizacion.value === 'PORCENTAJE'"
                                         [formControlName]="'penalizacion'"
                                         matInput
                                         [inputMask]="percentageInputMask"
+                                    />
+                                    <input
+                                        *ngIf="tipoPenalizacion.value === 'MONTO'"
+                                        [formControlName]="'penalizacion'"
+                                        matInput
+                                        [inputMask]="currencyInputMask"
                                     />
                                 </mat-form-field>
                                 <ng-container *ngIf="penalizacion.touched">

@@ -59,13 +59,16 @@ export class ProductosService {
             return newProducto;
         } catch (e: any) {
             console.log(e);
-            if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
+            if (e?.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando el nuevo producto' },
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             } else {
-                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
+                throw new HttpException(
+                    { status: e.response?.status, message: e.response?.message },
+                    e.response?.status
+                );
             }
         }
     }
