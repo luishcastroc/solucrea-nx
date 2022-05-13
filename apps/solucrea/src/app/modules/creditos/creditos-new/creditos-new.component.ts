@@ -26,7 +26,7 @@ import {
     IUsuarioReturnDto,
 } from 'api/dtos';
 import { Moment } from 'moment';
-import { debounceTime, distinctUntilChanged, filter, Observable, Subject, takeUntil, tap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, Observable, Subject, takeUntil, tap, of, switchMap } from 'rxjs';
 
 import { CreditosService } from '../_services/creditos.service';
 import {
@@ -307,38 +307,49 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
         );
 
         this._actions$
-            .pipe(ofActionCompleted(SelectCliente, CreateCredito), takeUntil(this._unsubscribeAll))
-            .subscribe((result: ActionCompletion<any, Error>) => {
-                const { error, successful } = result.result;
-                const { action } = result;
-                let message;
-                this.loading = false;
-                this.desembolsando = false;
-                // Mark for check
-                this._cdr.markForCheck();
-                if (error) {
-                    message = `${(error as HttpErrorResponse)['error'].message}`;
-                    this._toast.error(message, {
-                        duration: 4000,
-                        position: 'bottom-center',
-                    });
-                }
-                if (successful) {
-                    if (action instanceof CreateCredito) {
-                        message = 'Crédito agregado exitosamente.';
-                        this.successToast$ = this._toast.success(message, {
+            .pipe(
+                ofActionCompleted(SelectCliente, CreateCredito),
+                takeUntil(this._unsubscribeAll),
+                switchMap((result) => {
+                    const { error, successful } = result.result;
+                    const { action } = result;
+                    let message;
+                    this.loading = false;
+                    this.desembolsando = false;
+                    // Mark for check
+                    this._cdr.markForCheck();
+                    if (error) {
+                        message = `${(error as HttpErrorResponse)['error'].message}`;
+                        this._toast.error(message, {
                             duration: 4000,
                             position: 'bottom-center',
-                        }).afterClosed;
-
-                        this.successToast$.pipe(takeUntil(this._unsubscribeAll)).subscribe((e) => {
-                            this._store.dispatch(
-                                new Navigate([this.clienteId ? `creditos/cliente/${this.clienteId}/` : 'creditos/'])
-                            );
                         });
                     }
-                }
-            });
+                    if (successful) {
+                        if (action instanceof CreateCredito) {
+                            message = 'Crédito agregado exitosamente.';
+                            this.successToast$ = this._toast
+                                .success(message, {
+                                    duration: 4000,
+                                    position: 'bottom-center',
+                                })
+                                .afterClosed.pipe(
+                                    tap((e) =>
+                                        this._store.dispatch(
+                                            new Navigate([
+                                                this.clienteId ? `creditos/cliente/${this.clienteId}/` : 'creditos/',
+                                            ])
+                                        )
+                                    )
+                                );
+
+                            return this.successToast$;
+                        }
+                    }
+                    return of(result);
+                })
+            )
+            .subscribe();
 
         if (clienteId) {
             this._store.dispatch(new GetClienteData(clienteId));

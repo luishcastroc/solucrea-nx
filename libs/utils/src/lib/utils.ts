@@ -151,6 +151,7 @@ export const generateTablaAmorizacion = (
         amortizacion.push({ numeroDePago: i, fechaDePago, monto: montoCorriente, status });
         fechaPagoAux = fechaPlusDays.toISOString();
     }
+    getPagos(amortizacion, pagos, today, interesMoratorio);
     return amortizacion;
 };
 
@@ -209,6 +210,28 @@ export const getPagoStatus = (
         return StatusPago.adeuda;
     }
 };
+
+export const getPagos = (
+    amortizacion: IAmortizacion[],
+    pagos: Partial<Pago>[] | Pago[],
+    today: moment.Moment,
+    interesMoratorio: Prisma.Decimal
+): IAmortizacion[] => {
+    console.log('momentToday: ', today.format('YYYY-MM-DD'));
+    const evalAmortizacion: IAmortizacion[] = amortizacion.filter((pago) => {
+        console.log('momentFechaPago: ', moment(pago.fechaDePago).format('YYYY-MM-DD'));
+        if (moment(today.format('YYYY-MM-DD')).isSameOrAfter(moment(pago.fechaDePago).format('YYYY-MM-DD'))) {
+            return pagos;
+        } else {
+            return null;
+        }
+    });
+
+    console.log('evalAmortizacion:', evalAmortizacion);
+
+    return evalAmortizacion;
+};
+
 /**
  *
  * @param frecuencia

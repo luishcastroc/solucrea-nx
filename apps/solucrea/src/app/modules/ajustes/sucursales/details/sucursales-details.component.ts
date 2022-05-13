@@ -17,7 +17,7 @@ import {
     SelectSucursal,
 } from 'app/modules/ajustes/_store';
 import { SharedService } from 'app/shared';
-import { Observable, Subject, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, takeUntil, tap, switchMap, of } from 'rxjs';
 
 import { TipoDireccion } from '.prisma/client';
 
@@ -106,38 +106,46 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
      */
     subscribeToActions(): void {
         this._actions$
-            .pipe(ofActionCompleted(AddSucursal, EditSucursal), takeUntil(this._unsubscribeAll))
-            .subscribe((result) => {
-                const { error, successful } = result.result;
-                const { action } = result;
-                this.loading = false;
-                // Mark for check
-                this._cdr.markForCheck();
-                if (error) {
-                    const message = `${(error as HttpErrorResponse)['error'].message}`;
-                    this._toast.error(message, {
-                        duration: 4000,
-                        position: 'bottom-center',
-                    });
-                }
-                if (successful) {
-                    const message = 'Sucursal salvada exitosamente.';
-                    this.successToast$ = this._toast.success(message, {
-                        duration: 4000,
-                        position: 'bottom-center',
-                    }).afterClosed;
-
-                    if (action instanceof AddSucursal) {
-                        this.successToast$.pipe(takeUntil(this._unsubscribeAll)).subscribe((e) => {
-                            this._store.dispatch(new Navigate(['/ajustes/sucursales/']));
+            .pipe(
+                ofActionCompleted(AddSucursal, EditSucursal),
+                takeUntil(this._unsubscribeAll),
+                switchMap((result) => {
+                    const { error, successful } = result.result;
+                    const { action } = result;
+                    this.loading = false;
+                    // Mark for check
+                    this._cdr.markForCheck();
+                    if (error) {
+                        const message = `${(error as HttpErrorResponse)['error'].message}`;
+                        this._toast.error(message, {
+                            duration: 4000,
+                            position: 'bottom-center',
                         });
-                    } else {
-                        this.sucursalForm.markAsPristine();
-                        // we enable the form
-                        this.sucursalForm.enable();
                     }
-                }
-            });
+                    if (successful) {
+                        const message = 'Sucursal salvada exitosamente.';
+                        this.successToast$ = this._toast
+                            .success(message, {
+                                duration: 4000,
+                                position: 'bottom-center',
+                            })
+                            .afterClosed.pipe(
+                                takeUntil(this._unsubscribeAll),
+                                tap((e) => this._store.dispatch(new Navigate(['/ajustes/sucursales/'])))
+                            );
+
+                        if (action instanceof AddSucursal) {
+                            return this.successToast$;
+                        } else {
+                            this.sucursalForm.markAsPristine();
+                            // we enable the form
+                            this.sucursalForm.enable();
+                        }
+                    }
+                    return of(result);
+                })
+            )
+            .subscribe();
     }
 
     /**

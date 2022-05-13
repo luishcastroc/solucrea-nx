@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { HotToastService } from '@ngneat/hot-toast';
+import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
@@ -16,7 +16,7 @@ import {
 } from 'app/modules/ajustes/_store';
 import { IDays, IFrecuencia } from 'app/modules/ajustes/models';
 import { SharedService } from 'app/shared';
-import { Observable, Subject, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, takeUntil, tap, switchMap, of } from 'rxjs';
 
 import { dias } from '../../_config/dias';
 import { defaultFrecuencias } from '../../_config/frecuencias';
@@ -31,6 +31,7 @@ import { Producto, TipoPenalizacion } from '.prisma/client';
 export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
     @Select(AjustesCreditosState.loading)
     loading$!: Observable<boolean>;
+    successToast$!: Observable<HotToastClose>;
     loading = false;
     creditosForm!: FormGroup;
     editMode!: EditMode;
@@ -172,41 +173,46 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
      */
     subscribeToActions(): void {
         this._actions$
-            .pipe(ofActionCompleted(AddCredito, EditCredito), takeUntil(this._unsubscribeAll))
-            .subscribe((result) => {
-                const { error, successful } = result.result;
-                const { action } = result;
-                this.loading = false;
-                // Mark for check
-                this._cdr.markForCheck();
-                if (error) {
-                    const message = `${(error as HttpErrorResponse)['error'].message}`;
-                    this._toast.error(message, {
-                        duration: 4000,
-                        position: 'bottom-center',
-                    });
-                }
-                if (successful) {
-                    let message = 'Producto salvado exitosamente.';
-                    if (action instanceof EditCredito) {
-                        message = 'Producto actualizado exitosamente';
+            .pipe(
+                ofActionCompleted(AddCredito, EditCredito),
+                takeUntil(this._unsubscribeAll),
+                switchMap((result) => {
+                    const { error, successful } = result.result;
+                    const { action } = result;
+                    this.loading = false;
+                    // Mark for check
+                    this._cdr.markForCheck();
+                    if (error) {
+                        const message = `${(error as HttpErrorResponse)['error'].message}`;
+                        this._toast.error(message, {
+                            duration: 4000,
+                            position: 'bottom-center',
+                        });
                     }
-                    this._toast.success(message, {
-                        duration: 4000,
-                        position: 'bottom-center',
-                    });
+                    if (successful) {
+                        let message = 'Producto salvado exitosamente.';
+                        if (action instanceof EditCredito) {
+                            message = 'Producto actualizado exitosamente';
+                        }
+                        this.successToast$ = this._toast
+                            .success(message, {
+                                duration: 4000,
+                                position: 'bottom-center',
+                            })
+                            .afterClosed.pipe(tap((e) => this._store.dispatch(new Navigate(['/ajustes/creditos/']))));
 
-                    if (action instanceof AddCredito) {
-                        setTimeout(() => {
-                            this._store.dispatch(new Navigate(['/ajustes/creditos/']));
-                        }, 2000);
-                    } else {
-                        this.creditosForm.markAsPristine();
-                        // we enable the form
-                        this.creditosForm.enable();
+                        if (action instanceof AddCredito) {
+                            return this.successToast$;
+                        } else {
+                            this.creditosForm.markAsPristine();
+                            // we enable the form
+                            this.creditosForm.enable();
+                        }
                     }
-                }
-            });
+                    return of(result);
+                })
+            )
+            .subscribe();
     }
 
     /**

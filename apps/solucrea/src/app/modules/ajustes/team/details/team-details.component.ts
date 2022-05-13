@@ -1,11 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     OnDestroy,
     OnInit,
     ViewEncapsulation,
-    ChangeDetectorRef,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -15,7 +15,7 @@ import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { EditMode } from 'app/core/models';
 import { AddUsuario, AjustesUsuariosState, ClearUsuarioState, EditUsuario } from 'app/modules/ajustes/_store';
-import { Observable, Subject, takeUntil, tap } from 'rxjs';
+import { Observable, of, Subject, switchMap, tap } from 'rxjs';
 
 import { defaultRoles } from '../../_config/roles';
 import { IRole } from '../../models/roles.model';
@@ -115,7 +115,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
     setActions(): void {
         this.actions$ = this._actions$.pipe(
             ofActionCompleted(EditUsuario, AddUsuario),
-            tap((result) => {
+            switchMap((result) => {
                 const { error, successful } = result.result;
                 const { action } = result;
                 this.loading = false;
@@ -129,17 +129,18 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
                 }
                 if (successful) {
                     const message = this.successMessage;
-                    this.successToast$ = this._toast.success(message, {
-                        duration: 4000,
-                        position: 'bottom-center',
-                    }).afterClosed;
+                    this.successToast$ = this._toast
+                        .success(message, {
+                            duration: 4000,
+                            position: 'bottom-center',
+                        })
+                        .afterClosed.pipe(tap((e) => this._store.dispatch(new Navigate(['/ajustes/usuarios/']))));
 
                     if (action instanceof AddUsuario) {
-                        this.successToast$.pipe(takeUntil(this._unsubscribeAll)).subscribe((e) => {
-                            this._store.dispatch(new Navigate(['/ajustes/usuarios/']));
-                        });
+                        return this.successToast$;
                     }
                 }
+                return of(result);
             })
         );
     }

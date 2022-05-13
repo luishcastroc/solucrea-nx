@@ -10,7 +10,7 @@ import { CreateCajaDto, ICajaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 import { SharedService } from 'app/shared';
 import { Moment } from 'moment';
-import { Observable, Subject, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, takeUntil, tap, of, switchMap } from 'rxjs';
 
 import { AddCaja, CajasState, ClearCajasState, EditCaja, GetAllSucursales, SelectCaja } from 'app/modules/caja/_store';
 import { checkIfEndDateBeforeStartDate, futureDateValidator } from '../validators/custom-caja.validators';
@@ -147,42 +147,47 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
      */
     subscribeToActions(): void {
         this._actions$
-            .pipe(ofActionCompleted(AddCaja, EditCaja), takeUntil(this._unsubscribeAll))
-            .subscribe((result) => {
-                const { error, successful } = result.result;
-                const { action } = result;
-                this.loading = false;
-                this.cajaForm.enable();
-                this._cdr.markForCheck();
-                if (error) {
-                    const message = `${(error as HttpErrorResponse)['error'].message}`;
-                    this._toast.error(message, {
-                        duration: 4000,
-                        position: 'bottom-center',
-                    });
-                }
-                if (successful) {
-                    const message =
-                        this.editMode === 'new'
-                            ? 'Turno salvado exitosamente.'
-                            : this.editMode === 'cierre'
-                            ? 'Turno cerrado exitosamente.'
-                            : 'Turno editado exitosamente';
-                    this.successToast$ = this._toast.success(message, {
-                        duration: 4000,
-                        position: 'bottom-center',
-                    }).afterClosed;
-
-                    if (action instanceof AddCaja) {
-                        this.successToast$.pipe(takeUntil(this._unsubscribeAll)).subscribe((e) => {
-                            this._store.dispatch(new Navigate(['/caja']));
+            .pipe(
+                ofActionCompleted(AddCaja, EditCaja),
+                takeUntil(this._unsubscribeAll),
+                switchMap((result) => {
+                    const { error, successful } = result.result;
+                    const { action } = result;
+                    this.loading = false;
+                    this.cajaForm.enable();
+                    this._cdr.markForCheck();
+                    if (error) {
+                        const message = `${(error as HttpErrorResponse)['error'].message}`;
+                        this._toast.error(message, {
+                            duration: 4000,
+                            position: 'bottom-center',
                         });
-                    } else if (action instanceof EditCaja && this.editMode === 'cierre') {
-                        this.saldoFinal.disable();
-                        this.fechaCierre.disable();
                     }
-                }
-            });
+                    if (successful) {
+                        const message =
+                            this.editMode === 'new'
+                                ? 'Turno salvado exitosamente.'
+                                : this.editMode === 'cierre'
+                                ? 'Turno cerrado exitosamente.'
+                                : 'Turno editado exitosamente';
+                        this.successToast$ = this._toast
+                            .success(message, {
+                                duration: 4000,
+                                position: 'bottom-center',
+                            })
+                            .afterClosed.pipe(tap((e) => this._store.dispatch(new Navigate(['/caja']))));
+
+                        if (action instanceof AddCaja) {
+                            return this.successToast$;
+                        } else if (action instanceof EditCaja && this.editMode === 'cierre') {
+                            this.saldoFinal.disable();
+                            this.fechaCierre.disable();
+                        }
+                    }
+                    return of(result);
+                })
+            )
+            .subscribe();
     }
 
     /**
