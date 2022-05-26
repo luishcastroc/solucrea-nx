@@ -106,12 +106,11 @@ describe('Utils testing', () => {
         const today = moment().utc(true).utcOffset(0).set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
         const fechaDeInicio = today.subtract(1, 'day');
         const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
-            'b2d06964-b529-11ec-b909-0242ac120002',
             1,
             1,
             fechaDeInicio.local(true).format('YYYY-MM-DD'),
-            new Prisma.Decimal(15),
             new Prisma.Decimal(150.0),
+            new Prisma.Decimal(15),
             []
         );
 
@@ -121,12 +120,11 @@ describe('Utils testing', () => {
     it('should return no payment due', () => {
         const fechaDeInicio = moment().utc(true).utcOffset(0).set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
         const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
-            'b2d06964-b529-11ec-b909-0242ac120002',
             45,
             1,
             fechaDeInicio.toISOString(),
-            new Prisma.Decimal(15),
-            new Prisma.Decimal(150.0),
+            new Prisma.Decimal(150),
+            new Prisma.Decimal(15.0),
             []
         );
 
@@ -147,11 +145,10 @@ describe('Utils testing', () => {
             },
         ];
         const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
-            'b2d06964-b529-11ec-b909-0242ac120002',
             1,
             1,
             fechaDeInicio.toISOString(),
-            new Prisma.Decimal(15),
+            new Prisma.Decimal(190),
             monto,
             pagos
         );

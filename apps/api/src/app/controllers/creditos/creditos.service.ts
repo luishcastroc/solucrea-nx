@@ -27,7 +27,6 @@ export class CreditosService {
                 creditosCliente.map(async (credito) => {
                     const frecuencia = getFrecuencia(credito?.producto.frecuencia);
                     const amortizacion: IAmortizacion[] = generateTablaAmorizacion(
-                        credito?.id,
                         credito?.producto.numeroDePagos as number,
                         frecuencia,
                         credito?.fechaInicio as string | Date,
@@ -104,7 +103,6 @@ export class CreditosService {
                 creditos.map(async (credito) => {
                     const frecuencia = getFrecuencia(credito?.producto.frecuencia);
                     const amortizacion: IAmortizacion[] = generateTablaAmorizacion(
-                        credito?.id,
                         credito?.producto.numeroDePagos as number,
                         frecuencia,
                         credito?.fechaInicio as string | Date,
@@ -177,7 +175,6 @@ export class CreditosService {
 
             const frecuencia = getFrecuencia(credito?.producto.frecuencia);
             const amortizacion: IAmortizacion[] = generateTablaAmorizacion(
-                credito?.id as string,
                 credito?.producto.numeroDePagos as number,
                 frecuencia,
                 credito?.fechaInicio as string | Date,

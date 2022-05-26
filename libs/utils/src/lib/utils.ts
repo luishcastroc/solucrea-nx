@@ -111,7 +111,6 @@ export const getSaldoActual = (caja: ICajaReturnDto | Partial<ICajaReturnDto>): 
  * @returns tabla de amortización
  */
 export const generateTablaAmorizacion = (
-    creditoId: string,
     numeroDePagos: number,
     frecuencia: number,
     fechaInicio: string | Date,
@@ -122,37 +121,22 @@ export const generateTablaAmorizacion = (
     const amortizacion: IAmortizacion[] = [];
     const today = moment().utc(true).utcOffset(0).local(true);
     let fechaPagoAux = fechaInicio;
-    let status: StatusPago = getPagoStatus(
-        creditoId,
-        pagos,
-        1,
-        monto,
-        today,
-        moment(fechaPagoAux).utcOffset(0).local(true).format('YYYY-MM-DD')
-    );
-    let montoCorriente =
-        status === StatusPago.corriente
-            ? monto
-            : new Prisma.Decimal(monto.toNumber() + monto.toNumber() * (interesMoratorio.toNumber() / 100));
+    let status: StatusPago = StatusPago.corriente;
     amortizacion.push({
         numeroDePago: 1,
         fechaDePago: moment(fechaPagoAux).utcOffset(0).local(true).format('YYYY-MM-DD'),
-        monto: montoCorriente,
+        monto,
         status,
     });
     for (let i = 2; i < numeroDePagos + 1; i++) {
         const fechaPlusDays = addBusinessDays(moment(fechaPagoAux).utcOffset(0).local(true), frecuencia);
         const fechaDePago: Date | string = fechaPlusDays.local(true).format('YYYY-MM-DD');
-        status = getPagoStatus(creditoId, pagos, i, monto, today, fechaDePago);
-        montoCorriente =
-            status === StatusPago.corriente
-                ? monto
-                : new Prisma.Decimal(monto.toNumber() + monto.toNumber() * (interesMoratorio.toNumber() / 100));
-        amortizacion.push({ numeroDePago: i, fechaDePago, monto: montoCorriente, status });
+        status = StatusPago.corriente;
+        amortizacion.push({ numeroDePago: i, fechaDePago, monto, status });
         fechaPagoAux = fechaPlusDays.toISOString();
     }
-    getPagos(amortizacion, pagos, today, interesMoratorio);
-    return amortizacion;
+
+    return getPagos(amortizacion, pagos, today, interesMoratorio);
 };
 
 /**
@@ -217,17 +201,41 @@ export const getPagos = (
     today: moment.Moment,
     interesMoratorio: Prisma.Decimal
 ): IAmortizacion[] => {
-    console.log('momentToday: ', today.format('YYYY-MM-DD'));
-    const evalAmortizacion: IAmortizacion[] = amortizacion.filter((pago) => {
-        console.log('momentFechaPago: ', moment(pago.fechaDePago).format('YYYY-MM-DD'));
-        if (moment(today.format('YYYY-MM-DD')).isSameOrAfter(moment(pago.fechaDePago).format('YYYY-MM-DD'))) {
-            return pagos;
+    const pagosSum = pagos.length > 0 ? (pagos as Pago[]).reduce((acc, obj) => acc + obj.monto.toNumber(), 0) : 0;
+    let acum = pagosSum;
+    let statusReturn: StatusPago = StatusPago.corriente;
+    const evalAmortizacion: IAmortizacion[] = amortizacion.map(({ numeroDePago, fechaDePago, status, monto }) => {
+        let montoReturn = monto;
+        console.log(moment(today.format('YYYY-MM-DD')));
+        console.log(moment(fechaDePago).format('YYYY-MM-DD'));
+        console.log(moment(today.format('YYYY-MM-DD')).isAfter(moment(fechaDePago).format('YYYY-MM-DD')));
+        console.log(pagosSum);
+        console.log(pagosSum < monto.toNumber());
+        if (moment(today.format('YYYY-MM-DD')).isAfter(moment(fechaDePago).format('YYYY-MM-DD'))) {
+            if (pagosSum < monto.toNumber()) {
+                montoReturn = new Prisma.Decimal(
+                    monto.toNumber() + monto.toNumber() * (interesMoratorio.toNumber() / 100) - pagosSum
+                );
+                statusReturn = StatusPago.adeuda;
+            } else {
+                statusReturn = StatusPago.pagado;
+            }
+            acum -= monto.toNumber();
+            return {
+                numeroDePago,
+                fechaDePago,
+                monto: montoReturn,
+                status: statusReturn,
+            };
         } else {
-            return null;
+            if (pagosSum >= monto.toNumber()) {
+                statusReturn = StatusPago.pagado;
+            } else {
+                montoReturn = new Prisma.Decimal(monto.toNumber() - pagosSum);
+            }
+            return { numeroDePago, fechaDePago, status: statusReturn, monto: montoReturn };
         }
     });
-
-    console.log('evalAmortizacion:', evalAmortizacion);
 
     return evalAmortizacion;
 };

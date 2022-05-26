@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
@@ -17,7 +17,7 @@ import {
     SelectSucursal,
 } from 'app/modules/ajustes/_store';
 import { SharedService } from 'app/shared';
-import { Observable, Subject, takeUntil, tap, switchMap, of } from 'rxjs';
+import { mergeMap, Observable, of, Subject, takeUntil, tap } from 'rxjs';
 
 import { TipoDireccion } from '.prisma/client';
 
@@ -109,7 +109,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
             .pipe(
                 ofActionCompleted(AddSucursal, EditSucursal),
                 takeUntil(this._unsubscribeAll),
-                switchMap((result) => {
+                mergeMap((result) => {
                     const { error, successful } = result.result;
                     const { action } = result;
                     this.loading = false;

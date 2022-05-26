@@ -8,11 +8,11 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { CreateCajaDto, ICajaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
+import { AddCaja, CajasState, ClearCajasState, EditCaja, GetAllSucursales, SelectCaja } from 'app/modules/caja/_store';
 import { SharedService } from 'app/shared';
 import { Moment } from 'moment';
-import { Observable, Subject, takeUntil, tap, of, switchMap } from 'rxjs';
+import { mergeMap, Observable, of, Subject, takeUntil, tap } from 'rxjs';
 
-import { AddCaja, CajasState, ClearCajasState, EditCaja, GetAllSucursales, SelectCaja } from 'app/modules/caja/_store';
 import { checkIfEndDateBeforeStartDate, futureDateValidator } from '../validators/custom-caja.validators';
 
 @Component({
@@ -150,7 +150,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
             .pipe(
                 ofActionCompleted(AddCaja, EditCaja),
                 takeUntil(this._unsubscribeAll),
-                switchMap((result) => {
+                mergeMap((result) => {
                     const { error, successful } = result.result;
                     const { action } = result;
                     this.loading = false;

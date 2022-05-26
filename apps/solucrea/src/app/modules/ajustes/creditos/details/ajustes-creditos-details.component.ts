@@ -16,7 +16,7 @@ import {
 } from 'app/modules/ajustes/_store';
 import { IDays, IFrecuencia } from 'app/modules/ajustes/models';
 import { SharedService } from 'app/shared';
-import { Observable, Subject, takeUntil, tap, switchMap, of } from 'rxjs';
+import { mergeMap, Observable, of, Subject, takeUntil, tap } from 'rxjs';
 
 import { dias } from '../../_config/dias';
 import { defaultFrecuencias } from '../../_config/frecuencias';
@@ -176,7 +176,7 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
             .pipe(
                 ofActionCompleted(AddCredito, EditCredito),
                 takeUntil(this._unsubscribeAll),
-                switchMap((result) => {
+                mergeMap((result) => {
                     const { error, successful } = result.result;
                     const { action } = result;
                     this.loading = false;

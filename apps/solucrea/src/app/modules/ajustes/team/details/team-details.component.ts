@@ -15,7 +15,7 @@ import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { EditMode } from 'app/core/models';
 import { AddUsuario, AjustesUsuariosState, ClearUsuarioState, EditUsuario } from 'app/modules/ajustes/_store';
-import { Observable, of, Subject, switchMap, tap } from 'rxjs';
+import { mergeMap, Observable, of, Subject, tap } from 'rxjs';
 
 import { defaultRoles } from '../../_config/roles';
 import { IRole } from '../../models/roles.model';
@@ -115,7 +115,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
     setActions(): void {
         this.actions$ = this._actions$.pipe(
             ofActionCompleted(EditUsuario, AddUsuario),
-            switchMap((result) => {
+            mergeMap((result) => {
                 const { error, successful } = result.result;
                 const { action } = result;
                 this.loading = false;

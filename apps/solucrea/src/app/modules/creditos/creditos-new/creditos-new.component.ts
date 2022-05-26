@@ -7,15 +7,15 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
-import { ActionCompletion, Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
+import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { Producto } from '@prisma/client';
 import {
     addBusinessDays,
     calculateDetails,
+    getFrecuencia,
     ICreditoData,
     IDetails,
     ISegurosData,
-    getFrecuencia,
 } from '@solucrea-utils';
 import {
     IClienteReturnDto,
@@ -26,7 +26,7 @@ import {
     IUsuarioReturnDto,
 } from 'api/dtos';
 import { Moment } from 'moment';
-import { debounceTime, distinctUntilChanged, filter, Observable, Subject, takeUntil, tap, of, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, mergeMap, Observable, of, Subject, takeUntil, tap } from 'rxjs';
 
 import { CreditosService } from '../_services/creditos.service';
 import {
@@ -310,7 +310,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
             .pipe(
                 ofActionCompleted(SelectCliente, CreateCredito),
                 takeUntil(this._unsubscribeAll),
-                switchMap((result) => {
+                mergeMap((result) => {
                     const { error, successful } = result.result;
                     const { action } = result;
                     let message;
