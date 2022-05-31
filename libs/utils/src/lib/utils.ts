@@ -195,6 +195,14 @@ export const getPagoStatus = (
     }
 };
 
+/**
+ *
+ * @param amortizacion
+ * @param pagos
+ * @param today
+ * @param interesMoratorio
+ * @returns Amortización with pagos
+ */
 export const getPagos = (
     amortizacion: IAmortizacion[],
     pagos: Partial<Pago>[] | Pago[],
@@ -206,11 +214,6 @@ export const getPagos = (
     let statusReturn: StatusPago = StatusPago.corriente;
     const evalAmortizacion: IAmortizacion[] = amortizacion.map(({ numeroDePago, fechaDePago, status, monto }) => {
         let montoReturn = monto;
-        console.log(moment(today.format('YYYY-MM-DD')));
-        console.log(moment(fechaDePago).format('YYYY-MM-DD'));
-        console.log(moment(today.format('YYYY-MM-DD')).isAfter(moment(fechaDePago).format('YYYY-MM-DD')));
-        console.log(pagosSum);
-        console.log(pagosSum < monto.toNumber());
         if (moment(today.format('YYYY-MM-DD')).isAfter(moment(fechaDePago).format('YYYY-MM-DD'))) {
             if (pagosSum < monto.toNumber()) {
                 montoReturn = new Prisma.Decimal(
@@ -232,6 +235,7 @@ export const getPagos = (
                 statusReturn = StatusPago.pagado;
             } else {
                 montoReturn = new Prisma.Decimal(monto.toNumber() - pagosSum);
+                statusReturn = StatusPago.corriente;
             }
             return { numeroDePago, fechaDePago, status: statusReturn, monto: montoReturn };
         }
