@@ -10,6 +10,7 @@
         "prebuild": "rimraf dist/apps",
         "ng": "nx",
         "start": "ng serve",
+        "start:solucrea": "nx run-many --target=serve --projects=solucrea,api",
         "build": "ng build",
         "test": "ng test",
         "lint": "nx workspace-lint && ng lint",
