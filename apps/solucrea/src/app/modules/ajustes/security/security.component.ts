@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
@@ -18,7 +18,7 @@ import { createPasswordStrengthValidator } from '../validators/custom-ajustes.va
 export class AjustesSecurityComponent implements OnInit, OnDestroy {
     @Select(AjustesUsuariosState.selectedUsuario)
     user$!: Observable<Usuario>;
-    securityForm!: FormGroup;
+    securityForm!: UntypedFormGroup;
     usuario!: Usuario;
     private _unsubscribeAll: Subject<any>;
 
@@ -26,7 +26,7 @@ export class AjustesSecurityComponent implements OnInit, OnDestroy {
      * Constructor
      */
     constructor(
-        private _formBuilder: FormBuilder,
+        private _formBuilder: UntypedFormBuilder,
         private _store: Store,
         private _actions$: Actions,
         private _toast: HotToastService

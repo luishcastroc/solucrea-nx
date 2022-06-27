@@ -2,7 +2,7 @@ import { StepperOrientation, StepperSelectionEvent } from '@angular/cdk/stepper'
 import { Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
@@ -79,9 +79,9 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
     successToast$!: Observable<HotToastClose>;
 
     creditoId!: string | null;
-    creditosForm!: FormGroup;
-    searchInput = new FormControl();
-    searchInputReferral = new FormControl();
+    creditosForm!: UntypedFormGroup;
+    searchInput = new UntypedFormControl();
+    searchInputReferral = new UntypedFormControl();
     selectedCliente!: IClienteReturnDto;
     selectedClienteReferral!: IClienteReturnDto;
     selectedProducto!: Producto;
@@ -117,86 +117,86 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
         private _actions$: Actions,
         private _toast: HotToastService,
         private location: Location,
-        private _formBuilder: FormBuilder,
+        private _formBuilder: UntypedFormBuilder,
         private _cdr: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _creditosService: CreditosService
     ) {}
 
     get id() {
-        return this.creditosForm.get('id') as FormControl;
+        return this.creditosForm.get('id') as UntypedFormControl;
     }
 
     get fechaInicio() {
-        return this.creditosForm.get('fechaInicio') as FormControl;
+        return this.creditosForm.get('fechaInicio') as UntypedFormControl;
     }
 
     get fechaDesembolso() {
-        return this.creditosForm.get('fechaDesembolso') as FormControl;
+        return this.creditosForm.get('fechaDesembolso') as UntypedFormControl;
     }
 
     get fechaFinal() {
-        return this.creditosForm.get('fechaFinal') as FormControl;
+        return this.creditosForm.get('fechaFinal') as UntypedFormControl;
     }
 
     get monto() {
-        return this.creditosForm.get('monto') as FormControl;
+        return this.creditosForm.get('monto') as UntypedFormControl;
     }
 
     get cuota() {
-        return this.creditosForm.get('cuota') as FormControl;
+        return this.creditosForm.get('cuota') as UntypedFormControl;
     }
 
     get cuotaCapital() {
-        return this.creditosForm.get('cuotaCapital') as FormControl;
+        return this.creditosForm.get('cuotaCapital') as UntypedFormControl;
     }
 
     get cuotaInteres() {
-        return this.creditosForm.get('cuotaInteres') as FormControl;
+        return this.creditosForm.get('cuotaInteres') as UntypedFormControl;
     }
 
     get cuotaSeguro() {
-        return this.creditosForm.get('cuotaSeguro') as FormControl;
+        return this.creditosForm.get('cuotaSeguro') as UntypedFormControl;
     }
 
     get status() {
-        return this.creditosForm.get('status') as FormControl;
+        return this.creditosForm.get('status') as UntypedFormControl;
     }
 
     get cliente() {
-        return this.creditosForm.get('cliente') as FormControl;
+        return this.creditosForm.get('cliente') as UntypedFormControl;
     }
 
     get sucursal() {
-        return this.creditosForm.get('sucursal') as FormControl;
+        return this.creditosForm.get('sucursal') as UntypedFormControl;
     }
 
     get producto() {
-        return this.creditosForm.get('producto') as FormControl;
+        return this.creditosForm.get('producto') as UntypedFormControl;
     }
 
     get seguro() {
-        return this.creditosForm.get('seguro') as FormControl;
+        return this.creditosForm.get('seguro') as UntypedFormControl;
     }
 
     get modalidadDeSeguro() {
-        return this.creditosForm.get('modalidadDeSeguro') as FormControl;
+        return this.creditosForm.get('modalidadDeSeguro') as UntypedFormControl;
     }
 
     get aval() {
-        return this.creditosForm.get('aval') as FormGroup;
+        return this.creditosForm.get('aval') as UntypedFormGroup;
     }
 
     get colocador() {
-        return this.creditosForm.get('colocador') as FormControl;
+        return this.creditosForm.get('colocador') as UntypedFormControl;
     }
 
     get observaciones() {
-        return this.creditosForm.get('observaciones') as FormControl;
+        return this.creditosForm.get('observaciones') as UntypedFormControl;
     }
 
     get referidoPor() {
-        return this.creditosForm.get('referidoPor') as FormControl;
+        return this.creditosForm.get('referidoPor') as UntypedFormControl;
     }
 
     ngOnInit(): void {
@@ -437,7 +437,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
      * Create Creditos Form
      *
      */
-    createCreditosForm(): FormGroup {
+    createCreditosForm(): UntypedFormGroup {
         return this._formBuilder.group({
             id: [''],
             fechaDesembolso: ['', Validators.required],

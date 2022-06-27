@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations/public-api';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
@@ -22,14 +22,14 @@ export class AjustesAccountComponent implements OnInit {
     user$!: Observable<Usuario | undefined>;
     actions$!: Actions;
 
-    accountForm!: FormGroup;
+    accountForm!: UntypedFormGroup;
     defaultUser!: Usuario;
 
     /**
      * Constructor
      */
     constructor(
-        private _formBuilder: FormBuilder,
+        private _formBuilder: UntypedFormBuilder,
         private _store: Store,
         private _actions$: Actions,
         private _toast: HotToastService,

@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
@@ -36,7 +36,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
     colonias$!: Observable<IColoniaReturnDto | undefined>;
     actions$!: Actions;
     selectedSucursal$!: Observable<ISucursalReturnDto | undefined>;
-    sucursalForm!: FormGroup;
+    sucursalForm!: UntypedFormGroup;
     editMode!: EditMode;
     coloniasTemp$!: Observable<IColoniaReturnDto | []>;
     successToast$!: Observable<HotToastClose>;
@@ -49,7 +49,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
 
     constructor(
         private _store: Store,
-        private _formBuilder: FormBuilder,
+        private _formBuilder: UntypedFormBuilder,
         private _actions$: Actions,
         private _sharedService: SharedService,
         private _toast: HotToastService,
@@ -58,39 +58,39 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
     ) {}
 
     get id() {
-        return this.sucursalForm.get('id') as FormControl;
+        return this.sucursalForm.get('id') as UntypedFormControl;
     }
 
     get nombre() {
-        return this.sucursalForm.get('nombre') as FormControl;
+        return this.sucursalForm.get('nombre') as UntypedFormControl;
     }
 
     get telefono() {
-        return this.sucursalForm.get('telefono') as FormControl;
+        return this.sucursalForm.get('telefono') as UntypedFormControl;
     }
 
     get cp() {
-        return this.sucursalForm.get('direccion')?.get('codigoPostal') as FormControl;
+        return this.sucursalForm.get('direccion')?.get('codigoPostal') as UntypedFormControl;
     }
 
     get colonia() {
-        return this.sucursalForm.get('direccion')?.get('colonia') as FormControl;
+        return this.sucursalForm.get('direccion')?.get('colonia') as UntypedFormControl;
     }
 
     get calle() {
-        return this.sucursalForm.get('direccion')?.get('calle') as FormControl;
+        return this.sucursalForm.get('direccion')?.get('calle') as UntypedFormControl;
     }
 
     get numero() {
-        return this.sucursalForm.get('direccion')?.get('numero') as FormControl;
+        return this.sucursalForm.get('direccion')?.get('numero') as UntypedFormControl;
     }
 
     get ciudad() {
-        return this.sucursalForm.get('direccion')?.get('ciudad') as FormControl;
+        return this.sucursalForm.get('direccion')?.get('ciudad') as UntypedFormControl;
     }
 
     get estado() {
-        return this.sucursalForm.get('direccion')?.get('estado') as FormControl;
+        return this.sucursalForm.get('direccion')?.get('estado') as UntypedFormControl;
     }
 
     ngOnInit(): void {
@@ -197,7 +197,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
      * Create SucursalForm
      *
      */
-    createSucursalForm(): FormGroup {
+    createSucursalForm(): UntypedFormGroup {
         return this._formBuilder.group({
             id: [''],
             nombre: ['', Validators.required],

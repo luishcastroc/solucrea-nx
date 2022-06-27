@@ -8,7 +8,7 @@ import {
     OnInit,
     ViewChild,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -72,8 +72,8 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
 
     ubicacion: IColoniasState[] = [];
     ubicacionTrabajo!: IColoniasState;
-    clienteForm!: FormGroup;
-    trabajoForm!: FormGroup;
+    clienteForm!: UntypedFormGroup;
+    trabajoForm!: UntypedFormGroup;
     editMode!: EditMode;
     deletedAddresses: Array<any> = [];
     phoneInputMask = createMask({
@@ -89,7 +89,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
 
     constructor(
         private _store: Store,
-        private _formBuilder: FormBuilder,
+        private _formBuilder: UntypedFormBuilder,
         private _actions$: Actions,
         private _changeDetectorRef: ChangeDetectorRef,
         private _toast: HotToastService,
@@ -100,23 +100,23 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
     ) {}
 
     get direcciones() {
-        return this.clienteForm.get('direcciones') as FormArray;
+        return this.clienteForm.get('direcciones') as UntypedFormArray;
     }
 
     get actividadEconomica() {
-        return this.trabajoForm.get('actividadEconomica') as FormControl;
+        return this.trabajoForm.get('actividadEconomica') as UntypedFormControl;
     }
 
     get cpTrabajo() {
-        return this.trabajoForm.get('direccion')?.get('codigoPostal') as FormControl;
+        return this.trabajoForm.get('direccion')?.get('codigoPostal') as UntypedFormControl;
     }
 
     get ciudadTrabajo() {
-        return this.trabajoForm.get('direccion')?.get('ciudad') as FormControl;
+        return this.trabajoForm.get('direccion')?.get('ciudad') as UntypedFormControl;
     }
 
     get estadoTrabajo() {
-        return this.trabajoForm.get('direccion')?.get('estado') as FormControl;
+        return this.trabajoForm.get('direccion')?.get('estado') as UntypedFormControl;
     }
 
     @HostListener('window:beforeunload', ['$event'])
@@ -321,7 +321,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
      * Create ClienteForm
      *
      */
-    createClienteForm(): FormGroup {
+    createClienteForm(): UntypedFormGroup {
         return this._formBuilder.group({
             id: [''],
             nombre: ['', Validators.required],
@@ -348,7 +348,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
      * Create TrabajoForm
      *
      */
-    createTrabajoForm(): FormGroup {
+    createTrabajoForm(): UntypedFormGroup {
         return this._formBuilder.group({
             nombre: ['', Validators.required],
             direccion: this._formBuilder.group({
@@ -409,7 +409,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
      */
     removeDireccionesField(index: number, id: string): void {
         // obtener form array para direcciones
-        const direccionesFormArray = this.clienteForm.get('direcciones') as FormArray;
+        const direccionesFormArray = this.clienteForm.get('direcciones') as UntypedFormArray;
 
         // Remove the phone number field
         direccionesFormArray.removeAt(index);
@@ -552,8 +552,8 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
             element.get('ciudad')?.disable();
             element.get('estado')?.disable();
         });
-        (this.trabajoForm.get('direccion') as FormGroup).get('ciudad')?.disable();
-        (this.trabajoForm.get('direccion') as FormGroup).get('estado')?.disable();
+        (this.trabajoForm.get('direccion') as UntypedFormGroup).get('ciudad')?.disable();
+        (this.trabajoForm.get('direccion') as UntypedFormGroup).get('estado')?.disable();
     }
 
     /**

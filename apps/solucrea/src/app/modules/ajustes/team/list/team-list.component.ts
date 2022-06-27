@@ -6,7 +6,7 @@ import {
     OnInit,
     ViewEncapsulation,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
@@ -47,7 +47,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
     usuario = this._store.selectSnapshot(AuthState.user);
     searchResults!: Usuario[];
     roles: IRole[] = defaultRoles;
-    searchInput: FormControl = new FormControl();
+    searchInput: UntypedFormControl = new UntypedFormControl();
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**

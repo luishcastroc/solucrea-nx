@@ -7,7 +7,7 @@ import {
     OnInit,
     ViewEncapsulation,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
@@ -35,7 +35,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
     actions$!: Actions;
     editMode!: EditMode;
     selectedUsuario!: Usuario | undefined;
-    usuarioForm!: FormGroup;
+    usuarioForm!: UntypedFormGroup;
     successMessage!: string;
     errorMessage!: string;
     roles: IRole[] = defaultRoles;
@@ -47,7 +47,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
      * Constructor
      */
     constructor(
-        private _formBuilder: FormBuilder,
+        private _formBuilder: UntypedFormBuilder,
         private _store: Store,
         private _actions$: Actions,
         private _route: ActivatedRoute,

@@ -4,7 +4,7 @@ import { Select, Store, Actions } from '@ngxs/store';
 import { ICreditoReturnDto } from 'api/dtos';
 import { Observable } from 'rxjs';
 import { CreditosState, ModeCredito } from '../_store';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { createMask } from '@ngneat/input-mask';
 
 @Component({
@@ -31,7 +31,7 @@ export class CreditosPagoComponent implements OnInit {
         private _store: Store,
         private _actions$: Actions,
         private _toast: HotToastService,
-        private _formBuilder: FormBuilder,
+        private _formBuilder: UntypedFormBuilder,
         private _cdr: ChangeDetectorRef
     ) {}
 
@@ -41,7 +41,7 @@ export class CreditosPagoComponent implements OnInit {
      * Create Pagos Form
      *
      */
-    createPagosForm(): FormGroup {
+    createPagosForm(): UntypedFormGroup {
         return this._formBuilder.group({
             id: [''],
             creditoId: ['', Validators.required],

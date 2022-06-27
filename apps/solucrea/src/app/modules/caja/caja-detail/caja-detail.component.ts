@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
@@ -30,7 +30,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
     loading = false;
     selectedCaja!: ICajaReturnDto;
     editMode!: EditMode;
-    cajaForm!: FormGroup;
+    cajaForm!: UntypedFormGroup;
     currencyInputMask = createMask({
         alias: 'numeric',
         groupSeparator: ',',
@@ -45,7 +45,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
 
     constructor(
         private _store: Store,
-        private _formBuilder: FormBuilder,
+        private _formBuilder: UntypedFormBuilder,
         private _actions$: Actions,
         private _changeDetectorRef: ChangeDetectorRef,
         private _toast: HotToastService,
@@ -195,7 +195,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
      *
      * @param editMode
      */
-    createCajaForm(editMode: EditMode): FormGroup {
+    createCajaForm(editMode: EditMode): UntypedFormGroup {
         if (editMode === 'new' || editMode === 'edit') {
             return this._formBuilder.group({
                 id: [this._route.snapshot.paramMap.get('id')],

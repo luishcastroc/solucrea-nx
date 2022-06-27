@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import {
     CreateClienteDto,
     IActividadEconomicaReturnDto,
@@ -102,7 +102,7 @@ export class ClientesService {
      * @returns ClienteSaveDto
      */
 
-    prepareClienteCreateObject(clienteForm: FormGroup, trabajoForm: FormGroup): CreateClienteDto {
+    prepareClienteCreateObject(clienteForm: UntypedFormGroup, trabajoForm: UntypedFormGroup): CreateClienteDto {
         const {
             apellidoPaterno,
             apellidoMaterno,

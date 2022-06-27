@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
@@ -33,7 +33,7 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
     loading$!: Observable<boolean>;
     successToast$!: Observable<HotToastClose>;
     loading = false;
-    creditosForm!: FormGroup;
+    creditosForm!: UntypedFormGroup;
     editMode!: EditMode;
     editMode$!: Observable<EditMode>;
     selectedProducto$!: Observable<Producto | undefined>;
@@ -63,7 +63,7 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
 
     constructor(
         private _store: Store,
-        private _formBuilder: FormBuilder,
+        private _formBuilder: UntypedFormBuilder,
         private _actions$: Actions,
         private _sharedService: SharedService,
         private _toast: HotToastService,
@@ -72,67 +72,67 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
     ) {}
 
     get id() {
-        return this.creditosForm.get('id') as FormControl;
+        return this.creditosForm.get('id') as UntypedFormControl;
     }
 
     get nombre() {
-        return this.creditosForm.get('nombre') as FormControl;
+        return this.creditosForm.get('nombre') as UntypedFormControl;
     }
 
     get descripcion() {
-        return this.creditosForm.get('descripcion') as FormControl;
+        return this.creditosForm.get('descripcion') as UntypedFormControl;
     }
 
     get montoMinimo() {
-        return this.creditosForm.get('montoMinimo') as FormControl;
+        return this.creditosForm.get('montoMinimo') as UntypedFormControl;
     }
 
     get montoMaximo() {
-        return this.creditosForm.get('montoMaximo') as FormControl;
+        return this.creditosForm.get('montoMaximo') as UntypedFormControl;
     }
 
     get interes() {
-        return this.creditosForm.get('interes') as FormControl;
+        return this.creditosForm.get('interes') as UntypedFormControl;
     }
 
     get interesMoratorio() {
-        return this.creditosForm.get('interesMoratorio') as FormControl;
+        return this.creditosForm.get('interesMoratorio') as UntypedFormControl;
     }
 
     get tipoPenalizacion() {
-        return this.creditosForm.get('tipoPenalizacion') as FormControl;
+        return this.creditosForm.get('tipoPenalizacion') as UntypedFormControl;
     }
 
     get penalizacion() {
-        return this.creditosForm.get('penalizacion') as FormControl;
+        return this.creditosForm.get('penalizacion') as UntypedFormControl;
     }
 
     get comision() {
-        return this.creditosForm.get('comision') as FormControl;
+        return this.creditosForm.get('comision') as UntypedFormControl;
     }
 
     get cargos() {
-        return this.creditosForm.get('cargos') as FormControl;
+        return this.creditosForm.get('cargos') as UntypedFormControl;
     }
 
     get numeroDePagos() {
-        return this.creditosForm.get('numeroDePagos') as FormControl;
+        return this.creditosForm.get('numeroDePagos') as UntypedFormControl;
     }
 
     get frecuencia() {
-        return this.creditosForm.get('frecuencia') as FormControl;
+        return this.creditosForm.get('frecuencia') as UntypedFormControl;
     }
 
     get diaSemana() {
-        return this.creditosForm.get('diaSemana') as FormControl;
+        return this.creditosForm.get('diaSemana') as UntypedFormControl;
     }
 
     get diaMes() {
-        return this.creditosForm.get('diaMes') as FormControl;
+        return this.creditosForm.get('diaMes') as UntypedFormControl;
     }
 
     get creditosActivos() {
-        return this.creditosForm.get('creditosActivos') as FormControl;
+        return this.creditosForm.get('creditosActivos') as UntypedFormControl;
     }
 
     ngOnInit(): void {
@@ -145,7 +145,7 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
      * Create CreditosForm
      *
      */
-    createCreditosForm(): FormGroup {
+    createCreditosForm(): UntypedFormGroup {
         return this._formBuilder.group({
             id: [''],
             nombre: ['', Validators.required],

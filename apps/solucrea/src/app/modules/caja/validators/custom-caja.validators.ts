@@ -1,5 +1,5 @@
 import { of } from 'rxjs';
-import { AbstractControl, ValidatorFn, ValidationErrors, FormGroup } from '@angular/forms';
+import { AbstractControl, ValidatorFn, ValidationErrors, UntypedFormGroup } from '@angular/forms';
 import moment, { Moment } from 'moment';
 
 export const futureDateValidator =
@@ -20,7 +20,7 @@ export const futureDateValidator =
 
 export const checkIfEndDateBeforeStartDate =
     (): ValidatorFn =>
-    (group: FormGroup | any): ValidationErrors | null => {
+    (group: UntypedFormGroup | any): ValidationErrors | null => {
         const todayDate = moment();
         const value = group.getRawValue();
         const fechaApertura = group.get('fechaApertura')?.value ? moment(group.get('fechaApertura')?.value) : null;

@@ -1,7 +1,7 @@
 import { GetCreditosCount, SelectCredito } from '../_store/creditos.actions';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -41,7 +41,7 @@ export class CreditosClienteListComponent implements OnInit {
     turnosCount$!: Observable<number>;
 
     actions$!: Actions;
-    searchInput = new FormControl();
+    searchInput = new UntypedFormControl();
     values = [
         { display: 'Abiertos', value: Status.ABIERTO },
         { display: 'Cerrados', value: Status.CERRADO },

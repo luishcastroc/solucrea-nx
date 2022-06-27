@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
@@ -31,7 +31,7 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
     @Select(AjustesCreditosState.loading)
     loading$!: Observable<boolean>;
     searchResults$!: Observable<Producto[]>;
-    searchInput = new FormControl();
+    searchInput = new UntypedFormControl();
     actions$: Observable<Actions>;
     values = [
         { display: 'Activos', value: true },

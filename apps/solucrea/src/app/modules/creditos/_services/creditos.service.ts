@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Prisma, ReferidoPor, Status } from '@prisma/client';
 import { ICreditoReturnDto, IModalidadSeguroReturnDto, ISeguroReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { environment } from 'apps/solucrea/src/environments/environment';
@@ -104,7 +104,7 @@ export class CreditosService {
      * @param creditosForm
      * @returns Prisma.CreditoCreateInput
      */
-    prepareCreditoRecord(creditosForm: FormGroup): Prisma.CreditoCreateInput {
+    prepareCreditoRecord(creditosForm: UntypedFormGroup): Prisma.CreditoCreateInput {
         //getting all the values
         const formValue = creditosForm.value;
 

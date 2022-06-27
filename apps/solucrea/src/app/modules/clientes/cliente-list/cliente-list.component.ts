@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
@@ -26,7 +26,7 @@ export class ClienteListComponent implements OnInit, AfterViewInit {
     clientes!: IClienteReturnDto[];
     searchValueChanges$!: Observable<string>;
     actions$!: Observable<any>;
-    searchInput = new FormControl();
+    searchInput = new UntypedFormControl();
 
     constructor(private _store: Store, private _actions$: Actions, private _toast: HotToastService) {}
 

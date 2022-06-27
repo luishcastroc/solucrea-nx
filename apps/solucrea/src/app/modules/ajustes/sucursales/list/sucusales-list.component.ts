@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
@@ -31,7 +31,7 @@ export class SucusalesListComponent implements OnInit {
     loading$!: Observable<boolean>;
     actions$!: Actions;
     searchResults$!: Observable<ISucursalReturnDto[]>;
-    searchInput = new FormControl();
+    searchInput = new UntypedFormControl();
     values = [
         { display: 'Activas', value: true },
         { display: 'Inactivas', value: false },
