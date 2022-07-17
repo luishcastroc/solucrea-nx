@@ -325,8 +325,8 @@ export class ClientesService {
     private getDirecciones(
         data: IDireccionUpdateDto,
         actualizadoPor: string
-    ): Prisma.DireccionUpdateManyWithoutClienteInput {
-        let direcciones: Prisma.DireccionUpdateManyWithoutClienteInput = {};
+    ): Prisma.DireccionUpdateManyWithoutClienteNestedInput {
+        let direcciones: Prisma.DireccionUpdateManyWithoutClienteNestedInput = {};
         const { deleteDireccion, create, update } = data;
         if (update && update.length > 0) {
             direcciones = {
@@ -377,8 +377,8 @@ export class ClientesService {
         return direcciones;
     }
 
-    private getTrabajo(trabajo: ITrabajoDto): Prisma.TrabajoUpdateOneRequiredWithoutClienteInput {
-        let trabajoReturn: Prisma.TrabajoUpdateOneRequiredWithoutClienteInput = {};
+    private getTrabajo(trabajo: ITrabajoDto): Prisma.TrabajoUpdateOneRequiredWithoutClienteNestedInput {
+        let trabajoReturn: Prisma.TrabajoUpdateOneRequiredWithoutClienteNestedInput = {};
         const { nombre, telefono, antiguedad, direccion, actividadEconomica } = trabajo;
         let update: Prisma.TrabajoUpdateWithoutClienteInput = {};
         let direccionUpdate: Prisma.DireccionUpdateWithoutTrabajoInput = {};

@@ -78,14 +78,26 @@ export class UsuariosService {
     }
 
     async createUsuario(data: Prisma.UsuarioCreateInput): Promise<Partial<Usuario>> {
-        const saltOrRounds = 10;
-        const hash = await bcrypt.hash(data.password, saltOrRounds);
-        data = { ...data, password: hash };
-        const usuarioCreado = await this.prisma.usuario.create({
-            data,
-        });
-        const { password, ...rest } = usuarioCreado;
-        return rest;
+        try {
+            const saltOrRounds = 10;
+            const hash = await bcrypt.hash(data.password, saltOrRounds);
+            data = { ...data, password: hash };
+            const usuarioCreado = await this.prisma.usuario.create({
+                data,
+            });
+            const { password, ...rest } = usuarioCreado;
+            return rest;
+        } catch (e: any) {
+            console.log(e);
+            if (e.response.status === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al crear el usuario' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
+            }
+        }
     }
 
     async updateUsuario(params: {

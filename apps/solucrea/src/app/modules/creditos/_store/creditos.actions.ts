@@ -96,3 +96,8 @@ export class CreateCredito {
     static readonly type = '[Credito] Create Credito';
     constructor(public data: Prisma.CreditoCreateInput) {}
 }
+
+export class SavePago {
+    static readonly type = '[Credito] Save Pago';
+    constructor(public data: Prisma.PagoCreateInput) {}
+}

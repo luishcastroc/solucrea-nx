@@ -138,7 +138,6 @@ describe('Utils testing', () => {
             {
                 id: 'sdjhjh-sdsd-sdsd',
                 creditoId: 'b2d06964-b529-11ec-b909-0242ac120002',
-                numeroDePago: 1,
                 fechaDePago: fechaDeInicio.toDate(),
                 monto,
                 tipoDePago: 'REGULAR',

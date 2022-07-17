@@ -237,7 +237,6 @@ CREATE TABLE `Cajas` (
 -- CreateTable
 CREATE TABLE `Pagos` (
     `id` VARCHAR(191) NOT NULL,
-    `numeroDePago` INTEGER NOT NULL,
     `monto` DECIMAL(15, 2) NOT NULL,
     `tipoDePago` ENUM('REGULAR', 'CAPITAL', 'LIQUIDACION') NOT NULL,
     `fechaDePago` DATETIME(3) NOT NULL,

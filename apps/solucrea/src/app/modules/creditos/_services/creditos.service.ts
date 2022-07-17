@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { Prisma, ReferidoPor, Status } from '@prisma/client';
+import { Pago, Prisma, ReferidoPor, Status } from '@prisma/client';
 import { ICreditoReturnDto, IModalidadSeguroReturnDto, ISeguroReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { environment } from 'apps/solucrea/src/environments/environment';
 import { Moment } from 'moment';
@@ -96,6 +96,10 @@ export class CreditosService {
      */
     createCredito(data: Prisma.CreditoCreateInput): Observable<ICreditoReturnDto> {
         return this._httpClient.post<ICreditoReturnDto>(`${this._environment.uri}/credito`, data);
+    }
+
+    savePago(data: Prisma.PagoCreateInput): Observable<Pago> {
+        return this._httpClient.post<Pago>(`${this._environment.uri}/pago`, data);
     }
 
     /**

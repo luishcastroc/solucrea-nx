@@ -23,6 +23,7 @@ import {
     TiposViviendaModule,
     UsuariosModule,
 } from './controllers';
+import { PagosModule } from './controllers/pagos';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Module({
@@ -47,6 +48,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
         CreditosModule,
         ParentescosModule,
         SegurosModule,
+        PagosModule,
     ],
     providers: [
         {

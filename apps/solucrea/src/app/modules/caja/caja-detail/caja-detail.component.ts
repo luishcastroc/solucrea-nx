@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
+import { HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
@@ -11,7 +11,7 @@ import { EditMode } from 'app/core/models';
 import { AddCaja, CajasState, ClearCajasState, EditCaja, GetAllSucursales, SelectCaja } from 'app/modules/caja/_store';
 import { SharedService } from 'app/shared';
 import { Moment } from 'moment';
-import { mergeMap, Observable, of, Subject, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { checkIfEndDateBeforeStartDate, futureDateValidator } from '../validators/custom-caja.validators';
 
@@ -26,7 +26,6 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
     sucursales$!: Observable<ISucursalReturnDto[]>;
     editMode$!: Observable<EditMode>;
     selectedCaja$!: Observable<ICajaReturnDto | undefined>;
-    successToast$!: Observable<HotToastClose>;
     loading = false;
     selectedCaja!: ICajaReturnDto;
     editMode!: EditMode;
@@ -150,11 +149,10 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
             .pipe(
                 ofActionCompleted(AddCaja, EditCaja),
                 takeUntil(this._unsubscribeAll),
-                mergeMap((result) => {
+                tap((result) => {
                     const { error, successful } = result.result;
                     const { action } = result;
                     this.loading = false;
-                    this.cajaForm.enable();
                     this._cdr.markForCheck();
                     if (error) {
                         const message = `${(error as HttpErrorResponse)['error'].message}`;
@@ -170,21 +168,22 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
                                 : this.editMode === 'cierre'
                                 ? 'Turno cerrado exitosamente.'
                                 : 'Turno editado exitosamente';
-                        this.successToast$ = this._toast
-                            .success(message, {
-                                duration: 4000,
-                                position: 'bottom-center',
-                            })
-                            .afterClosed.pipe(tap((e) => this._store.dispatch(new Navigate(['/caja']))));
+                        this._toast.success(message, {
+                            duration: 4000,
+                            position: 'bottom-center',
+                        });
 
                         if (action instanceof AddCaja) {
-                            return this.successToast$;
+                            this.cajaForm.enable();
+                            this.cajaForm.reset();
                         } else if (action instanceof EditCaja && this.editMode === 'cierre') {
                             this.saldoFinal.disable();
                             this.fechaCierre.disable();
+                        } else if (action instanceof EditCaja && this.editMode === 'edit') {
+                            this.cajaForm.enable();
+                            this.cajaForm.markAsPristine();
                         }
                     }
-                    return of(result);
                 })
             )
             .subscribe();

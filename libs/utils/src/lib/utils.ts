@@ -1,5 +1,5 @@
-import { Decimal } from '@prisma/client/runtime';
 import { Frecuencia, Pago, Prisma } from '@prisma/client';
+import { Decimal } from '@prisma/client/runtime';
 import { IAmortizacion, ICajaReturnDto, StatusPago } from 'api/dtos';
 import { sumBy } from 'lodash';
 import * as moment from 'moment';
@@ -162,41 +162,6 @@ export const getPagoNoIntereses = (amortizacion: IAmortizacion[], cuota: Decimal
 
 /**
  *
- * @param creditoId
- * @param pagos
- * @param numeroDePago
- * @param monto
- * @param today
- * @param fechaPago
- * @returns StatusPago
- */
-export const getPagoStatus = (
-    creditoId: string,
-    pagos: Partial<Pago>[] | Pago[],
-    numeroDePago: number,
-    monto: Prisma.Decimal,
-    today: moment.Moment,
-    fechaPago: string | Date
-): StatusPago => {
-    if (
-        pagos.some(
-            (pago) =>
-                pago?.numeroDePago === numeroDePago &&
-                pago?.monto?.toNumber() === monto.toNumber() &&
-                pago?.tipoDePago === 'REGULAR' &&
-                pago?.creditoId === creditoId
-        )
-    ) {
-        return StatusPago.pagado;
-    } else if (moment(today.format('YYYY-MM-DD')).isSameOrBefore(moment(fechaPago).format('YYYY-MM-DD'))) {
-        return StatusPago.corriente;
-    } else {
-        return StatusPago.adeuda;
-    }
-};
-
-/**
- *
  * @param amortizacion
  * @param pagos
  * @param today
@@ -212,7 +177,7 @@ export const getPagos = (
     const pagosSum = pagos.length > 0 ? (pagos as Pago[]).reduce((acc, obj) => acc + obj.monto.toNumber(), 0) : 0;
     let acum = pagosSum;
     let statusReturn: StatusPago = StatusPago.corriente;
-    const evalAmortizacion: IAmortizacion[] = amortizacion.map(({ numeroDePago, fechaDePago, status, monto }) => {
+    const evalAmortizacion: IAmortizacion[] = amortizacion.map(({ numeroDePago, fechaDePago, monto }) => {
         let montoReturn = monto;
         if (moment(today.format('YYYY-MM-DD')).isAfter(moment(fechaDePago).format('YYYY-MM-DD'))) {
             if (pagosSum < monto.toNumber()) {
@@ -231,11 +196,13 @@ export const getPagos = (
                 status: statusReturn,
             };
         } else {
-            if (pagosSum >= monto.toNumber()) {
+            if (acum > 0 && acum >= monto.toNumber()) {
                 statusReturn = StatusPago.pagado;
+                acum -= monto.toNumber();
             } else {
-                montoReturn = new Prisma.Decimal(monto.toNumber() - pagosSum);
+                montoReturn = new Prisma.Decimal(monto.toNumber());
                 statusReturn = StatusPago.corriente;
+                acum = 0;
             }
             return { numeroDePago, fechaDePago, status: statusReturn, monto: montoReturn };
         }

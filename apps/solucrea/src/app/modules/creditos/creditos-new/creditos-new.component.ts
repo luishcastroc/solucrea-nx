@@ -4,9 +4,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
+import { HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
-import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { Producto } from '@prisma/client';
 import {
@@ -26,7 +25,7 @@ import {
     IUsuarioReturnDto,
 } from 'api/dtos';
 import { Moment } from 'moment';
-import { debounceTime, distinctUntilChanged, filter, mergeMap, Observable, of, Subject, takeUntil, tap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { CreditosService } from '../_services/creditos.service';
 import {
@@ -76,7 +75,6 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
     selectedCliente$!: Observable<IClienteReturnDto | undefined>;
     selectedOtro$!: Observable<boolean>;
     selectedModalidadDeSeguro$!: Observable<IModalidadSeguroReturnDto | undefined>;
-    successToast$!: Observable<HotToastClose>;
 
     creditoId!: string | null;
     creditosForm!: UntypedFormGroup;
@@ -310,7 +308,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
             .pipe(
                 ofActionCompleted(SelectCliente, CreateCredito),
                 takeUntil(this._unsubscribeAll),
-                mergeMap((result) => {
+                tap((result) => {
                     const { error, successful } = result.result;
                     const { action } = result;
                     let message;
@@ -328,25 +326,14 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
                     if (successful) {
                         if (action instanceof CreateCredito) {
                             message = 'Crédito agregado exitosamente.';
-                            this.successToast$ = this._toast
-                                .success(message, {
-                                    duration: 4000,
-                                    position: 'bottom-center',
-                                })
-                                .afterClosed.pipe(
-                                    tap((e) =>
-                                        this._store.dispatch(
-                                            new Navigate([
-                                                this.clienteId ? `creditos/cliente/${this.clienteId}/` : 'creditos/',
-                                            ])
-                                        )
-                                    )
-                                );
+                            this._toast.success(message, {
+                                duration: 4000,
+                                position: 'bottom-center',
+                            });
 
-                            return this.successToast$;
+                            this.creditosForm.reset();
                         }
                     }
-                    return of(result);
                 })
             )
             .subscribe();

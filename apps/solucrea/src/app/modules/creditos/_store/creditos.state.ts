@@ -1,4 +1,3 @@
-import { selectCredito } from './../../../../../../api/src/app/util/select';
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { ISegurosData } from '@solucrea-utils';
@@ -16,7 +15,7 @@ import { AjustesCreditosService, AjustesUsuarioService } from 'app/modules/ajust
 import { CajaService } from 'app/modules/caja/_services/caja.service';
 import { ClientesService } from 'app/modules/clientes';
 import { ParentescosService } from 'app/shared';
-import { sortBy } from 'lodash';
+import { cloneDeep, sortBy } from 'lodash';
 import { forkJoin, tap } from 'rxjs';
 
 import { CreditosService } from '../_services/creditos.service';
@@ -34,6 +33,7 @@ import {
     GetSucursalesWhereCaja,
     GetTurnosCount,
     ModeCredito,
+    SavePago,
     SelectCliente,
     SelectClienteReferral,
     SelectCredito,
@@ -43,7 +43,7 @@ import {
     SelectSeguro,
 } from './creditos.actions';
 import { CreditosStateModel } from './creditos.model';
-import { Producto, Role } from '.prisma/client';
+import { Pago, Producto, Role } from '.prisma/client';
 
 @State<CreditosStateModel>({
     name: 'creditos',
@@ -178,11 +178,11 @@ export class CreditosState {
     }
 
     @Action(GetAllCreditosCliente)
-    getAllCreditosCliente(ctx: StateContext<CreditosStateModel>, { id, status }: GetAllCreditosCliente) {
-        ctx.patchState({ loading: true });
+    getAllCreditosCliente({ patchState }: StateContext<CreditosStateModel>, { id, status }: GetAllCreditosCliente) {
+        patchState({ loading: true });
         return this._creditosService.getCreditosCliente(id, status).pipe(
             tap((creditos: ICreditoReturnDto[]) => {
-                ctx.patchState({
+                patchState({
                     creditos,
                     loading: false,
                 });
@@ -191,11 +191,11 @@ export class CreditosState {
     }
 
     @Action(GetAllCreditos)
-    getAllCreditos(ctx: StateContext<CreditosStateModel>, { status }: GetAllCreditos) {
-        ctx.patchState({ loading: true });
+    getAllCreditos({ patchState }: StateContext<CreditosStateModel>, { status }: GetAllCreditos) {
+        patchState({ loading: true });
         return this._creditosService.getCreditos(status).pipe(
             tap((creditos: ICreditoReturnDto[]) => {
-                ctx.patchState({
+                patchState({
                     creditos,
                     loading: false,
                 });
@@ -204,7 +204,7 @@ export class CreditosState {
     }
 
     @Action(GetCreditosConfiguration)
-    getCreditosConfiguration(ctx: StateContext<CreditosStateModel>) {
+    getCreditosConfiguration({ patchState }: StateContext<CreditosStateModel>) {
         return forkJoin([
             this._ajustesCreditosService.getProductos(),
             this._creditosService.getSegurosData(),
@@ -215,7 +215,7 @@ export class CreditosState {
                 if (segurosData) {
                     segurosData.modalidadesDeSeguro = sortBy(segurosData.modalidadesDeSeguro, 'titulo');
                 }
-                ctx.patchState({
+                patchState({
                     productos: sortBy(productos, 'descripcion'),
                     segurosData,
                     colocadores: sortBy(colocadores, 'apellido'),
@@ -226,21 +226,24 @@ export class CreditosState {
     }
 
     @Action(GetSucursalesWhereCaja)
-    getSucursalesWhereCaja(ctx: StateContext<CreditosStateModel>, { minAmount, maxAmount }: GetSucursalesWhereCaja) {
+    getSucursalesWhereCaja(
+        { patchState }: StateContext<CreditosStateModel>,
+        { minAmount, maxAmount }: GetSucursalesWhereCaja
+    ) {
         return this._creditosService.getSucursalesWithCaja(minAmount, maxAmount).pipe(
             tap((sucursales) => {
                 if (sucursales) {
-                    ctx.patchState({ sucursales: sortBy(sucursales, 'descripcion') });
+                    patchState({ sucursales: sortBy(sucursales, 'descripcion') });
                 }
             })
         );
     }
 
     @Action(GetClienteData)
-    getClienteData(ctx: StateContext<CreditosStateModel>, { id }: GetClienteData) {
+    getClienteData({ patchState }: StateContext<CreditosStateModel>, { id }: GetClienteData) {
         return this._clientesService.getCliente(id).pipe(
             tap((selectedCliente: IClienteReturnDto) => {
-                ctx.patchState({
+                patchState({
                     selectedCliente,
                 });
             })
@@ -248,30 +251,33 @@ export class CreditosState {
     }
 
     @Action(SelectCliente)
-    selectClienteForCredito(ctx: StateContext<CreditosStateModel>, { cliente }: SelectCliente) {
-        ctx.patchState({ selectedCliente: cliente, clientes: undefined });
+    selectClienteForCredito({ patchState }: StateContext<CreditosStateModel>, { cliente }: SelectCliente) {
+        patchState({ selectedCliente: cliente, clientes: undefined });
     }
 
     @Action(SelectClienteReferral)
-    selectClienteReferralForCredito(ctx: StateContext<CreditosStateModel>, { cliente }: SelectClienteReferral) {
-        ctx.patchState({ selectedClienteReferral: cliente, clientes: undefined });
+    selectClienteReferralForCredito(
+        { patchState }: StateContext<CreditosStateModel>,
+        { cliente }: SelectClienteReferral
+    ) {
+        patchState({ selectedClienteReferral: cliente, clientes: undefined });
     }
 
     @Action(SelectProducto)
-    selectProductoForCredito(ctx: StateContext<CreditosStateModel>, { id }: SelectProducto) {
+    selectProductoForCredito({ getState, patchState }: StateContext<CreditosStateModel>, { id }: SelectProducto) {
         let selectedProducto;
         if (id === null) {
             selectedProducto = undefined;
         } else {
-            selectedProducto = ctx.getState().productos.filter((producto: Producto) => producto.id === id)[0];
+            selectedProducto = getState().productos.filter((producto: Producto) => producto.id === id)[0];
         }
-        ctx.patchState({ selectedProducto });
+        patchState({ selectedProducto });
     }
 
     @Action(GetClienteWhere)
-    getClientesWhere(ctx: StateContext<CreditosStateModel>, { data }: GetClienteWhere) {
+    getClientesWhere({ getState, patchState }: StateContext<CreditosStateModel>, { data }: GetClienteWhere) {
         const search = { data };
-        const { selectedCliente } = ctx.getState();
+        const { selectedCliente } = getState();
         return this._clientesService.getClientesWhere(search).pipe(
             tap((clientesReturn: IClienteReturnDto[]) => {
                 if (clientesReturn.length > 0) {
@@ -281,11 +287,11 @@ export class CreditosState {
                         }
                     });
 
-                    ctx.patchState({
+                    patchState({
                         clientes,
                     });
                 } else {
-                    ctx.patchState({
+                    patchState({
                         clientes: [],
                     });
                 }
@@ -294,10 +300,10 @@ export class CreditosState {
     }
 
     @Action(GetCreditosCount)
-    getCreditosCount(ctx: StateContext<CreditosStateModel>, { id }: GetCreditosCount) {
+    getCreditosCount({ patchState }: StateContext<CreditosStateModel>, { id }: GetCreditosCount) {
         return this._creditosService.getCreditosCount(id).pipe(
             tap((creditosCount: number) => {
-                ctx.patchState({
+                patchState({
                     creditosCount,
                 });
             })
@@ -305,10 +311,10 @@ export class CreditosState {
     }
 
     @Action(GetClientesCount)
-    getClientesCount(ctx: StateContext<CreditosStateModel>) {
+    getClientesCount({ patchState }: StateContext<CreditosStateModel>) {
         return this._clientesService.getClientesCount().pipe(
             tap((clientesCount: number) => {
-                ctx.patchState({
+                patchState({
                     clientesCount,
                 });
             })
@@ -316,10 +322,10 @@ export class CreditosState {
     }
 
     @Action(GetTurnosCount)
-    getTurnosCount(ctx: StateContext<CreditosStateModel>) {
+    getTurnosCount({ patchState }: StateContext<CreditosStateModel>) {
         return this._cajaService.getTurnosCount().pipe(
             tap((turnosCount: number) => {
-                ctx.patchState({
+                patchState({
                     turnosCount,
                 });
             })
@@ -327,68 +333,79 @@ export class CreditosState {
     }
 
     @Action(ModeCredito)
-    toggleEditModeCredito(ctx: StateContext<CreditosStateModel>, action: ModeCredito) {
+    toggleEditModeCredito({ patchState }: StateContext<CreditosStateModel>, action: ModeCredito) {
         const { payload } = action;
-        ctx.patchState({ editMode: payload });
+        patchState({ editMode: payload });
     }
 
     @Action(SelectCredito)
-    selectCredito(ctx: StateContext<CreditosStateModel>, { id }: SelectCredito) {
+    selectCredito({ patchState }: StateContext<CreditosStateModel>, { id }: SelectCredito) {
         return this._creditosService.getCredito(id).pipe(
             tap((selectedCredito) => {
-                if (selectCredito) {
-                    ctx.patchState({ selectedCredito });
+                if (selectedCredito) {
+                    patchState({ selectedCredito });
                 }
             })
         );
     }
 
     @Action(SelectParentesco)
-    selectParentesco(ctx: StateContext<CreditosStateModel>, { id }: SelectParentesco) {
-        const parentesco = ctx.getState().parentescos.filter((par: IParentescoReturnDto) => par.id === id)[0];
+    selectParentesco({ getState, patchState }: StateContext<CreditosStateModel>, { id }: SelectParentesco) {
+        const parentesco = getState().parentescos.filter((par: IParentescoReturnDto) => par.id === id)[0];
         if (parentesco.descripcion.includes('Otro')) {
-            ctx.patchState({ selectedOtro: true });
+            patchState({ selectedOtro: true });
         } else {
-            ctx.patchState({ selectedOtro: false });
+            patchState({ selectedOtro: false });
         }
     }
 
     @Action(SelectModalidadSeguro)
-    selectModalidadSeguro(ctx: StateContext<CreditosStateModel>, { id }: SelectModalidadSeguro) {
-        const selectedModalidadDeSeguro = ctx
-            .getState()
-            .segurosData?.modalidadesDeSeguro.filter((modalidad) => modalidad.id === id)[0];
+    selectModalidadSeguro({ getState, patchState }: StateContext<CreditosStateModel>, { id }: SelectModalidadSeguro) {
+        const selectedModalidadDeSeguro = getState().segurosData?.modalidadesDeSeguro.filter(
+            (modalidad) => modalidad.id === id
+        )[0];
 
-        ctx.patchState({ selectedModalidadDeSeguro });
+        patchState({ selectedModalidadDeSeguro });
     }
 
     @Action(SelectSeguro)
-    selectSeguro(ctx: StateContext<CreditosStateModel>, { id }: SelectSeguro) {
+    selectSeguro({ getState, patchState }: StateContext<CreditosStateModel>, { id }: SelectSeguro) {
         let selectedSeguro;
         if (id === null) {
             selectedSeguro = undefined;
         } else {
-            selectedSeguro = ctx
-                .getState()
-                .segurosData?.seguros.filter((seguro: ISeguroReturnDto) => seguro.id === id)[0];
+            selectedSeguro = getState().segurosData?.seguros.filter((seguro: ISeguroReturnDto) => seguro.id === id)[0];
         }
-        ctx.patchState({ selectedSeguro });
+        patchState({ selectedSeguro });
     }
 
     @Action(CreateCredito)
-    createCredito(ctx: StateContext<CreditosStateModel>, { data }: CreateCredito) {
+    createCredito({ getState, patchState }: StateContext<CreditosStateModel>, { data }: CreateCredito) {
         return this._creditosService.createCredito(data).pipe(
             tap((credito: ICreditoReturnDto) => {
-                const state = ctx.getState();
+                const state = getState();
                 const creditos = [...state.creditos, credito];
-                ctx.patchState({ creditos });
+                patchState({ creditos });
+            })
+        );
+    }
+
+    @Action(SavePago)
+    savePago({ getState, patchState }: StateContext<CreditosStateModel>, { data }: SavePago) {
+        return this._creditosService.savePago(data).pipe(
+            tap((pago: Pago) => {
+                const state = getState();
+                const creditos = cloneDeep(state.creditos);
+                const idx = creditos.findIndex((credito) => credito.id === data.credito?.connect?.id);
+                creditos[idx].pagos.push(pago);
+                patchState({ creditos, selectedCredito: creditos[idx] });
             })
         );
     }
 
     @Action(ClearCreditosState)
-    clearState(ctx: StateContext<CreditosStateModel>) {
-        ctx.patchState({
+    clearState({ patchState }: StateContext<CreditosStateModel>) {
+        patchState({
             creditos: [],
             editMode: 'new',
             selectedCredito: undefined,
@@ -411,8 +428,8 @@ export class CreditosState {
     }
 
     @Action(ClearCreditosDetails)
-    clearDetailState(ctx: StateContext<CreditosStateModel>) {
-        ctx.patchState({
+    clearDetailState({ patchState }: StateContext<CreditosStateModel>) {
+        patchState({
             productos: [],
             sucursales: [],
             clientes: [],

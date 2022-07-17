@@ -132,10 +132,10 @@ export class CreditosClienteListComponent implements OnInit {
      * Go to Credito details
      */
     goToDetails(id: string) {
+        console.log(`creditoId: ${id}`);
         this._store.dispatch([
             new Navigate([`creditos/cliente/${this.clienteId}/detail/${id}`]),
             new ModeCredito('edit'),
-            new SelectCredito(id),
         ]);
     }
 

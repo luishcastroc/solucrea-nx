@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
+import { HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
@@ -17,7 +17,7 @@ import {
     SelectSucursal,
 } from 'app/modules/ajustes/_store';
 import { SharedService } from 'app/shared';
-import { mergeMap, Observable, of, Subject, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { TipoDireccion } from '.prisma/client';
 
@@ -31,7 +31,6 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
     @Select(AjustesSucursalesState.loading)
     loading$!: Observable<boolean>;
     loading = false;
-
     editMode$!: Observable<EditMode>;
     colonias$!: Observable<IColoniaReturnDto | undefined>;
     actions$!: Actions;
@@ -39,7 +38,6 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
     sucursalForm!: UntypedFormGroup;
     editMode!: EditMode;
     coloniasTemp$!: Observable<IColoniaReturnDto | []>;
-    successToast$!: Observable<HotToastClose>;
     phoneInputMask = createMask({
         mask: '(999)-999-99-99',
         autoUnmask: true,
@@ -109,7 +107,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
             .pipe(
                 ofActionCompleted(AddSucursal, EditSucursal),
                 takeUntil(this._unsubscribeAll),
-                mergeMap((result) => {
+                tap((result) => {
                     const { error, successful } = result.result;
                     const { action } = result;
                     this.loading = false;
@@ -123,26 +121,20 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
                         });
                     }
                     if (successful) {
-                        const message = 'Sucursal salvada exitosamente.';
-                        this.successToast$ = this._toast
-                            .success(message, {
+                        if (action instanceof AddSucursal) {
+                            const message = 'Sucursal salvada exitosamente.';
+                            this._toast.success(message, {
                                 duration: 4000,
                                 position: 'bottom-center',
-                            })
-                            .afterClosed.pipe(
-                                takeUntil(this._unsubscribeAll),
-                                tap((e) => this._store.dispatch(new Navigate(['/ajustes/sucursales/'])))
-                            );
-
-                        if (action instanceof AddSucursal) {
-                            return this.successToast$;
+                            });
+                            this.sucursalForm.reset();
                         } else {
                             this.sucursalForm.markAsPristine();
                             // we enable the form
                             this.sucursalForm.enable();
                         }
                     }
-                    return of(result);
+                    this.sucursalForm.enable();
                 })
             )
             .subscribe();

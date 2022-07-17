@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
+import { HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
@@ -16,7 +16,7 @@ import {
 } from 'app/modules/ajustes/_store';
 import { IDays, IFrecuencia } from 'app/modules/ajustes/models';
 import { SharedService } from 'app/shared';
-import { mergeMap, Observable, of, Subject, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { dias } from '../../_config/dias';
 import { defaultFrecuencias } from '../../_config/frecuencias';
@@ -31,7 +31,6 @@ import { Producto, TipoPenalizacion } from '.prisma/client';
 export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
     @Select(AjustesCreditosState.loading)
     loading$!: Observable<boolean>;
-    successToast$!: Observable<HotToastClose>;
     loading = false;
     creditosForm!: UntypedFormGroup;
     editMode!: EditMode;
@@ -176,7 +175,7 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
             .pipe(
                 ofActionCompleted(AddCredito, EditCredito),
                 takeUntil(this._unsubscribeAll),
-                mergeMap((result) => {
+                tap((result) => {
                     const { error, successful } = result.result;
                     const { action } = result;
                     this.loading = false;
@@ -194,22 +193,20 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
                         if (action instanceof EditCredito) {
                             message = 'Producto actualizado exitosamente';
                         }
-                        this.successToast$ = this._toast
-                            .success(message, {
-                                duration: 4000,
-                                position: 'bottom-center',
-                            })
-                            .afterClosed.pipe(tap((e) => this._store.dispatch(new Navigate(['/ajustes/creditos/']))));
+
+                        this._toast.success(message, {
+                            duration: 4000,
+                            position: 'bottom-center',
+                        });
 
                         if (action instanceof AddCredito) {
-                            return this.successToast$;
+                            this.creditosForm.reset();
                         } else {
                             this.creditosForm.markAsPristine();
-                            // we enable the form
-                            this.creditosForm.enable();
                         }
                     }
-                    return of(result);
+                    // we enable the form
+                    this.creditosForm.enable();
                 })
             )
             .subscribe();

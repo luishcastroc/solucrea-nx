@@ -119,7 +119,7 @@ export class SucursalesService {
                 delete data.direccion.codigoPostal;
             }
             const update: Prisma.DireccionUncheckedUpdateWithoutSucursalesInput = { ...data.direccion };
-            const direccion: Prisma.DireccionUpdateOneRequiredWithoutSucursalesInput = {
+            const direccion: Prisma.DireccionUpdateOneRequiredWithoutSucursalesNestedInput = {
                 update,
             };
             sucursalUpdate = { ...data, direccion };

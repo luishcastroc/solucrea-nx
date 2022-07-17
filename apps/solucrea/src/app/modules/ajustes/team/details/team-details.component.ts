@@ -5,17 +5,18 @@ import {
     Component,
     OnDestroy,
     OnInit,
+    ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormGroupDirective, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { HotToastClose, HotToastService } from '@ngneat/hot-toast';
+import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { EditMode } from 'app/core/models';
 import { AddUsuario, AjustesUsuariosState, ClearUsuarioState, EditUsuario } from 'app/modules/ajustes/_store';
-import { mergeMap, Observable, of, Subject, tap } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 
 import { defaultRoles } from '../../_config/roles';
 import { IRole } from '../../models/roles.model';
@@ -29,9 +30,9 @@ import { createPasswordStrengthValidator } from '../../validators/custom-ajustes
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TeamDetailsComponent implements OnInit, OnDestroy {
+    @ViewChild('formDirective') formDirective!: FormGroupDirective;
     editMode$!: Observable<EditMode>;
     selectedUsuario$!: Observable<Usuario | undefined>;
-    successToast$!: Observable<HotToastClose>;
     actions$!: Actions;
     editMode!: EditMode;
     selectedUsuario!: Usuario | undefined;
@@ -115,7 +116,8 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
     setActions(): void {
         this.actions$ = this._actions$.pipe(
             ofActionCompleted(EditUsuario, AddUsuario),
-            mergeMap((result) => {
+            tap((result) => {
+                this.usuarioForm.enable();
                 const { error, successful } = result.result;
                 const { action } = result;
                 this.loading = false;
@@ -129,18 +131,16 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
                 }
                 if (successful) {
                     const message = this.successMessage;
-                    this.successToast$ = this._toast
-                        .success(message, {
+                    if (action instanceof AddUsuario) {
+                        this._toast.success(message, {
                             duration: 4000,
                             position: 'bottom-center',
-                        })
-                        .afterClosed.pipe(tap((e) => this._store.dispatch(new Navigate(['/ajustes/usuarios/']))));
+                        });
 
-                    if (action instanceof AddUsuario) {
-                        return this.successToast$;
+                        this.usuarioForm.reset();
+                        this.formDirective.resetForm();
                     }
                 }
-                return of(result);
             })
         );
     }
