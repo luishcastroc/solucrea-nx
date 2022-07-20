@@ -121,18 +121,20 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
                         });
                     }
                     if (successful) {
+                        let message;
                         if (action instanceof AddSucursal) {
-                            const message = 'Sucursal salvada exitosamente.';
-                            this._toast.success(message, {
-                                duration: 4000,
-                                position: 'bottom-center',
-                            });
+                            message = 'Sucursal salvada exitosamente.';
                             this.sucursalForm.reset();
                         } else {
+                            message = 'Sucursal actualizada exitosamente.';
                             this.sucursalForm.markAsPristine();
                             // we enable the form
                             this.sucursalForm.enable();
                         }
+                        this._toast.success(message, {
+                            duration: 4000,
+                            position: 'bottom-center',
+                        });
                     }
                     this.sucursalForm.enable();
                 })

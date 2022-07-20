@@ -123,7 +123,10 @@
                             </div>
                             <!-- Penalización -->
                             <div>
-                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-form-field
+                                    class="fuse-mat-no-subscript w-full"
+                                    *ngIf="tipoPenalizacion.value === 'MONTO'"
+                                >
                                     <mat-label>Penalización</mat-label>
                                     <mat-icon
                                         class="icon-size-5"
@@ -131,16 +134,25 @@
                                         matPrefix
                                     ></mat-icon>
                                     <input
-                                        *ngIf="tipoPenalizacion.value === 'PORCENTAJE'"
-                                        [formControlName]="'penalizacion'"
-                                        matInput
-                                        [inputMask]="percentageInputMask"
-                                    />
-                                    <input
-                                        *ngIf="tipoPenalizacion.value === 'MONTO'"
                                         [formControlName]="'penalizacion'"
                                         matInput
                                         [inputMask]="currencyInputMask"
+                                    />
+                                </mat-form-field>
+                                <mat-form-field
+                                    class="fuse-mat-no-subscript w-full"
+                                    *ngIf="tipoPenalizacion.value === 'PORCENTAJE'"
+                                >
+                                    <mat-label>Penalización</mat-label>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_outline:calculator'"
+                                        matPrefix
+                                    ></mat-icon>
+                                    <input
+                                        [formControlName]="'penalizacion'"
+                                        matInput
+                                        [inputMask]="percentageInputMask"
                                     />
                                 </mat-form-field>
                                 <ng-container *ngIf="penalizacion.touched">
