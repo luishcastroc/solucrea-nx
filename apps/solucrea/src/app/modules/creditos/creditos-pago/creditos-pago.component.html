@@ -38,7 +38,11 @@
                     <div class="flex flex-col">
                         <div class="font-bold">Pago para no generar interés:</div>
                         <div class="mt-2">
-                            {{ credito.pagoNoIntereses | decimalToNumber | currency: 'MXN':'symbol' }}
+                            {{
+                                credito.pagoNoIntereses
+                                    ? credito.pagoNoIntereses
+                                    : (0 | decimalToNumber | currency: 'MXN':'symbol')
+                            }}
                         </div>
                     </div>
                 </div>

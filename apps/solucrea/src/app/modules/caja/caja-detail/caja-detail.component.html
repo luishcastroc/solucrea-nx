@@ -29,6 +29,7 @@
             <!-- Form -->
             <form
                 [formGroup]="cajaForm"
+                #formDirective="ngForm"
                 class="flex-auto flex flex-col max-w-3xl mt-8"
                 *ngIf="
                     ((editMode === 'edit' || editMode === 'cierre') && (selectedCaja$ | async)) || editMode === 'new'

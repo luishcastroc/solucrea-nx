@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormGroupDirective, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
@@ -22,6 +22,7 @@ import { checkIfEndDateBeforeStartDate, futureDateValidator } from '../validator
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CajaDetailComponent implements OnInit, OnDestroy {
+    @ViewChild('formDirective') formDirective!: FormGroupDirective;
     @Select(CajasState.sucursales)
     sucursales$!: Observable<ISucursalReturnDto[]>;
     editMode$!: Observable<EditMode>;
@@ -176,6 +177,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
                         if (action instanceof AddCaja) {
                             this.cajaForm.enable();
                             this.cajaForm.reset();
+                            this.formDirective.resetForm();
                         } else if (action instanceof EditCaja && this.editMode === 'cierre') {
                             this.saldoFinal.disable();
                             this.fechaCierre.disable();
