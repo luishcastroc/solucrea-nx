@@ -198,23 +198,23 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
         if (editMode === 'new' || editMode === 'edit') {
             return this._formBuilder.group({
                 id: [this._route.snapshot.paramMap.get('id')],
-                saldoInicial: ['', Validators.required],
+                saldoInicial: [0, Validators.required],
                 fechaApertura: ['', Validators.required, futureDateValidator()],
                 sucursal: ['', Validators.required],
                 observaciones: [''],
-                saldoActual: [''],
+                saldoActual: [0],
             });
         } else {
             return this._formBuilder.group(
                 {
                     id: [this._route.snapshot.paramMap.get('id')],
-                    saldoInicial: ['', Validators.required],
+                    saldoInicial: [0, Validators.required],
                     fechaApertura: ['', Validators.required, futureDateValidator()],
                     sucursal: ['', Validators.required],
                     observaciones: [''],
                     fechaCierre: ['', Validators.required],
-                    saldoFinal: ['', Validators.required],
-                    saldoActual: [''],
+                    saldoFinal: [0, Validators.required],
+                    saldoActual: [0],
                 },
                 { validators: checkIfEndDateBeforeStartDate() }
             );
@@ -232,7 +232,12 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
         if (editMode === 'new') {
             const fechaApertura = (this.fechaApertura.value as Moment).toISOString();
             const { saldoActual, ...rest } = this.cajaForm.value;
-            const caja: CreateCajaDto = { ...rest, fechaApertura };
+            const caja: CreateCajaDto = {
+                ...rest,
+                saldoInicial: Number(rest.saldoInicial),
+                saldoFinal: Number(rest.saldoFinal),
+                fechaApertura,
+            };
             this._store.dispatch(new AddCaja(caja));
         } else if (editMode === 'edit') {
             let changedCaja = this._shared.getDirtyValues(this.cajaForm);
@@ -244,7 +249,9 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
             this._store.dispatch(new EditCaja(this.id.value, changedCaja));
         } else {
             const fechaCierre = (this.fechaCierre.value as Moment).toISOString();
-            this._store.dispatch(new EditCaja(this.id.value, { fechaCierre, saldoFinal: this.saldoFinal.value }));
+            this._store.dispatch(
+                new EditCaja(this.id.value, { fechaCierre, saldoFinal: Number(this.saldoFinal.value) })
+            );
         }
     }
 

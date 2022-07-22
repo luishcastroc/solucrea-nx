@@ -467,8 +467,8 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
      * @param colonia1
      * @param colonia2
      */
-    compareColonias(id: string, colonia2: IColonias) {
-        return id && colonia2 && id === colonia2.id;
+    compareColonias(id: string, colonia2: IColonias): boolean {
+        return id && colonia2 && id === colonia2.id ? true : false;
     }
 
     /**

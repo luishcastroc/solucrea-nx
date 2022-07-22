@@ -18,7 +18,6 @@
         *ngIf="selectedCredito$ | async as credito"
         fuseScrollbar
         [fuseScrollbarOptions]="{
-            wheelPropagation: inner,
             suppressScrollX: true
         }"
     >
@@ -28,17 +27,19 @@
                     <!-- Saldo -->
                     <div class="flex flex-col">
                         <div class="font-bold">Saldo al día de hoy:</div>
-                        <div class="mt-2">{{ credito.saldo | currency: 'MXN':'symbol' }}</div>
+                        <div class="mt-2">{{ credito.saldo | decimalToNumber | currency: 'MXN':'symbol' }}</div>
                     </div>
                     <!-- Saldo Vencido -->
                     <div class="flex flex-col">
                         <div class="font-bold">Saldo Vencido/Pago Mínimo:</div>
-                        <div class="mt-2">{{ credito.saldoVencido | currency: 'MXN':'symbol' }}</div>
+                        <div class="mt-2">{{ credito.saldoVencido | decimalToNumber | currency: 'MXN':'symbol' }}</div>
                     </div>
                     <!-- Pago No Intereses -->
                     <div class="flex flex-col">
                         <div class="font-bold">Pago para no generar interés:</div>
-                        <div class="mt-2">{{ credito.pagoNoIntereses | currency: 'MXN':'symbol' }}</div>
+                        <div class="mt-2">
+                            {{ credito.pagoNoIntereses | decimalToNumber | currency: 'MXN':'symbol' }}
+                        </div>
                     </div>
                 </div>
                 <form [formGroup]="pagosForm" class="flex flex-col w-full">
@@ -84,8 +85,8 @@
                                     }}</mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <ng-container *ngIf="tipoDePago.touched">
-                                <mat-error *ngIf="tipoDePago.errors?.['required']">
+                            <ng-container *ngIf="tipoDePago?.touched">
+                                <mat-error *ngIf="tipoDePago?.errors?.['required']">
                                     El tipo de pago es requerido.
                                 </mat-error>
                             </ng-container>
@@ -112,7 +113,7 @@
                         type="button"
                         [color]="'primary'"
                         [class.spinner-loading]="loading$ | async"
-                        [disabled]="!monto.touched || monto.invalid"
+                        [disabled]="!monto?.touched || monto?.invalid"
                         (click)="savePago()"
                     >
                         Salvar

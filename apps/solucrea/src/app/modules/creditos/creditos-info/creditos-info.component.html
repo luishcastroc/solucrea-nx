@@ -18,12 +18,11 @@
         *ngIf="selectedCredito$ | async as credito"
         fuseScrollbar
         [fuseScrollbarOptions]="{
-            wheelPropagation: inner,
             suppressScrollX: true
         }"
     >
         <mat-stepper [linear]="true" #stepper labelPosition="bottom" class="flex flex-col flex-auto">
-            <mat-step [stepControl]="clienteForm"
+            <mat-step
                 ><ng-template matStepLabel>Datos Generales</ng-template>
                 <div class="z-20 flex flex-col px-2 py-4 md:px-10">
                     <div class="flex flex-col gap-10">
@@ -32,18 +31,18 @@
                             <div class="flex flex-col">
                                 <div class="font-bold">Nombre Cliente:</div>
                                 <div class="mt-2">
-                                    {{ credito.cliente?.nombre }} {{ credito.cliente?.apellidoPaterno }}
-                                    {{ credito.cliente?.apellidoMaterno }}
+                                    {{ credito.cliente.nombre }} {{ credito.cliente.apellidoPaterno }}
+                                    {{ credito.cliente.apellidoMaterno }}
                                 </div>
                             </div>
                             <!-- Teléfono -->
                             <div class="flex flex-col">
                                 <div class="font-bold">Teléfono:</div>
                                 <div class="mt-2">
-                                    ({{ credito.cliente?.telefono1 | slice: 0:3 }})-{{
-                                        credito.cliente?.telefono1 | slice: 3:6
-                                    }}-{{ credito.cliente?.telefono1 | slice: 6:8 }}-{{
-                                        credito.cliente?.telefono1 | slice: 8:10
+                                    ({{ credito.cliente.telefono1 | slice: 0:3 }})-{{
+                                        credito.cliente.telefono1 | slice: 3:6
+                                    }}-{{ credito.cliente.telefono1 | slice: 6:8 }}-{{
+                                        credito.cliente.telefono1 | slice: 8:10
                                     }}
                                 </div>
                             </div>
@@ -51,51 +50,51 @@
                             <div class="flex flex-col">
                                 <div class="font-bold">Fecha de Nacimiento:</div>
                                 <div class="mt-2">
-                                    {{ credito.cliente?.fechaDeNacimiento | date: 'd MMM yyyy':'UTC' }}
+                                    {{ credito.cliente.fechaDeNacimiento | date: 'd MMM yyyy':'UTC' }}
                                 </div>
                             </div>
                             <!-- RFC del Cliente -->
                             <div class="flex flex-col">
                                 <div class="font-bold">RFC:</div>
                                 <div class="mt-2">
-                                    {{ credito.cliente?.rfc }}
+                                    {{ credito.cliente.rfc }}
                                 </div>
                             </div>
                             <!-- CURP del Cliente -->
                             <div class="flex flex-col col-span-2 md:col-auto">
                                 <div class="font-bold">CURP:</div>
                                 <div class="mt-2">
-                                    {{ credito.cliente?.curp }}
+                                    {{ credito.cliente.curp }}
                                 </div>
                             </div>
                             <!-- Sucursal -->
                             <div class="flex flex-col">
                                 <div class="font-bold">Sucursal:</div>
                                 <div class="mt-2">
-                                    {{ credito.sucursal?.nombre }}
+                                    {{ credito.sucursal.nombre }}
                                 </div>
                             </div>
                             <!-- Nombre del Producto -->
                             <div class="flex flex-col">
                                 <div class="font-bold">Nombre del Producto:</div>
                                 <div class="mt-2">
-                                    {{ credito.producto?.nombre }}
+                                    {{ credito.producto.nombre }}
                                 </div>
                             </div>
                             <!-- Tasa de Interés -->
                             <div class="flex flex-col">
                                 <div class="font-bold">Tasa de Interés:</div>
-                                <div class="mt-2">{{ credito.producto?.interes }}%</div>
+                                <div class="mt-2">{{ credito.producto.interes }}%</div>
                             </div>
                             <!-- Monto Otorgado -->
                             <div class="flex flex-col">
                                 <div class="font-bold">Monto Otorgado:</div>
-                                <div class="mt-2">{{ credito.monto | currency: 'MXN':'symbol' }}</div>
+                                <div class="mt-2">{{ credito.monto | decimalToNumber | currency: 'MXN':'symbol' }}</div>
                             </div>
                             <!-- Monto Otorgado -->
                             <div class="flex flex-col">
                                 <div class="font-bold">Cuota:</div>
-                                <div class="mt-2">{{ credito.cuota | currency: 'MXN':'symbol' }}</div>
+                                <div class="mt-2">{{ credito.cuota | decimalToNumber | currency: 'MXN':'symbol' }}</div>
                             </div>
                             <!-- Fecha Desembolso -->
                             <div class="flex flex-col">
@@ -105,7 +104,7 @@
                             <!-- Pagos Realizados -->
                             <div class="flex flex-col">
                                 <div class="font-bold">Pagos Realizados:</div>
-                                <div class="mt-2">{{ credito.pagos?.length }}</div>
+                                <div class="mt-2">{{ credito.pagos.length }}</div>
                             </div>
                             <!-- Status -->
                             <div class="flex flex-col">
@@ -115,17 +114,21 @@
                             <!-- Saldo -->
                             <div class="flex flex-col">
                                 <div class="font-bold">Saldo al día de hoy:</div>
-                                <div class="mt-2">{{ credito.saldo | currency: 'MXN':'symbol' }}</div>
+                                <div class="mt-2">{{ credito.saldo | decimalToNumber | currency: 'MXN':'symbol' }}</div>
                             </div>
                             <!-- Saldo Vencido -->
                             <div class="flex flex-col">
                                 <div class="font-bold">Saldo Vencido:</div>
-                                <div class="mt-2">{{ credito.saldoVencido | currency: 'MXN':'symbol' }}</div>
+                                <div class="mt-2">
+                                    {{ credito.saldoVencido | decimalToNumber | currency: 'MXN':'symbol' }}
+                                </div>
                             </div>
                             <!-- Pago No Intereses -->
                             <div class="flex flex-col">
                                 <div class="font-bold">Pago para no generar interés:</div>
-                                <div class="mt-2">{{ credito.pagoNoIntereses | currency: 'MXN':'symbol' }}</div>
+                                <div class="mt-2">
+                                    {{ credito.pagoNoIntereses | decimalToNumber | currency: 'MXN':'symbol' }}
+                                </div>
                             </div>
                         </div>
                         <h2 class="text-3xl font-extrabold tracking-tight leading-none">Aval</h2>
@@ -134,18 +137,18 @@
                             <div class="flex flex-col">
                                 <div class="font-bold">Nombre:</div>
                                 <div class="mt-2">
-                                    {{ credito.aval?.nombre }} {{ credito.aval?.apellidoPaterno }}
-                                    {{ credito.aval?.apellidoMaterno }}
+                                    {{ credito.aval.nombre }} {{ credito.aval.apellidoPaterno }}
+                                    {{ credito.aval.apellidoMaterno }}
                                 </div>
                             </div>
                             <!-- Teléfono -->
                             <div class="flex flex-col">
                                 <div class="font-bold">Teléfono:</div>
                                 <div class="mt-2">
-                                    ({{ credito.aval?.telefono | slice: 0:3 }})-{{
-                                        credito.aval?.telefono | slice: 3:6
-                                    }}-{{ credito.aval?.telefono | slice: 6:8 }}-{{
-                                        credito.aval?.telefono | slice: 8:10
+                                    ({{ credito.aval.telefono | slice: 0:3 }})-{{
+                                        credito.aval.telefono | slice: 3:6
+                                    }}-{{ credito.aval.telefono | slice: 6:8 }}-{{
+                                        credito.aval.telefono | slice: 8:10
                                     }}
                                 </div>
                             </div>
@@ -153,7 +156,7 @@
                             <div class="flex flex-col">
                                 <div class="font-bold">Parentesco:</div>
                                 <div class="mt-2">
-                                    {{ credito.aval?.parentesco?.descripcion }}
+                                    {{ credito.aval.parentesco?.descripcion }}
                                 </div>
                             </div>
                         </div>
@@ -163,14 +166,13 @@
                         <button mat-stroked-button type="button" (click)="goToPago()">Pagar</button>
                     </div>
                 </div> </mat-step
-            ><mat-step [stepControl]="clienteForm"
+            ><mat-step
                 ><ng-template matStepLabel>Amortización</ng-template>
                 <div class="z-20 flex flex-col px-2 py-4 md:px-10">
                     <div
                         class="p-4 overflow-hidden basis-120"
                         fuseScrollbar
                         [fuseScrollbarOptions]="{
-                            wheelPropagation: inner,
                             suppressScrollX: true
                         }"
                     >
@@ -183,7 +185,7 @@
                         <div
                             class="grid grid-cols-1 mb-4 pb-8 hover:bg-fuse-bg-default md:mb-0 md:pb-0 md:grid-cols-4 gap-3 border-b-2 min-h-8 cursor-pointer"
                             *ngFor="let pago of credito.amortizacion"
-                            (click)="goToPago(pago)"
+                            (click)="goToPago()"
                         >
                             <div class="grid grid-cols-2 md:grid-cols-1">
                                 <div class="font-bold md:hidden">Numero de Pago:</div>
@@ -195,7 +197,9 @@
                             </div>
                             <div class="grid grid-cols-2 md:grid-cols-1">
                                 <div class="font-bold md:hidden">Monto:</div>
-                                <div class="text-center">{{ pago.monto | currency: 'MXN':'symbol' }}</div>
+                                <div class="text-center">
+                                    {{ pago.monto | decimalToNumber | currency: 'MXN':'symbol' }}
+                                </div>
                             </div>
                             <div class="grid grid-cols-2 md:grid-cols-1">
                                 <div class="font-bold md:hidden">Estado del Pago:</div>

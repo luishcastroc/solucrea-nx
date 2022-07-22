@@ -21,8 +21,5 @@
             "api/*": ["apps/api/src/app/*"],
             "app/*": ["apps/solucrea/src/app/*"]
         }
-    },
-    "angularCompilerOptions": {
-        "enableI18nLegacyMessageIdFormat": false
     }
 }

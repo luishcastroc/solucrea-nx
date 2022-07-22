@@ -2,8 +2,8 @@
 <div
     class="fuse-vertical-navigation-item-wrapper"
     [class.fuse-vertical-navigation-item-has-subtitle]="!!item.subtitle"
-    [ngClass]="item.classes?.wrapper"
-    *verifyRole="item.roles"
+    [ngClass]="$any(item.classes?.wrapper)"
+    *verifyRole="$any(item.roles)"
 >
     <!-- Item with an internal link -->
     <a
@@ -87,7 +87,7 @@
     <!-- Icon -->
     <mat-icon
         class="fuse-vertical-navigation-item-icon"
-        [ngClass]="item.classes?.icon"
+        [ngClass]="$any(item.classes?.icon)"
         *ngIf="item.icon"
         [svgIcon]="item.icon"
     ></mat-icon>
@@ -95,12 +95,12 @@
     <!-- Title & Subtitle -->
     <div class="fuse-vertical-navigation-item-title-wrapper">
         <div class="fuse-vertical-navigation-item-title">
-            <span [ngClass]="item.classes?.title">
+            <span [ngClass]="$any(item.classes?.title)">
                 {{ item.title }}
             </span>
         </div>
         <div class="fuse-vertical-navigation-item-subtitle" *ngIf="item.subtitle">
-            <span [ngClass]="item.classes?.subtitle">
+            <span [ngClass]="$any(item.classes?.subtitle)">
                 {{ item.subtitle }}
             </span>
         </div>
@@ -108,7 +108,7 @@
 
     <!-- Badge -->
     <div class="fuse-vertical-navigation-item-badge" *ngIf="item.badge">
-        <div class="fuse-vertical-navigation-item-badge-content" [ngClass]="item.badge.classes">
+        <div class="fuse-vertical-navigation-item-badge-content" [ngClass]="$any(item.badge.classes)">
             {{ item.badge.title }}
         </div>
     </div>

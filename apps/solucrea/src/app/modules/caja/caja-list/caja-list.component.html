@@ -39,18 +39,20 @@
                                 <div class="flex flex-col flex-auto">
                                     <div class="font-bold">Saldo Inicial:</div>
                                     <div class="mt-2">
-                                        {{ caja.saldoInicial | currency: 'MXN':'symbol' }}
+                                        {{ caja.saldoInicial | decimalToNumber | currency: 'MXN':'symbol' }}
                                     </div>
                                 </div>
                                 <!-- Saldo Actual -->
                                 <div class="flex flex-col flex-auto">
                                     <div class="font-bold">Saldo Actual:</div>
-                                    <div class="mt-2">{{ caja.saldoActual | currency: 'MXN':'symbol' }}</div>
+                                    <div class="mt-2">
+                                        {{ caja.saldoActual | decimalToNumber | currency: 'MXN':'symbol' }}
+                                    </div>
                                 </div>
                                 <!-- Sucursal -->
                                 <div class="flex flex-col">
                                     <div class="font-bold">Sucursal:</div>
-                                    <div class="mt-2">{{ caja.sucursal?.nombre }}</div>
+                                    <div class="mt-2">{{ caja.sucursal.nombre }}</div>
                                 </div>
                                 <!-- Observaciones -->
                                 <div class="flex flex-col">

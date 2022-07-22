@@ -85,7 +85,10 @@
                             "crypto-js/hmac-sha256",
                             "crypto-js/enc-base64",
                             "@prisma/client",
-                            "validator"
+                            "validator",
+                            "lodash",
+                            "inputmask",
+                            "moment"
                         ],
                         "assets": [
                             "apps/solucrea/src/assets",

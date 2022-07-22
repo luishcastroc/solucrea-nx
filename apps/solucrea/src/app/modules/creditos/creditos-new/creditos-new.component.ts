@@ -430,11 +430,11 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
             fechaDesembolso: ['', Validators.required],
             fechaInicio: ['', Validators.required],
             fechaFinal: [null, Validators.required],
-            monto: ['', Validators.required],
-            cuota: [''],
-            cuotaCapital: [''],
-            cuotaInteres: [''],
-            cuotaSeguro: [''],
+            monto: [0, Validators.required],
+            cuota: [0],
+            cuotaCapital: [0],
+            cuotaInteres: [0],
+            cuotaSeguro: [0],
             cliente: [null, Validators.required],
             sucursal: [null, Validators.required],
             producto: [null, Validators.required],
@@ -509,7 +509,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
         if (stepLabel === 'Resumen de la Operación') {
             const modalidadDeSeguro = this.selectedModalidadDeSeguro?.titulo;
             const data: ICreditoData = {
-                monto: this.monto.value,
+                monto: Number(this.monto.value),
                 interesMoratorio: Number(this.selectedProducto.interesMoratorio),
                 tasaInteres: Number(this.selectedProducto.interes),
                 cargos: Number(this.selectedProducto.cargos),

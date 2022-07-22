@@ -5,5 +5,9 @@
         "types": []
     },
     "files": ["src/main.ts", "src/polyfills.ts"],
-    "include": ["src/**/*.d.ts"]
+    "include": ["src/**/*.d.ts"],
+    "angularCompilerOptions": {
+        "enableI18nLegacyMessageIdFormat": false,
+        "strictTemplates": true
+    }
 }

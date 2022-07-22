@@ -97,7 +97,7 @@ export class CreditosPagoComponent implements OnInit {
             creditoId: ['', Validators.required],
             clienteId: ['', Validators.required],
             sucursalId: ['', Validators.required],
-            monto: ['', [Validators.required, Validators.min(1)]],
+            monto: [0, [Validators.required, Validators.min(1)]],
             tipoDePago: [null, Validators.required],
             fechaDePago: ['', Validators.required],
             observaciones: [''],
@@ -108,7 +108,7 @@ export class CreditosPagoComponent implements OnInit {
         const user = this._store.selectSnapshot(AuthState.user) as Usuario;
         const creadoPor = user.nombre;
         const pago: Prisma.PagoCreateInput = {
-            monto: this.monto?.value,
+            monto: Number(this.monto?.value),
             tipoDePago: this.tipoDePago?.value,
             clienteId: this.clienteId?.value,
             sucursalId: this.sucursalId?.value,

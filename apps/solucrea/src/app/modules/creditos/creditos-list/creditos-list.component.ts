@@ -119,8 +119,7 @@ export class CreditosListComponent implements OnInit {
      *
      * Go to Credito details
      */
-    goToDetails(id: string) {
-        console.log(`creditoId: ${id}`);
+    goToDetails(id: string | undefined) {
         this._store.dispatch([new Navigate([`creditos/${id}`]), new ModeCredito('edit')]);
     }
 

@@ -198,7 +198,7 @@
                                                     </mat-select>
                                                 </mat-form-field>
                                                 <ng-container *ngIf="producto.touched">
-                                                    <mat-error *ngIf="producto.errors?.required">
+                                                    <mat-error *ngIf="producto.errors?.['required']">
                                                         El producto es requerido.
                                                     </mat-error>
                                                 </ng-container>
@@ -228,7 +228,7 @@
                                                         </mat-select>
                                                     </mat-form-field>
                                                     <ng-container *ngIf="sucursal.touched">
-                                                        <mat-error *ngIf="sucursal.errors?.required">
+                                                        <mat-error *ngIf="sucursal.errors?.['required']">
                                                             La sucursal es requerida.
                                                         </mat-error>
                                                     </ng-container>
@@ -291,7 +291,7 @@
                                         <div class="leading-6 font-light">Tasa de Interés:</div>
                                     </div>
                                     <div class="leading-6 font-bold ml-4">
-                                        {{ producto.interes / 100 | percent: '1.2' }}
+                                        {{ (producto.interes | decimalToNumber) / 100 | percent: '1.2' }}
                                     </div>
                                 </div>
                                 <!-- Interés moratorio -->
@@ -308,7 +308,7 @@
                                         <div class="leading-6 font-light">Interés moratorio:</div>
                                     </div>
                                     <div class="leading-6 font-bold ml-4">
-                                        {{ producto.interesMoratorio / 100 | percent: '1.2' }}
+                                        {{ (producto.interesMoratorio | decimalToNumber) / 100 | percent: '1.2' }}
                                     </div>
                                 </div>
                                 <!-- Comisión por apertura -->
@@ -325,7 +325,7 @@
                                         <div class="leading-6 font-light">Comisión por apertura:</div>
                                     </div>
                                     <div class="leading-6 font-bold ml-4">
-                                        {{ producto.comision / 100 | percent: '1.2' }}
+                                        {{ (producto.comision | decimalToNumber) / 100 | percent: '1.2' }}
                                     </div>
                                 </div>
                                 <!-- Penalización -->
@@ -344,8 +344,8 @@
                                     <div class="leading-6 font-bold ml-4">
                                         {{
                                             producto.tipoPenalizacion === 'PORCENTAJE'
-                                                ? (producto.penalizacion / 100 | percent: '1.2')
-                                                : (producto.penalizacion | currency: 'MXN':'symbol')
+                                                ? ((producto.penalizacion | decimalToNumber) / 100 | percent: '1.2')
+                                                : (producto.penalizacion | decimalToNumber | currency: 'MXN':'symbol')
                                         }}
                                     </div>
                                 </div>
@@ -364,9 +364,9 @@
                                     </div>
                                     <div class="leading-6 font-bold ml-4">
                                         {{
-                                            producto.cargos === 0 || producto.cargos === '0'
+                                            (producto.cargos | decimalToNumber) === 0
                                                 ? 'No Hay Cargos'
-                                                : (producto.cargos / 100 | percent: '1.2')
+                                                : ((producto.cargos | decimalToNumber) / 100 | percent: '1.2')
                                         }}
                                     </div>
                                 </div>
@@ -418,7 +418,7 @@
                                         <div class="leading-6 font-light">Monto Mínimo:</div>
                                     </div>
                                     <div class="leading-6 font-bold ml-4">
-                                        {{ producto.montoMinimo | currency: 'MXN':'symbol' }}
+                                        {{ producto.montoMinimo | decimalToNumber | currency: 'MXN':'symbol' }}
                                     </div>
                                 </div>
                                 <!-- Monto Máximo -->
@@ -435,7 +435,7 @@
                                         <div class="leading-6 font-light">Monto Máximo:</div>
                                     </div>
                                     <div class="leading-6 font-bold ml-4">
-                                        {{ producto.montoMaximo | currency: 'MXN':'symbol' }}
+                                        {{ producto.montoMaximo | decimalToNumber | currency: 'MXN':'symbol' }}
                                     </div>
                                 </div>
                             </div>
@@ -477,8 +477,8 @@
                                         [inputMask]="titleInputMask"
                                     />
                                 </mat-form-field>
-                                <ng-container *ngIf="aval.get('apellidoPaterno').touched">
-                                    <mat-error *ngIf="aval.get('apellidoPaterno').errors?.required">
+                                <ng-container *ngIf="aval.get('apellidoPaterno')?.touched">
+                                    <mat-error *ngIf="aval.get('apellidoPaterno')?.errors?.['required']">
                                         El Apellido paterno es requerido.
                                     </mat-error>
                                 </ng-container>
@@ -499,8 +499,8 @@
                                         [inputMask]="titleInputMask"
                                     />
                                 </mat-form-field>
-                                <ng-container *ngIf="aval.get('apellidoMaterno').touched">
-                                    <mat-error *ngIf="aval.get('apellidoMaterno').errors?.required">
+                                <ng-container *ngIf="aval.get('apellidoMaterno')?.touched">
+                                    <mat-error *ngIf="aval.get('apellidoMaterno')?.errors?.['required']">
                                         El Apellido materno es requerido.
                                     </mat-error>
                                 </ng-container>
@@ -521,8 +521,8 @@
                                         [inputMask]="titleInputMask"
                                     />
                                 </mat-form-field>
-                                <ng-container *ngIf="aval.get('nombre').touched">
-                                    <mat-error *ngIf="aval.get('nombre').errors?.required">
+                                <ng-container *ngIf="aval.get('nombre')?.touched">
+                                    <mat-error *ngIf="aval.get('nombre')?.errors?.['required']">
                                         El Nombre es requerido.
                                     </mat-error>
                                 </ng-container>
@@ -546,8 +546,8 @@
                                     </mat-datepicker-toggle>
                                     <mat-datepicker #birthdayDatepicker></mat-datepicker>
                                 </mat-form-field>
-                                <ng-container *ngIf="aval.get('fechaDeNacimiento').touched">
-                                    <mat-error *ngIf="aval.get('fechaDeNacimiento').errors?.required">
+                                <ng-container *ngIf="aval.get('fechaDeNacimiento')?.touched">
+                                    <mat-error *ngIf="aval.get('fechaDeNacimiento')?.errors?.['required']">
                                         La fecha de nacimiento es requerida.
                                     </mat-error>
                                 </ng-container>
@@ -572,8 +572,8 @@
                                         >
                                     </mat-select>
                                 </mat-form-field>
-                                <ng-container *ngIf="aval.get('parentesco').touched">
-                                    <mat-error *ngIf="aval.get('parentesco').errors?.required">
+                                <ng-container *ngIf="aval.get('parentesco')?.touched">
+                                    <mat-error *ngIf="aval.get('parentesco')?.errors?.['required']">
                                         El Parentesco es requerido.
                                     </mat-error>
                                 </ng-container>
@@ -594,8 +594,8 @@
                                         [inputMask]="titleInputMask"
                                     />
                                 </mat-form-field>
-                                <ng-container *ngIf="aval.get('otro').touched">
-                                    <mat-error *ngIf="aval.get('otro').errors?.required">
+                                <ng-container *ngIf="aval.get('otro')?.touched">
+                                    <mat-error *ngIf="aval.get('otro')?.errors?.['required']">
                                         La especificación del parentesco es requerida.
                                     </mat-error>
                                 </ng-container>
@@ -616,8 +616,8 @@
                                         [inputMask]="titleInputMask"
                                     />
                                 </mat-form-field>
-                                <ng-container *ngIf="aval.get('ocupacion').touched">
-                                    <mat-error *ngIf="aval.get('ocupacion').errors?.required">
+                                <ng-container *ngIf="aval.get('ocupacion')?.touched">
+                                    <mat-error *ngIf="aval.get('ocupacion')?.errors?.['required']">
                                         La Ocupación es requerida.
                                     </mat-error>
                                 </ng-container>
@@ -638,8 +638,8 @@
                                         type="tel"
                                     />
                                 </mat-form-field>
-                                <ng-container *ngIf="aval.get('telefono').touched">
-                                    <mat-error *ngIf="aval.get('telefono').errors?.required">
+                                <ng-container *ngIf="aval.get('telefono')?.touched">
+                                    <mat-error *ngIf="aval.get('telefono')?.errors?.['required']">
                                         El telefono es requerido.
                                     </mat-error>
                                 </ng-container>
@@ -689,7 +689,7 @@
                                     </mat-select>
                                 </mat-form-field>
                                 <ng-container *ngIf="modalidadDeSeguro.touched">
-                                    <mat-error *ngIf="modalidadDeSeguro.errors?.required">
+                                    <mat-error *ngIf="modalidadDeSeguro.errors?.['required']">
                                         La modalidad de seguro es requerida.
                                     </mat-error>
                                 </ng-container>
@@ -734,12 +734,13 @@
                                 <input [formControlName]="'monto'" matInput [inputMask]="currencyInputMask" />
                             </mat-form-field>
                             <ng-container *ngIf="monto.touched">
-                                <mat-error *ngIf="monto.errors?.required">
+                                <mat-error *ngIf="monto.errors?.['required']">
                                     La Cantidad a otorgar es requerida.
                                 </mat-error>
-                                <mat-error *ngIf="monto.errors?.min || monto.errors?.max">
-                                    La Cantidad debe estar entre {{ selectedProducto.montoMinimo | currency }} y
-                                    {{ selectedProducto.montoMaximo | currency: 'MXN':'symbol' }}.
+                                <mat-error *ngIf="monto.errors?.['min'] || monto.errors?.['max']">
+                                    La Cantidad debe estar entre
+                                    {{ selectedProducto.montoMinimo | decimalToNumber | currency }} y
+                                    {{ selectedProducto.montoMaximo | decimalToNumber | currency: 'MXN':'symbol' }}.
                                 </mat-error>
                             </ng-container>
                         </div>
@@ -764,10 +765,10 @@
                                 <mat-datepicker #initDatepicker></mat-datepicker>
                             </mat-form-field>
                             <ng-container *ngIf="fechaDesembolso.touched">
-                                <mat-error *ngIf="fechaDesembolso.errors?.required">
+                                <mat-error *ngIf="fechaDesembolso.errors?.['required']">
                                     La fecha de desembolso es requerida.
                                 </mat-error>
-                                <mat-error *ngIf="fechaDesembolso.errors?.matDatepickerFilter">
+                                <mat-error *ngIf="fechaDesembolso.errors?.['matDatepickerFilter']">
                                     La fecha de desembolso no puede ser domingo.
                                 </mat-error>
                             </ng-container>
@@ -918,7 +919,7 @@
                                 <div class="leading-6 font-light">Modalidad de Seguro:</div>
                             </div>
                             <div class="leading-6 font-bold">
-                                {{ selectedModalidadDeSeguro.descripcion }}
+                                {{ selectedModalidadDeSeguro?.descripcion }}
                             </div>
                         </div>
                         <!-- Producto -->

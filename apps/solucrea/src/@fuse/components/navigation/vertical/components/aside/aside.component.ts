@@ -29,7 +29,7 @@ export class FuseVerticalNavigationAsideItemComponent implements OnChanges, OnIn
 
     /* eslint-enable @typescript-eslint/naming-convention */
     @Input()
-    activeItemId!: string;
+    activeItemId!: string | null;
     @Input()
     autoCollapse!: boolean;
     @Input()

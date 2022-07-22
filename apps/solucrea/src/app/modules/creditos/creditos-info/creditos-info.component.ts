@@ -33,7 +33,7 @@ export class CreditosInfoComponent implements OnInit {
         this.location.back();
     }
 
-    goToPago(pago: IAmortizacion) {
+    goToPago() {
         this._store.dispatch(new ModeCredito('pago'));
     }
 }

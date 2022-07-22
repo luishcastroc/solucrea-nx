@@ -72,13 +72,13 @@
                                         <div class="flex flex-col">
                                             <div class="font-bold">Monto Minimo:</div>
                                             <div class="mt-2">
-                                                {{ producto.montoMinimo | currency: 'MXN':'symbol' }}
+                                                {{ producto.montoMinimo | decimalToNumber | currency: 'MXN':'symbol' }}
                                             </div>
                                         </div>
                                         <div class="flex flex-col">
                                             <div class="font-bold">Monto Maximo:</div>
                                             <div class="mt-2">
-                                                {{ producto.montoMaximo | currency: 'MXN':'symbol' }}
+                                                {{ producto.montoMaximo | decimalToNumber | currency: 'MXN':'symbol' }}
                                             </div>
                                         </div>
                                         <div class="flex flex-col min-w-40">

@@ -20,6 +20,7 @@ import { ClienteListComponent } from './cliente-list/cliente-list.component';
 import { ClienteComponent } from './cliente/cliente.component';
 import { ClientesComponent } from './clientes.component';
 import { clientesRoutes } from './clientes.routing';
+import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 
 @NgModule({
     declarations: [ClientesComponent, ClienteComponent, ClienteListComponent],
@@ -38,6 +39,7 @@ import { clientesRoutes } from './clientes.routing';
         MatStepperModule,
         SharedModule,
         InputMaskModule,
+        FuseScrollbarModule,
         NgxsModule.forFeature([ClientesState]),
     ],
 })

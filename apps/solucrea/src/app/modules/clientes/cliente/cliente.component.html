@@ -329,7 +329,7 @@
                                                             ></mat-icon>
                                                             <input
                                                                 matInput
-                                                                [formControl]="direccion.get('calle')"
+                                                                [formControl]="$any(direccion.get('calle'))"
                                                                 [placeholder]="'Calle'"
                                                                 [spellcheck]="false"
                                                             />
@@ -353,7 +353,7 @@
                                                             ></mat-icon>
                                                             <input
                                                                 matInput
-                                                                [formControl]="direccion.get('numero')"
+                                                                [formControl]="$any(direccion.get('numero'))"
                                                                 [placeholder]="'Número'"
                                                             />
                                                         </mat-form-field>
@@ -376,7 +376,7 @@
                                                             ></mat-icon>
                                                             <input
                                                                 matInput
-                                                                [formControl]="direccion.get('cruzamientos')"
+                                                                [formControl]="$any(direccion.get('cruzamientos'))"
                                                                 [placeholder]="'Cruzamientos'"
                                                             />
                                                         </mat-form-field>
@@ -392,7 +392,7 @@
                                                             ></mat-icon>
                                                             <input
                                                                 matInput
-                                                                [formControl]="direccion.get('codigoPostal')"
+                                                                [formControl]="$any(direccion.get('codigoPostal'))"
                                                                 [placeholder]="'Código Postal'"
                                                                 (change)="
                                                                     getColonias(
@@ -422,7 +422,7 @@
                                                             ></mat-icon>
                                                             <input
                                                                 matInput
-                                                                [formControl]="direccion.get('estado')"
+                                                                [formControl]="$any(direccion.get('estado'))"
                                                                 [placeholder]="'Estado'"
                                                             />
                                                         </mat-form-field>
@@ -438,7 +438,7 @@
                                                             ></mat-icon>
                                                             <input
                                                                 matInput
-                                                                [formControl]="direccion.get('ciudad')"
+                                                                [formControl]="$any(direccion.get('ciudad'))"
                                                                 [placeholder]="'ciudad'"
                                                             />
                                                         </mat-form-field>
@@ -453,7 +453,7 @@
                                                                 matPrefix
                                                             ></mat-icon>
                                                             <mat-select
-                                                                [formControl]="direccion.get('colonia')"
+                                                                [formControl]="$any(direccion.get('colonia'))"
                                                                 [compareWith]="compareColonias"
                                                             >
                                                                 <mat-option
@@ -728,7 +728,7 @@
                                                         matInput
                                                         formControlName="codigoPostal"
                                                         [placeholder]="'Código Postal'"
-                                                        (change)="getColonias(cpTrabajo.value, i, 'TRABAJO')"
+                                                        (change)="getColonias(cpTrabajo.value, -1, 'TRABAJO')"
                                                     />
                                                 </mat-form-field>
                                                 <ng-container

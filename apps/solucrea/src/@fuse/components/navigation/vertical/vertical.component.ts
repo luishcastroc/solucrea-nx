@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable arrow-parens */
 import {
     AfterViewInit,
