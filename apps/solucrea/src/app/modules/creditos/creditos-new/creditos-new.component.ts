@@ -1,8 +1,17 @@
 import { StepperOrientation, StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
@@ -70,6 +79,9 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
     selectedSeguro$!: Observable<ISeguroReturnDto>;
     @Select(CreditosState.selectedClienteReferral)
     selectedClienteReferral$!: Observable<IClienteReturnDto>;
+
+    @ViewChild('stepper')
+    private myStepper!: MatStepper;
 
     selectedProducto$!: Observable<Producto | undefined>;
     selectedCliente$!: Observable<IClienteReturnDto | undefined>;
@@ -332,6 +344,9 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
                             });
 
                             this.creditosForm.reset();
+                            this.searchInput.reset();
+                            // we reset the stepper
+                            this.myStepper.reset();
                         }
                     }
                 })

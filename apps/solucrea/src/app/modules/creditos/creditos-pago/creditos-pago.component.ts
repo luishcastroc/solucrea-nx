@@ -106,7 +106,8 @@ export class CreditosPagoComponent implements OnInit {
 
     savePago() {
         const user = this._store.selectSnapshot(AuthState.user) as Usuario;
-        const creadoPor = user.nombre;
+        const creadoPor = user.nombreUsuario;
+        const actualizadoPor = creadoPor;
         const pago: Prisma.PagoCreateInput = {
             monto: Number(this.monto?.value),
             tipoDePago: this.tipoDePago?.value,
@@ -114,6 +115,7 @@ export class CreditosPagoComponent implements OnInit {
             sucursalId: this.sucursalId?.value,
             fechaDePago: this.fechaDePago?.value,
             creadoPor,
+            actualizadoPor,
             credito: { connect: { id: this.creditoId?.value } },
         };
         this._store.dispatch(new SavePago(pago));

@@ -17,7 +17,7 @@ export const calculateDetails = (data: ICreditoData): IDetails => {
 
     const capital = monto / numeroDePagos;
     const interes = capital * (tasaInteres / 100);
-    const seguroDiferido = modalidadSeguro === 'diferido' ? (montoSeguro ? montoSeguro : 0 / numeroDePagos) : 0;
+    const seguroDiferido = montoSeguro ? montoSeguro : 0 / numeroDePagos;
     const cuota = capital + interes + seguroDiferido;
     const apertura = comisionPorApertura ? monto * (comisionPorApertura / 100) : 0;
     const total = apertura + (modalidadSeguro === 'contado' ? (montoSeguro ? montoSeguro : 0) : 0);

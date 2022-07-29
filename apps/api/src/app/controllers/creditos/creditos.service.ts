@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Pago, Prisma, Status } from '@prisma/client';
+import { Pago, Prisma, Producto, Status } from '@prisma/client';
 import {
     generateTablaAmorizacion,
     getFrecuencia,
@@ -255,6 +255,7 @@ export class CreditosService {
 
     async createCredito(data: Prisma.CreditoCreateInput): Promise<ICreditoReturnDto> {
         const select = selectCredito;
+        let producto: Producto | null;
         try {
             const creditosActivos = await this.prisma.credito.findMany({
                 where: {
@@ -266,12 +267,21 @@ export class CreditosService {
                 },
             });
 
-            if (creditosActivos.length > 0) {
-                const producto = await this.prisma.producto.findFirst({
-                    select: { creditosActivos: true },
-                    where: { id: { equals: data.producto.connect?.id } },
-                });
+            producto = await this.prisma.producto.findFirst({
+                where: { id: { equals: data.producto.connect?.id } },
+            });
 
+            if (!producto) {
+                throw new HttpException(
+                    {
+                        status: HttpStatus.PRECONDITION_FAILED,
+                        message: 'Error localizando el producto',
+                    },
+                    HttpStatus.PRECONDITION_FAILED
+                );
+            }
+
+            if (creditosActivos.length > 0) {
                 if (creditosActivos.length + 1 > Number(producto?.creditosActivos)) {
                     throw new HttpException(
                         {
@@ -318,7 +328,11 @@ export class CreditosService {
                 );
             }
 
-            const creditoCreado = await this.prisma.credito.create({ data, select });
+            const saldoInicial = (producto.interes.toNumber() / 100) * Number(data.monto) + Number(data.monto);
+            const creditoCreado = await this.prisma.credito.create({
+                data: { ...data, saldo: new Prisma.Decimal(saldoInicial) },
+                select,
+            });
 
             if (creditoCreado) {
                 //once credito is created we retire the money from the sucursal
