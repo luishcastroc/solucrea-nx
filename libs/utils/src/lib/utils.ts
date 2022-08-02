@@ -17,7 +17,7 @@ export const calculateDetails = (data: ICreditoData): IDetails => {
 
     const capital = monto / numeroDePagos;
     const interes = capital * (tasaInteres / 100);
-    const seguroDiferido = montoSeguro ? montoSeguro : 0 / numeroDePagos;
+    const seguroDiferido = (montoSeguro ? montoSeguro : 0) / numeroDePagos;
     const cuota = capital + interes + seguroDiferido;
     const apertura = comisionPorApertura ? monto * (comisionPorApertura / 100) : 0;
     const total = apertura + (modalidadSeguro === 'contado' ? (montoSeguro ? montoSeguro : 0) : 0);
@@ -188,7 +188,7 @@ export const getPagos = (
             } else {
                 statusReturn = StatusPago.pagado;
             }
-            acum -= monto.toNumber();
+            acum -= montoReturn.toNumber();
             return {
                 numeroDePago,
                 fechaDePago,
@@ -198,7 +198,7 @@ export const getPagos = (
         } else {
             if (acum > 0 && acum >= monto.toNumber()) {
                 statusReturn = StatusPago.pagado;
-                acum -= monto.toNumber();
+                acum -= montoReturn.toNumber();
             } else {
                 montoReturn = new Prisma.Decimal(monto.toNumber());
                 statusReturn = StatusPago.corriente;

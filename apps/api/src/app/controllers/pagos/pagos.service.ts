@@ -26,11 +26,12 @@ export class PagosService {
                 const {
                     connect: { id },
                 } = credito;
+
                 const currentCredito = await this.prisma.credito.findUnique({
                     where: { id },
                     include: { pagos: true },
                 });
-                console.log('currentCredito: ', currentCredito);
+
                 if (!currentCredito) {
                     throw new HttpException(
                         { status: HttpStatus.NOT_FOUND, message: 'Error al crear el pago, crédito no encontrado' },
@@ -40,7 +41,7 @@ export class PagosService {
                 pago = await this.prisma.pago.create({
                     data,
                 });
-                console.log('currentCredito: ', currentCredito);
+
                 if (!pago) {
                     throw new HttpException(
                         { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al crear el pago' },
@@ -49,6 +50,10 @@ export class PagosService {
                 }
 
                 const { saldo, pagos } = currentCredito;
+
+                console.log(pago);
+                console.log(pagos.length);
+                console.log(pagos);
 
                 const sumPagos = pagos.reduce(
                     (previousValue, currentValue) => previousValue + currentValue.monto.toNumber(),

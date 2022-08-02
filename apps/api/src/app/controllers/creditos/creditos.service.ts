@@ -36,7 +36,7 @@ export class CreditosService {
                     );
 
                     let status;
-                    if (amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length > 0) {
+                    if (amortizacion.some((table) => table.status === StatusPago.adeuda)) {
                         status = Status.MORA;
                     } else if (
                         amortizacion.filter((tabla) => tabla.status === StatusPago.pagado).length ===
@@ -44,24 +44,18 @@ export class CreditosService {
                     ) {
                         status = Status.CERRADO;
                     } else if (
-                        amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length === 0 &&
+                        !amortizacion.some((tabla) => tabla.status === StatusPago.adeuda) &&
                         amortizacion.some((tabla) => tabla.status === StatusPago.corriente)
                     ) {
                         status = Status.ABIERTO;
                     }
 
                     const saldoVencido = getSaldoVencido(amortizacion);
-                    const saldo = amortizacion.reduce(
-                        (acc, curr) =>
-                            acc + (curr.status === 'ADEUDA' || curr.status === 'CORRIENTE' ? curr.monto.toNumber() : 0),
-                        0
-                    );
 
                     const creditoReturn = {
                         ...credito,
                         amortizacion,
                         status,
-                        saldo,
                         saldoVencido,
                     };
 
@@ -112,7 +106,7 @@ export class CreditosService {
                     );
 
                     let status;
-                    if (amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length > 0) {
+                    if (amortizacion.some((table) => table.status === StatusPago.adeuda)) {
                         status = Status.MORA;
                     } else if (
                         amortizacion.filter((tabla) => tabla.status === StatusPago.pagado).length ===
@@ -120,24 +114,18 @@ export class CreditosService {
                     ) {
                         status = Status.CERRADO;
                     } else if (
-                        amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length === 0 &&
+                        !amortizacion.some((tabla) => tabla.status === StatusPago.adeuda) &&
                         amortizacion.some((tabla) => tabla.status === StatusPago.corriente)
                     ) {
                         status = Status.ABIERTO;
                     }
 
                     const saldoVencido = getSaldoVencido(amortizacion);
-                    const saldo = amortizacion.reduce(
-                        (acc, curr) =>
-                            acc + (curr.status === 'ADEUDA' || curr.status === 'CORRIENTE' ? curr.monto.toNumber() : 0),
-                        0
-                    );
 
                     const creditoReturn = {
                         ...credito,
                         amortizacion,
                         status,
-                        saldo,
                         saldoVencido,
                     };
 
@@ -184,7 +172,7 @@ export class CreditosService {
             );
 
             let status;
-            if (amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length > 0) {
+            if (amortizacion.some((table) => table.status === StatusPago.adeuda)) {
                 status = Status.MORA;
             } else if (
                 amortizacion.filter((tabla) => tabla.status === StatusPago.pagado).length ===
@@ -192,7 +180,7 @@ export class CreditosService {
             ) {
                 status = Status.CERRADO;
             } else if (
-                amortizacion.filter((tabla) => tabla.status === StatusPago.adeuda).length === 0 &&
+                !amortizacion.some((tabla) => tabla.status === StatusPago.adeuda) &&
                 amortizacion.some((tabla) => tabla.status === StatusPago.corriente)
             ) {
                 status = Status.ABIERTO;
@@ -200,17 +188,11 @@ export class CreditosService {
 
             const saldoVencido = getSaldoVencido(amortizacion);
             const pagoNoIntereses = getPagoNoIntereses(amortizacion, credito?.cuota as Prisma.Decimal);
-            const saldo = amortizacion.reduce(
-                (acc, curr) =>
-                    acc + (curr.status === 'ADEUDA' || curr.status === 'CORRIENTE' ? curr.monto.toNumber() : 0),
-                0
-            );
 
             const creditoReturn = {
                 ...credito,
                 amortizacion,
                 status,
-                saldo,
                 saldoVencido,
                 pagoNoIntereses,
             };

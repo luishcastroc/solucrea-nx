@@ -63,6 +63,7 @@ export const selectCredito = {
     cuotaInteres: true,
     cuotaSeguro: true,
     status: true,
+    saldo: true,
     sucursal: { select: { id: true, nombre: true } },
     producto: {
         select: {

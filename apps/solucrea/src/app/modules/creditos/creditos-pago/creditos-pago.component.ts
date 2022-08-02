@@ -1,11 +1,12 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
-import { Actions, Select, Store } from '@ngxs/store';
+import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
 import { Prisma, TipoDePago, Usuario } from '@prisma/client';
 import { ICreditoReturnDto } from 'api/dtos';
-import { AuthState, AuthStateModel } from 'app/core/auth';
+import { AuthState } from 'app/core/auth';
 import moment from 'moment';
 import { Observable, tap } from 'rxjs';
 
@@ -20,7 +21,9 @@ import { CreditosState, ModeCredito, SavePago } from '../_store';
 export class CreditosPagoComponent implements OnInit {
     @Select(CreditosState.loading)
     loading$!: Observable<boolean>;
+    loading: boolean = false;
     selectedCredito$!: Observable<ICreditoReturnDto | undefined>;
+    actions$!: Actions;
     tipoDePagoTemp = TipoDePago;
     pagosForm!: UntypedFormGroup;
 
@@ -41,6 +44,35 @@ export class CreditosPagoComponent implements OnInit {
         private _formBuilder: UntypedFormBuilder,
         private _cdr: ChangeDetectorRef
     ) {
+        this.actions$ = this._actions$.pipe(
+            ofActionCompleted(SavePago),
+            tap((result) => {
+                const { error, successful } = result.result;
+                const { action } = result;
+                let message;
+                this.loading = false;
+                // Mark for check
+                this._cdr.markForCheck();
+                if (error) {
+                    message = `${(error as HttpErrorResponse)['error'].message}`;
+                    this._toast.error(message, {
+                        duration: 4000,
+                        position: 'bottom-center',
+                    });
+                }
+                if (successful) {
+                    if (action instanceof SavePago) {
+                        message = 'Pago agregado exitosamente.';
+                        this._toast.success(message, {
+                            duration: 4000,
+                            position: 'bottom-center',
+                        });
+
+                        this.pagosForm.reset();
+                    }
+                }
+            })
+        );
         this.selectedCredito$ = this._store.select(CreditosState.selectedCredito).pipe(
             tap((credito: ICreditoReturnDto | undefined) => {
                 if (credito) {
