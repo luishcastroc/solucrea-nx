@@ -21,12 +21,15 @@ import { AuthState } from '../store/auth.state';
     providedIn: 'root',
 })
 export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
-    @Select(AuthState.isAuthenticated) isAuthenticated$!: Observable<boolean>;
-    @Select(AuthState.user) user$!: Observable<Usuario>;
+    isAuthenticated$!: Observable<boolean>;
+    user$!: Observable<Usuario | undefined>;
     /**
      * Constructor
      */
-    constructor(private _store: Store, private _authService: AuthService) {}
+    constructor(private _store: Store, private _authService: AuthService) {
+        this.isAuthenticated$ = this._store.select(AuthState.isAuthenticated);
+        this.user$ = this._store.select(AuthState.user);
+    }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods

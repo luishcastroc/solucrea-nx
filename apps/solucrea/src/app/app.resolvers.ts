@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { InitialData } from 'app/app.types';
 import { forkJoin, map, Observable, of } from 'rxjs';
@@ -12,13 +12,14 @@ import { defaultNavigation } from 'app/core/config/app.config';
     providedIn: 'root',
 })
 export class InitialDataResolver implements Resolve<any> {
-    @Select(AuthState.user)
-    user$!: Observable<Usuario>;
+    user$!: Observable<Usuario | undefined>;
     private _navigation = defaultNavigation;
     /**
      * Constructor
      */
-    constructor() {}
+    constructor(private _store: Store) {
+        this.user$ = this._store.select(AuthState.user);
+    }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
