@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
-import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
+import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { EditMode } from 'app/core/models';
 import {
     AddCredito,
@@ -29,7 +29,6 @@ import { Producto, TipoPenalizacion } from '.prisma/client';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
-    @Select(AjustesCreditosState.loading)
     loading$!: Observable<boolean>;
     loading = false;
     creditosForm!: UntypedFormGroup;
@@ -68,7 +67,9 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
         private _toast: HotToastService,
         private _route: ActivatedRoute,
         private _cdr: ChangeDetectorRef
-    ) {}
+    ) {
+        this.loading$ = this._store.select(AjustesCreditosState.loading);
+    }
 
     get id() {
         return this.creditosForm.get('id') as UntypedFormControl;

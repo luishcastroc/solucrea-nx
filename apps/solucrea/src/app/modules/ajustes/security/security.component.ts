@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
-import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { Actions, ofActionErrored, ofActionSuccessful, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
@@ -16,8 +16,7 @@ import { createPasswordStrengthValidator } from '../validators/custom-ajustes.va
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AjustesSecurityComponent implements OnInit, OnDestroy {
-    @Select(AjustesUsuariosState.selectedUsuario)
-    user$!: Observable<Usuario>;
+    user$!: Observable<Usuario | undefined>;
     securityForm!: UntypedFormGroup;
     usuario!: Usuario;
     private _unsubscribeAll: Subject<any>;
@@ -32,6 +31,7 @@ export class AjustesSecurityComponent implements OnInit, OnDestroy {
         private _toast: HotToastService
     ) {
         this._unsubscribeAll = new Subject();
+        this.user$ = this._store.select(AjustesUsuariosState.selectedUsuario);
     }
 
     get currentPassword() {

@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
-import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
+import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { CreateCajaDto, ICajaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 import { AddCaja, CajasState, ClearCajasState, EditCaja, GetAllSucursales, SelectCaja } from 'app/modules/caja/_store';
@@ -23,7 +23,6 @@ import { checkIfEndDateBeforeStartDate, futureDateValidator } from '../validator
 })
 export class CajaDetailComponent implements OnInit, OnDestroy {
     @ViewChild('formDirective') formDirective!: FormGroupDirective;
-    @Select(CajasState.sucursales)
     sucursales$!: Observable<ISucursalReturnDto[]>;
     editMode$!: Observable<EditMode>;
     selectedCaja$!: Observable<ICajaReturnDto | undefined>;
@@ -47,12 +46,13 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
         private _store: Store,
         private _formBuilder: UntypedFormBuilder,
         private _actions$: Actions,
-        private _changeDetectorRef: ChangeDetectorRef,
         private _toast: HotToastService,
         private _route: ActivatedRoute,
         private _shared: SharedService,
         private _cdr: ChangeDetectorRef
-    ) {}
+    ) {
+        this.sucursales$ = this._store.select(CajasState.sucursales);
+    }
 
     get id() {
         return this.cajaForm.controls['id'];

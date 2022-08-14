@@ -1,12 +1,10 @@
-import { GetCreditosCount, SelectCredito } from '../_store/creditos.actions';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
-import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
+import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Status } from '@prisma/client';
 import { ICreditoReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth';
@@ -14,14 +12,14 @@ import { CajasMode } from 'app/modules/caja/_store';
 import { ClientesMode } from 'app/modules/clientes/_store/';
 import {
     CreditosState,
+    GetAllCreditos,
     GetClientesCount,
     GetTurnosCount,
     ModeCredito,
-    GetAllCreditos,
 } from 'app/modules/creditos/_store/';
 import { Observable, tap } from 'rxjs';
 
-import { CreditosService } from '../_services/creditos.service';
+import { GetCreditosCount } from '../_store/creditos.actions';
 
 @Component({
     selector: 'app-creditos-list',
@@ -29,15 +27,10 @@ import { CreditosService } from '../_services/creditos.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditosListComponent implements OnInit {
-    @Select(CreditosState.creditos)
     creditos$!: Observable<ICreditoReturnDto[]>;
-    @Select(CreditosState.loading)
     loading$!: Observable<boolean>;
-    @Select(CreditosState.clientesCount)
     clientesCount$!: Observable<number>;
-    @Select(CreditosState.creditosCount)
     creditosCount$!: Observable<number>;
-    @Select(CreditosState.turnosCount)
     turnosCount$!: Observable<number>;
 
     actions$!: Actions;
@@ -48,13 +41,13 @@ export class CreditosListComponent implements OnInit {
         { display: 'Suspendidos', value: Status.SUSPENDIDO },
     ];
     status = Status.ABIERTO;
-    constructor(
-        private _store: Store,
-        private _dialog: MatDialog,
-        private _actions$: Actions,
-        private _toast: HotToastService,
-        private _creditosService: CreditosService
-    ) {}
+    constructor(private _store: Store, private _actions$: Actions, private _toast: HotToastService) {
+        this.creditos$ = this._store.select(CreditosState.creditos);
+        this.loading$ = this._store.select(CreditosState.loading);
+        this.clientesCount$ = this._store.select(CreditosState.clientesCount);
+        this.creditosCount$ = this._store.select(CreditosState.creditosCount);
+        this.turnosCount$ = this._store.select(CreditosState.turnosCount);
+    }
 
     ngOnInit(): void {
         this._store.dispatch([

@@ -1,13 +1,14 @@
-import { CreditosState } from './../_store/creditos.state';
 import { StepperOrientation } from '@angular/cdk/stepper';
 import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { Select, Store } from '@ngxs/store';
-import { ClearCreditosDetails, GetCreditosConfiguration } from 'app/modules/creditos/_store/';
-import { Subject, takeUntil, Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
 import { EditMode } from 'app/core/models';
+import { ClearCreditosDetails } from 'app/modules/creditos/_store/';
+import { Observable, Subject, takeUntil } from 'rxjs';
+
+import { CreditosState } from './../_store/creditos.state';
 
 @Component({
     selector: 'app-creditos-detail',
@@ -15,7 +16,6 @@ import { EditMode } from 'app/core/models';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditosDetailComponent implements OnInit, OnDestroy {
-    @Select(CreditosState.editMode)
     editMode$!: Observable<EditMode>;
     clienteId!: string | null;
     orientation: StepperOrientation = 'horizontal';
@@ -28,7 +28,9 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
         private _route: ActivatedRoute,
         private _cdr: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService
-    ) {}
+    ) {
+        this.editMode$ = this._store.select(CreditosState.editMode);
+    }
 
     ngOnInit(): void {
         this.clienteId = this._route.snapshot.paramMap.get('clienteId');

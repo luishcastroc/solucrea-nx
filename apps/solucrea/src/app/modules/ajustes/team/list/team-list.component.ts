@@ -1,33 +1,26 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    OnDestroy,
-    OnInit,
-    ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
-import { Actions, ofActionErrored, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { Actions, ofActionErrored, ofActionSuccessful, Store } from '@ngxs/store';
 import { Role, Usuario } from '@prisma/client';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { AuthState } from 'app/core/auth/store/auth.state';
 import { EditMode } from 'app/core/models';
+import {
+    AjustesModeUsuario,
+    AjustesUsuariosState,
+    DeleteUsuario,
+    EditUsuario,
+    GetAllUsuarios,
+    SelectUsuario,
+} from 'app/modules/ajustes/_store';
 import { ConfirmationDialogComponent } from 'app/shared';
 import { Observable, Subject, takeUntil, withLatestFrom } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 import { defaultRoles } from '../../_config/roles';
-import {
-    AjustesModeUsuario,
-    DeleteUsuario,
-    EditUsuario,
-    GetAllUsuarios,
-    SelectUsuario,
-    AjustesUsuariosState,
-} from 'app/modules/ajustes/_store';
 import { IRole } from '../../models/roles.model';
 
 @Component({
@@ -38,9 +31,7 @@ import { IRole } from '../../models/roles.model';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TeamListComponent implements OnInit, OnDestroy {
-    @Select(AjustesUsuariosState.usuarios)
     usuarios$!: Observable<Usuario[]>;
-    @Select(AjustesUsuariosState.loading)
     loading$!: Observable<boolean>;
 
     searchResults$!: Observable<Usuario[]>;
@@ -58,7 +49,10 @@ export class TeamListComponent implements OnInit, OnDestroy {
         private _dialog: MatDialog,
         private _actions$: Actions,
         private _toast: HotToastService
-    ) {}
+    ) {
+        this.usuarios$ = this._store.select(AjustesUsuariosState.usuarios);
+        this.loading$ = this._store.select(AjustesUsuariosState.loading);
+    }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks

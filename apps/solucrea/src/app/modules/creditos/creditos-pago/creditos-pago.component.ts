@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEnca
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
-import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
+import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Prisma, TipoDePago, Usuario } from '@prisma/client';
 import { ICreditoReturnDto } from 'api/dtos';
 import { AuthState } from 'app/core/auth';
@@ -19,7 +19,6 @@ import { CreditosState, ModeCredito, SavePago } from '../_store';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditosPagoComponent implements OnInit {
-    @Select(CreditosState.loading)
     loading$!: Observable<boolean>;
     loading: boolean = false;
     selectedCredito$!: Observable<ICreditoReturnDto | undefined>;
@@ -44,6 +43,7 @@ export class CreditosPagoComponent implements OnInit {
         private _formBuilder: UntypedFormBuilder,
         private _cdr: ChangeDetectorRef
     ) {
+        this.loading$ = this._store.select(CreditosState.loading);
         this.actions$ = this._actions$.pipe(
             ofActionCompleted(SavePago),
             tap((result) => {

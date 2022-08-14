@@ -4,7 +4,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
-import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
+import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import {
     AjustesCreditosState,
@@ -26,9 +26,7 @@ import { Producto } from '.prisma/client';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AjustesCreditosListComponent implements OnInit, OnDestroy {
-    @Select(AjustesCreditosState.creditos)
     creditos$!: Observable<Producto[]>;
-    @Select(AjustesCreditosState.loading)
     loading$!: Observable<boolean>;
     searchResults$!: Observable<Producto[]>;
     searchInput = new UntypedFormControl();
@@ -48,6 +46,8 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
         private _toast: HotToastService
     ) {
         this.actions$ = this.subscribeToActions();
+        this.creditos$ = this._store.select(AjustesCreditosState.creditos);
+        this.loading$ = this._store.select(AjustesCreditosState.loading);
     }
 
     ngOnInit(): void {

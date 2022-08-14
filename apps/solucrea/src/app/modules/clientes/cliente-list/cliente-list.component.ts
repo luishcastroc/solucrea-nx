@@ -3,7 +3,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angu
 import { UntypedFormControl } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
-import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
+import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { IClienteReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { ClientesMode, ClientesState, Edit, GetAllCount, Inactivate, Search } from 'app/modules/clientes/_store';
@@ -16,9 +16,7 @@ import { debounceTime, distinctUntilChanged, Observable, tap } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClienteListComponent implements OnInit, AfterViewInit {
-    @Select(ClientesState.clientes)
     searchResults$!: Observable<IClienteReturnDto[]>;
-    @Select(ClientesState.clientesCount)
     clientesCount$!: Observable<number | undefined>;
 
     values: string[] = ['Activos', 'Inactivos'];
@@ -28,7 +26,10 @@ export class ClienteListComponent implements OnInit, AfterViewInit {
     actions$!: Observable<any>;
     searchInput = new UntypedFormControl();
 
-    constructor(private _store: Store, private _actions$: Actions, private _toast: HotToastService) {}
+    constructor(private _store: Store, private _actions$: Actions, private _toast: HotToastService) {
+        this.searchResults$ = this._store.select(ClientesState.clientes);
+        this.clientesCount$ = this._store.select(ClientesState.clientesCount);
+    }
 
     ngOnInit(): void {
         this._store.dispatch(new GetAllCount());

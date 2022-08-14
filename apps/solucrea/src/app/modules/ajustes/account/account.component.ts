@@ -1,5 +1,4 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations/public-api';
@@ -32,8 +31,7 @@ export class AjustesAccountComponent implements OnInit {
         private _formBuilder: UntypedFormBuilder,
         private _store: Store,
         private _actions$: Actions,
-        private _toast: HotToastService,
-        private location: Location
+        private _toast: HotToastService
     ) {}
 
     // -----------------------------------------------------------------------------------------------------

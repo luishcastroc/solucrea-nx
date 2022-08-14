@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
-import { Select, Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { ICajaReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth/auth.utils';
-import { Observable } from 'rxjs';
-
 import { CajasMode, CajasState, GetAll } from 'app/modules/caja/_store';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-caja-list',
@@ -14,10 +13,11 @@ import { CajasMode, CajasState, GetAll } from 'app/modules/caja/_store';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CajaListComponent implements OnInit {
-    @Select(CajasState.cajas)
     cajas$!: Observable<ICajaReturnDto[]>;
 
-    constructor(private _store: Store) {}
+    constructor(private _store: Store) {
+        this.cajas$ = this._store.select(CajasState.cajas);
+    }
 
     ngOnInit(): void {
         this._store.dispatch(new GetAll());

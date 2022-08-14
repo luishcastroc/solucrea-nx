@@ -14,7 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
-import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
+import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { TipoDireccion } from '@prisma/client';
 import {
     CreateDireccionDto,
@@ -54,21 +54,15 @@ import { curpValidator, rfcValidator } from '../validators/custom-clientes.valid
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateComponent {
-    @Select(ClientesState.config)
-    config$!: Observable<IConfig>;
-    @Select(ClientesState.loading)
-    loading$!: Observable<boolean>;
-    @Select(ClientesState.editMode)
-    editMode$!: Observable<EditMode>;
-    @Select(ClientesState.colonias)
-    colonias$!: Observable<IColoniasState[]>;
-    @Select(ClientesState.selectedCliente)
-    selectedCliente$!: Observable<IClienteReturnDto>;
-    @Select(ClientesState.selectedActividadEconomica)
-    selectedActividadEconomica$!: Observable<IActividadEconomicaReturnDto>;
-
     @ViewChild('stepper')
     private myStepper!: MatStepper;
+
+    config$!: Observable<IConfig | undefined>;
+    loading$!: Observable<boolean>;
+    editMode$!: Observable<EditMode>;
+    colonias$!: Observable<IColoniasState[]>;
+    selectedCliente$!: Observable<IClienteReturnDto | undefined>;
+    selectedActividadEconomica$!: Observable<IActividadEconomicaReturnDto | undefined>;
 
     ubicacion: IColoniasState[] = [];
     ubicacionTrabajo!: IColoniasState;
@@ -97,7 +91,14 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
         private _route: ActivatedRoute,
         private _sharedService: SharedService,
         private _cdr: ChangeDetectorRef
-    ) {}
+    ) {
+        this.config$ = this._store.select(ClientesState.config);
+        this.loading$ = this._store.select(ClientesState.loading);
+        this.editMode$ = this._store.select(ClientesState.editMode);
+        this.colonias$ = this._store.select(ClientesState.colonias);
+        this.selectedCliente$ = this._store.select(ClientesState.selectedCliente);
+        this.selectedActividadEconomica$ = this._store.select(ClientesState.selectedActividadEconomica);
+    }
 
     get direcciones() {
         return this.clienteForm.get('direcciones') as UntypedFormArray;
@@ -188,7 +189,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
     subscribeToSelectedActividadEconomica(): void {
         this.selectedActividadEconomica$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((selectedActividadEconomica: IActividadEconomicaReturnDto) => {
+            .subscribe((selectedActividadEconomica: IActividadEconomicaReturnDto | undefined) => {
                 if (selectedActividadEconomica) {
                     this.trabajoForm.get('montoMinimo')?.patchValue(Number(selectedActividadEconomica.montoMin));
                     this.trabajoForm.get('montoMaximo')?.patchValue(Number(selectedActividadEconomica.montoMax));
@@ -266,7 +267,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                 }),
                 takeUntil(this._unsubscribeAll)
             )
-            .subscribe((selectedCliente: IClienteReturnDto | null) => {
+            .subscribe((selectedCliente: IClienteReturnDto | undefined | null) => {
                 if (selectedCliente) {
                     const { direcciones, trabajo } = selectedCliente;
 

@@ -4,7 +4,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
-import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
+import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Sucursal } from '@prisma/client';
 import { ISucursalReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth';
@@ -25,9 +25,7 @@ import { map, Observable, startWith, tap, withLatestFrom } from 'rxjs';
     styleUrls: [],
 })
 export class SucusalesListComponent implements OnInit {
-    @Select(AjustesSucursalesState.sucursales)
     sucursales$!: Observable<ISucursalReturnDto[]>;
-    @Select(AjustesSucursalesState.loading)
     loading$!: Observable<boolean>;
     actions$!: Actions;
     searchResults$!: Observable<ISucursalReturnDto[]>;
@@ -43,7 +41,10 @@ export class SucusalesListComponent implements OnInit {
         private _dialog: MatDialog,
         private _actions$: Actions,
         private _toast: HotToastService
-    ) {}
+    ) {
+        this.sucursales$ = this._store.select(AjustesSucursalesState.sucursales);
+        this.loading$ = this._store.select(AjustesSucursalesState.loading);
+    }
 
     ngOnInit(): void {
         this._store.dispatch(new GetAllSucursales());

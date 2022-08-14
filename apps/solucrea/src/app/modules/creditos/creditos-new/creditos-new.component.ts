@@ -61,27 +61,18 @@ import {
 export class CreditosNewComponent implements OnInit, OnDestroy {
     @Input()
     clienteId!: string | null;
-    @Select(CreditosState.loading)
-    loading$!: Observable<boolean>;
-    @Select(CreditosState.clientes)
-    clientes$!: Observable<IClienteReturnDto[]>;
-    @Select(CreditosState.productos)
-    productos$!: Observable<Producto[]>;
-    @Select(CreditosState.sucursales)
-    sucursales$!: Observable<ISucursalReturnDto[]>;
-    @Select(CreditosState.parentescos)
-    parentescos$!: Observable<IParentescoReturnDto[]>;
-    @Select(CreditosState.segurosData)
-    segurosData$!: Observable<ISegurosData>;
-    @Select(CreditosState.colocadores)
-    colocadores$!: Observable<IUsuarioReturnDto[]>;
-    @Select(CreditosState.selectedSeguro)
-    selectedSeguro$!: Observable<ISeguroReturnDto>;
-    @Select(CreditosState.selectedClienteReferral)
-    selectedClienteReferral$!: Observable<IClienteReturnDto>;
-
     @ViewChild('stepper')
     private myStepper!: MatStepper;
+
+    loading$!: Observable<boolean>;
+    clientes$!: Observable<IClienteReturnDto[]>;
+    productos$!: Observable<Producto[]>;
+    sucursales$!: Observable<ISucursalReturnDto[]>;
+    parentescos$!: Observable<IParentescoReturnDto[]>;
+    segurosData$!: Observable<ISegurosData | undefined>;
+    colocadores$!: Observable<IUsuarioReturnDto[]>;
+    selectedSeguro$!: Observable<ISeguroReturnDto | undefined>;
+    selectedClienteReferral$!: Observable<IClienteReturnDto | undefined>;
 
     selectedProducto$!: Observable<Producto | undefined>;
     selectedCliente$!: Observable<IClienteReturnDto | undefined>;
@@ -131,7 +122,17 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
         private _cdr: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _creditosService: CreditosService
-    ) {}
+    ) {
+        this.loading$ = this._store.select(CreditosState.loading);
+        this.clientes$ = this._store.select(CreditosState.clientes);
+        this.productos$ = this._store.select(CreditosState.productos);
+        this.sucursales$ = this._store.select(CreditosState.sucursales);
+        this.parentescos$ = this._store.select(CreditosState.parentescos);
+        this.segurosData$ = this._store.select(CreditosState.segurosData);
+        this.colocadores$ = this._store.select(CreditosState.colocadores);
+        this.selectedSeguro$ = this._store.select(CreditosState.selectedSeguro);
+        this.selectedClienteReferral$ = this._store.select(CreditosState.selectedClienteReferral);
+    }
 
     get id() {
         return this.creditosForm.get('id') as UntypedFormControl;
@@ -295,7 +296,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
             })
         );
 
-        this.selectedSeguro$.pipe(takeUntil(this._unsubscribeAll)).subscribe((seguro: ISeguroReturnDto) => {
+        this.selectedSeguro$.pipe(takeUntil(this._unsubscribeAll)).subscribe((seguro: ISeguroReturnDto | undefined) => {
             if (seguro) {
                 this.selectedSeguro = seguro;
             }

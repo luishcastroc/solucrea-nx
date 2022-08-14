@@ -1,10 +1,11 @@
-import { IAmortizacion, ICreditoReturnDto } from 'api/dtos';
-import { Observable } from 'rxjs';
-import { Select, Store } from '@ngxs/store';
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Location } from '@angular/common';
-import { CreditosState, ModeCredito, SelectCredito } from '../_store';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngxs/store';
+import { ICreditoReturnDto } from 'api/dtos';
+import { Observable } from 'rxjs';
+
+import { CreditosState, ModeCredito, SelectCredito } from '../_store';
 
 @Component({
     selector: 'app-creditos-info',
@@ -12,12 +13,13 @@ import { ActivatedRoute } from '@angular/router';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditosInfoComponent implements OnInit {
-    @Select(CreditosState.loading)
     loading$!: Observable<boolean>;
-    @Select(CreditosState.selectedCredito)
-    selectedCredito$!: Observable<ICreditoReturnDto>;
+    selectedCredito$!: Observable<ICreditoReturnDto | undefined>;
     creditoId!: string | null;
-    constructor(private _store: Store, private location: Location, private _route: ActivatedRoute) {}
+    constructor(private _store: Store, private location: Location, private _route: ActivatedRoute) {
+        this.loading$ = this._store.select(CreditosState.loading);
+        this.selectedCredito$ = this._store.select(CreditosState.selectedCredito);
+    }
 
     ngOnInit(): void {
         this.creditoId = this._route.snapshot.paramMap.get('creditoId');

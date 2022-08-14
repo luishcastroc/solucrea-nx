@@ -29,15 +29,10 @@ import { MatRadioChange } from '@angular/material/radio';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditosClienteListComponent implements OnInit {
-    @Select(CreditosState.creditos)
     creditos$!: Observable<ICreditoReturnDto[]>;
-    @Select(CreditosState.selectedCliente)
-    cliente$!: Observable<IClienteReturnDto>;
-    @Select(CreditosState.creditosCount)
+    cliente$!: Observable<IClienteReturnDto | undefined>;
     creditosCount$!: Observable<number>;
-    @Select(CreditosState.loading)
     loading$!: Observable<boolean>;
-    @Select(CreditosState.turnosCount)
     turnosCount$!: Observable<number>;
 
     actions$!: Actions;
@@ -60,7 +55,13 @@ export class CreditosClienteListComponent implements OnInit {
         private _actions$: Actions,
         private _toast: HotToastService,
         private _route: ActivatedRoute
-    ) {}
+    ) {
+        this.creditos$ = this._store.select(CreditosState.creditos);
+        this.cliente$ = this._store.select(CreditosState.selectedCliente);
+        this.creditosCount$ = this._store.select(CreditosState.creditosCount);
+        this.loading$ = this._store.select(CreditosState.loading);
+        this.turnosCount$ = this._store.select(CreditosState.turnosCount);
+    }
 
     ngOnInit(): void {
         this.clienteId = this._route.snapshot.paramMap.get('clienteId');
