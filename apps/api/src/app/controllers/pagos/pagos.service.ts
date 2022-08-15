@@ -1,10 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Pago, Prisma } from '@prisma/client';
 import { PrismaService } from 'api/prisma';
+import { CreditosService } from '../creditos';
 
 @Injectable()
 export class PagosService {
-    constructor(private prisma: PrismaService) {}
+    constructor(private prisma: PrismaService, private creditos: CreditosService) {}
 
     // Pagos
 
@@ -38,10 +39,7 @@ export class PagosService {
                     );
                 }
 
-                const currentCredito = await this.prisma.credito.findUnique({
-                    where: { id },
-                    include: { pagos: true },
-                });
+                const currentCredito = await this.creditos.getCredito(id as string);
 
                 if (!currentCredito) {
                     throw new HttpException(
@@ -50,22 +48,24 @@ export class PagosService {
                     );
                 }
 
-                const { saldo, pagos } = currentCredito;
+                const { saldo, pagos, amortizacion } = currentCredito;
 
                 console.log(pago);
                 console.log(pagos.length);
                 console.log(pagos);
+                console.log(amortizacion);
 
                 const sumPagos = pagos.reduce(
-                    (previousValue, currentValue) => previousValue + currentValue.monto.toNumber(),
+                    (previousValue, currentValue) =>
+                        previousValue + (currentValue.monto ? currentValue.monto.toNumber() : 0),
                     0
                 );
 
                 console.log('sumPagos: ', sumPagos);
 
                 if (saldo) {
-                    console.log('suma: ', saldo.toNumber() - sumPagos);
-                    if (saldo.toNumber() - sumPagos === 0) {
+                    console.log('suma: ', (saldo as Prisma.Decimal).toNumber() - sumPagos);
+                    if ((saldo as Prisma.Decimal).toNumber() - sumPagos === 0) {
                         const updatedCredito = await this.prisma.credito.update({
                             where: { id },
                             data: { fechaLiquidacion: pago.fechaCreacion },

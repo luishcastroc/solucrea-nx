@@ -186,6 +186,9 @@ export const getPagos = (
                 );
                 statusReturn = StatusPago.adeuda;
             } else {
+                montoReturn = new Prisma.Decimal(
+                    monto.toNumber() + monto.toNumber() * (interesMoratorio.toNumber() / 100)
+                );
                 statusReturn = StatusPago.pagado;
             }
             acum -= montoReturn.toNumber();
