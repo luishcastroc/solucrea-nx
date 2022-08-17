@@ -15,7 +15,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
-import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
+import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Producto } from '@prisma/client';
 import {
     addBusinessDays,
@@ -348,6 +348,11 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
                             this.searchInput.reset();
                             // we reset the stepper
                             this.myStepper.reset();
+                            if (!this.clienteId) {
+                                this._store.dispatch(new SelectCliente(undefined));
+                                this.searchInput.setValue('');
+                            }
+                            this._store.dispatch(new SelectProducto(null));
                         }
                     }
                 })

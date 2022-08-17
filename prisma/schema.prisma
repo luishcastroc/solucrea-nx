@@ -37,6 +37,7 @@ model ActividadEconomica {
     fechaActualizacion DateTime @default(now()) @updatedAt
 
     Trabajo Trabajo[]
+
     @@map(name: "ActividadesEconomicas")
 }
 
@@ -61,6 +62,7 @@ model Estado {
     fechaActualizacion DateTime @default(now()) @updatedAt
 
     Ciudad Ciudad[]
+
     @@map(name: "Estados")
 }
 
@@ -480,6 +482,7 @@ model Credito {
     cuota               Decimal           @db.Decimal(15, 2)
     cuotaCapital        Decimal           @db.Decimal(15, 2)
     cuotaInteres        Decimal           @db.Decimal(15, 2)
+    cuotaMora           Decimal           @db.Decimal(15, 2)
     cuotaSeguro         Decimal           @db.Decimal(15, 2)
     producto            Producto          @relation(fields: [productosId], references: [id])
     seguro              Seguro?           @relation(fields: [segurosId], references: [id])

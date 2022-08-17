@@ -1,12 +1,22 @@
 import { Role, Prisma } from '@prisma/client';
+import { ICreateSucursalDto } from './sucursales';
 
-export const adminUsuario: Prisma.UsuarioCreateInput = {
-    nombreUsuario: 'admin',
-    password: '$2b$10$PcFzBj9LN22dXBMnIfYOneRpgBuS1fZ7CcRVDuD.4p/eqaQkl08T2',
-    nombre: 'Admin',
-    apellido: 'Admin',
-    role: Role.ADMIN,
-};
+export const usuarios: Prisma.UsuarioCreateInput[] = [
+    {
+        nombreUsuario: 'admin',
+        password: '$2b$10$PcFzBj9LN22dXBMnIfYOneRpgBuS1fZ7CcRVDuD.4p/eqaQkl08T2',
+        nombre: 'Admin',
+        apellido: 'Admin',
+        role: Role.ADMIN,
+    },
+    {
+        nombreUsuario: 'luish.castroc',
+        password: '$2b$10$1jeIW3Zr5FJFMu.ATJoiTehBOgrAvTjI2C/lHOGG9MkebGNj5zVd6',
+        nombre: 'Luis',
+        apellido: 'Castro',
+        role: Role.ADMIN,
+    },
+];
 
 const creationDate = new Date().toISOString();
 
@@ -16839,5 +16849,84 @@ export const createColonias: Prisma.ColoniaUncheckedCreateInput[] = [
         fechaCreacion: creationDate,
         actualizadoPor: 'ADMIN',
         fechaActualizacion: creationDate,
+    },
+];
+
+export const sucursales: ICreateSucursalDto[] = [
+    {
+        nombre: 'Tekax',
+        telefono: '9979742323',
+        direccion: {
+            calle: '57',
+            numero: '197-A',
+            cruzamientos: '48 y 50',
+            codigoPostal: '97970',
+            colonia: 'Tekax de Álvaro Obregón',
+        },
+    },
+    {
+        nombre: 'Oxkutzcab',
+        telefono: '9979751198',
+        direccion: { calle: '50', numero: '97', cruzamientos: '47 y 49', codigoPostal: '97880', colonia: 'Oxkutzcab' },
+    },
+    {
+        nombre: 'Ticul',
+        telefono: '9979721753',
+        direccion: {
+            calle: '25',
+            numero: '205-F',
+            cruzamientos: '26 y 28',
+            codigoPostal: '97860',
+            colonia: 'Ticul Centro',
+        },
+    },
+    {
+        nombre: 'Umán',
+        telefono: '9889330286',
+        direccion: {
+            calle: '21',
+            numero: '125-A',
+            cruzamientos: '22 y 24',
+            codigoPostal: '97390',
+            colonia: 'Centro Umán',
+        },
+    },
+    {
+        nombre: 'Mérida',
+        telefono: '9994064789',
+        direccion: {
+            calle: '59-A',
+            numero: '270-A',
+            cruzamientos: '124-A y 126',
+            codigoPostal: '97238',
+            colonia: 'Yucalpeten',
+        },
+    },
+    {
+        nombre: 'Hunucmá',
+        telefono: '9889310354',
+        direccion: {
+            calle: '31',
+            numero: '199-B',
+            cruzamientos: '26',
+            codigoPostal: '97350',
+            colonia: 'Centro Hunucmá',
+        },
+    },
+    {
+        nombre: 'Motul',
+        telefono: '9919154113',
+        direccion: {
+            calle: '27',
+            numero: '302',
+            cruzamientos: '26 y 38',
+            codigoPostal: '97430',
+            colonia: 'Motul de Carrillo Puerto Centro',
+        },
+    },
+    {
+        nombre: 'Acanceh',
+        telefono: '9889126064',
+        direccion: { calle: '22', numero: '107', cruzamientos: '19 y 21', codigoPostal: '97380', colonia: 'Acanceh' },
     },
 ];

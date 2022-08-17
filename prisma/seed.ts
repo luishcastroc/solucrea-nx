@@ -1,8 +1,8 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Sucursal } from '@prisma/client';
 
 import {
     actividadesEconomicasCreate,
-    adminUsuario,
+    usuarios,
     createCiudades,
     createColonias,
     createEstado,
@@ -12,20 +12,22 @@ import {
     modalidadesDeSeguro,
     parentescos,
     seguros,
+    sucursales,
     tiposDeViviendaCreate,
 } from './seed-data';
+import { createSucursal } from './sucursales';
 
 /* eslint-disable prefer-arrow/prefer-arrow-functions */
 const prisma = new PrismaClient();
 
 async function main() {
     //Creates ADMIN user
-    const admin = await prisma.usuario.create({
-        data: adminUsuario,
+    const admin = await prisma.usuario.createMany({
+        data: usuarios,
     });
 
     if (admin) {
-        console.log(`Usuario ADMIN creado id: ${admin.id}`);
+        console.log(`Usuarios creados conteo: ${admin.count}`);
         //Creates estado
         const estado = await prisma.estado.create({ data: createEstado });
         if (estado) {
@@ -71,6 +73,21 @@ async function main() {
         const actividadesEconomicas = await prisma.actividadEconomica.createMany({ data: actividadesEconomicasCreate });
         if (actividadesEconomicas) {
             console.log(`Actividades económicas creadas exitosamente Conteo: ${actividadesEconomicas.count}`);
+        }
+        if (sucursales) {
+            let sucursalesCreated: number = 0;
+            for (const sucursal of sucursales) {
+                const data = await createSucursal(sucursal);
+                if (data) {
+                    const createdSucursal = await prisma.sucursal.create({ data });
+                    if (createdSucursal) {
+                        sucursalesCreated++;
+                    }
+                }
+            }
+            if (sucursalesCreated === sucursales.length) {
+                console.log(`Sucursales creadas exitosamente Conteo: ${sucursales.length}`);
+            }
         }
     }
 }
