@@ -16930,3 +16930,23 @@ export const sucursales: ICreateSucursalDto[] = [
         direccion: { calle: '22', numero: '107', cruzamientos: '19 y 21', codigoPostal: '97380', colonia: 'Acanceh' },
     },
 ];
+
+export const productos: Prisma.ProductoUncheckedCreateInput[] = [
+    {
+        cargos: 0,
+        comision: new Prisma.Decimal(0.0),
+        creditosActivos: 1,
+        descripcion: 'Tradicional 45 días micro-empresas',
+        diaMes: 0,
+        diaSemana: 0,
+        frecuencia: 'DIARIO',
+        interes: new Prisma.Decimal(35.0),
+        interesMoratorio: new Prisma.Decimal(15.0),
+        montoMaximo: new Prisma.Decimal(15000.0),
+        montoMinimo: new Prisma.Decimal(3000.0),
+        nombre: 'Tradicional',
+        numeroDePagos: 45,
+        penalizacion: new Prisma.Decimal(10.0),
+        tipoPenalizacion: 'PORCENTAJE',
+    },
+];

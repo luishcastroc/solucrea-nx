@@ -170,6 +170,10 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
         return this.creditosForm.get('cuotaSeguro') as UntypedFormControl;
     }
 
+    get cuotaMora() {
+        return this.creditosForm.get('cuotaMora') as UntypedFormControl;
+    }
+
     get status() {
         return this.creditosForm.get('status') as UntypedFormControl;
     }
@@ -456,6 +460,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
             cuotaCapital: [0],
             cuotaInteres: [0],
             cuotaSeguro: [0],
+            cuotaMora: [0],
             cliente: [null, Validators.required],
             sucursal: [null, Validators.required],
             producto: [null, Validators.required],
@@ -548,6 +553,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
             this.cuota.setValue(this.resumenOperacion.cuota);
             this.cuotaCapital.setValue(this.resumenOperacion.capital);
             this.cuotaInteres.setValue(this.resumenOperacion.interes);
+            this.cuotaMora.setValue(this.resumenOperacion.mora);
             this.cuotaSeguro.setValue(modalidadDeSeguro?.includes('Diferido') ? this.resumenOperacion.seguro : 0);
         }
     }

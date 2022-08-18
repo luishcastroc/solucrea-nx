@@ -50,10 +50,8 @@ export class PagosService {
 
                 const { saldo, pagos, amortizacion } = currentCredito;
 
-                console.log(pago);
-                console.log(pagos.length);
-                console.log(pagos);
-                console.log(amortizacion);
+                console.log('pagos: ', pagos);
+                console.log('amortizacion: ', amortizacion);
 
                 const sumPagos = pagos.reduce(
                     (previousValue, currentValue) =>

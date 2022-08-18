@@ -27,11 +27,12 @@ describe('Utils testing', () => {
         const results: IDetails = {
             apertura: 25,
             capital: 50,
-            cuota: 53.75,
+            cuota: 56.25,
             interes: 3.75,
             saldo: 1000,
             seguro: 50,
             total: 75,
+            mora: 64.6875,
         };
         expect(calculateDetails(data)).toEqual(results);
     });
@@ -110,8 +111,8 @@ describe('Utils testing', () => {
             1,
             fechaDeInicio.local(true).format('YYYY-MM-DD'),
             new Prisma.Decimal(150.0),
-            new Prisma.Decimal(15),
-            []
+            [],
+            new Prisma.Decimal(172.5)
         );
 
         expect(tablaDeAmortizacion.filter((data) => data.status === StatusPago.adeuda).length === 1).toBeTruthy();
@@ -124,8 +125,8 @@ describe('Utils testing', () => {
             1,
             fechaDeInicio.toISOString(),
             new Prisma.Decimal(150),
-            new Prisma.Decimal(15.0),
-            []
+            [],
+            new Prisma.Decimal(172.5)
         );
 
         expect(tablaDeAmortizacion.filter((data) => data.status === StatusPago.adeuda).length === 0).toBeTruthy();
@@ -133,6 +134,7 @@ describe('Utils testing', () => {
 
     it('should return one payment made', () => {
         const monto = new Prisma.Decimal(150.0);
+        const montoMora = new Prisma.Decimal(monto.toNumber() * (15 / 100) + monto.toNumber());
         const fechaDeInicio = moment().utc(true).utcOffset(0).set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
         const pagos: Partial<Pago>[] | Pago[] = [
             {
@@ -147,9 +149,9 @@ describe('Utils testing', () => {
             1,
             1,
             fechaDeInicio.toISOString(),
-            new Prisma.Decimal(190),
             monto,
-            pagos
+            pagos,
+            montoMora
         );
 
         expect(tablaDeAmortizacion.filter((data) => data.status === StatusPago.adeuda).length === 0).toBeTruthy();

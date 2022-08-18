@@ -6,4 +6,5 @@ export interface IDetails {
     total: number;
     seguro: number;
     saldo?: number;
+    mora: number;
 }

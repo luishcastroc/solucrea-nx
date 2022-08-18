@@ -251,6 +251,7 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
             this.creditosForm.disable();
             const diaSemana = this.diaSemana.value === '' ? null : this.diaSemana.value;
             const diaMes = this.diaMes.value === '' ? null : this.diaMes.value;
+            console.log({ ...this.creditosForm.value, diaMes, diaSemana });
             this._store.dispatch(new AddCredito({ ...this.creditosForm.value, diaMes, diaSemana }));
         } else if (this.editMode === 'edit') {
             const creditoEdit = this._sharedService.getDirtyValues(this.creditosForm);

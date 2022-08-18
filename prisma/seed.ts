@@ -14,6 +14,7 @@ import {
     seguros,
     sucursales,
     tiposDeViviendaCreate,
+    productos,
 } from './seed-data';
 import { createSucursal } from './sucursales';
 
@@ -87,6 +88,12 @@ async function main() {
             }
             if (sucursalesCreated === sucursales.length) {
                 console.log(`Sucursales creadas exitosamente Conteo: ${sucursales.length}`);
+            }
+        }
+        if (productos) {
+            const productorCreate = await prisma.producto.createMany({ data: productos });
+            if (productorCreate) {
+                console.log(`Productos creados exitosamente Conteo: ${productorCreate.count}`);
             }
         }
     }

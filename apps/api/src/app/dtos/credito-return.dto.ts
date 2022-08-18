@@ -30,6 +30,7 @@ export interface ICreditoReturnDto {
     cuotaCapital: Prisma.Decimal | number | string;
     cuotaInteres: Prisma.Decimal | number | string;
     cuotaSeguro: Prisma.Decimal | number | string;
+    cuotaMora: Prisma.Decimal | number | string;
     saldo?: Prisma.Decimal | number | string;
     amortizacion?: IAmortizacion[];
     saldoVencido?: number;

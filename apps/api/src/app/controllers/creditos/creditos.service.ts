@@ -31,8 +31,8 @@ export class CreditosService {
                         frecuencia,
                         credito?.fechaInicio as string | Date,
                         credito?.cuota,
-                        credito?.producto.interesMoratorio,
-                        credito?.pagos as Partial<Pago>[] | Pago[]
+                        credito?.pagos as Partial<Pago>[] | Pago[],
+                        credito?.cuotaMora
                     );
 
                     let status;
@@ -101,8 +101,8 @@ export class CreditosService {
                         frecuencia,
                         credito?.fechaInicio as string | Date,
                         credito?.cuota,
-                        credito?.producto.interesMoratorio,
-                        credito?.pagos as Partial<Pago>[] | Pago[]
+                        credito?.pagos as Partial<Pago>[] | Pago[],
+                        credito?.cuotaMora
                     );
 
                     let status;
@@ -167,8 +167,8 @@ export class CreditosService {
                 frecuencia,
                 credito?.fechaInicio as string | Date,
                 credito?.cuota as Prisma.Decimal,
-                credito?.producto.interesMoratorio as Prisma.Decimal,
-                credito?.pagos as Partial<Pago>[] | Pago[]
+                credito?.pagos as Partial<Pago>[] | Pago[],
+                credito?.cuotaMora as Prisma.Decimal
             );
 
             let status;
@@ -356,6 +356,7 @@ export class CreditosService {
                 );
             }
         } catch (e: any) {
+            console.log(e);
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error creando el nuevo crédito, verificar.' },

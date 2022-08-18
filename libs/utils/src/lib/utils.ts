@@ -13,7 +13,16 @@ import { ICreditoData, IDetails } from './models';
  * @returns IDetails
  */
 export const calculateDetails = (data: ICreditoData): IDetails => {
-    const { tasaInteres, monto, montoSeguro, numeroDePagos, comisionPorApertura, modalidadSeguro, pagos } = data;
+    const {
+        tasaInteres,
+        monto,
+        montoSeguro,
+        numeroDePagos,
+        comisionPorApertura,
+        modalidadSeguro,
+        pagos,
+        interesMoratorio,
+    } = data;
 
     const capital = monto / numeroDePagos;
     const interes = capital * (tasaInteres / 100);
@@ -21,6 +30,7 @@ export const calculateDetails = (data: ICreditoData): IDetails => {
     const cuota = capital + interes + seguroDiferido;
     const apertura = comisionPorApertura ? monto * (comisionPorApertura / 100) : 0;
     const total = apertura + (modalidadSeguro === 'contado' ? (montoSeguro ? montoSeguro : 0) : 0);
+    const mora = cuota * (interesMoratorio / 100) + cuota;
     const seguro =
         modalidadSeguro === 'diferido'
             ? seguroDiferido
@@ -40,6 +50,7 @@ export const calculateDetails = (data: ICreditoData): IDetails => {
         total,
         seguro,
         saldo,
+        mora,
     };
 
     return details;
@@ -115,8 +126,8 @@ export const generateTablaAmorizacion = (
     frecuencia: number,
     fechaInicio: string | Date,
     monto: Prisma.Decimal,
-    interesMoratorio: Prisma.Decimal,
-    pagos: Partial<Pago>[] | Pago[]
+    pagos: Partial<Pago>[] | Pago[],
+    montoMora: Prisma.Decimal
 ): IAmortizacion[] => {
     const amortizacion: IAmortizacion[] = [];
     const today = moment().utc(true).utcOffset(0).local(true);
@@ -136,7 +147,7 @@ export const generateTablaAmorizacion = (
         fechaPagoAux = fechaPlusDays.toISOString();
     }
 
-    return getPagos(amortizacion, pagos, today, interesMoratorio);
+    return getPagos(amortizacion, pagos, today, montoMora);
 };
 
 /**
@@ -172,7 +183,7 @@ export const getPagos = (
     amortizacion: IAmortizacion[],
     pagos: Partial<Pago>[] | Pago[],
     today: moment.Moment,
-    interesMoratorio: Prisma.Decimal
+    montoMora: Prisma.Decimal
 ): IAmortizacion[] => {
     const pagosSum = pagos.length > 0 ? (pagos as Pago[]).reduce((acc, obj) => acc + obj.monto.toNumber(), 0) : 0;
     let acum = pagosSum;
@@ -181,14 +192,10 @@ export const getPagos = (
         let montoReturn = monto;
         if (moment(today.format('YYYY-MM-DD')).isAfter(moment(fechaDePago).format('YYYY-MM-DD'))) {
             if (pagosSum < monto.toNumber()) {
-                montoReturn = new Prisma.Decimal(
-                    monto.toNumber() + monto.toNumber() * (interesMoratorio.toNumber() / 100) - pagosSum
-                );
+                montoReturn = new Prisma.Decimal(montoMora.toNumber() - pagosSum);
                 statusReturn = StatusPago.adeuda;
             } else {
-                montoReturn = new Prisma.Decimal(
-                    monto.toNumber() + monto.toNumber() * (interesMoratorio.toNumber() / 100)
-                );
+                montoReturn = new Prisma.Decimal(montoMora);
                 statusReturn = StatusPago.pagado;
             }
             acum -= montoReturn.toNumber();
