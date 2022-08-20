@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Pago, Prisma } from '@prisma/client';
+import { Pago, Prisma, TipoDePago } from '@prisma/client';
+import { StatusPago } from 'api/dtos';
 import { PrismaService } from 'api/prisma';
 import { CreditosService } from '../creditos';
 
@@ -28,6 +29,15 @@ export class PagosService {
                     connect: { id },
                 } = credito;
 
+                const currentCredito = await this.creditos.getCredito(id as string);
+
+                if (!currentCredito) {
+                    throw new HttpException(
+                        { status: HttpStatus.NOT_FOUND, message: 'Error al crear el pago, crédito no encontrado' },
+                        HttpStatus.NOT_FOUND
+                    );
+                }
+
                 pago = await this.prisma.pago.create({
                     data,
                 });
@@ -39,46 +49,49 @@ export class PagosService {
                     );
                 }
 
-                const currentCredito = await this.creditos.getCredito(id as string);
+                const { saldo, cuotaCapital, cuotaMora } = currentCredito;
 
-                if (!currentCredito) {
-                    throw new HttpException(
-                        { status: HttpStatus.NOT_FOUND, message: 'Error al crear el pago, crédito no encontrado' },
-                        HttpStatus.NOT_FOUND
-                    );
+                switch (pago.tipoDePago) {
+                    case TipoDePago.ABONO:
+                        console.log('abono');
+                        break;
+                    case TipoDePago.MORA:
+                        console.log('mora');
+                        break;
+                    case TipoDePago.CAPITAL:
+                        console.log('capital');
+                        break;
+                    case TipoDePago.LIQUIDACION:
+                        console.log('liquidacion');
+                        break;
+                    default:
+                        console.log('regular');
+                        break;
                 }
 
-                const { saldo, pagos, amortizacion } = currentCredito;
+                // const auxSaldo = Math.floor(pago.monto.toNumber()/(cuotaCapital as Prisma.Decimal).toNumber());
+                // if(auxSaldo > 0){
 
-                console.log('pagos: ', pagos);
-                console.log('amortizacion: ', amortizacion);
+                // }
 
-                const sumPagos = pagos.reduce(
-                    (previousValue, currentValue) =>
-                        previousValue + (currentValue.monto ? currentValue.monto.toNumber() : 0),
-                    0
-                );
-
-                console.log('sumPagos: ', sumPagos);
-
-                if (saldo) {
-                    console.log('suma: ', (saldo as Prisma.Decimal).toNumber() - sumPagos);
-                    if ((saldo as Prisma.Decimal).toNumber() - sumPagos === 0) {
-                        const updatedCredito = await this.prisma.credito.update({
-                            where: { id },
-                            data: { fechaLiquidacion: pago.fechaCreacion },
-                        });
-                        if (!updatedCredito) {
-                            throw new HttpException(
-                                {
-                                    status: HttpStatus.INTERNAL_SERVER_ERROR,
-                                    message: 'Error al actualizar el crédito con fecha final',
-                                },
-                                HttpStatus.INTERNAL_SERVER_ERROR
-                            );
-                        }
-                    }
-                }
+                // if (saldo) {
+                //     console.log('suma: ', (saldo as Prisma.Decimal).toNumber() - sumPagos);
+                //     if ((saldo as Prisma.Decimal).toNumber() - sumPagos === 0) {
+                //         const updatedCredito = await this.prisma.credito.update({
+                //             where: { id },
+                //             data: { fechaLiquidacion: pago.fechaCreacion },
+                //         });
+                //         if (!updatedCredito) {
+                //             throw new HttpException(
+                //                 {
+                //                     status: HttpStatus.INTERNAL_SERVER_ERROR,
+                //                     message: 'Error al actualizar el crédito con fecha final',
+                //                 },
+                //                 HttpStatus.INTERNAL_SERVER_ERROR
+                //             );
+                //         }
+                //     }
+                // }
 
                 return pago;
             } else {

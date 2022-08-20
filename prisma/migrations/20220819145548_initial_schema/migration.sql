@@ -238,7 +238,7 @@ CREATE TABLE `Cajas` (
 CREATE TABLE `Pagos` (
     `id` VARCHAR(191) NOT NULL,
     `monto` DECIMAL(15, 2) NOT NULL,
-    `tipoDePago` ENUM('REGULAR', 'CAPITAL', 'LIQUIDACION') NOT NULL,
+    `tipoDePago` ENUM('REGULAR', 'MORA', 'CAPITAL', 'ABONO', 'LIQUIDACION') NOT NULL,
     `fechaDePago` DATETIME(3) NOT NULL,
     `observaciones` VARCHAR(191) NULL,
     `creadoPor` VARCHAR(191) NOT NULL,

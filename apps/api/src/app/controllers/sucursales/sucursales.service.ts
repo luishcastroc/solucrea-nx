@@ -221,6 +221,7 @@ export class SucursalesService {
         }
 
         let sucursalesReturn: Partial<ISucursalReturnDto>[] = [];
+
         for (const caja of availableCajas) {
             const sucursalWithCaja = await this.prisma.sucursal.findUnique({
                 where: { id: caja.sucursal?.id },

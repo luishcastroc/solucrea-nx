@@ -225,7 +225,9 @@ enum ReferidoPor {
 
 enum TipoDePago {
     REGULAR
+    MORA
     CAPITAL
+    ABONO
     LIQUIDACION
 }
 
