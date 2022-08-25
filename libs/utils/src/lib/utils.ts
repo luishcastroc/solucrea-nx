@@ -166,9 +166,15 @@ export const getSaldoVencido = (amortizacion: IAmortizacion[]): number => {
  * @param cuota
  * @returns pago para no generar intereses
  */
-export const getPagoNoIntereses = (amortizacion: IAmortizacion[], cuota: Decimal): number => {
+export const getPagoNoIntereses = (amortizacion: IAmortizacion[], cuota: Prisma.Decimal): number => {
+    const today = moment().utc(true).utcOffset(0).local(true);
     const vencido = getSaldoVencido(amortizacion);
-    return cuota.toNumber() + vencido;
+    const corriente = amortizacion.filter(
+        (pago) =>
+            pago.status === 'CORRIENTE' &&
+            moment(today.format('YYYY-MM-DD')).isSame(moment(pago.fechaDePago).format('YYYY-MM-DD'))
+    );
+    return (corriente.length > 0 ? cuota.toNumber() : 0) + vencido;
 };
 
 /**

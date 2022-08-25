@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Pago, Prisma, TipoDePago } from '@prisma/client';
-import { StatusPago } from 'api/dtos';
 import { PrismaService } from 'api/prisma';
+
 import { CreditosService } from '../creditos';
 
 @Injectable()
@@ -49,49 +49,47 @@ export class PagosService {
                     );
                 }
 
-                const { saldo, cuotaCapital, cuotaMora } = currentCredito;
+                let { saldo, cuotaMora, cuota } = currentCredito;
+                const { amortizacion } = currentCredito;
+                cuota = (cuota as Prisma.Decimal).toNumber();
+                cuotaMora = (cuotaMora as Prisma.Decimal).toNumber();
+                saldo = (saldo as Prisma.Decimal).toNumber();
 
+                let auxSaldo = 0;
                 switch (pago.tipoDePago) {
                     case TipoDePago.ABONO:
-                        console.log('abono');
+                        auxSaldo = Math.floor(pago.monto.toNumber() / cuota);
                         break;
                     case TipoDePago.MORA:
-                        console.log('mora');
-                        break;
-                    case TipoDePago.CAPITAL:
-                        console.log('capital');
+                        auxSaldo = Math.floor(pago.monto.toNumber() / cuotaMora);
                         break;
                     case TipoDePago.LIQUIDACION:
-                        console.log('liquidacion');
+                        auxSaldo = saldo;
                         break;
                     default:
-                        console.log('regular');
+                        auxSaldo = Math.floor(pago.monto.toNumber() / cuota);
                         break;
                 }
 
-                // const auxSaldo = Math.floor(pago.monto.toNumber()/(cuotaCapital as Prisma.Decimal).toNumber());
-                // if(auxSaldo > 0){
+                saldo = saldo !== auxSaldo ? new Prisma.Decimal(saldo - cuota * auxSaldo) : saldo - auxSaldo;
 
-                // }
-
-                // if (saldo) {
-                //     console.log('suma: ', (saldo as Prisma.Decimal).toNumber() - sumPagos);
-                //     if ((saldo as Prisma.Decimal).toNumber() - sumPagos === 0) {
-                //         const updatedCredito = await this.prisma.credito.update({
-                //             where: { id },
-                //             data: { fechaLiquidacion: pago.fechaCreacion },
-                //         });
-                //         if (!updatedCredito) {
-                //             throw new HttpException(
-                //                 {
-                //                     status: HttpStatus.INTERNAL_SERVER_ERROR,
-                //                     message: 'Error al actualizar el crédito con fecha final',
-                //                 },
-                //                 HttpStatus.INTERNAL_SERVER_ERROR
-                //             );
-                //         }
-                //     }
-                // }
+                let dataSaldo: Prisma.CreditoUncheckedUpdateInput = { saldo };
+                if (saldo <= 0) {
+                    dataSaldo = { ...dataSaldo, fechaLiquidacion: pago.fechaCreacion };
+                }
+                const updatedCredito = await this.prisma.credito.update({
+                    where: { id },
+                    data: dataSaldo,
+                });
+                if (!updatedCredito) {
+                    throw new HttpException(
+                        {
+                            status: HttpStatus.INTERNAL_SERVER_ERROR,
+                            message: 'Error al actualizar el crédito con fecha final',
+                        },
+                        HttpStatus.INTERNAL_SERVER_ERROR
+                    );
+                }
 
                 return pago;
             } else {

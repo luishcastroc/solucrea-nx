@@ -8,10 +8,10 @@ export class ActividadesEconomicasService {
     constructor(private prisma: PrismaService) {}
 
     async actividadEconomica(
-        avalWhereUniqueInput: Prisma.ActividadEconomicaWhereUniqueInput
+        where: Prisma.ActividadEconomicaWhereUniqueInput
     ): Promise<IActividadEconomicaReturnDto | null> {
         return this.prisma.actividadEconomica.findUnique({
-            where: avalWhereUniqueInput,
+            where,
             select: { id: true, descripcion: true, montoMin: true, montoMax: true },
         });
     }

@@ -16,7 +16,7 @@ import { CajaService } from 'app/modules/caja/_services/caja.service';
 import { ClientesService } from 'app/modules/clientes';
 import { ParentescosService } from 'app/shared';
 import { cloneDeep, sortBy } from 'lodash';
-import { forkJoin, tap } from 'rxjs';
+import { forkJoin, mergeMap, tap } from 'rxjs';
 
 import { CreditosService } from '../_services/creditos.service';
 import {
@@ -43,7 +43,7 @@ import {
     SelectSeguro,
 } from './creditos.actions';
 import { CreditosStateModel } from './creditos.model';
-import { Pago, Producto, Role } from '.prisma/client';
+import { Producto, Role } from '.prisma/client';
 
 @State<CreditosStateModel>({
     name: 'creditos',
@@ -392,12 +392,14 @@ export class CreditosState {
 
     @Action(SavePago)
     savePago({ getState, patchState }: StateContext<CreditosStateModel>, { data }: SavePago) {
+        const creditoId = data.credito?.connect?.id;
         return this._creditosService.savePago(data).pipe(
-            tap((pago: Pago) => {
+            mergeMap(() => this._creditosService.getCredito(creditoId as string)),
+            tap((credito: ICreditoReturnDto) => {
                 const state = getState();
                 const creditos = cloneDeep(state.creditos);
-                const idx = creditos.findIndex((credito) => credito.id === data.credito?.connect?.id);
-                creditos[idx].pagos.push(pago);
+                const idx = creditos.findIndex((creditoSt) => creditoSt.id === creditoId);
+                creditos[idx] = credito;
                 patchState({ creditos, selectedCredito: creditos[idx] });
             })
         );

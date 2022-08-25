@@ -163,7 +163,14 @@
                     </div>
                     <div class="flex basis-40 gap-3 items-end">
                         <button mat-flat-button type="button" [color]="'primary'" matStepperNext>Siguiente</button>
-                        <button mat-stroked-button type="button" (click)="goToPago()">Pagar</button>
+                        <button
+                            mat-stroked-button
+                            type="button"
+                            (click)="goToPago()"
+                            *ngIf="credito.status !== 'CERRADO'"
+                        >
+                            Pagar
+                        </button>
                     </div>
                 </div> </mat-step
             ><mat-step
@@ -185,7 +192,7 @@
                         <div
                             class="grid grid-cols-1 mb-4 pb-8 hover:bg-fuse-bg-default md:mb-0 md:pb-0 md:grid-cols-4 gap-3 border-b-2 min-h-8 cursor-pointer"
                             *ngFor="let pago of credito.amortizacion"
-                            (click)="goToPago()"
+                            (click)="credito.status !== 'CERRADO' ? goToPago() : null"
                         >
                             <div class="grid grid-cols-2 md:grid-cols-1">
                                 <div class="font-bold md:hidden">Numero de Pago:</div>
@@ -211,7 +218,14 @@
                     </div>
                     <div class="flex flex-auto gap-3 basis-30 items-end">
                         <button mat-flat-button type="button" [color]="'primary'" matStepperPrevious>Anterior</button>
-                        <button mat-stroked-button type="button" (click)="goToPago()">Pagar</button>
+                        <button
+                            mat-stroked-button
+                            type="button"
+                            (click)="goToPago()"
+                            *ngIf="credito.status !== 'CERRADO'"
+                        >
+                            Pagar
+                        </button>
                     </div>
                 </div>
             </mat-step></mat-stepper

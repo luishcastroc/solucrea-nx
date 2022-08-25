@@ -804,7 +804,7 @@
                                 <mat-select [formControlName]="'colocador'">
                                     <mat-option>Elija una opción</mat-option>
                                     <mat-option *ngFor="let colocador of colocadores$ | async" [value]="colocador.id"
-                                        >{{ colocador.apellido }} {{ colocador.nombre }}</mat-option
+                                        >{{ colocador.nombre }} {{ colocador.apellido }}</mat-option
                                     >
                                 </mat-select>
                             </mat-form-field>
