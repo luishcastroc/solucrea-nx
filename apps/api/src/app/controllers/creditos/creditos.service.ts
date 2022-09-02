@@ -203,6 +203,7 @@ export class CreditosService {
 
             return creditoReturn as ICreditoReturnDto;
         } catch (e: any) {
+            console.log('credito: ', e);
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error consultando créditos del cliente' },
@@ -310,7 +311,10 @@ export class CreditosService {
                 );
             }
 
-            const saldoInicial = (producto.interes.toNumber() / 100) * Number(data.monto) + Number(data.monto);
+            const saldoInicial =
+                (producto.interes.toNumber() / 100) * Number(data.monto) +
+                Number(data.monto) +
+                Number(producto.numeroDePagos) * Number(data.cuotaSeguro);
             const creditoCreado = await this.prisma.credito.create({
                 data: { ...data, saldo: new Prisma.Decimal(saldoInicial) },
                 select,

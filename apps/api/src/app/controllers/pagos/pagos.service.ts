@@ -102,6 +102,7 @@ export class PagosService {
                 );
             }
         } catch (e: any) {
+            console.log(e);
             if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
                 throw new HttpException(
                     { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error al crear el pago' },

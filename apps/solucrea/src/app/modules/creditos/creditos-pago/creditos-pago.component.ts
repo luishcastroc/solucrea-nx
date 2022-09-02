@@ -68,7 +68,9 @@ export class CreditosPagoComponent implements OnInit {
                             position: 'bottom-center',
                         });
 
-                        this.pagosForm.reset();
+                        this.monto?.reset();
+                        this.tipoDePago?.reset();
+                        this.observaciones?.reset();
                     }
                 }
             })
@@ -150,6 +152,7 @@ export class CreditosPagoComponent implements OnInit {
             actualizadoPor,
             credito: { connect: { id: this.creditoId?.value } },
         };
+        console.log(pago);
         this._store.dispatch(new SavePago(pago));
     }
 
