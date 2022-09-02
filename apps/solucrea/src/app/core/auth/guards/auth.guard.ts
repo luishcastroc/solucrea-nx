@@ -10,7 +10,7 @@ import {
     UrlTree,
 } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
-import { Select, Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { Role, Usuario } from '@prisma/client';
 import { AuthService } from 'app/core/auth/auth.service';
 import { combineLatest, Observable, of, switchMap } from 'rxjs';

@@ -204,24 +204,18 @@ export const getPagos = (
                 montoReturn = new Prisma.Decimal(montoMora);
                 statusReturn = StatusPago.pagado;
             }
-            acum -= montoReturn.toNumber();
-            return {
-                numeroDePago,
-                fechaDePago,
-                monto: montoReturn,
-                status: statusReturn,
-            };
+            acum = Math.round((acum - montoReturn.toNumber() + Number.EPSILON) * 100) / 100;
         } else {
             if (acum > 0 && acum >= monto.toNumber()) {
                 statusReturn = StatusPago.pagado;
-                acum -= montoReturn.toNumber();
+                acum = Math.round((acum - montoReturn.toNumber() + Number.EPSILON) * 100) / 100;
             } else {
                 montoReturn = new Prisma.Decimal(monto.toNumber());
                 statusReturn = StatusPago.corriente;
                 acum = 0;
             }
-            return { numeroDePago, fechaDePago, status: statusReturn, monto: montoReturn };
         }
+        return { numeroDePago, fechaDePago, status: statusReturn, monto: montoReturn };
     });
 
     return evalAmortizacion;
