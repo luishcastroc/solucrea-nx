@@ -87,8 +87,7 @@
                             "@prisma/client",
                             "validator",
                             "lodash",
-                            "inputmask",
-                            "moment"
+                            "inputmask"
                         ],
                         "assets": [
                             "apps/solucrea/src/assets",

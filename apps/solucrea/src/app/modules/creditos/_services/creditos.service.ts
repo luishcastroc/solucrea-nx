@@ -2,12 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { Pago, Prisma, ReferidoPor, Status } from '@prisma/client';
+import { ISegurosData } from '@solucrea-utils';
 import { ICreditoReturnDto, IModalidadSeguroReturnDto, ISeguroReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { environment } from 'apps/solucrea/src/environments/environment';
-import { Moment } from 'moment';
+import { DateTime } from 'luxon';
 import { forkJoin, map, Observable } from 'rxjs';
-
-import { ISegurosData } from '@solucrea-utils';
 
 @Injectable({
     providedIn: 'root',
@@ -113,16 +112,10 @@ export class CreditosService {
         const formValue = creditosForm.value;
 
         //transform into date strings
-        const fechaDesembolso = (formValue.fechaDesembolso as Moment).toISOString();
-        const fechaInicio = (formValue.fechaInicio as Moment)
-            .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-            .toISOString();
-        const fechaFinal = (formValue.fechaFinal as Moment)
-            .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-            .toISOString();
-        const fechaDeNacimiento = (formValue.aval.fechaDeNacimiento as Moment)
-            .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-            .toISOString();
+        const fechaDesembolso = (formValue.fechaDesembolso as DateTime).toISO();
+        const fechaInicio = (formValue.fechaInicio as DateTime).toISO();
+        const fechaFinal = (formValue.fechaFinal as DateTime).toISO();
+        const fechaDeNacimiento = (formValue.aval.fechaDeNacimiento as DateTime).toISO();
 
         //removing non used values (they have default in the database)
         const { id, status, ...rest } = formValue;

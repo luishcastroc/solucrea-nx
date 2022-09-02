@@ -33,7 +33,7 @@ import {
     ISucursalReturnDto,
     IUsuarioReturnDto,
 } from 'api/dtos';
-import { Moment } from 'moment';
+import { DateTime } from 'luxon';
 import { debounceTime, distinctUntilChanged, filter, Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { CreditosService } from '../_services/creditos.service';
@@ -420,7 +420,9 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
         const frecuencia = getFrecuencia(this.selectedProducto.frecuencia);
         const duracion = frecuencia * this.selectedProducto.numeroDePagos;
         this.fechaInicio.setValue(addBusinessDays(this.fechaDesembolso.value, 1));
-        this.fechaFinal.setValue(addBusinessDays(this.fechaInicio.value, duracion));
+        if (this.fechaInicio.valid) {
+            this.fechaFinal.setValue(addBusinessDays(this.fechaInicio.value, duracion));
+        }
         this.fechaInicio.markAsTouched();
         this.fechaFinal.markAsTouched();
     }
@@ -563,10 +565,10 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
      *
      * @param date
      */
-    myFilter(d: Moment | null): boolean {
-        const day = d?.weekday();
+    myFilter(d: DateTime | null): boolean {
+        const day = d?.weekday;
         // Prevent Sunday from being selected.
-        return day !== 0;
+        return day !== 7;
     }
 
     ngOnDestroy(): void {

@@ -10,7 +10,7 @@ import { CreateCajaDto, ICajaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 import { AddCaja, CajasState, ClearCajasState, EditCaja, GetAllSucursales, SelectCaja } from 'app/modules/caja/_store';
 import { SharedService } from 'app/shared';
-import { Moment } from 'moment';
+import { DateTime } from 'luxon';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { checkIfEndDateBeforeStartDate, futureDateValidator } from '../validators/custom-caja.validators';
@@ -232,7 +232,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
         this.loading = true;
         this.cajaForm.disable();
         if (editMode === 'new') {
-            const fechaApertura = (this.fechaApertura.value as Moment).toISOString();
+            const fechaApertura = (this.fechaApertura.value as DateTime).toISO();
             const { saldoActual, ...rest } = this.cajaForm.value;
             const caja: CreateCajaDto = {
                 ...rest,
@@ -244,13 +244,13 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
         } else if (editMode === 'edit') {
             let changedCaja = this._shared.getDirtyValues(this.cajaForm);
             if (changedCaja.fechaInicio) {
-                const fechaApertura = (this.fechaApertura.value as Moment).toISOString();
+                const fechaApertura = (this.fechaApertura.value as DateTime).toISO();
                 const { saldoActual, ...rest } = changedCaja;
                 changedCaja = { ...rest, fechaApertura };
             }
             this._store.dispatch(new EditCaja(this.id.value, changedCaja));
         } else {
-            const fechaCierre = (this.fechaCierre.value as Moment).toISOString();
+            const fechaCierre = (this.fechaCierre.value as DateTime).toISO();
             this._store.dispatch(
                 new EditCaja(this.id.value, { fechaCierre, saldoFinal: Number(this.saldoFinal.value) })
             );

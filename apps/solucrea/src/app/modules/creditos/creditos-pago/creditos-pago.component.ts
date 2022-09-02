@@ -7,7 +7,7 @@ import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Prisma, TipoDePago, Usuario } from '@prisma/client';
 import { ICreditoReturnDto } from 'api/dtos';
 import { AuthState } from 'app/core/auth';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import { Observable, tap } from 'rxjs';
 
 import { CreditosState, ModeCredito, SavePago } from '../_store';
@@ -83,7 +83,7 @@ export class CreditosPagoComponent implements OnInit {
                     this.creditoId?.patchValue(credito.id);
                     this.clienteId?.patchValue(cliente.id);
                     this.sucursalId?.patchValue(sucursal.id);
-                    this.fechaDePago?.patchValue(moment());
+                    this.fechaDePago?.patchValue(DateTime.now());
                 }
             })
         );

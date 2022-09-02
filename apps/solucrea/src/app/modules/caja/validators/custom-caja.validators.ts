@@ -1,6 +1,6 @@
+import { AbstractControl, UntypedFormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { DateTime } from 'luxon';
 import { of } from 'rxjs';
-import { AbstractControl, ValidatorFn, ValidationErrors, UntypedFormGroup } from '@angular/forms';
-import moment, { Moment } from 'moment';
 
 export const futureDateValidator =
     (): ValidatorFn =>
@@ -11,7 +11,7 @@ export const futureDateValidator =
             return null;
         }
 
-        const today: Moment = moment();
+        const today = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
 
         const validDate = value > today;
 
@@ -21,16 +21,18 @@ export const futureDateValidator =
 export const checkIfEndDateBeforeStartDate =
     (): ValidatorFn =>
     (group: UntypedFormGroup | any): ValidationErrors | null => {
-        const todayDate = moment();
+        const todayDate = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
         const value = group.getRawValue();
-        const fechaApertura = group.get('fechaApertura')?.value ? moment(group.get('fechaApertura')?.value) : null;
-        const fechaCierre = group.get('fechaCierre')?.value ? moment(group.get('fechaCierre')?.value) : null;
+        const fechaApertura = group.get('fechaApertura')?.value
+            ? DateTime.fromISO(group.get('fechaApertura')?.value)
+            : null;
+        const fechaCierre = group.get('fechaCierre')?.value ? DateTime.fromISO(group.get('fechaCierre')?.value) : null;
 
         if (!value || !fechaApertura || !fechaCierre) {
             return null;
         }
 
-        const validDate = fechaCierre.isSameOrAfter(fechaApertura) && fechaCierre.isSameOrBefore(todayDate);
+        const validDate = fechaCierre >= fechaApertura && fechaCierre <= todayDate;
 
         if (!validDate) {
             group.get('fechaCierre')?.setErrors({ checkIfEndDateBeforeStartDate: true });

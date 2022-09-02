@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatLuxonDateModule } from '@angular/material-luxon-adapter';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -51,7 +51,7 @@ import { creditosRoutes } from './creditos.routing';
         MatSelectModule,
         MatCardModule,
         MatDatepickerModule,
-        MatMomentDateModule,
+        MatLuxonDateModule,
         MatTooltipModule,
         MatAutocompleteModule,
         MatProgressSpinnerModule,

@@ -1,4 +1,8 @@
-import { NgModule, LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeEsMx from '@angular/common/locales/es-MX';
+import { LOCALE_ID, NgModule } from '@angular/core';
+import { LuxonDateAdapter, MAT_LUXON_DATE_ADAPTER_OPTIONS } from '@angular/material-luxon-adapter';
+import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ExtraOptions, PreloadAllModules, RouterModule } from '@angular/router';
@@ -13,15 +17,12 @@ import { appRoutes } from 'app/app.routing';
 import { appConfig } from 'app/core/config/app.config';
 import { CoreModule } from 'app/core/core.module';
 import { LayoutModule } from 'app/layout/layout.module';
+import { environment } from 'apps/solucrea/src/environments/environment';
 import { MarkdownModule } from 'ngx-markdown';
 
 import { FuseModule } from '../@fuse';
-import { environment } from 'apps/solucrea/src/environments/environment';
 import { AuthState } from './core/auth/store/auth.state';
-import localeEsMx from '@angular/common/locales/es-MX';
-import { registerLocaleData } from '@angular/common';
-import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
+
 registerLocaleData(localeEsMx, 'es-Mx');
 
 const routerConfig: ExtraOptions = {
@@ -61,11 +62,11 @@ const routerConfig: ExtraOptions = {
     providers: [
         { provide: LOCALE_ID, useValue: 'es-Mx' },
         { provide: MAT_DATE_LOCALE, useValue: 'es-MX' },
-        { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+        { provide: MAT_LUXON_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
         {
             provide: DateAdapter,
-            useClass: MomentDateAdapter,
-            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+            useClass: LuxonDateAdapter,
+            deps: [MAT_DATE_LOCALE, MAT_LUXON_DATE_ADAPTER_OPTIONS],
         },
     ],
     bootstrap: [AppComponent],

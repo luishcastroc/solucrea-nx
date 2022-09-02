@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatLuxonDateModule } from '@angular/material-luxon-adapter';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,7 +31,7 @@ import { cajaRoutes } from './caja.routing';
         MatButtonModule,
         MatTooltipModule,
         MatDatepickerModule,
-        MatMomentDateModule,
+        MatLuxonDateModule,
         MatSelectModule,
         MatProgressSpinnerModule,
         MatStepperModule,

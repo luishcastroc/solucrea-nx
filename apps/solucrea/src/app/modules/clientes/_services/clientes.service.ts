@@ -14,7 +14,7 @@ import {
 } from 'api/dtos';
 import { IDireccion } from 'api/dtos/';
 import { environment } from 'apps/solucrea/src/environments/environment';
-import { Moment } from 'moment';
+import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -107,7 +107,7 @@ export class ClientesService {
             apellidoPaterno,
             apellidoMaterno,
             nombre,
-            fechaDeNacimiento: fechaMoment,
+            fechaDeNacimiento: fechaLuxon,
             curp,
             rfc,
             escolaridad,
@@ -131,8 +131,8 @@ export class ClientesService {
             coloniaId: dir.colonia,
         }));
 
-        const fechaDeNacimiento: Moment = fechaMoment;
-        const fechaToSend = fechaDeNacimiento.toISOString();
+        const fechaDeNacimiento: DateTime = fechaLuxon;
+        const fechaToSend = fechaDeNacimiento.toISO();
 
         const {
             nombre: trabajoNombre,

@@ -2,7 +2,7 @@ import { Frecuencia, Pago, Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime';
 import { IAmortizacion, ICajaReturnDto, StatusPago } from 'api/dtos';
 import { sumBy } from 'lodash';
-import * as moment from 'moment';
+import { DateTime } from 'luxon';
 
 import { ICreditoData, IDetails } from './models';
 
@@ -61,17 +61,16 @@ export const calculateDetails = (data: ICreditoData): IDetails => {
  *
  * @param originalDate
  * @param numDaysToAdd
- * @returns Moment
+ * @returns DateTime
  */
-export const addBusinessDays = (originalDate: moment.Moment, numDaysToAdd: number): moment.Moment => {
-    const sunday = 0;
+export const addBusinessDays = (originalDate: DateTime, numDaysToAdd = 1): DateTime => {
+    const sunday = 7;
     let daysRemaining = numDaysToAdd;
-
-    const newDate = originalDate.clone();
+    let newDate: DateTime = originalDate;
 
     while (daysRemaining > 0) {
-        newDate.add(1, 'days');
-        if (newDate.day() !== sunday) {
+        newDate = newDate.plus({ days: 1 });
+        if (newDate.weekday !== sunday) {
             daysRemaining--;
         }
     }
@@ -130,21 +129,21 @@ export const generateTablaAmorizacion = (
     montoMora: Prisma.Decimal
 ): IAmortizacion[] => {
     const amortizacion: IAmortizacion[] = [];
-    const today = moment().utc(true).utcOffset(0).local(true);
-    let fechaPagoAux = fechaInicio;
+    const today = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toLocal().toISODate();
+    let fechaPagoAux = fechaInicio instanceof Date ? fechaInicio.toISOString() : fechaInicio;
     let status: StatusPago = StatusPago.corriente;
     amortizacion.push({
         numeroDePago: 1,
-        fechaDePago: moment(fechaPagoAux).utcOffset(0).local(true).format('YYYY-MM-DD'),
+        fechaDePago: DateTime.fromISO(fechaPagoAux).toLocal().toISODate(),
         monto,
         status,
     });
     for (let i = 2; i < numeroDePagos + 1; i++) {
-        const fechaPlusDays = addBusinessDays(moment(fechaPagoAux).utcOffset(0).local(true), frecuencia);
-        const fechaDePago: Date | string = fechaPlusDays.local(true).format('YYYY-MM-DD');
+        const fechaPlusDays = addBusinessDays(DateTime.fromISO(fechaPagoAux).toLocal(), frecuencia);
+        const fechaDePago: Date | string = fechaPlusDays.toLocal().toISODate();
         status = StatusPago.corriente;
         amortizacion.push({ numeroDePago: i, fechaDePago, monto, status });
-        fechaPagoAux = fechaPlusDays.toISOString();
+        fechaPagoAux = fechaPlusDays.toISODate();
     }
 
     return getPagos(amortizacion, pagos, today, montoMora);
@@ -167,12 +166,16 @@ export const getSaldoVencido = (amortizacion: IAmortizacion[]): number => {
  * @returns pago para no generar intereses
  */
 export const getPagoNoIntereses = (amortizacion: IAmortizacion[], cuota: Prisma.Decimal): number => {
-    const today = moment().utc(true).utcOffset(0).local(true);
+    const today = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toUTC().toLocal();
     const vencido = getSaldoVencido(amortizacion);
     const corriente = amortizacion.filter(
         (pago) =>
             pago.status === 'CORRIENTE' &&
-            moment(today.format('YYYY-MM-DD')).isSame(moment(pago.fechaDePago).format('YYYY-MM-DD'))
+            today.equals(
+                DateTime.fromISO(pago.fechaDePago as string)
+                    .toUTC()
+                    .toLocal()
+            )
     );
     return (corriente.length > 0 ? cuota.toNumber() : 0) + vencido;
 };
@@ -188,7 +191,7 @@ export const getPagoNoIntereses = (amortizacion: IAmortizacion[], cuota: Prisma.
 export const getPagos = (
     amortizacion: IAmortizacion[],
     pagos: Partial<Pago>[] | Pago[],
-    today: moment.Moment,
+    today: string,
     montoMora: Prisma.Decimal
 ): IAmortizacion[] => {
     const pagosSum = pagos.length > 0 ? (pagos as Pago[]).reduce((acc, obj) => acc + obj.monto.toNumber(), 0) : 0;
@@ -196,7 +199,10 @@ export const getPagos = (
     let statusReturn: StatusPago = StatusPago.corriente;
     const evalAmortizacion: IAmortizacion[] = amortizacion.map(({ numeroDePago, fechaDePago, monto }) => {
         let montoReturn = monto;
-        if (moment(today.format('YYYY-MM-DD')).isAfter(moment(fechaDePago).format('YYYY-MM-DD'))) {
+        if (
+            DateTime.fromISO(today).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }) >
+            DateTime.fromISO(fechaDePago as string).set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+        ) {
             if (pagosSum < monto.toNumber()) {
                 montoReturn = new Prisma.Decimal(montoMora.toNumber() - pagosSum);
                 statusReturn = StatusPago.adeuda;
