@@ -152,7 +152,6 @@ export class CreditosPagoComponent implements OnInit {
             actualizadoPor,
             credito: { connect: { id: this.creditoId?.value } },
         };
-        console.log(pago);
         this._store.dispatch(new SavePago(pago));
     }
 

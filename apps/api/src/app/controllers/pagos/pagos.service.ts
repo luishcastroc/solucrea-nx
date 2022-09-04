@@ -58,16 +58,16 @@ export class PagosService {
                 let auxSaldo = 0;
                 switch (pago.tipoDePago) {
                     case TipoDePago.ABONO:
-                        auxSaldo = Math.floor(pago.monto.toNumber() / cuota);
+                        auxSaldo = Math.floor(Math.round(pago.monto.toNumber() / cuota));
                         break;
                     case TipoDePago.MORA:
-                        auxSaldo = Math.floor(pago.monto.toNumber() / cuotaMora);
+                        auxSaldo = Math.floor(Math.round(pago.monto.toNumber() / cuotaMora));
                         break;
                     case TipoDePago.LIQUIDACION:
                         auxSaldo = saldo;
                         break;
                     default:
-                        auxSaldo = Math.floor(pago.monto.toNumber() / cuota);
+                        auxSaldo = Math.floor(Math.round(pago.monto.toNumber() / cuota));
                         break;
                 }
 
