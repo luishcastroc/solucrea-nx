@@ -38,4 +38,8 @@ export class CreditosInfoComponent implements OnInit {
     goToPago() {
         this._store.dispatch(new ModeCredito('pago'));
     }
+
+    goToPagosList() {
+        this._store.dispatch(new ModeCredito('pagos-list'));
+    }
 }

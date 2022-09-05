@@ -171,6 +171,14 @@
                         >
                             Pagar
                         </button>
+                        <button
+                            mat-stroked-button
+                            type="button"
+                            (click)="goToPagosList()"
+                            *ngIf="credito.pagos.length > 0"
+                        >
+                            Lista de Pagos
+                        </button>
                     </div>
                 </div> </mat-step
             ><mat-step
@@ -225,6 +233,14 @@
                             *ngIf="credito.status !== 'CERRADO'"
                         >
                             Pagar
+                        </button>
+                        <button
+                            mat-stroked-button
+                            type="button"
+                            (click)="goToPagosList()"
+                            *ngIf="credito.pagos.length > 0"
+                        >
+                            Lista de Pagos
                         </button>
                     </div>
                 </div>

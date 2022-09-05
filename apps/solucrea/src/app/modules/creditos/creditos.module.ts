@@ -26,6 +26,7 @@ import { CreditosInfoComponent } from './creditos-info/creditos-info.component';
 import { CreditosListComponent } from './creditos-list/creditos-list.component';
 import { CreditosNewComponent } from './creditos-new/creditos-new.component';
 import { CreditosPagoComponent } from './creditos-pago/creditos-pago.component';
+import { CreditosPagosListComponent } from './creditos-pagos-list/creditos-pagos-list.component';
 import { CreditosComponent } from './creditos.component';
 import { creditosRoutes } from './creditos.routing';
 
@@ -38,6 +39,7 @@ import { creditosRoutes } from './creditos.routing';
         CreditosInfoComponent,
         CreditosNewComponent,
         CreditosPagoComponent,
+        CreditosPagosListComponent,
     ],
     imports: [
         RouterModule.forChild(creditosRoutes),

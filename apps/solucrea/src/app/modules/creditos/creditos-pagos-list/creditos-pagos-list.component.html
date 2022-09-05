@@ -1,0 +1,45 @@
+<ng-container *ngIf="{ loading: loading$ | async, credito: selectedCredito$ | async } as data"
+    ><div class="z-20 flex flex-col px-2 py-4 md:px-10">
+        <div
+            class="p-4 overflow-hidden basis-120"
+            fuseScrollbar
+            [fuseScrollbarOptions]="{
+                suppressScrollX: true
+            }"
+        >
+            <div class="hidden md:grid md:grid-cols-4 md:mb-4">
+                <span class="font-bold text-center">Numero de Pago</span
+                ><span class="font-bold text-center">Fecha de Pago</span><span class="font-bold text-center">Monto</span
+                ><span class="font-bold text-center">Tipo de Pago</span>
+            </div>
+            <div
+                class="grid grid-cols-1 mb-4 pb-8 md:mb-0 md:pb-0 md:grid-cols-4 gap-3 border-b-2 min-h-8"
+                *ngFor="let pago of data.credito?.pagos; let i = index"
+            >
+                <div class="grid grid-cols-2 md:grid-cols-1">
+                    <div class="font-bold md:hidden">Numero de Pago:</div>
+                    <div class="text-center">{{ i + 1 }}</div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-1">
+                    <div class="font-bold md:hidden">Fecha de Pago:</div>
+                    <div class="text-center">{{ pago.fechaDePago | date }}</div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-1">
+                    <div class="font-bold md:hidden">Monto:</div>
+                    <div class="text-center">
+                        {{ pago.monto | decimalToNumber | currency: 'MXN':'symbol' }}
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-1">
+                    <div class="font-bold md:hidden">Tipo de Pago:</div>
+                    <div class="text-center font-bold" [class.text-red-600]="pago.tipoDePago === 'MORA'">
+                        {{ pago.tipoDePago }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-auto gap-3 basis-30 items-end">
+            <button mat-flat-button type="button" [color]="'primary'" (click)="goToDetails()">Regresar</button>
+        </div>
+    </div></ng-container
+>
