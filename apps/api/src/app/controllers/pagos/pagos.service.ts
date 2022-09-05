@@ -48,30 +48,29 @@ export class PagosService {
                         HttpStatus.INTERNAL_SERVER_ERROR
                     );
                 }
-
-                let { saldo, cuotaMora, cuota } = currentCredito;
                 const { amortizacion } = currentCredito;
-                cuota = (cuota as Prisma.Decimal).toNumber();
-                cuotaMora = (cuotaMora as Prisma.Decimal).toNumber();
-                saldo = (saldo as Prisma.Decimal).toNumber();
+                const cuota = (currentCredito.cuota as Prisma.Decimal).toNumber();
+                const cuotaMora = (currentCredito.cuotaMora as Prisma.Decimal).toNumber();
+                const monto = pago.monto.toNumber();
+                let saldo = (currentCredito.saldo as Prisma.Decimal).toNumber();
 
                 let auxSaldo = 0;
                 switch (pago.tipoDePago) {
                     case TipoDePago.ABONO:
-                        auxSaldo = Math.floor(Math.round(pago.monto.toNumber() / cuota));
+                        auxSaldo = Math.floor(Math.round(monto / cuota));
                         break;
                     case TipoDePago.MORA:
-                        auxSaldo = Math.floor(Math.round(pago.monto.toNumber() / cuotaMora));
+                        auxSaldo = Math.floor(Math.round(monto / cuotaMora));
                         break;
                     case TipoDePago.LIQUIDACION:
                         auxSaldo = saldo;
                         break;
                     default:
-                        auxSaldo = Math.floor(Math.round(pago.monto.toNumber() / cuota));
+                        auxSaldo = Math.floor(Math.round(monto / cuota));
                         break;
                 }
 
-                saldo = saldo !== auxSaldo ? new Prisma.Decimal(saldo - cuota * auxSaldo) : saldo - auxSaldo;
+                saldo = saldo !== auxSaldo ? new Prisma.Decimal(saldo - cuota * auxSaldo).toNumber() : saldo - auxSaldo;
 
                 let dataSaldo: Prisma.CreditoUncheckedUpdateInput = { saldo };
                 if (saldo <= 0) {

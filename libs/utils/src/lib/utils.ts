@@ -1,4 +1,4 @@
-import { Frecuencia, Pago, Prisma } from '@prisma/client';
+import { Frecuencia, Pago, Prisma, TipoDePago } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime';
 import { IAmortizacion, ICajaReturnDto, StatusPago } from 'api/dtos';
 import { sumBy } from 'lodash';
@@ -194,21 +194,29 @@ export const getPagos = (
     today: string,
     montoMora: Prisma.Decimal
 ): IAmortizacion[] => {
-    const pagosSum = pagos.length > 0 ? (pagos as Pago[]).reduce((acc, obj) => acc + obj.monto.toNumber(), 0) : 0;
-    let acum = pagosSum;
+    let acum = pagos.length > 0 ? (pagos as Pago[]).reduce((acc, obj) => acc + obj.monto.toNumber(), 0) : 0;
     let statusReturn: StatusPago = StatusPago.corriente;
     const evalAmortizacion: IAmortizacion[] = amortizacion.map(({ numeroDePago, fechaDePago, monto }) => {
-        let montoReturn = monto;
-        if (
-            DateTime.fromISO(today).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }) >
-            DateTime.fromISO(fechaDePago as string).set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-        ) {
-            if (pagosSum < monto.toNumber()) {
-                montoReturn = new Prisma.Decimal(montoMora.toNumber() - pagosSum);
-                statusReturn = StatusPago.adeuda;
+        let montoReturn: Prisma.Decimal = monto;
+        const todayEval = getDateWithFormat(today);
+        const fechaDePagoEval = getDateWithFormat(fechaDePago as string);
+        const pagoExists = existPagoOrAbono(pagos, fechaDePagoEval, monto.toNumber());
+
+        if (todayEval > fechaDePagoEval) {
+            if (acum > 0) {
+                if (pagoExists && acum >= monto.toNumber()) {
+                    montoReturn = new Prisma.Decimal(monto.toNumber());
+                    statusReturn = StatusPago.pagado;
+                } else if (acum >= monto.toNumber()) {
+                    montoReturn = new Prisma.Decimal(montoMora.toNumber());
+                    statusReturn = StatusPago.pagado;
+                } else {
+                    montoReturn = new Prisma.Decimal(montoMora.toNumber());
+                    statusReturn = StatusPago.adeuda;
+                }
             } else {
-                montoReturn = new Prisma.Decimal(montoMora);
-                statusReturn = StatusPago.pagado;
+                montoReturn = new Prisma.Decimal(montoMora.toNumber());
+                statusReturn = StatusPago.adeuda;
             }
             acum = Math.round((acum - montoReturn.toNumber() + Number.EPSILON) * 100) / 100;
         } else {
@@ -266,3 +274,38 @@ export const getFrecuencia = (frecuencia: Frecuencia | undefined): number => {
 
     return dias;
 };
+
+/**
+ *
+ * @param date
+ * @returns DateTime
+ */
+export const getDateWithFormat = (date: string): DateTime =>
+    DateTime.fromISO(date).set({
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+    });
+
+/**
+ *
+ * @param pagos
+ * @param fechaPago
+ * @param monto
+ * @returns boolean
+ */
+export const existPagoOrAbono = (pagos: Partial<Pago>[] | Pago[], fechaPago: DateTime, monto: number): boolean =>
+    pagos.some(
+        (pago) =>
+            pago?.tipoDePago !== TipoDePago.MORA &&
+            pago?.fechaCreacion &&
+            pago.monto &&
+            monto >= pago?.monto.toNumber() &&
+            DateTime.fromISO(pago.fechaCreacion.toDateString()).set({
+                hour: 0,
+                minute: 0,
+                second: 0,
+                millisecond: 0,
+            }) <= fechaPago
+    );
