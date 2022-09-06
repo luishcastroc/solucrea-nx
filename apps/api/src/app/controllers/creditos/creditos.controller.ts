@@ -41,6 +41,16 @@ export class CreditosController {
     }
 
     @UseGuards(RolesGuard)
+    @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
+    @Get('open-creditos-count/:clienteId/:productId')
+    async openCreditosCount(
+        @Param('clienteId') clienteId: string,
+        @Param('productId') productId: string
+    ): Promise<number> {
+        return this.creditosService.getOpenCreditosCount(clienteId, productId);
+    }
+
+    @UseGuards(RolesGuard)
     @UsePipes(new ValidationPipe())
     @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
     @Post('credito')

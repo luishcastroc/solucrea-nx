@@ -323,7 +323,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
 
         this._actions$
             .pipe(
-                ofActionCompleted(SelectCliente, CreateCredito),
+                ofActionCompleted(SelectCliente, CreateCredito, SelectProducto),
                 takeUntil(this._unsubscribeAll),
                 tap((result) => {
                     const { error, successful } = result.result;
@@ -356,7 +356,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
                                 this._store.dispatch(new SelectCliente(undefined));
                                 this.searchInput.setValue('');
                             }
-                            this._store.dispatch(new SelectProducto(null));
+                            this._store.dispatch(new SelectProducto(null, null));
                         }
                     }
                 })
@@ -409,7 +409,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
      */
     selectProducto(id: string): void {
         //Assign to local variable
-        this._store.dispatch(new SelectProducto(id));
+        this._store.dispatch(new SelectProducto(this.selectedCliente.id, id));
     }
 
     /**
@@ -496,7 +496,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
             this._store.dispatch(new SelectCliente(undefined));
             this.searchInput.setValue('');
         }
-        this._store.dispatch(new SelectProducto(null));
+        this._store.dispatch(new SelectProducto(null, null));
         this._cdr.detectChanges();
     }
 

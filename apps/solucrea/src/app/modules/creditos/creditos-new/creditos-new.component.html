@@ -204,6 +204,11 @@
                                                 </ng-container>
                                             </div>
                                         </ng-container>
+                                        <ng-template #noProductosTemplate>
+                                            <div class="font-bold text-center py-4">
+                                                No existen productos para ofrecer, agregar uno
+                                            </div>
+                                        </ng-template>
                                     </ng-container>
                                     <!-- Sucursales -->
                                     <ng-container *ngIf="selectedProducto">
@@ -232,24 +237,18 @@
                                                             La sucursal es requerida.
                                                         </mat-error>
                                                     </ng-container>
+                                                </div> </ng-container
+                                            ><ng-template #noSucursalesTemplate>
+                                                <div class="font-bold text-center py-4">
+                                                    <p>
+                                                        No existen sucursales con la cantidad de dinero para otorgar el
+                                                        préstamo,
+                                                    </p>
+                                                    <p>verifique que exista un turno abierto</p>
                                                 </div>
-                                            </ng-container></ng-container
+                                            </ng-template></ng-container
                                         >
                                     </ng-container>
-                                    <ng-template #noSucursalesTemplate>
-                                        <div class="font-bold text-center py-4">
-                                            <p>
-                                                No existen sucursales con la cantidad de dinero para otorgar el
-                                                préstamo,
-                                            </p>
-                                            <p>verifique que exista un turno abierto</p>
-                                        </div>
-                                    </ng-template>
-                                    <ng-template #noProductosTemplate>
-                                        <div class="font-bold text-center py-4">
-                                            No existen productos para ofrecer, agregar uno
-                                        </div>
-                                    </ng-template>
                                 </div>
                             </div>
                         </div>

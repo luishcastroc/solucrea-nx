@@ -32,6 +32,15 @@ export class CreditosService {
         return this._httpClient.get<number>(`${this._environment.uri}/creditos-count/${id}`);
     }
     /**
+     * Get Créditos count
+     *
+     *
+     * @returns Number of créditos active and innactive.
+     */
+    getOpenCreditosCount(clienteId: string, productId: string): Observable<number> {
+        return this._httpClient.get<number>(`${this._environment.uri}/open-creditos-count/${clienteId}/${productId}`);
+    }
+    /**
      * Get Creditos from Cliente
      *
      * @param id

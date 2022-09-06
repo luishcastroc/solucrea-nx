@@ -264,12 +264,26 @@ export class CreditosState {
     }
 
     @Action(SelectProducto)
-    selectProductoForCredito({ getState, patchState }: StateContext<CreditosStateModel>, { id }: SelectProducto) {
+    selectProductoForCredito(
+        { getState, patchState }: StateContext<CreditosStateModel>,
+        { clienteId, productId }: SelectProducto
+    ) {
         let selectedProducto;
-        if (id === null) {
+        if (clienteId === null || productId === null) {
             selectedProducto = undefined;
         } else {
-            selectedProducto = getState().productos.filter((producto: Producto) => producto.id === id)[0];
+            return this._creditosService.getOpenCreditosCount(clienteId, productId).pipe(
+                tap((count) => {
+                    if (count > 0) {
+                        selectedProducto = undefined;
+                    } else {
+                        selectedProducto = getState().productos.filter(
+                            (producto: Producto) => producto.id === productId
+                        )[0];
+                        patchState({ selectedProducto });
+                    }
+                })
+            );
         }
         patchState({ selectedProducto });
     }

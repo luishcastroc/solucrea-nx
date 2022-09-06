@@ -9,7 +9,6 @@ import {
 } from '@solucrea-utils';
 import { IAmortizacion, ICajaReturnDto, ICreditoReturnDto, StatusPago } from 'api/dtos';
 import { PrismaService } from 'api/prisma';
-import { selectCredito } from 'api/util';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 @Injectable()
@@ -20,7 +19,110 @@ export class CreditosService {
         try {
             const creditosCliente = await this.prisma.credito.findMany({
                 where: { clienteId: { equals: clienteId } },
-                select: selectCredito,
+                include: {
+                    cliente: {
+                        select: {
+                            id: true,
+                            nombre: true,
+                            apellidoPaterno: true,
+                            apellidoMaterno: true,
+                            fechaDeNacimiento: true,
+                            rfc: true,
+                            curp: true,
+                            genero: { select: { id: true, descripcion: true } },
+                            escolaridad: { select: { id: true, descripcion: true } },
+                            estadoCivil: { select: { id: true, descripcion: true } },
+                            tipoDeVivienda: { select: { id: true, descripcion: true } },
+                            montoMinimo: true,
+                            montoMaximo: true,
+                            numeroCreditosCrecer: true,
+                            multiplos: true,
+                            porcentajeDePagos: true,
+                            porcentajeDeMora: true,
+                            telefono1: true,
+                            telefono2: true,
+                            direcciones: {
+                                select: {
+                                    id: true,
+                                    calle: true,
+                                    numero: true,
+                                    cruzamientos: true,
+                                    colonia: { select: { id: true, descripcion: true, codigoPostal: true } },
+                                },
+                            },
+                            trabajo: {
+                                select: {
+                                    id: true,
+                                    nombre: true,
+                                    antiguedad: true,
+                                    actividadEconomica: {
+                                        select: { id: true, descripcion: true, montoMin: true, montoMax: true },
+                                    },
+                                    telefono: true,
+                                    direccion: {
+                                        select: {
+                                            id: true,
+                                            calle: true,
+                                            numero: true,
+                                            cruzamientos: true,
+                                            colonia: { select: { id: true, descripcion: true, codigoPostal: true } },
+                                        },
+                                    },
+                                },
+                            },
+                            activo: true,
+                        },
+                    },
+                    pagos: {
+                        orderBy: { fechaDePago: 'asc' },
+                        select: { id: true, monto: true, tipoDePago: true, fechaDePago: true, observaciones: true },
+                    },
+                    producto: {
+                        select: {
+                            id: true,
+                            nombre: true,
+                            descripcion: true,
+                            montoMinimo: true,
+                            montoMaximo: true,
+                            interes: true,
+                            interesMoratorio: true,
+                            penalizacion: true,
+                            comision: true,
+                            cargos: true,
+                            activo: true,
+                            numeroDePagos: true,
+                            frecuencia: true,
+                            creditosActivos: true,
+                            diaSemana: true,
+                            diaMes: true,
+                        },
+                    },
+                    sucursal: { select: { id: true, nombre: true } },
+                    seguro: { select: { id: true, nombre: true, monto: true } },
+                    modalidadDeSeguro: { select: { id: true, titulo: true, descripcion: true } },
+                    aval: {
+                        select: {
+                            id: true,
+                            nombre: true,
+                            apellidoPaterno: true,
+                            apellidoMaterno: true,
+                            telefono: true,
+                            fechaDeNacimiento: true,
+                            parentesco: { select: { id: true, descripcion: true } },
+                            otro: true,
+                            ocupacion: true,
+                        },
+                    },
+                    colocador: {
+                        select: {
+                            id: true,
+                            usuario: { select: { id: true, nombre: true, apellido: true } },
+                            cliente: {
+                                select: { id: true, apellidoPaterno: true, apellidoMaterno: true, nombre: true },
+                            },
+                        },
+                    },
+                },
             });
 
             const creditosReturn = await Promise.all(
@@ -87,10 +189,112 @@ export class CreditosService {
     }
 
     async creditos(statusCredito: Status): Promise<ICreditoReturnDto[] | null> {
-        const select = selectCredito;
         try {
             const creditos = await this.prisma.credito.findMany({
-                select,
+                include: {
+                    cliente: {
+                        select: {
+                            id: true,
+                            nombre: true,
+                            apellidoPaterno: true,
+                            apellidoMaterno: true,
+                            fechaDeNacimiento: true,
+                            rfc: true,
+                            curp: true,
+                            genero: { select: { id: true, descripcion: true } },
+                            escolaridad: { select: { id: true, descripcion: true } },
+                            estadoCivil: { select: { id: true, descripcion: true } },
+                            tipoDeVivienda: { select: { id: true, descripcion: true } },
+                            montoMinimo: true,
+                            montoMaximo: true,
+                            numeroCreditosCrecer: true,
+                            multiplos: true,
+                            porcentajeDePagos: true,
+                            porcentajeDeMora: true,
+                            telefono1: true,
+                            telefono2: true,
+                            direcciones: {
+                                select: {
+                                    id: true,
+                                    calle: true,
+                                    numero: true,
+                                    cruzamientos: true,
+                                    colonia: { select: { id: true, descripcion: true, codigoPostal: true } },
+                                },
+                            },
+                            trabajo: {
+                                select: {
+                                    id: true,
+                                    nombre: true,
+                                    antiguedad: true,
+                                    actividadEconomica: {
+                                        select: { id: true, descripcion: true, montoMin: true, montoMax: true },
+                                    },
+                                    telefono: true,
+                                    direccion: {
+                                        select: {
+                                            id: true,
+                                            calle: true,
+                                            numero: true,
+                                            cruzamientos: true,
+                                            colonia: { select: { id: true, descripcion: true, codigoPostal: true } },
+                                        },
+                                    },
+                                },
+                            },
+                            activo: true,
+                        },
+                    },
+                    pagos: {
+                        orderBy: { fechaDePago: 'asc' },
+                        select: { id: true, monto: true, tipoDePago: true, fechaDePago: true, observaciones: true },
+                    },
+                    producto: {
+                        select: {
+                            id: true,
+                            nombre: true,
+                            descripcion: true,
+                            montoMinimo: true,
+                            montoMaximo: true,
+                            interes: true,
+                            interesMoratorio: true,
+                            penalizacion: true,
+                            comision: true,
+                            cargos: true,
+                            activo: true,
+                            numeroDePagos: true,
+                            frecuencia: true,
+                            creditosActivos: true,
+                            diaSemana: true,
+                            diaMes: true,
+                        },
+                    },
+                    sucursal: { select: { id: true, nombre: true } },
+                    seguro: { select: { id: true, nombre: true, monto: true } },
+                    modalidadDeSeguro: { select: { id: true, titulo: true, descripcion: true } },
+                    aval: {
+                        select: {
+                            id: true,
+                            nombre: true,
+                            apellidoPaterno: true,
+                            apellidoMaterno: true,
+                            telefono: true,
+                            fechaDeNacimiento: true,
+                            parentesco: { select: { id: true, descripcion: true } },
+                            otro: true,
+                            ocupacion: true,
+                        },
+                    },
+                    colocador: {
+                        select: {
+                            id: true,
+                            usuario: { select: { id: true, nombre: true, apellido: true } },
+                            cliente: {
+                                select: { id: true, apellidoPaterno: true, apellidoMaterno: true, nombre: true },
+                            },
+                        },
+                    },
+                },
             });
 
             const creditosReturn = await Promise.all(
@@ -157,9 +361,114 @@ export class CreditosService {
     }
 
     async getCredito(id: string): Promise<ICreditoReturnDto | null> {
-        const select = selectCredito;
         try {
-            const credito = await this.prisma.credito.findUnique({ where: { id }, select });
+            const credito = await this.prisma.credito.findUnique({
+                where: { id },
+                include: {
+                    cliente: {
+                        select: {
+                            id: true,
+                            nombre: true,
+                            apellidoPaterno: true,
+                            apellidoMaterno: true,
+                            fechaDeNacimiento: true,
+                            rfc: true,
+                            curp: true,
+                            genero: { select: { id: true, descripcion: true } },
+                            escolaridad: { select: { id: true, descripcion: true } },
+                            estadoCivil: { select: { id: true, descripcion: true } },
+                            tipoDeVivienda: { select: { id: true, descripcion: true } },
+                            montoMinimo: true,
+                            montoMaximo: true,
+                            numeroCreditosCrecer: true,
+                            multiplos: true,
+                            porcentajeDePagos: true,
+                            porcentajeDeMora: true,
+                            telefono1: true,
+                            telefono2: true,
+                            direcciones: {
+                                select: {
+                                    id: true,
+                                    calle: true,
+                                    numero: true,
+                                    cruzamientos: true,
+                                    colonia: { select: { id: true, descripcion: true, codigoPostal: true } },
+                                },
+                            },
+                            trabajo: {
+                                select: {
+                                    id: true,
+                                    nombre: true,
+                                    antiguedad: true,
+                                    actividadEconomica: {
+                                        select: { id: true, descripcion: true, montoMin: true, montoMax: true },
+                                    },
+                                    telefono: true,
+                                    direccion: {
+                                        select: {
+                                            id: true,
+                                            calle: true,
+                                            numero: true,
+                                            cruzamientos: true,
+                                            colonia: { select: { id: true, descripcion: true, codigoPostal: true } },
+                                        },
+                                    },
+                                },
+                            },
+                            activo: true,
+                        },
+                    },
+                    pagos: {
+                        orderBy: { fechaDePago: 'asc' },
+                        select: { id: true, monto: true, tipoDePago: true, fechaDePago: true, observaciones: true },
+                    },
+                    producto: {
+                        select: {
+                            id: true,
+                            nombre: true,
+                            descripcion: true,
+                            montoMinimo: true,
+                            montoMaximo: true,
+                            interes: true,
+                            interesMoratorio: true,
+                            penalizacion: true,
+                            comision: true,
+                            cargos: true,
+                            activo: true,
+                            numeroDePagos: true,
+                            frecuencia: true,
+                            creditosActivos: true,
+                            diaSemana: true,
+                            diaMes: true,
+                        },
+                    },
+                    sucursal: { select: { id: true, nombre: true } },
+                    seguro: { select: { id: true, nombre: true, monto: true } },
+                    modalidadDeSeguro: { select: { id: true, titulo: true, descripcion: true } },
+                    aval: {
+                        select: {
+                            id: true,
+                            nombre: true,
+                            apellidoPaterno: true,
+                            apellidoMaterno: true,
+                            telefono: true,
+                            fechaDeNacimiento: true,
+                            parentesco: { select: { id: true, descripcion: true } },
+                            otro: true,
+                            ocupacion: true,
+                        },
+                    },
+                    colocador: {
+                        select: {
+                            id: true,
+                            usuario: { select: { id: true, nombre: true, apellido: true } },
+                            cliente: {
+                                select: { id: true, apellidoPaterno: true, apellidoMaterno: true, nombre: true },
+                            },
+                        },
+                    },
+                },
+            });
 
             const frecuencia = getFrecuencia(credito?.producto.frecuencia);
             const amortizacion: IAmortizacion[] = generateTablaAmorizacion(
@@ -236,8 +545,41 @@ export class CreditosService {
         }
     }
 
+    async getOpenCreditosCount(clienteId: string, productId: string): Promise<number> {
+        try {
+            const creditosSum = await this.prisma.credito.aggregate({
+                where: {
+                    AND: [
+                        { clienteId: { equals: clienteId } },
+                        { productosId: { equals: productId } },
+                        { status: { in: ['ABIERTO', 'SUSPENDIDO', 'MORA'] } },
+                    ],
+                },
+                _count: true,
+            });
+            if (creditosSum._count > 0) {
+                throw new HttpException(
+                    {
+                        status: HttpStatus.NOT_ACCEPTABLE,
+                        message: 'Error el cliente ya cuenta con un crédito sin cerrar para ese producto, Verificar',
+                    },
+                    HttpStatus.NOT_ACCEPTABLE
+                );
+            }
+            return creditosSum._count;
+        } catch (e: any) {
+            if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new HttpException(
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Error contando los créditos' },
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            } else {
+                throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
+            }
+        }
+    }
+
     async createCredito(data: Prisma.CreditoCreateInput): Promise<ICreditoReturnDto> {
-        const select = selectCredito;
         let producto: Producto | null;
         try {
             const creditosActivos = await this.prisma.credito.findMany({
@@ -317,7 +659,110 @@ export class CreditosService {
                 Number(producto.numeroDePagos) * Number(data.cuotaSeguro);
             const creditoCreado = await this.prisma.credito.create({
                 data: { ...data, saldo: new Prisma.Decimal(saldoInicial) },
-                select,
+                include: {
+                    cliente: {
+                        select: {
+                            id: true,
+                            nombre: true,
+                            apellidoPaterno: true,
+                            apellidoMaterno: true,
+                            fechaDeNacimiento: true,
+                            rfc: true,
+                            curp: true,
+                            genero: { select: { id: true, descripcion: true } },
+                            escolaridad: { select: { id: true, descripcion: true } },
+                            estadoCivil: { select: { id: true, descripcion: true } },
+                            tipoDeVivienda: { select: { id: true, descripcion: true } },
+                            montoMinimo: true,
+                            montoMaximo: true,
+                            numeroCreditosCrecer: true,
+                            multiplos: true,
+                            porcentajeDePagos: true,
+                            porcentajeDeMora: true,
+                            telefono1: true,
+                            telefono2: true,
+                            direcciones: {
+                                select: {
+                                    id: true,
+                                    calle: true,
+                                    numero: true,
+                                    cruzamientos: true,
+                                    colonia: { select: { id: true, descripcion: true, codigoPostal: true } },
+                                },
+                            },
+                            trabajo: {
+                                select: {
+                                    id: true,
+                                    nombre: true,
+                                    antiguedad: true,
+                                    actividadEconomica: {
+                                        select: { id: true, descripcion: true, montoMin: true, montoMax: true },
+                                    },
+                                    telefono: true,
+                                    direccion: {
+                                        select: {
+                                            id: true,
+                                            calle: true,
+                                            numero: true,
+                                            cruzamientos: true,
+                                            colonia: { select: { id: true, descripcion: true, codigoPostal: true } },
+                                        },
+                                    },
+                                },
+                            },
+                            activo: true,
+                        },
+                    },
+                    pagos: {
+                        orderBy: { fechaDePago: 'asc' },
+                        select: { id: true, monto: true, tipoDePago: true, fechaDePago: true, observaciones: true },
+                    },
+                    producto: {
+                        select: {
+                            id: true,
+                            nombre: true,
+                            descripcion: true,
+                            montoMinimo: true,
+                            montoMaximo: true,
+                            interes: true,
+                            interesMoratorio: true,
+                            penalizacion: true,
+                            comision: true,
+                            cargos: true,
+                            activo: true,
+                            numeroDePagos: true,
+                            frecuencia: true,
+                            creditosActivos: true,
+                            diaSemana: true,
+                            diaMes: true,
+                        },
+                    },
+                    sucursal: { select: { id: true, nombre: true } },
+                    seguro: { select: { id: true, nombre: true, monto: true } },
+                    modalidadDeSeguro: { select: { id: true, titulo: true, descripcion: true } },
+                    aval: {
+                        select: {
+                            id: true,
+                            nombre: true,
+                            apellidoPaterno: true,
+                            apellidoMaterno: true,
+                            telefono: true,
+                            fechaDeNacimiento: true,
+                            parentesco: { select: { id: true, descripcion: true } },
+                            otro: true,
+                            ocupacion: true,
+                        },
+                    },
+                    colocador: {
+                        select: {
+                            id: true,
+                            usuario: { select: { id: true, nombre: true, apellido: true } },
+                            cliente: {
+                                select: { id: true, apellidoPaterno: true, apellidoMaterno: true, nombre: true },
+                            },
+                        },
+                    },
+                },
             });
 
             if (creditoCreado) {
