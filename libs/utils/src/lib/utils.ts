@@ -296,16 +296,22 @@ export const getDateWithFormat = (date: string): DateTime =>
  * @returns boolean
  */
 export const existPagoOrAbono = (pagos: Partial<Pago>[] | Pago[], fechaPago: DateTime, monto: number): boolean =>
-    pagos.some(
-        (pago) =>
-            pago?.tipoDePago !== TipoDePago.MORA &&
-            pago?.fechaCreacion &&
-            pago.monto &&
-            monto >= pago?.monto.toNumber() &&
-            DateTime.fromISO(pago.fechaCreacion.toDateString()).set({
-                hour: 0,
-                minute: 0,
-                second: 0,
-                millisecond: 0,
-            }) <= fechaPago
-    );
+    pagos.some((pago) => {
+        if (pago) {
+            if (pago.monto && pago.fechaDePago) {
+                const paymentGreaterThanAmt = pago.monto.toNumber() >= monto;
+                const fechaPagoMade = DateTime.fromISO(pago.fechaDePago.toISOString()).set({
+                    hour: 0,
+                    minute: 0,
+                    second: 0,
+                    millisecond: 0,
+                });
+                const dateLowerOrEquAmtDt = fechaPagoMade <= fechaPago;
+
+                if (paymentGreaterThanAmt && dateLowerOrEquAmtDt) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    });
