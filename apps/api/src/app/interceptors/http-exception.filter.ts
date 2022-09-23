@@ -9,7 +9,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         const request = ctx.getRequest<Request>();
         const status = exception.getStatus();
         let message = response.statusMessage;
-        if ((request.url === '/auth/login' && status === 401) || status === 404) {
+        if (request.url === '/auth/login' && (status === 401 || status === 404)) {
             message = 'Usuario o contraseña erroneos, verificar.';
             response.status(status).json({
                 statusCode: status,
@@ -18,19 +18,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
         } else {
             if (!message) {
                 const exceptionResp = exception.getResponse();
-                message = exceptionResp['message' as keyof object];
-            }
-            switch (status) {
-                case 401:
-                case 403:
-                    message = 'Acceso no autorizado.';
-                    break;
-                case 500:
-                    message = 'Error en el servidor contactar a soporte.';
-                    break;
-                case 404:
-                    message = 'Recurso no encontrado, verificar';
-                    break;
+                if (exception.message) {
+                    message = exception.message;
+                } else {
+                    message = exceptionResp['message' as keyof object];
+                }
             }
             response.status(status).json({
                 statusCode: status,

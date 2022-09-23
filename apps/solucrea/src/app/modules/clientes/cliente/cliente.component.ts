@@ -203,50 +203,52 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
      *
      */
     subscribeToActions(): void {
-        this._actions$.pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(Add, Edit)).subscribe((result) => {
-            const { error, successful } = result.result;
-            const { action } = result;
-            this.loading = false;
-            this.clienteForm.enable();
-            this.trabajoForm.enable();
-            this._cdr.markForCheck();
-            if (error) {
-                const message = `${(error as HttpErrorResponse)['error'].message}`;
-                this._toast.error(message, {
-                    duration: 4000,
-                    position: 'bottom-center',
-                });
-            }
-            if (successful) {
-                // we enable the form
-                this.clienteForm.markAsPristine();
-                this.trabajoForm.markAsPristine();
-                this.clienteForm.markAsUntouched();
-                this.trabajoForm.markAsUntouched();
-
-                const message = 'Cliente salvado exitosamente.';
-                this._toast.success(message, {
-                    duration: 4000,
-                    position: 'bottom-center',
-                });
-
-                if (action instanceof Add) {
-                    // we clear the forms
-                    this.clienteForm.reset();
-                    if (this.direcciones.length > 1) {
-                        for (let i = 1; i < this.direcciones.length; i++) {
-                            this.direcciones.removeAt(i);
-                        }
-                    }
-                    this.trabajoForm.reset();
-
-                    // we reset the stepper
-                    this.myStepper.reset();
-                } else {
-                    this.disableCiudadAndEstado();
+        this._actions$
+            .pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(Add, Edit, GetColonias))
+            .subscribe((result) => {
+                const { error, successful } = result.result;
+                const { action } = result;
+                this.loading = false;
+                this.clienteForm.enable();
+                this.trabajoForm.enable();
+                this._cdr.markForCheck();
+                if (error) {
+                    const message = `${(error as HttpErrorResponse)['error'].message}`;
+                    this._toast.error(message, {
+                        duration: 4000,
+                        position: 'bottom-center',
+                    });
                 }
-            }
-        });
+                if (successful) {
+                    // we enable the form
+                    this.clienteForm.markAsPristine();
+                    this.trabajoForm.markAsPristine();
+                    this.clienteForm.markAsUntouched();
+                    this.trabajoForm.markAsUntouched();
+
+                    const message = 'Cliente salvado exitosamente.';
+                    this._toast.success(message, {
+                        duration: 4000,
+                        position: 'bottom-center',
+                    });
+
+                    if (action instanceof Add) {
+                        // we clear the forms
+                        this.clienteForm.reset();
+                        if (this.direcciones.length > 1) {
+                            for (let i = 1; i < this.direcciones.length; i++) {
+                                this.direcciones.removeAt(i);
+                            }
+                        }
+                        this.trabajoForm.reset();
+
+                        // we reset the stepper
+                        this.myStepper.reset();
+                    } else {
+                        this.disableCiudadAndEstado();
+                    }
+                }
+            });
     }
 
     /**
