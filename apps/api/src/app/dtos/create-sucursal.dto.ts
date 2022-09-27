@@ -13,6 +13,5 @@ export class CreateSucursalDto {
     actualizadoPor?: string;
     fechaActualizacion?: string | Date;
     creditos?: Prisma.CreditoCreateNestedManyWithoutSucursalInput;
-    comisiones?: Prisma.ComisionCreateNestedManyWithoutSucursalInput;
     cajas?: Prisma.CajaCreateNestedManyWithoutSucursalInput;
 }

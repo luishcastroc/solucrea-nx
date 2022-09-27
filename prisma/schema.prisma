@@ -189,11 +189,6 @@ enum TipoDireccion {
     OTRO
 }
 
-enum Posicion {
-    COLOCADOR
-    COBRADOR
-}
-
 enum TiposMovimiento {
     DEPOSITO
     RETIRO
@@ -252,24 +247,25 @@ model Usuario {
     actualizadoPor     String      @default("ADMIN")
     fechaActualizacion DateTime    @default(now()) @updatedAt
     colocador          Colocador[]
+    cobrador           Cobrador[]
 
     @@map(name: "Usuarios")
 }
 
 model Sucursal {
-    id                 String     @id @default(uuid())
-    nombre             String     @unique
-    direccion          Direccion  @relation(fields: [direccionId], references: [id])
+    id                 String    @id @default(uuid())
+    nombre             String    @unique
+    direccion          Direccion @relation(fields: [direccionId], references: [id])
     telefono           String
     creditos           Credito[]
-    comisiones         Comision[]
     cajas              Caja[]
-    activa             Boolean    @default(true)
-    creadoPor          String     @default("ADMIN")
-    fechaCreacion      DateTime   @default(now())
-    actualizadoPor     String     @default("ADMIN")
-    fechaActualizacion DateTime   @default(now()) @updatedAt
+    activa             Boolean   @default(true)
+    creadoPor          String    @default("ADMIN")
+    fechaCreacion      DateTime  @default(now())
+    actualizadoPor     String    @default("ADMIN")
+    fechaActualizacion DateTime  @default(now()) @updatedAt
     direccionId        String
+    pago               Pago[]
 
     @@map(name: "Sucursales")
 }
@@ -334,13 +330,16 @@ model Pago {
     fechaDePago        DateTime
     observaciones      String?
     credito            Credito?   @relation(fields: [creditoId], references: [id])
+    cobrador           Cobrador?  @relation(fields: [cobradorId], references: [id])
+    sucursal           Sucursal   @relation(fields: [sucursalId], references: [id])
     creadoPor          String
     fechaCreacion      DateTime   @default(now())
     actualizadoPor     String     @default("ADMIN")
     fechaActualizacion DateTime   @default(now()) @updatedAt
     clienteId          String
-    sucursalId         String
     creditoId          String?
+    cobradorId         String
+    sucursalId         String
 
     @@map(name: "Pagos")
 }
@@ -471,6 +470,13 @@ model Colocador {
     @@map("Colocadores")
 }
 
+model Cobrador {
+    id        String  @id @default(uuid())
+    usuario   Usuario @relation(fields: [usuarioId], references: [id])
+    pago      Pago[]
+    usuarioId String
+}
+
 model Credito {
     id                  String            @id @default(uuid())
     cliente             Cliente           @relation(fields: [clienteId], references: [id])
@@ -490,7 +496,6 @@ model Credito {
     modalidadDeSeguro   ModalidadDeSeguro @relation(fields: [modalidadDeSeguroId], references: [id])
     aval                Aval              @relation(fields: [avalId], references: [id])
     observaciones       String?
-    comisiones          Comision[]
     pagos               Pago[]
     status              Status
     referidoPor         ReferidoPor
@@ -507,6 +512,7 @@ model Credito {
     avalId              String
     modalidadDeSeguroId String
     colocadorId         String
+    comision            Comision[]
 
     @@map(name: "Creditos")
 }
@@ -532,19 +538,16 @@ model EsquemaComision {
 
 model Comision {
     id                 String          @id @default(uuid())
-    credito            Credito         @relation(fields: [creditoId], references: [id])
-    sucursal           Sucursal        @relation(fields: [sucursalId], references: [id])
     usuario            Usuario         @relation(fields: [usuarioId], references: [id])
     esquema            EsquemaComision @relation(fields: [esquemaComisionId], references: [id])
-    monto              Decimal         @db.Decimal(15, 2)
+    credito            Credito?        @relation(fields: [creditoId], references: [id])
     creadoPor          String
     fechaCreacion      DateTime        @default(now())
     actualizadoPor     String          @default("ADMIN")
     fechaActualizacion DateTime        @default(now()) @updatedAt
-    creditoId          String
-    sucursalId         String
     usuarioId          String
     esquemaComisionId  String
+    creditoId          String?
 
     @@map(name: "Comisiones")
 }

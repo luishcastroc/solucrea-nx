@@ -109,6 +109,10 @@ export class CreditosPagoComponent implements OnInit {
         return this.pagosForm.get('sucursalId');
     }
 
+    get cobradorId() {
+        return this.pagosForm.get('cobradorId');
+    }
+
     get fechaDePago() {
         return this.pagosForm.get('fechaDePago');
     }
@@ -131,6 +135,7 @@ export class CreditosPagoComponent implements OnInit {
             creditoId: ['', Validators.required],
             clienteId: ['', Validators.required],
             sucursalId: ['', Validators.required],
+            cobradorId: ['', Validators.required],
             monto: [0, [Validators.required, Validators.min(1)]],
             tipoDePago: [null, Validators.required],
             fechaDePago: ['', Validators.required],
@@ -146,7 +151,8 @@ export class CreditosPagoComponent implements OnInit {
             monto: Number(this.monto?.value),
             tipoDePago: this.tipoDePago?.value,
             clienteId: this.clienteId?.value,
-            sucursalId: this.sucursalId?.value,
+            sucursal: { connect: { id: this.sucursalId?.value } },
+            //cobrador: { connect: { id: this.cobradorId?.value } },
             fechaDePago: this.fechaDePago?.value,
             creadoPor,
             actualizadoPor,

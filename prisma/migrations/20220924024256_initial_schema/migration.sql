@@ -238,7 +238,7 @@ CREATE TABLE `Cajas` (
 CREATE TABLE `Pagos` (
     `id` VARCHAR(191) NOT NULL,
     `monto` DECIMAL(15, 2) NOT NULL,
-    `tipoDePago` ENUM('REGULAR', 'MORA', 'CAPITAL', 'ABONO', 'LIQUIDACION') NOT NULL,
+    `tipoDePago` ENUM('REGULAR', 'MORA', 'ABONO', 'LIQUIDACION') NOT NULL,
     `fechaDePago` DATETIME(3) NOT NULL,
     `observaciones` VARCHAR(191) NULL,
     `creadoPor` VARCHAR(191) NOT NULL,
@@ -246,8 +246,9 @@ CREATE TABLE `Pagos` (
     `actualizadoPor` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
     `fechaActualizacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `clienteId` VARCHAR(191) NOT NULL,
-    `sucursalId` VARCHAR(191) NOT NULL,
     `creditoId` VARCHAR(191) NULL,
+    `cobradorId` VARCHAR(191) NOT NULL,
+    `sucursalId` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -369,6 +370,14 @@ CREATE TABLE `Colocadores` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `Cobrador` (
+    `id` VARCHAR(191) NOT NULL,
+    `usuarioId` VARCHAR(191) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Creditos` (
     `id` VARCHAR(191) NOT NULL,
     `fechaDesembolso` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -417,15 +426,13 @@ CREATE TABLE `EsquemasComision` (
 -- CreateTable
 CREATE TABLE `Comisiones` (
     `id` VARCHAR(191) NOT NULL,
-    `monto` DECIMAL(15, 2) NOT NULL,
     `creadoPor` VARCHAR(191) NOT NULL,
     `fechaCreacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `actualizadoPor` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
     `fechaActualizacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `creditoId` VARCHAR(191) NOT NULL,
-    `sucursalId` VARCHAR(191) NOT NULL,
     `usuarioId` VARCHAR(191) NOT NULL,
     `esquemaComisionId` VARCHAR(191) NOT NULL,
+    `creditoId` VARCHAR(191) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -453,6 +460,12 @@ ALTER TABLE `Cajas` ADD CONSTRAINT `Cajas_sucursalId_fkey` FOREIGN KEY (`sucursa
 
 -- AddForeignKey
 ALTER TABLE `Pagos` ADD CONSTRAINT `Pagos_creditoId_fkey` FOREIGN KEY (`creditoId`) REFERENCES `Creditos`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Pagos` ADD CONSTRAINT `Pagos_cobradorId_fkey` FOREIGN KEY (`cobradorId`) REFERENCES `Cobrador`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Pagos` ADD CONSTRAINT `Pagos_sucursalId_fkey` FOREIGN KEY (`sucursalId`) REFERENCES `Sucursales`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Clientes` ADD CONSTRAINT `Clientes_trabajoId_fkey` FOREIGN KEY (`trabajoId`) REFERENCES `Trabajos`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -485,6 +498,9 @@ ALTER TABLE `Colocadores` ADD CONSTRAINT `Colocadores_clienteId_fkey` FOREIGN KE
 ALTER TABLE `Colocadores` ADD CONSTRAINT `Colocadores_usuarioId_fkey` FOREIGN KEY (`usuarioId`) REFERENCES `Usuarios`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `Cobrador` ADD CONSTRAINT `Cobrador_usuarioId_fkey` FOREIGN KEY (`usuarioId`) REFERENCES `Usuarios`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_clienteId_fkey` FOREIGN KEY (`clienteId`) REFERENCES `Clientes`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -506,13 +522,10 @@ ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_avalId_fkey` FOREIGN KEY (`avalI
 ALTER TABLE `Creditos` ADD CONSTRAINT `Creditos_colocadorId_fkey` FOREIGN KEY (`colocadorId`) REFERENCES `Colocadores`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Comisiones` ADD CONSTRAINT `Comisiones_creditoId_fkey` FOREIGN KEY (`creditoId`) REFERENCES `Creditos`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Comisiones` ADD CONSTRAINT `Comisiones_sucursalId_fkey` FOREIGN KEY (`sucursalId`) REFERENCES `Sucursales`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `Comisiones` ADD CONSTRAINT `Comisiones_usuarioId_fkey` FOREIGN KEY (`usuarioId`) REFERENCES `Usuarios`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Comisiones` ADD CONSTRAINT `Comisiones_esquemaComisionId_fkey` FOREIGN KEY (`esquemaComisionId`) REFERENCES `EsquemasComision`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Comisiones` ADD CONSTRAINT `Comisiones_creditoId_fkey` FOREIGN KEY (`creditoId`) REFERENCES `Creditos`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
