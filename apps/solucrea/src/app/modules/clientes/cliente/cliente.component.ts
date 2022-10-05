@@ -54,9 +54,6 @@ import { curpValidator, rfcValidator } from '../validators/custom-clientes.valid
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateComponent {
-    @ViewChild('stepper')
-    private myStepper!: MatStepper;
-
     config$!: Observable<IConfig | undefined>;
     loading$!: Observable<boolean>;
     editMode$!: Observable<EditMode>;
@@ -79,6 +76,8 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
     titleInputMask = createMask({ casing: 'title' });
     loading = false;
 
+    @ViewChild('stepper')
+    private myStepper!: MatStepper;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
@@ -226,13 +225,12 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
                     this.clienteForm.markAsUntouched();
                     this.trabajoForm.markAsUntouched();
 
-                    const message = 'Cliente salvado exitosamente.';
-                    this._toast.success(message, {
-                        duration: 4000,
-                        position: 'bottom-center',
-                    });
-
                     if (action instanceof Add) {
+                        const message = 'Cliente salvado exitosamente.';
+                        this._toast.success(message, {
+                            duration: 4000,
+                            position: 'bottom-center',
+                        });
                         // we clear the forms
                         this.clienteForm.reset();
                         if (this.direcciones.length > 1) {

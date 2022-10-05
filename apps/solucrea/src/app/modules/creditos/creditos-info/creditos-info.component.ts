@@ -5,7 +5,7 @@ import { Store } from '@ngxs/store';
 import { ICreditoReturnDto } from 'api/dtos';
 import { Observable } from 'rxjs';
 
-import { CreditosState, ModeCredito, SelectCredito } from '../_store';
+import { CreditosState, GetCobratarios, ModeCredito, SelectCredito } from '../_store';
 
 @Component({
     selector: 'app-creditos-info',
@@ -24,7 +24,7 @@ export class CreditosInfoComponent implements OnInit {
     ngOnInit(): void {
         this.creditoId = this._route.snapshot.paramMap.get('creditoId');
         if (this.creditoId) {
-            this._store.dispatch(new SelectCredito(this.creditoId));
+            this._store.dispatch([new SelectCredito(this.creditoId), new GetCobratarios()]);
         }
     }
 

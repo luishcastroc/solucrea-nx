@@ -20,6 +20,7 @@ export interface CreditosStateModel {
     sucursales: ISucursalReturnDto[] | [];
     clientes: IClienteReturnDto[] | [];
     colocadores: IUsuarioReturnDto[] | [];
+    cobratarios: IUsuarioReturnDto[] | [];
     parentescos: IParentescoReturnDto[] | [];
     segurosData: ISegurosData | undefined;
     selectedOtro: boolean;

@@ -28,6 +28,7 @@ import {
     GetClienteData,
     GetClientesCount,
     GetClienteWhere,
+    GetCobratarios,
     GetCreditosConfiguration,
     GetCreditosCount,
     GetSucursalesWhereCaja,
@@ -59,6 +60,7 @@ import { Producto, Role } from '.prisma/client';
         selectedModalidadDeSeguro: undefined,
         selectedSeguro: undefined,
         colocadores: [],
+        cobratarios: [],
         parentescos: [],
         selectedOtro: false,
         segurosData: undefined,
@@ -177,6 +179,11 @@ export class CreditosState {
         return turnosCount;
     }
 
+    @Selector()
+    static cobratarios({ cobratarios }: CreditosStateModel): IUsuarioReturnDto[] | [] {
+        return cobratarios;
+    }
+
     @Action(GetAllCreditosCliente)
     getAllCreditosCliente({ patchState }: StateContext<CreditosStateModel>, { id, status }: GetAllCreditosCliente) {
         patchState({ loading: true });
@@ -221,6 +228,19 @@ export class CreditosState {
                     colocadores: sortBy(colocadores, 'apellido'),
                     parentescos: sortBy(parentescos, 'descripcion'),
                 });
+            })
+        );
+    }
+
+    @Action(GetCobratarios)
+    getCobratarios({ patchState }: StateContext<CreditosStateModel>) {
+        return this._ajustesUsuarios.getUsuariosWhere({ role: Role.COBRADOR }).pipe(
+            tap((cobratarios) => {
+                if (cobratarios) {
+                    patchState({
+                        cobratarios: sortBy(cobratarios, 'apellido'),
+                    });
+                }
             })
         );
     }
@@ -434,6 +454,7 @@ export class CreditosState {
             selectedClienteReferral: undefined,
             selectedModalidadDeSeguro: undefined,
             colocadores: [],
+            cobratarios: [],
             parentescos: [],
             loading: false,
             segurosData: undefined,
@@ -450,6 +471,7 @@ export class CreditosState {
             sucursales: [],
             clientes: [],
             colocadores: [],
+            cobratarios: [],
             parentescos: [],
             selectedCliente: undefined,
             selectedCredito: undefined,

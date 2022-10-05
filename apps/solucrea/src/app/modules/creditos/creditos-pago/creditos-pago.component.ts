@@ -5,7 +5,7 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Prisma, TipoDePago, Usuario } from '@prisma/client';
-import { ICreditoReturnDto } from 'api/dtos';
+import { ICreditoReturnDto, IUsuarioReturnDto } from 'api/dtos';
 import { AuthState } from 'app/core/auth';
 import { DateTime } from 'luxon';
 import { Observable, tap } from 'rxjs';
@@ -22,6 +22,7 @@ export class CreditosPagoComponent implements OnInit {
     loading$!: Observable<boolean>;
     loading: boolean = false;
     selectedCredito$!: Observable<ICreditoReturnDto | undefined>;
+    cobratarios$!: Observable<IUsuarioReturnDto[] | []>;
     actions$!: Actions;
     tipoDePagoTemp = TipoDePago;
     pagosForm!: UntypedFormGroup;
@@ -44,6 +45,7 @@ export class CreditosPagoComponent implements OnInit {
         private _cdr: ChangeDetectorRef
     ) {
         this.loading$ = this._store.select(CreditosState.loading);
+        this.cobratarios$ = this._store.select(CreditosState.cobratarios);
         this.actions$ = this._actions$.pipe(
             ofActionCompleted(SavePago),
             tap((result) => {
@@ -71,6 +73,7 @@ export class CreditosPagoComponent implements OnInit {
                         this.monto?.reset();
                         this.tipoDePago?.reset();
                         this.observaciones?.reset();
+                        this.cobradorId?.reset();
                     }
                 }
             })
@@ -152,7 +155,7 @@ export class CreditosPagoComponent implements OnInit {
             tipoDePago: this.tipoDePago?.value,
             clienteId: this.clienteId?.value,
             sucursal: { connect: { id: this.sucursalId?.value } },
-            //cobrador: { connect: { id: this.cobradorId?.value } },
+            cobrador: { create: { usuario: { connect: { id: this.cobradorId?.value } } } },
             fechaDePago: this.fechaDePago?.value,
             creadoPor,
             actualizadoPor,

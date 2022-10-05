@@ -101,3 +101,7 @@ export class SavePago {
     static readonly type = '[Credito] Save Pago';
     constructor(public data: Prisma.PagoCreateInput) {}
 }
+
+export class GetCobratarios {
+    static readonly type = '[Credito] Get Cobratarios';
+}
