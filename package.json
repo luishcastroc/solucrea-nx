@@ -75,7 +75,7 @@
         "highlight.js": "11.6.0",
         "inputmask": "^5.0.7",
         "lodash-es": "4.17.21",
-        "luxon": "^3.0.4",
+        "luxon": "~3.0.4",
         "ng-apexcharts": "1.7.1",
         "ngx-markdown": "14.0.1",
         "nx": "^15.0.0",
