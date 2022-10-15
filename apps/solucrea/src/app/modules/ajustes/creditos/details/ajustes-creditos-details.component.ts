@@ -20,7 +20,7 @@ import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { dias } from '../../_config/dias';
 import { defaultFrecuencias } from '../../_config/frecuencias';
-import { Producto, TipoPenalizacion } from '.prisma/client';
+import { Producto, TipoPenalizacion } from '@prisma/client';
 
 @Component({
     selector: 'app-details',

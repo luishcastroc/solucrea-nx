@@ -2,8 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, V
 import { EstadoService } from './estado.service';
 import { Public, Roles } from 'api/decorators';
 import { RolesGuard } from 'api/guards';
-
-import { Estado, Role } from '.prisma/client';
+import { Estado, Role } from '@prisma/client';
 
 @Controller()
 export class EstadoController {

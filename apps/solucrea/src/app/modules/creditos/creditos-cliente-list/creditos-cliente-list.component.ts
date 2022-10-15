@@ -20,8 +20,8 @@ import {
 } from 'app/modules/creditos/_store/';
 import { Observable, tap } from 'rxjs';
 
-import { Status } from '.prisma/client';
 import { MatRadioChange } from '@angular/material/radio';
+import { Status } from '@prisma/client';
 
 @Component({
     selector: 'app-creditos-cliente-list',

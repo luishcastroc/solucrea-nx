@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Usuario } from '@prisma/client';
 import { AuthState, UpdateUsuario } from 'app/core/auth';
 import { EditMode } from 'app/core/models';
 import { AjustesUsuarioService } from 'app/modules/ajustes/_services';
@@ -16,7 +17,6 @@ import {
     SelectUsuario,
 } from './ajustes-usuarios.actions';
 import { AjustesUsuariosStateModel } from './ajustes-usuarios.model';
-import { Usuario } from '.prisma/client';
 
 @State<AjustesUsuariosStateModel>({
     name: 'ajustesUsuarios',

@@ -15,8 +15,7 @@ import { CajaService } from './caja.service';
 import { Public, Roles } from 'api/decorators';
 import { CreateCajaDto, ICajaReturnDto } from 'api/dtos';
 import { RolesGuard } from 'api/guards';
-
-import { Caja, Role } from '.prisma/client';
+import { Caja, Role } from '@prisma/client';
 
 @Controller()
 export class CajaController {

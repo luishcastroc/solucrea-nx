@@ -14,8 +14,8 @@ import {
     SelectCredito,
 } from './ajustes-creditos.actions';
 import { AjustesCreditosStateModel } from './ajustes-creditos.model';
-import { Producto } from '.prisma/client';
 import { ChangeSearchFilterCreditos } from '.';
+import { Producto } from '@prisma/client';
 
 @State<AjustesCreditosStateModel>({
     name: 'ajustesCreditos',

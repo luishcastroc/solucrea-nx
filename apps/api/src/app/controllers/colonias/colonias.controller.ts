@@ -3,8 +3,7 @@ import { ColoniasService } from './colonias.service';
 import { Public, Roles } from 'api/decorators';
 import { CreateColoniaDto, IColoniaReturnDto } from 'api/dtos';
 import { RolesGuard } from 'api/guards';
-
-import { Colonia, Role } from '.prisma/client';
+import { Colonia, Role } from '@prisma/client';
 
 @Controller()
 export class ColoniasController {

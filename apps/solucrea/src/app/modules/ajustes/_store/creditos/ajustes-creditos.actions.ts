@@ -1,6 +1,5 @@
+import { Producto } from '@prisma/client';
 import { EditMode } from 'app/core/models';
-
-import { Producto } from '.prisma/client';
 
 export class AddCredito {
     static readonly type = '[Credito] Add';

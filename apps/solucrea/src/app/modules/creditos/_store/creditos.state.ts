@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Producto, Role } from '@prisma/client';
 import { ISegurosData } from '@solucrea-utils';
 import {
     IClienteReturnDto,
@@ -44,7 +45,6 @@ import {
     SelectSeguro,
 } from './creditos.actions';
 import { CreditosStateModel } from './creditos.model';
-import { Producto, Role } from '.prisma/client';
 
 @State<CreditosStateModel>({
     name: 'creditos',

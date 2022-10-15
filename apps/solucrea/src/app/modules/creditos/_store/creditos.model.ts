@@ -10,7 +10,7 @@ import {
 import { EditMode } from 'app/core/models';
 
 import { ISegurosData } from '@solucrea-utils';
-import { Producto } from '.prisma/client';
+import { Producto } from '@prisma/client';
 
 export interface CreditosStateModel {
     editMode: EditMode;

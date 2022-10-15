@@ -1,11 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, Role } from '@prisma/client';
 import { ActividadesEconomicasService } from './actividades-economicas.service';
 import { Public, Roles } from 'api/decorators';
 import { CreateActividadEconomicaDto, IActividadEconomicaReturnDto } from 'api/dtos';
 import { RolesGuard } from 'api/guards';
-
-import { Role } from '.prisma/client';
 
 @Controller()
 export class ActividadesEconomicasController {

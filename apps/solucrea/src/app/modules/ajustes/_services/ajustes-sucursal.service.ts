@@ -1,10 +1,10 @@
-import { Prisma } from '.prisma/client';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateSucursalDto, ISucursalReturnDto } from 'api/dtos';
 import { Observable } from 'rxjs';
 
 import { environment } from 'apps/solucrea/src/environments/environment';
+import { Prisma } from '@prisma/client';
 
 @Injectable({
     providedIn: 'root',

@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
+import { Producto } from '@prisma/client';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import {
     AjustesCreditosState,
@@ -16,8 +17,6 @@ import {
 } from 'app/modules/ajustes/_store';
 import { ConfirmationDialogComponent } from 'app/shared';
 import { map, Observable, startWith, Subject, takeUntil, tap, withLatestFrom } from 'rxjs';
-
-import { Producto } from '.prisma/client';
 
 @Component({
     selector: 'app-list',

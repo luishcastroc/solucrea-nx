@@ -1,11 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { Role } from '@prisma/client';
+import { Prisma, Producto, Role } from '@prisma/client';
 import { ProductosService } from './productos.service';
 import { Public, Roles } from 'api/decorators';
 import { CreateProductoDto } from 'api/dtos';
 import { RolesGuard } from 'api/guards';
-
-import { Prisma, Producto } from '.prisma/client';
 
 @Controller()
 export class ProductosController {

@@ -3,8 +3,7 @@ import { CiudadService } from './ciudad.service';
 import { Public, Roles } from 'api/decorators';
 import { CreateCiudadDto } from 'api/dtos';
 import { RolesGuard } from 'api/guards';
-
-import { Ciudad, Role } from '.prisma/client';
+import { Ciudad, Role } from '@prisma/client';
 
 @Controller()
 export class CiudadController {

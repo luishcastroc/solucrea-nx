@@ -6,6 +6,7 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
+import { TipoDireccion } from '@prisma/client';
 import { IColoniaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 import {
@@ -18,8 +19,6 @@ import {
 } from 'app/modules/ajustes/_store';
 import { SharedService } from 'app/shared';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
-
-import { TipoDireccion } from '.prisma/client';
 
 @Component({
     selector: 'app-sucursales-details',

@@ -1,9 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Colonia, Prisma } from '@prisma/client';
 import { PrismaService } from 'api/prisma';
 
 import { IColoniaReturnDto } from 'api/dtos';
-import { Colonia } from '.prisma/client';
 
 @Injectable()
 export class ColoniasService {
