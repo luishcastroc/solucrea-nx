@@ -241,7 +241,6 @@ model Usuario {
     nombre             String
     apellido           String
     role               Role        @default(USUARIO)
-    comision           Comision[]
     creadoPor          String      @default("ADMIN")
     fechaCreacion      DateTime    @default(now())
     actualizadoPor     String      @default("ADMIN")
@@ -471,8 +470,9 @@ model Colocador {
 }
 
 model Cobrador {
-    id        String  @id @default(uuid())
-    usuario   Usuario @relation(fields: [usuarioId], references: [id])
+    id        String     @id @default(uuid())
+    usuario   Usuario    @relation(fields: [usuarioId], references: [id])
+    comision  Comision[]
     pago      Pago[]
     usuarioId String
 }
@@ -517,37 +517,37 @@ model Credito {
     @@map(name: "Creditos")
 }
 
-enum TipoDeEsquema {
-    PORCENTAJE
-    MONTO
+enum TipoDeComision {
+    PAGO
+    FINALIZACION
 }
 
-model EsquemaComision {
-    id                 String        @id @default(uuid())
-    tipo               TipoDeEsquema
+model TipoComision {
+    id                 String         @id @default(uuid())
+    tipo               TipoDeComision
     descripcion        String
     monto              String
     comision           Comision[]
     creadoPor          String
-    fechaCreacion      DateTime      @default(now())
-    actualizadoPor     String        @default("ADMIN")
-    fechaActualizacion DateTime      @default(now()) @updatedAt
+    fechaCreacion      DateTime       @default(now())
+    actualizadoPor     String         @default("ADMIN")
+    fechaActualizacion DateTime       @default(now()) @updatedAt
 
-    @@map(name: "EsquemasComision")
+    @@map(name: "TipossComision")
 }
 
 model Comision {
-    id                 String          @id @default(uuid())
-    usuario            Usuario         @relation(fields: [usuarioId], references: [id])
-    esquema            EsquemaComision @relation(fields: [esquemaComisionId], references: [id])
-    credito            Credito?        @relation(fields: [creditoId], references: [id])
+    id                 String       @id @default(uuid())
+    cobrador           Cobrador     @relation(fields: [cobradorId], references: [id])
+    esquema            TipoComision @relation(fields: [tipoComisionId], references: [id])
+    credito            Credito?     @relation(fields: [creditoId], references: [id])
     creadoPor          String
-    fechaCreacion      DateTime        @default(now())
-    actualizadoPor     String          @default("ADMIN")
-    fechaActualizacion DateTime        @default(now()) @updatedAt
-    usuarioId          String
-    esquemaComisionId  String
+    fechaCreacion      DateTime     @default(now())
+    actualizadoPor     String       @default("ADMIN")
+    fechaActualizacion DateTime     @default(now()) @updatedAt
     creditoId          String?
+    cobradorId         String
+    tipoComisionId     String
 
     @@map(name: "Comisiones")
 }

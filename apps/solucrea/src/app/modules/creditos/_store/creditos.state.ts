@@ -306,6 +306,7 @@ export class CreditosState {
             );
         }
         patchState({ selectedProducto });
+        return;
     }
 
     @Action(GetClienteWhere)
@@ -318,6 +319,8 @@ export class CreditosState {
                     const clientes = clientesReturn.filter((cliente) => {
                         if ((selectedCliente && selectedCliente.id !== cliente.id) || !selectedCliente) {
                             return cliente;
+                        } else {
+                            return {};
                         }
                     });
 
