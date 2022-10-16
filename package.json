@@ -78,7 +78,6 @@
         "luxon": "~3.0.4",
         "ng-apexcharts": "1.7.1",
         "ngx-markdown": "14.0.1",
-        "nx": "^15.0.0",
         "passport": ">=0.6.0",
         "passport-jwt": "^4.0.0",
         "passport-local": "^1.0.0",
