@@ -5,7 +5,7 @@ import { ParentescosController } from './parentescos.controller';
 import { ParentescosService } from './parentescos.service';
 
 @Module({
-    controllers: [ParentescosController],
-    providers: [ParentescosService, PrismaService],
+  controllers: [ParentescosController],
+  providers: [ParentescosService, PrismaService],
 })
 export class ParentescosModule {}

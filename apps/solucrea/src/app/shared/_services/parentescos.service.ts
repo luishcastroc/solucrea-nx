@@ -5,25 +5,27 @@ import { environment } from 'apps/solucrea/src/environments/environment';
 import { Observable } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 export class ParentescosService {
-    private _environment = environment;
+  private _environment = environment;
 
-    /**
-     * Constructor
-     */
-    constructor(private _httpClient: HttpClient) {}
+  /**
+   * Constructor
+   */
+  constructor(private _httpClient: HttpClient) {}
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-    /**
-     * Get Parentescos
-     *
-     *
-     */
-    getParentescos(): Observable<IParentescoReturnDto[]> {
-        return this._httpClient.get<IParentescoReturnDto[]>(`${this._environment.uri}/parentescos`);
-    }
+  // -----------------------------------------------------------------------------------------------------
+  // @ Public methods
+  // -----------------------------------------------------------------------------------------------------
+  /**
+   * Get Parentescos
+   *
+   *
+   */
+  getParentescos(): Observable<IParentescoReturnDto[]> {
+    return this._httpClient.get<IParentescoReturnDto[]>(
+      `${this._environment.uri}/parentescos`
+    );
+  }
 }

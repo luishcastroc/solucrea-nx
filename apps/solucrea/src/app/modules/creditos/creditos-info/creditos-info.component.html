@@ -1,257 +1,303 @@
-<div class="flex flex-col flex-auto w-full">
-    <div class="flex justify-between border-b pb-3">
-        <h1 class="text-4xl font-extrabold tracking-tight leading-none">Detalles Crédito</h1>
-        <button
-            mat-icon-button
-            aria-label="Regresar"
-            (click)="back()"
-            #tooltip="matTooltip"
-            matTooltip="Regresar"
-            [matTooltipPosition]="'below'"
-        >
-            <mat-icon svgIcon="heroicons_outline:arrow-left"></mat-icon>
-        </button>
-    </div>
-    <!-- Content -->
-    <div
-        class="flex flex-auto overflow-hidden"
-        *ngIf="selectedCredito$ | async as credito"
-        fuseScrollbar
-        [fuseScrollbarOptions]="{
-            suppressScrollX: true
-        }"
-    >
-        <mat-stepper [linear]="true" #stepper labelPosition="bottom" class="flex flex-col flex-auto">
-            <mat-step
-                ><ng-template matStepLabel>Datos Generales</ng-template>
-                <div class="z-20 flex flex-col px-2 py-4 md:px-10">
-                    <div class="flex flex-col gap-10">
-                        <div class="mt-8 z-20 grid grid-cols-2 gap-4 md:grid-cols-5">
-                            <!-- Nombre del Cliente -->
-                            <div class="flex flex-col">
-                                <div class="font-bold">Nombre Cliente:</div>
-                                <div class="mt-2">
-                                    {{ credito.cliente.nombre }} {{ credito.cliente.apellidoPaterno }}
-                                    {{ credito.cliente.apellidoMaterno }}
-                                </div>
-                            </div>
-                            <!-- Teléfono -->
-                            <div class="flex flex-col">
-                                <div class="font-bold">Teléfono:</div>
-                                <div class="mt-2">
-                                    ({{ credito.cliente.telefono1 | slice: 0:3 }})-{{
-                                        credito.cliente.telefono1 | slice: 3:6
-                                    }}-{{ credito.cliente.telefono1 | slice: 6:8 }}-{{
-                                        credito.cliente.telefono1 | slice: 8:10
-                                    }}
-                                </div>
-                            </div>
-                            <!-- Fecha de Nacimiento -->
-                            <div class="flex flex-col">
-                                <div class="font-bold">Fecha de Nacimiento:</div>
-                                <div class="mt-2">
-                                    {{ credito.cliente.fechaDeNacimiento | date: 'd MMM yyyy':'UTC' }}
-                                </div>
-                            </div>
-                            <!-- RFC del Cliente -->
-                            <div class="flex flex-col">
-                                <div class="font-bold">RFC:</div>
-                                <div class="mt-2">
-                                    {{ credito.cliente.rfc }}
-                                </div>
-                            </div>
-                            <!-- CURP del Cliente -->
-                            <div class="flex flex-col col-span-2 md:col-auto">
-                                <div class="font-bold">CURP:</div>
-                                <div class="mt-2">
-                                    {{ credito.cliente.curp }}
-                                </div>
-                            </div>
-                            <!-- Sucursal -->
-                            <div class="flex flex-col">
-                                <div class="font-bold">Sucursal:</div>
-                                <div class="mt-2">
-                                    {{ credito.sucursal.nombre }}
-                                </div>
-                            </div>
-                            <!-- Nombre del Producto -->
-                            <div class="flex flex-col">
-                                <div class="font-bold">Nombre del Producto:</div>
-                                <div class="mt-2">
-                                    {{ credito.producto.nombre }}
-                                </div>
-                            </div>
-                            <!-- Tasa de Interés -->
-                            <div class="flex flex-col">
-                                <div class="font-bold">Tasa de Interés:</div>
-                                <div class="mt-2">{{ credito.producto.interes }}%</div>
-                            </div>
-                            <!-- Monto Otorgado -->
-                            <div class="flex flex-col">
-                                <div class="font-bold">Monto Otorgado:</div>
-                                <div class="mt-2">{{ credito.monto | decimalToNumber | currency: 'MXN':'symbol' }}</div>
-                            </div>
-                            <!-- Monto Otorgado -->
-                            <div class="flex flex-col">
-                                <div class="font-bold">Cuota:</div>
-                                <div class="mt-2">{{ credito.cuota | decimalToNumber | currency: 'MXN':'symbol' }}</div>
-                            </div>
-                            <!-- Fecha Desembolso -->
-                            <div class="flex flex-col">
-                                <div class="font-bold">Fecha de Desembolso:</div>
-                                <div class="mt-2">{{ credito.fechaDesembolso | date: 'd MMM yyyy':'UTC' }}</div>
-                            </div>
-                            <!-- Pagos Realizados -->
-                            <div class="flex flex-col">
-                                <div class="font-bold">Pagos Realizados:</div>
-                                <div class="mt-2">{{ credito.pagos.length }}</div>
-                            </div>
-                            <!-- Status -->
-                            <div class="flex flex-col">
-                                <div class="font-bold">Estado:</div>
-                                <div class="mt-2">{{ credito.status }}</div>
-                            </div>
-                            <!-- Saldo -->
-                            <div class="flex flex-col">
-                                <div class="font-bold">Saldo al día de hoy:</div>
-                                <div class="mt-2">{{ credito.saldo | decimalToNumber | currency: 'MXN':'symbol' }}</div>
-                            </div>
-                            <!-- Saldo Vencido -->
-                            <div class="flex flex-col">
-                                <div class="font-bold">Saldo Vencido:</div>
-                                <div class="mt-2">
-                                    {{ credito.saldoVencido | decimalToNumber | currency: 'MXN':'symbol' }}
-                                </div>
-                            </div>
-                            <!-- Pago No Intereses -->
-                            <div class="flex flex-col">
-                                <div class="font-bold">Pago para no generar interés:</div>
-                                <div class="mt-2">
-                                    {{ credito.pagoNoIntereses | decimalToNumber | currency: 'MXN':'symbol' }}
-                                </div>
-                            </div>
-                        </div>
-                        <h2 class="text-3xl font-extrabold tracking-tight leading-none">Aval</h2>
-                        <div class="z-20 grid grid-cols-2 gap-4 md:grid-cols-5">
-                            <!-- Nombre del Aval -->
-                            <div class="flex flex-col">
-                                <div class="font-bold">Nombre:</div>
-                                <div class="mt-2">
-                                    {{ credito.aval.nombre }} {{ credito.aval.apellidoPaterno }}
-                                    {{ credito.aval.apellidoMaterno }}
-                                </div>
-                            </div>
-                            <!-- Teléfono -->
-                            <div class="flex flex-col">
-                                <div class="font-bold">Teléfono:</div>
-                                <div class="mt-2">
-                                    ({{ credito.aval.telefono | slice: 0:3 }})-{{
-                                        credito.aval.telefono | slice: 3:6
-                                    }}-{{ credito.aval.telefono | slice: 6:8 }}-{{
-                                        credito.aval.telefono | slice: 8:10
-                                    }}
-                                </div>
-                            </div>
-                            <!-- Parentesco -->
-                            <div class="flex flex-col">
-                                <div class="font-bold">Parentesco:</div>
-                                <div class="mt-2">
-                                    {{ credito.aval.parentesco?.descripcion }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex basis-40 gap-3 items-end">
-                        <button mat-flat-button type="button" [color]="'primary'" matStepperNext>Siguiente</button>
-                        <button
-                            mat-stroked-button
-                            type="button"
-                            (click)="goToPago()"
-                            *ngIf="credito.status !== 'CERRADO'"
-                        >
-                            Pagar
-                        </button>
-                        <button
-                            mat-stroked-button
-                            type="button"
-                            (click)="goToPagosList()"
-                            *ngIf="credito.pagos.length > 0"
-                        >
-                            Lista de Pagos
-                        </button>
-                    </div>
-                </div> </mat-step
-            ><mat-step
-                ><ng-template matStepLabel>Amortización</ng-template>
-                <div class="z-20 flex flex-col px-2 py-4 md:px-10">
-                    <div
-                        class="p-4 overflow-hidden basis-120"
-                        fuseScrollbar
-                        [fuseScrollbarOptions]="{
-                            suppressScrollX: true
-                        }"
-                    >
-                        <div class="hidden md:grid md:grid-cols-4 md:mb-4">
-                            <span class="font-bold text-center">Numero de Pago</span
-                            ><span class="font-bold text-center">Fecha de Pago</span
-                            ><span class="font-bold text-center">Monto</span
-                            ><span class="font-bold text-center">Estatus</span>
-                        </div>
-                        <div
-                            class="grid grid-cols-1 mb-4 pb-8 hover:bg-fuse-bg-default md:mb-0 md:pb-0 md:grid-cols-4 gap-3 border-b-2 min-h-8 cursor-pointer"
-                            *ngFor="let pago of credito.amortizacion"
-                            (click)="credito.status !== 'CERRADO' ? goToPago() : null"
-                        >
-                            <div class="grid grid-cols-2 md:grid-cols-1">
-                                <div class="font-bold md:hidden">Numero de Pago:</div>
-                                <div class="text-center">{{ pago.numeroDePago }}</div>
-                            </div>
-                            <div class="grid grid-cols-2 md:grid-cols-1">
-                                <div class="font-bold md:hidden">Fecha de Pago:</div>
-                                <div class="text-center">{{ pago.fechaDePago | date }}</div>
-                            </div>
-                            <div class="grid grid-cols-2 md:grid-cols-1">
-                                <div class="font-bold md:hidden">Monto:</div>
-                                <div class="text-center">
-                                    {{ pago.monto | decimalToNumber | currency: 'MXN':'symbol' }}
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 md:grid-cols-1">
-                                <div class="font-bold md:hidden">Estado del Pago:</div>
-                                <div class="text-center font-bold" [class.text-red-600]="pago.status === 'ADEUDA'">
-                                    {{ pago.status }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-auto gap-3 basis-30 items-end">
-                        <button mat-flat-button type="button" [color]="'primary'" matStepperPrevious>Anterior</button>
-                        <button
-                            mat-stroked-button
-                            type="button"
-                            (click)="goToPago()"
-                            *ngIf="credito.status !== 'CERRADO'"
-                        >
-                            Pagar
-                        </button>
-                        <button
-                            mat-stroked-button
-                            type="button"
-                            (click)="goToPagosList()"
-                            *ngIf="credito.pagos.length > 0"
-                        >
-                            Lista de Pagos
-                        </button>
-                    </div>
+<div class="flex w-full flex-auto flex-col">
+  <div class="flex justify-between border-b pb-3">
+    <h1 class="text-4xl font-extrabold leading-none tracking-tight">
+      Detalles Crédito
+    </h1>
+    <button
+      mat-icon-button
+      aria-label="Regresar"
+      (click)="back()"
+      #tooltip="matTooltip"
+      matTooltip="Regresar"
+      [matTooltipPosition]="'below'">
+      <mat-icon svgIcon="heroicons_outline:arrow-left"></mat-icon>
+    </button>
+  </div>
+  <!-- Content -->
+  <div
+    class="flex flex-auto overflow-hidden"
+    *ngIf="selectedCredito$ | async as credito"
+    fuseScrollbar
+    [fuseScrollbarOptions]="{
+      suppressScrollX: true
+    }">
+    <mat-stepper
+      [linear]="true"
+      #stepper
+      labelPosition="bottom"
+      class="flex flex-auto flex-col">
+      <mat-step
+        ><ng-template matStepLabel>Datos Generales</ng-template>
+        <div class="z-20 flex flex-col px-2 py-4 md:px-10">
+          <div class="flex flex-col gap-10">
+            <div class="z-20 mt-8 grid grid-cols-2 gap-4 md:grid-cols-5">
+              <!-- Nombre del Cliente -->
+              <div class="flex flex-col">
+                <div class="font-bold">Nombre Cliente:</div>
+                <div class="mt-2">
+                  {{ credito.cliente.nombre }}
+                  {{ credito.cliente.apellidoPaterno }}
+                  {{ credito.cliente.apellidoMaterno }}
                 </div>
-            </mat-step></mat-stepper
-        >
-        <!-- <mat-card class="mb-8 flex-auto">
+              </div>
+              <!-- Teléfono -->
+              <div class="flex flex-col">
+                <div class="font-bold">Teléfono:</div>
+                <div class="mt-2">
+                  ({{ credito.cliente.telefono1 | slice: 0:3 }})-{{
+                    credito.cliente.telefono1 | slice: 3:6
+                  }}-{{ credito.cliente.telefono1 | slice: 6:8 }}-{{
+                    credito.cliente.telefono1 | slice: 8:10
+                  }}
+                </div>
+              </div>
+              <!-- Fecha de Nacimiento -->
+              <div class="flex flex-col">
+                <div class="font-bold">Fecha de Nacimiento:</div>
+                <div class="mt-2">
+                  {{
+                    credito.cliente.fechaDeNacimiento | date: 'd MMM yyyy':'UTC'
+                  }}
+                </div>
+              </div>
+              <!-- RFC del Cliente -->
+              <div class="flex flex-col">
+                <div class="font-bold">RFC:</div>
+                <div class="mt-2">
+                  {{ credito.cliente.rfc }}
+                </div>
+              </div>
+              <!-- CURP del Cliente -->
+              <div class="col-span-2 flex flex-col md:col-auto">
+                <div class="font-bold">CURP:</div>
+                <div class="mt-2">
+                  {{ credito.cliente.curp }}
+                </div>
+              </div>
+              <!-- Sucursal -->
+              <div class="flex flex-col">
+                <div class="font-bold">Sucursal:</div>
+                <div class="mt-2">
+                  {{ credito.sucursal.nombre }}
+                </div>
+              </div>
+              <!-- Nombre del Producto -->
+              <div class="flex flex-col">
+                <div class="font-bold">Nombre del Producto:</div>
+                <div class="mt-2">
+                  {{ credito.producto.nombre }}
+                </div>
+              </div>
+              <!-- Tasa de Interés -->
+              <div class="flex flex-col">
+                <div class="font-bold">Tasa de Interés:</div>
+                <div class="mt-2">{{ credito.producto.interes }}%</div>
+              </div>
+              <!-- Monto Otorgado -->
+              <div class="flex flex-col">
+                <div class="font-bold">Monto Otorgado:</div>
+                <div class="mt-2">
+                  {{
+                    credito.monto | decimalToNumber | currency: 'MXN':'symbol'
+                  }}
+                </div>
+              </div>
+              <!-- Monto Otorgado -->
+              <div class="flex flex-col">
+                <div class="font-bold">Cuota:</div>
+                <div class="mt-2">
+                  {{
+                    credito.cuota | decimalToNumber | currency: 'MXN':'symbol'
+                  }}
+                </div>
+              </div>
+              <!-- Fecha Desembolso -->
+              <div class="flex flex-col">
+                <div class="font-bold">Fecha de Desembolso:</div>
+                <div class="mt-2">
+                  {{ credito.fechaDesembolso | date: 'd MMM yyyy':'UTC' }}
+                </div>
+              </div>
+              <!-- Pagos Realizados -->
+              <div class="flex flex-col">
+                <div class="font-bold">Pagos Realizados:</div>
+                <div class="mt-2">{{ credito.pagos.length }}</div>
+              </div>
+              <!-- Status -->
+              <div class="flex flex-col">
+                <div class="font-bold">Estado:</div>
+                <div class="mt-2">{{ credito.status }}</div>
+              </div>
+              <!-- Saldo -->
+              <div class="flex flex-col">
+                <div class="font-bold">Saldo al día de hoy:</div>
+                <div class="mt-2">
+                  {{
+                    credito.saldo | decimalToNumber | currency: 'MXN':'symbol'
+                  }}
+                </div>
+              </div>
+              <!-- Saldo Vencido -->
+              <div class="flex flex-col">
+                <div class="font-bold">Saldo Vencido:</div>
+                <div class="mt-2">
+                  {{
+                    credito.saldoVencido
+                      | decimalToNumber
+                      | currency: 'MXN':'symbol'
+                  }}
+                </div>
+              </div>
+              <!-- Pago No Intereses -->
+              <div class="flex flex-col">
+                <div class="font-bold">Pago para no generar interés:</div>
+                <div class="mt-2">
+                  {{
+                    credito.pagoNoIntereses
+                      | decimalToNumber
+                      | currency: 'MXN':'symbol'
+                  }}
+                </div>
+              </div>
+            </div>
+            <h2 class="text-3xl font-extrabold leading-none tracking-tight">
+              Aval
+            </h2>
+            <div class="z-20 grid grid-cols-2 gap-4 md:grid-cols-5">
+              <!-- Nombre del Aval -->
+              <div class="flex flex-col">
+                <div class="font-bold">Nombre:</div>
+                <div class="mt-2">
+                  {{ credito.aval.nombre }} {{ credito.aval.apellidoPaterno }}
+                  {{ credito.aval.apellidoMaterno }}
+                </div>
+              </div>
+              <!-- Teléfono -->
+              <div class="flex flex-col">
+                <div class="font-bold">Teléfono:</div>
+                <div class="mt-2">
+                  ({{ credito.aval.telefono | slice: 0:3 }})-{{
+                    credito.aval.telefono | slice: 3:6
+                  }}-{{ credito.aval.telefono | slice: 6:8 }}-{{
+                    credito.aval.telefono | slice: 8:10
+                  }}
+                </div>
+              </div>
+              <!-- Parentesco -->
+              <div class="flex flex-col">
+                <div class="font-bold">Parentesco:</div>
+                <div class="mt-2">
+                  {{ credito.aval.parentesco?.descripcion }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex basis-40 items-end gap-3">
+            <button
+              mat-flat-button
+              type="button"
+              [color]="'primary'"
+              matStepperNext>
+              Siguiente
+            </button>
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="goToPago()"
+              *ngIf="credito.status !== 'CERRADO'">
+              Pagar
+            </button>
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="goToPagosList()"
+              *ngIf="credito.pagos.length > 0">
+              Lista de Pagos
+            </button>
+          </div>
+        </div> </mat-step
+      ><mat-step
+        ><ng-template matStepLabel>Amortización</ng-template>
+        <div class="z-20 flex flex-col px-2 py-4 md:px-10">
+          <div
+            class="basis-120 overflow-hidden p-4"
+            fuseScrollbar
+            [fuseScrollbarOptions]="{
+              suppressScrollX: true
+            }">
+            <div class="hidden md:mb-4 md:grid md:grid-cols-4">
+              <span class="text-center font-bold">Numero de Pago</span
+              ><span class="text-center font-bold">Fecha de Pago</span
+              ><span class="text-center font-bold">Monto</span
+              ><span class="text-center font-bold">Estatus</span>
+            </div>
+            <div
+              class="hover:bg-fuse-bg-default min-h-8 mb-4 grid cursor-pointer grid-cols-1 gap-3 border-b-2 pb-8 md:mb-0 md:grid-cols-4 md:pb-0"
+              *ngFor="let pago of credito.amortizacion"
+              (click)="credito.status !== 'CERRADO' ? goToPago() : null">
+              <div class="grid grid-cols-2 md:grid-cols-1">
+                <div class="font-bold md:hidden">Numero de Pago:</div>
+                <div class="text-center">{{ pago.numeroDePago }}</div>
+              </div>
+              <div class="grid grid-cols-2 md:grid-cols-1">
+                <div class="font-bold md:hidden">Fecha de Pago:</div>
+                <div class="text-center">{{ pago.fechaDePago | date }}</div>
+              </div>
+              <div class="grid grid-cols-2 md:grid-cols-1">
+                <div class="font-bold md:hidden">Monto:</div>
+                <div class="text-center">
+                  {{ pago.monto | decimalToNumber | currency: 'MXN':'symbol' }}
+                </div>
+              </div>
+              <div class="grid grid-cols-2 md:grid-cols-1">
+                <div class="font-bold md:hidden">Estado del Pago:</div>
+                <div
+                  class="text-center font-bold"
+                  [class.text-red-600]="pago.status === 'ADEUDA'">
+                  {{ pago.status }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="basis-30 flex flex-auto items-end gap-3">
+            <button
+              mat-flat-button
+              type="button"
+              [color]="'primary'"
+              matStepperPrevious>
+              Anterior
+            </button>
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="goToPago()"
+              *ngIf="credito.status !== 'CERRADO'">
+              Pagar
+            </button>
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="goToPagosList()"
+              *ngIf="credito.pagos.length > 0">
+              Lista de Pagos
+            </button>
+          </div>
+        </div>
+      </mat-step></mat-stepper
+    >
+    <!-- <mat-card class="mb-8 flex-auto">
         </mat-card> -->
-    </div>
+  </div>
 </div>
-<ng-container *ngIf="loading$ | async; then loadingTemplate; else formTemplate"></ng-container>
+<ng-container
+  *ngIf="
+    loading$ | async;
+    then loadingTemplate;
+    else formTemplate
+  "></ng-container>
 <ng-template #formTemplate></ng-template>
 <ng-template #loadingTemplate>
-    <div class="flex flex-col flex-auto self-center"><mat-spinner> </mat-spinner></div>
+  <div class="flex flex-auto flex-col self-center">
+    <mat-spinner> </mat-spinner>
+  </div>
 </ng-template>

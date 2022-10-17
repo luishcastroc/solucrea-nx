@@ -3,44 +3,44 @@ import { CreateUsuarioDto, UpdateUsuarioDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 
 export class AddUsuario {
-    static readonly type = '[Usuario] Add';
-    constructor(public payload: CreateUsuarioDto) {}
+  static readonly type = '[Usuario] Add';
+  constructor(public payload: CreateUsuarioDto) {}
 }
 
 export class GetAllUsuarios {
-    static readonly type = '[Usuario] Get All';
-    constructor(public id: string) {}
+  static readonly type = '[Usuario] Get All';
+  constructor(public id: string) {}
 }
 
 export class EditUsuario {
-    static readonly type = '[Usuario] Edit';
-    constructor(public id: string, public payload: UpdateUsuarioDto) {}
+  static readonly type = '[Usuario] Edit';
+  constructor(public id: string, public payload: UpdateUsuarioDto) {}
 }
 
 export class DeleteUsuario {
-    static readonly type = '[Usuario] Delete';
-    constructor(public id: string) {}
+  static readonly type = '[Usuario] Delete';
+  constructor(public id: string) {}
 }
 
 export class SelectUsuario {
-    static readonly type = '[Usuario] Select';
-    constructor(public usuario: Usuario | undefined) {}
+  static readonly type = '[Usuario] Select';
+  constructor(public usuario: Usuario | undefined) {}
 }
 
 export class AjustesModeUsuario {
-    static readonly type = '[Usuario] Edit Mode';
-    constructor(public payload: EditMode) {}
+  static readonly type = '[Usuario] Edit Mode';
+  constructor(public payload: EditMode) {}
 }
 
 export class SearchUsuario {
-    static readonly type = '[Usuario] Search';
-    constructor(public payload: string) {}
+  static readonly type = '[Usuario] Search';
+  constructor(public payload: string) {}
 }
 
 export class ClearUsuarioState {
-    static readonly type = '[Usuario] Clear Usuario State';
+  static readonly type = '[Usuario] Clear Usuario State';
 }
 
 export class ClearUsuarios {
-    static readonly type = '[Usuario] Clear Usuarios';
+  static readonly type = '[Usuario] Clear Usuarios';
 }

@@ -7,16 +7,19 @@ import { IUsuarioReturnDto } from '../dtos/usuario-return.dto';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
-    constructor(private authService: AuthService) {
-        super();
-    }
+  constructor(private authService: AuthService) {
+    super();
+  }
 
-    async validate(username: string, password: string): Promise<IUsuarioReturnDto> {
-        const usuario = { nombreUsuario: username, password };
-        const usuarioRetorno = await this.authService.validarUsuario(usuario);
-        if (!usuarioRetorno) {
-            throw new UnauthorizedException();
-        }
-        return usuarioRetorno;
+  async validate(
+    username: string,
+    password: string
+  ): Promise<IUsuarioReturnDto> {
+    const usuario = { nombreUsuario: username, password };
+    const usuarioRetorno = await this.authService.validarUsuario(usuario);
+    if (!usuarioRetorno) {
+      throw new UnauthorizedException();
     }
+    return usuarioRetorno;
+  }
 }

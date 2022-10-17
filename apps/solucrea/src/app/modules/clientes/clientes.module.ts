@@ -23,24 +23,24 @@ import { clientesRoutes } from './clientes.routing';
 import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 
 @NgModule({
-    declarations: [ClientesComponent, ClienteComponent, ClienteListComponent],
-    imports: [
-        RouterModule.forChild(clientesRoutes),
-        MatFormFieldModule,
-        MatIconModule,
-        MatInputModule,
-        MatButtonModule,
-        MatTooltipModule,
-        MatDatepickerModule,
-        MatLuxonDateModule,
-        MatRadioModule,
-        MatSelectModule,
-        MatProgressSpinnerModule,
-        MatStepperModule,
-        SharedModule,
-        InputMaskModule,
-        FuseScrollbarModule,
-        NgxsModule.forFeature([ClientesState]),
-    ],
+  declarations: [ClientesComponent, ClienteComponent, ClienteListComponent],
+  imports: [
+    RouterModule.forChild(clientesRoutes),
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatDatepickerModule,
+    MatLuxonDateModule,
+    MatRadioModule,
+    MatSelectModule,
+    MatProgressSpinnerModule,
+    MatStepperModule,
+    SharedModule,
+    InputMaskModule,
+    FuseScrollbarModule,
+    NgxsModule.forFeature([ClientesState]),
+  ],
 })
 export class ClientesModule {}

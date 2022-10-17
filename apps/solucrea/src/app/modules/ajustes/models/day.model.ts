@@ -1,4 +1,4 @@
 export interface IDays {
-    id: number;
-    nombre: string;
+  id: number;
+  nombre: string;
 }

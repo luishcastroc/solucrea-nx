@@ -1,12 +1,17 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 @Component({
-    selector: 'app-ajustes-creditos',
-    templateUrl: './ajustes-creditos.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-ajustes-creditos',
+  templateUrl: './ajustes-creditos.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AjustesCreditosComponent implements OnInit {
-    constructor() {}
+  constructor() {}
 
-    ngOnInit(): void {}
+  ngOnInit(): void {}
 }

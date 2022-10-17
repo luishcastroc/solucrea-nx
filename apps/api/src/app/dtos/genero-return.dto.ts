@@ -1,4 +1,4 @@
 export interface IGeneroReturnDto {
-    id: string;
-    descripcion: string;
+  id: string;
+  descripcion: string;
 }

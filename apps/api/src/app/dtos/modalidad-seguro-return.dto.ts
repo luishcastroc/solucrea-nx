@@ -1,5 +1,5 @@
 export interface IModalidadSeguroReturnDto {
-    id: string;
-    titulo: string;
-    descripcion: string;
+  id: string;
+  titulo: string;
+  descripcion: string;
 }

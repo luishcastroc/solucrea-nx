@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  Resolve,
+  RouterStateSnapshot,
+} from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { InitialData } from 'app/app.types';
@@ -9,34 +13,37 @@ import { AuthState } from 'app/core/auth/store';
 import { defaultNavigation } from 'app/core/config/app.config';
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 export class InitialDataResolver implements Resolve<any> {
-    user$!: Observable<Usuario | undefined>;
-    private _navigation = defaultNavigation;
-    /**
-     * Constructor
-     */
-    constructor(private _store: Store) {
-        this.user$ = this._store.select(AuthState.user);
-    }
+  user$!: Observable<Usuario | undefined>;
+  private _navigation = defaultNavigation;
+  /**
+   * Constructor
+   */
+  constructor(private _store: Store) {
+    this.user$ = this._store.select(AuthState.user);
+  }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
+  // -----------------------------------------------------------------------------------------------------
+  // @ Public methods
+  // -----------------------------------------------------------------------------------------------------
 
-    /**
-     *
-     *
-     * @param route
-     * @param state
-     */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InitialData> {
-        // Fork join multiple API endpoint calls to wait all of them to finish
-        return forkJoin([of(this._navigation)]).pipe(
-            map(([navigation]) => ({
-                navigation,
-            }))
-        );
-    }
+  /**
+   *
+   *
+   * @param route
+   * @param state
+   */
+  resolve(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<InitialData> {
+    // Fork join multiple API endpoint calls to wait all of them to finish
+    return forkJoin([of(this._navigation)]).pipe(
+      map(([navigation]) => ({
+        navigation,
+      }))
+    );
+  }
 }

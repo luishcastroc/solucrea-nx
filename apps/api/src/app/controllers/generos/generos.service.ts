@@ -5,46 +5,52 @@ import { PrismaService } from 'api/prisma';
 
 @Injectable()
 export class GenerosService {
-    constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {}
 
-    // Genero
+  // Genero
 
-    async genero(where: Prisma.GeneroWhereUniqueInput): Promise<IGeneroReturnDto | null> {
-        return await this.prisma.genero.findUnique({
-            where,
-            select: { id: true, descripcion: true },
-        });
-    }
+  async genero(
+    where: Prisma.GeneroWhereUniqueInput
+  ): Promise<IGeneroReturnDto | null> {
+    return await this.prisma.genero.findUnique({
+      where,
+      select: { id: true, descripcion: true },
+    });
+  }
 
-    async generos(): Promise<IGeneroReturnDto[]> {
-        return await this.prisma.genero.findMany({
-            select: { id: true, descripcion: true },
-        });
-    }
+  async generos(): Promise<IGeneroReturnDto[]> {
+    return await this.prisma.genero.findMany({
+      select: { id: true, descripcion: true },
+    });
+  }
 
-    async createGenero(data: Prisma.GeneroCreateInput): Promise<IGeneroReturnDto> {
-        return await this.prisma.genero.create({
-            data,
-            select: { id: true, descripcion: true },
-        });
-    }
+  async createGenero(
+    data: Prisma.GeneroCreateInput
+  ): Promise<IGeneroReturnDto> {
+    return await this.prisma.genero.create({
+      data,
+      select: { id: true, descripcion: true },
+    });
+  }
 
-    async updateGenero(params: {
-        where: Prisma.GeneroWhereUniqueInput;
-        data: Prisma.GeneroUpdateInput;
-    }): Promise<IGeneroReturnDto> {
-        const { where, data } = params;
-        return await this.prisma.genero.update({
-            data,
-            where,
-            select: { id: true, descripcion: true },
-        });
-    }
+  async updateGenero(params: {
+    where: Prisma.GeneroWhereUniqueInput;
+    data: Prisma.GeneroUpdateInput;
+  }): Promise<IGeneroReturnDto> {
+    const { where, data } = params;
+    return await this.prisma.genero.update({
+      data,
+      where,
+      select: { id: true, descripcion: true },
+    });
+  }
 
-    async deleteGenero(where: Prisma.GeneroWhereUniqueInput): Promise<IGeneroReturnDto> {
-        return this.prisma.genero.delete({
-            where,
-            select: { id: true, descripcion: true },
-        });
-    }
+  async deleteGenero(
+    where: Prisma.GeneroWhereUniqueInput
+  ): Promise<IGeneroReturnDto> {
+    return this.prisma.genero.delete({
+      where,
+      select: { id: true, descripcion: true },
+    });
+  }
 }

@@ -1,4 +1,4 @@
 export interface IParentescoReturnDto {
-    id: string;
-    descripcion: string;
+  id: string;
+  descripcion: string;
 }

@@ -1,3 +1,3 @@
 export interface CanDeactivateComponent {
-    canDeactivate(): boolean;
+  canDeactivate(): boolean;
 }

@@ -8,16 +8,22 @@ import { ClassyLayoutModule } from 'app/layout/layouts/vertical/classy/classy.mo
 import { SharedModule } from 'app/shared/shared.module';
 
 const layoutModules = [
-    // Empty
-    EmptyLayoutModule,
+  // Empty
+  EmptyLayoutModule,
 
-    // Vertical navigation
-    ClassyLayoutModule,
+  // Vertical navigation
+  ClassyLayoutModule,
 ];
 
 @NgModule({
-    declarations: [LayoutComponent],
-    imports: [MatIconModule, MatTooltipModule, FuseDrawerModule, SharedModule, ...layoutModules],
-    exports: [LayoutComponent, ...layoutModules],
+  declarations: [LayoutComponent],
+  imports: [
+    MatIconModule,
+    MatTooltipModule,
+    FuseDrawerModule,
+    SharedModule,
+    ...layoutModules,
+  ],
+  exports: [LayoutComponent, ...layoutModules],
 })
 export class LayoutModule {}

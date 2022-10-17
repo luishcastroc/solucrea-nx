@@ -1,132 +1,151 @@
-<ng-container *ngIf="loading$ | async; then loadingTemplate; else dataTemplate"></ng-container>
+<ng-container
+  *ngIf="
+    loading$ | async;
+    then loadingTemplate;
+    else dataTemplate
+  "></ng-container>
 <ng-template #loadingTemplate>
-    <div class="flex flex-col flex-auto self-center"><mat-spinner> </mat-spinner></div>
+  <div class="flex flex-auto flex-col self-center">
+    <mat-spinner> </mat-spinner>
+  </div>
 </ng-template>
 <ng-template #dataTemplate>
-    <ng-container *ngIf="actions$ | async">
-        <div class="w-full flex flex-col">
-            <!-- Add team member -->
-            <div class="w-full">
-                <div class="flex flex-col gap-3">
-                    <mat-form-field class="fuse-mat-no-subscript w-full" [floatLabel]="'always'">
-                        <mat-label>Buscar Producto:</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:view-boards'" matPrefix></mat-icon>
-                        <input
-                            matInput
-                            [autocomplete]="'off'"
-                            [placeholder]="'Nombre del Producto'"
-                            [formControl]="searchInput"
-                        />
-                        <button
-                            mat-icon-button
-                            matSuffix
-                            aria-label="Crear producto"
-                            #tooltip="matTooltip"
-                            matTooltip="Crear producto"
-                            [matTooltipPosition]="'below'"
-                            (click)="newProducto()"
-                        >
-                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
-                        </button>
-                    </mat-form-field>
-                    <!-- Active or Innactive ones -->
-                    <mat-radio-group
-                        aria-labelledby="radio-group-label"
-                        class="flex flex-row gap-3 items-center justify-center"
-                        [(ngModel)]="activo"
-                    >
-                        <mat-radio-button
-                            *ngFor="let value of values"
-                            [value]="value.value"
-                            (change)="changeActivo($event)"
-                        >
-                            {{ value.display }}
-                        </mat-radio-button>
-                    </mat-radio-group>
-                </div>
-                <!-- Content -->
-                <div class="flex-auto mt-8">
-                    <ng-container *ngIf="searchResults$ | async as productos">
-                        <ng-container *ngIf="productos.length > 0; else noProducts">
-                            <ng-container *ngFor="let producto of productos">
-                                <div
-                                    class="grid grid-cols-1 gap-3 z-20 md:flex px-2 py-4 md:px-10 border-b justify-between"
-                                >
-                                    <div class="grid grid-cols-2 md:grid-cols-3 gap-6 w-full md:w-9/12">
-                                        <div class="flex flex-col">
-                                            <div class="font-bold">Nombre:</div>
-                                            <div class="mt-2">{{ producto.nombre }}</div>
-                                        </div>
-                                        <div class="flex flex-col">
-                                            <div class="font-bold">Tasa de Interes:</div>
-                                            <div class="mt-2">{{ producto.interes }} %</div>
-                                        </div>
-                                        <div class="flex flex-col">
-                                            <div class="font-bold">Número de Pagos:</div>
-                                            <div class="mt-2">{{ producto.numeroDePagos }}</div>
-                                        </div>
-                                        <div class="flex flex-col">
-                                            <div class="font-bold">Frecuencia:</div>
-                                            <div class="mt-2">{{ producto.frecuencia | titlecase }}</div>
-                                        </div>
-                                        <div class="flex flex-col">
-                                            <div class="font-bold">Monto Minimo:</div>
-                                            <div class="mt-2">
-                                                {{ producto.montoMinimo | decimalToNumber | currency: 'MXN':'symbol' }}
-                                            </div>
-                                        </div>
-                                        <div class="flex flex-col">
-                                            <div class="font-bold">Monto Maximo:</div>
-                                            <div class="mt-2">
-                                                {{ producto.montoMaximo | decimalToNumber | currency: 'MXN':'symbol' }}
-                                            </div>
-                                        </div>
-                                        <div class="flex flex-col min-w-40">
-                                            <div class="font-bold">Descripción:</div>
-                                            <div class="mt-2">
-                                                {{ producto.descripcion }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex justify-center items-center">
-                                        <button
-                                            mat-icon-button
-                                            aria-label="Editar producto"
-                                            #tooltip="matTooltip"
-                                            matTooltip="Editar producto"
-                                            [matTooltipPosition]="'below'"
-                                            (click)="editProducto(producto.id)"
-                                        >
-                                            <mat-icon
-                                                class="text-hint"
-                                                [svgIcon]="'heroicons_outline:clipboard-list'"
-                                            ></mat-icon>
-                                        </button>
-                                        <button
-                                            mat-icon-button
-                                            aria-label="Desactivar producto"
-                                            #tooltip="matTooltip"
-                                            matTooltip="Desactivar producto"
-                                            [matTooltipPosition]="'below'"
-                                            (click)="deleteProducto(producto)"
-                                        >
-                                            <mat-icon
-                                                class="text-hint"
-                                                [svgIcon]="'heroicons_outline:trash'"
-                                            ></mat-icon>
-                                        </button>
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </ng-container>
-                        <ng-template #noProducts>
-                            <div *ngIf="activo">
-                                No existen productos disponibles, agregar uno utilizando el botón +
-                            </div>
-                        </ng-template>
-                    </ng-container>
-                </div>
-            </div>
+  <ng-container *ngIf="actions$ | async">
+    <div class="flex w-full flex-col">
+      <!-- Add team member -->
+      <div class="w-full">
+        <div class="flex flex-col gap-3">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            [floatLabel]="'always'">
+            <mat-label>Buscar Producto:</mat-label>
+            <mat-icon
+              class="icon-size-5"
+              [svgIcon]="'heroicons_outline:view-boards'"
+              matPrefix></mat-icon>
+            <input
+              matInput
+              [autocomplete]="'off'"
+              [placeholder]="'Nombre del Producto'"
+              [formControl]="searchInput" />
+            <button
+              mat-icon-button
+              matSuffix
+              aria-label="Crear producto"
+              #tooltip="matTooltip"
+              matTooltip="Crear producto"
+              [matTooltipPosition]="'below'"
+              (click)="newProducto()">
+              <mat-icon
+                class="icon-size-5"
+                [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+            </button>
+          </mat-form-field>
+          <!-- Active or Innactive ones -->
+          <mat-radio-group
+            aria-labelledby="radio-group-label"
+            class="flex flex-row items-center justify-center gap-3"
+            [(ngModel)]="activo">
+            <mat-radio-button
+              *ngFor="let value of values"
+              [value]="value.value"
+              (change)="changeActivo($event)">
+              {{ value.display }}
+            </mat-radio-button>
+          </mat-radio-group>
         </div>
-    </ng-container>
+        <!-- Content -->
+        <div class="mt-8 flex-auto">
+          <ng-container *ngIf="searchResults$ | async as productos">
+            <ng-container *ngIf="productos.length > 0; else noProducts">
+              <ng-container *ngFor="let producto of productos">
+                <div
+                  class="z-20 grid grid-cols-1 justify-between gap-3 border-b px-2 py-4 md:flex md:px-10">
+                  <div
+                    class="grid w-full grid-cols-2 gap-6 md:w-9/12 md:grid-cols-3">
+                    <div class="flex flex-col">
+                      <div class="font-bold">Nombre:</div>
+                      <div class="mt-2">{{ producto.nombre }}</div>
+                    </div>
+                    <div class="flex flex-col">
+                      <div class="font-bold">Tasa de Interes:</div>
+                      <div class="mt-2">{{ producto.interes }} %</div>
+                    </div>
+                    <div class="flex flex-col">
+                      <div class="font-bold">Número de Pagos:</div>
+                      <div class="mt-2">{{ producto.numeroDePagos }}</div>
+                    </div>
+                    <div class="flex flex-col">
+                      <div class="font-bold">Frecuencia:</div>
+                      <div class="mt-2">
+                        {{ producto.frecuencia | titlecase }}
+                      </div>
+                    </div>
+                    <div class="flex flex-col">
+                      <div class="font-bold">Monto Minimo:</div>
+                      <div class="mt-2">
+                        {{
+                          producto.montoMinimo
+                            | decimalToNumber
+                            | currency: 'MXN':'symbol'
+                        }}
+                      </div>
+                    </div>
+                    <div class="flex flex-col">
+                      <div class="font-bold">Monto Maximo:</div>
+                      <div class="mt-2">
+                        {{
+                          producto.montoMaximo
+                            | decimalToNumber
+                            | currency: 'MXN':'symbol'
+                        }}
+                      </div>
+                    </div>
+                    <div class="min-w-40 flex flex-col">
+                      <div class="font-bold">Descripción:</div>
+                      <div class="mt-2">
+                        {{ producto.descripcion }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-center">
+                    <button
+                      mat-icon-button
+                      aria-label="Editar producto"
+                      #tooltip="matTooltip"
+                      matTooltip="Editar producto"
+                      [matTooltipPosition]="'below'"
+                      (click)="editProducto(producto.id)">
+                      <mat-icon
+                        class="text-hint"
+                        [svgIcon]="
+                          'heroicons_outline:clipboard-list'
+                        "></mat-icon>
+                    </button>
+                    <button
+                      mat-icon-button
+                      aria-label="Desactivar producto"
+                      #tooltip="matTooltip"
+                      matTooltip="Desactivar producto"
+                      [matTooltipPosition]="'below'"
+                      (click)="deleteProducto(producto)">
+                      <mat-icon
+                        class="text-hint"
+                        [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+            <ng-template #noProducts>
+              <div *ngIf="activo">
+                No existen productos disponibles, agregar uno utilizando el
+                botón +
+              </div>
+            </ng-template>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 </ng-template>

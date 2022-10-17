@@ -1,196 +1,220 @@
-<ng-container *ngIf="loading$ | async; then loadingTemplate; else formTemplate"></ng-container>
+<ng-container
+  *ngIf="
+    loading$ | async;
+    then loadingTemplate;
+    else formTemplate
+  "></ng-container>
 <ng-template #loadingTemplate>
-    <div class="flex flex-col flex-auto self-center"><mat-spinner> </mat-spinner></div>
+  <div class="flex flex-auto flex-col self-center">
+    <mat-spinner> </mat-spinner>
+  </div>
 </ng-template>
 <ng-template #formTemplate>
-    <div class="flex-auto flex flex-col">
-        <div class="w-full">
-            <ng-container *ngIf="editMode$ | async as editMode">
-                <!-- Form -->
-                <form
-                    [formGroup]="sucursalForm"
-                    *ngIf="(editMode === 'edit' && (selectedSucursal$ | async)) || editMode === 'new'"
-                >
-                    <ng-template matStepLabel>Datos Generales</ng-template>
-                    <div class="flex flex-wrap gap-3 w-full mt-2">
-                        <div class="grid md:grid-cols-2 grid-cols-1 w-full gap-3 md:w-2/4">
-                            <!-- Nombre -->
-                            <div>
-                                <mat-form-field class="fuse-mat-no-subscript w-full">
-                                    <mat-label>Nombre</mat-label>
-                                    <mat-icon
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_outline:office-building'"
-                                        matPrefix
-                                    ></mat-icon>
-                                    <input [formControlName]="'nombre'" matInput />
-                                </mat-form-field>
-                                <ng-container *ngIf="nombre.touched">
-                                    <mat-error *ngIf="nombre.errors?.['required']"> El nombre es requerido. </mat-error>
-                                </ng-container>
-                            </div>
-                            <!-- Teléfono -->
-                            <div>
-                                <mat-form-field class="fuse-mat-no-subscript w-full">
-                                    <mat-label>Teléfono</mat-label>
-                                    <mat-icon
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:phone'"
-                                        matPrefix
-                                    ></mat-icon>
-                                    <input [formControlName]="'telefono'" matInput [inputMask]="phoneInputMask" />
-                                </mat-form-field>
-                                <ng-container *ngIf="telefono.touched">
-                                    <mat-error *ngIf="telefono.errors?.['required']">
-                                        El telefono es requerido.
-                                    </mat-error>
-                                </ng-container>
-                            </div>
-                        </div>
-                        <h3 class="text-3xl font-extrabold tracking-tight leading-none flex-auto w-full mt-4">
-                            Dirección
-                        </h3>
-                        <!-- Dirección -->
-                        <div
-                            class="grid grid-cols-2 md:grid-cols-4 gap-3 w-full md:max-w-5/6"
-                            formGroupName="direccion"
-                        >
-                            <!-- Calle -->
-                            <div>
-                                <mat-form-field class="fuse-mat-no-subscript w-full">
-                                    <mat-label>Calle</mat-label>
-                                    <mat-icon
-                                        matPrefix
-                                        class="hidden sm:flex icon-size-5"
-                                        [svgIcon]="'heroicons_solid:location-marker'"
-                                    ></mat-icon>
-                                    <input
-                                        matInput
-                                        formControlName="calle"
-                                        [placeholder]="'Calle'"
-                                        [spellcheck]="false"
-                                    />
-                                </mat-form-field>
-                                <ng-container *ngIf="calle.touched">
-                                    <mat-error *ngIf="calle.errors?.['required']"> La calle es requerida. </mat-error>
-                                </ng-container>
-                            </div>
-                            <!-- Número -->
-                            <div>
-                                <mat-form-field class="fuse-mat-no-subscript w-full">
-                                    <mat-label>Número</mat-label>
-                                    <mat-icon
-                                        matPrefix
-                                        class="hidden sm:flex icon-size-5"
-                                        [svgIcon]="'heroicons_solid:location-marker'"
-                                    ></mat-icon>
-                                    <input matInput formControlName="numero" [placeholder]="'Número'" />
-                                </mat-form-field>
-                                <ng-container *ngIf="numero.touched">
-                                    <mat-error *ngIf="numero.errors?.['required']"> El numero es requerido. </mat-error>
-                                </ng-container>
-                            </div>
-                            <!-- Cruzamientos -->
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Cruzamientos</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:location-marker'"
-                                ></mat-icon>
-                                <input matInput formControlName="cruzamientos" [placeholder]="'Cruzamientos'" />
-                            </mat-form-field>
-                            <!-- Código Postal -->
-                            <div>
-                                <mat-form-field class="fuse-mat-no-subscript w-full">
-                                    <mat-label>Código Postal</mat-label>
-                                    <mat-icon
-                                        matPrefix
-                                        class="hidden sm:flex icon-size-5"
-                                        [svgIcon]="'heroicons_solid:location-marker'"
-                                    ></mat-icon>
-                                    <input
-                                        matInput
-                                        formControlName="codigoPostal"
-                                        [placeholder]="'Código Postal'"
-                                        (change)="getColonias(cp.value)"
-                                    />
-                                </mat-form-field>
-                                <ng-container *ngIf="cp.touched">
-                                    <mat-error *ngIf="cp.errors?.['required']">
-                                        El Codigo postal es requerido.
-                                    </mat-error>
-                                </ng-container>
-                            </div>
-                            <!-- Estado -->
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Estado</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:location-marker'"
-                                ></mat-icon>
-                                <input matInput formControlName="estado" [placeholder]="'Estado'" />
-                            </mat-form-field>
-                            <!-- Ciudad -->
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Ciudad</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:location-marker'"
-                                ></mat-icon>
-                                <input matInput formControlName="ciudad" [placeholder]="'ciudad'" />
-                            </mat-form-field>
-                            <!-- Colonia -->
-                            <div>
-                                <mat-form-field class="fuse-mat-no-subscript w-full">
-                                    <mat-label>Colonia</mat-label>
-                                    <mat-icon
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:location-marker'"
-                                        matPrefix
-                                    ></mat-icon>
-                                    <mat-select formControlName="colonia">
-                                        <mat-option
-                                            *ngFor="let colonia of (colonias$ | async)?.colonias"
-                                            [value]="colonia.id"
-                                            >{{ colonia.descripcion }}</mat-option
-                                        >
-                                    </mat-select>
-                                </mat-form-field>
-                                <ng-container *ngIf="colonia.touched">
-                                    <mat-error *ngIf="colonia.errors?.['required']">
-                                        La colonia es requerida.
-                                    </mat-error>
-                                </ng-container>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Divider -->
-                    <div class="mt-11 mb-10 border-t"></div>
-                    <div class="flex items-center justify-end">
-                        <button mat-stroked-button type="button" (click)="back()" matStepperPrevious>Regresar</button>
-                        <button
-                            mat-flat-button
-                            type="submit"
-                            [color]="'primary'"
-                            (click)="saveSucursal()"
-                            [class.spinner-loading]="loading"
-                            class="ml-2"
-                            [disabled]="
-                                (editMode === 'new' && !sucursalForm.touched) ||
-                                sucursalForm.invalid ||
-                                sucursalForm.disabled ||
-                                (editMode === 'edit' && !sucursalForm.touched) ||
-                                sucursalForm.invalid
-                            "
-                        >
-                            {{ editMode === 'edit' ? 'Actualizar' : 'Guardar' }}
-                        </button>
-                    </div>
-                </form></ng-container
-            >
-        </div>
+  <div class="flex flex-auto flex-col">
+    <div class="w-full">
+      <ng-container *ngIf="editMode$ | async as editMode">
+        <!-- Form -->
+        <form
+          [formGroup]="sucursalForm"
+          *ngIf="
+            (editMode === 'edit' && (selectedSucursal$ | async)) ||
+            editMode === 'new'
+          ">
+          <ng-template matStepLabel>Datos Generales</ng-template>
+          <div class="mt-2 flex w-full flex-wrap gap-3">
+            <div class="grid w-full grid-cols-1 gap-3 md:w-2/4 md:grid-cols-2">
+              <!-- Nombre -->
+              <div>
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                  <mat-label>Nombre</mat-label>
+                  <mat-icon
+                    class="icon-size-5"
+                    [svgIcon]="'heroicons_outline:office-building'"
+                    matPrefix></mat-icon>
+                  <input [formControlName]="'nombre'" matInput />
+                </mat-form-field>
+                <ng-container *ngIf="nombre.touched">
+                  <mat-error *ngIf="nombre.errors?.['required']">
+                    El nombre es requerido.
+                  </mat-error>
+                </ng-container>
+              </div>
+              <!-- Teléfono -->
+              <div>
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                  <mat-label>Teléfono</mat-label>
+                  <mat-icon
+                    class="icon-size-5"
+                    [svgIcon]="'heroicons_solid:phone'"
+                    matPrefix></mat-icon>
+                  <input
+                    [formControlName]="'telefono'"
+                    matInput
+                    [inputMask]="phoneInputMask" />
+                </mat-form-field>
+                <ng-container *ngIf="telefono.touched">
+                  <mat-error *ngIf="telefono.errors?.['required']">
+                    El telefono es requerido.
+                  </mat-error>
+                </ng-container>
+              </div>
+            </div>
+            <h3
+              class="mt-4 w-full flex-auto text-3xl font-extrabold leading-none tracking-tight">
+              Dirección
+            </h3>
+            <!-- Dirección -->
+            <div
+              class="md:max-w-5/6 grid w-full grid-cols-2 gap-3 md:grid-cols-4"
+              formGroupName="direccion">
+              <!-- Calle -->
+              <div>
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                  <mat-label>Calle</mat-label>
+                  <mat-icon
+                    matPrefix
+                    class="icon-size-5 hidden sm:flex"
+                    [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                  <input
+                    matInput
+                    formControlName="calle"
+                    [placeholder]="'Calle'"
+                    [spellcheck]="false" />
+                </mat-form-field>
+                <ng-container *ngIf="calle.touched">
+                  <mat-error *ngIf="calle.errors?.['required']">
+                    La calle es requerida.
+                  </mat-error>
+                </ng-container>
+              </div>
+              <!-- Número -->
+              <div>
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                  <mat-label>Número</mat-label>
+                  <mat-icon
+                    matPrefix
+                    class="icon-size-5 hidden sm:flex"
+                    [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                  <input
+                    matInput
+                    formControlName="numero"
+                    [placeholder]="'Número'" />
+                </mat-form-field>
+                <ng-container *ngIf="numero.touched">
+                  <mat-error *ngIf="numero.errors?.['required']">
+                    El numero es requerido.
+                  </mat-error>
+                </ng-container>
+              </div>
+              <!-- Cruzamientos -->
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>Cruzamientos</mat-label>
+                <mat-icon
+                  matPrefix
+                  class="icon-size-5 hidden sm:flex"
+                  [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                <input
+                  matInput
+                  formControlName="cruzamientos"
+                  [placeholder]="'Cruzamientos'" />
+              </mat-form-field>
+              <!-- Código Postal -->
+              <div>
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                  <mat-label>Código Postal</mat-label>
+                  <mat-icon
+                    matPrefix
+                    class="icon-size-5 hidden sm:flex"
+                    [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                  <input
+                    matInput
+                    formControlName="codigoPostal"
+                    [placeholder]="'Código Postal'"
+                    (change)="getColonias(cp.value)" />
+                </mat-form-field>
+                <ng-container *ngIf="cp.touched">
+                  <mat-error *ngIf="cp.errors?.['required']">
+                    El Codigo postal es requerido.
+                  </mat-error>
+                </ng-container>
+              </div>
+              <!-- Estado -->
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>Estado</mat-label>
+                <mat-icon
+                  matPrefix
+                  class="icon-size-5 hidden sm:flex"
+                  [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                <input
+                  matInput
+                  formControlName="estado"
+                  [placeholder]="'Estado'" />
+              </mat-form-field>
+              <!-- Ciudad -->
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>Ciudad</mat-label>
+                <mat-icon
+                  matPrefix
+                  class="icon-size-5 hidden sm:flex"
+                  [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                <input
+                  matInput
+                  formControlName="ciudad"
+                  [placeholder]="'ciudad'" />
+              </mat-form-field>
+              <!-- Colonia -->
+              <div>
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                  <mat-label>Colonia</mat-label>
+                  <mat-icon
+                    class="icon-size-5"
+                    [svgIcon]="'heroicons_solid:location-marker'"
+                    matPrefix></mat-icon>
+                  <mat-select formControlName="colonia">
+                    <mat-option
+                      *ngFor="let colonia of (colonias$ | async)?.colonias"
+                      [value]="colonia.id"
+                      >{{ colonia.descripcion }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+                <ng-container *ngIf="colonia.touched">
+                  <mat-error *ngIf="colonia.errors?.['required']">
+                    La colonia es requerida.
+                  </mat-error>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+          <!-- Divider -->
+          <div class="mt-11 mb-10 border-t"></div>
+          <div class="flex items-center justify-end">
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="back()"
+              matStepperPrevious>
+              Regresar
+            </button>
+            <button
+              mat-flat-button
+              type="submit"
+              [color]="'primary'"
+              (click)="saveSucursal()"
+              [class.spinner-loading]="loading"
+              class="ml-2"
+              [disabled]="
+                (editMode === 'new' && !sucursalForm.touched) ||
+                sucursalForm.invalid ||
+                sucursalForm.disabled ||
+                (editMode === 'edit' && !sucursalForm.touched) ||
+                sucursalForm.invalid
+              ">
+              {{ editMode === 'edit' ? 'Actualizar' : 'Guardar' }}
+            </button>
+          </div>
+        </form></ng-container
+      >
     </div>
+  </div>
 </ng-template>

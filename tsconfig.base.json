@@ -1,25 +1,25 @@
 {
-    "compileOnSave": false,
-    "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
-        "baseUrl": ".",
-        "outDir": "./dist/out-tsc",
-        "sourceMap": true,
-        "declaration": false,
-        "downlevelIteration": true,
-        "experimentalDecorators": true,
-        "moduleResolution": "node",
-        "importHelpers": true,
-        "target": "es2015",
-        "module": "esnext",
-        "lib": ["es2017", "dom"],
-        "skipLibCheck": true,
-        "skipDefaultLibCheck": true,
-        "paths": {
-            "@fuse/*": ["apps/solucrea/src/@fuse/*"],
-            "@solucrea-utils": ["libs/utils/src/index.ts"],
-            "api/*": ["apps/api/src/app/*"],
-            "app/*": ["apps/solucrea/src/app/*"]
-        }
+  "compileOnSave": false,
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "paths": {
+      "@fuse/*": ["apps/solucrea/src/@fuse/*"],
+      "@solucrea-utils": ["libs/utils/src/index.ts"],
+      "api/*": ["apps/api/src/app/*"],
+      "app/*": ["apps/solucrea/src/app/*"]
     }
+  }
 }

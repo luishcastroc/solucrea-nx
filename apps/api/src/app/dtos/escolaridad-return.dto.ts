@@ -1,4 +1,4 @@
 export interface IEscolaridadReturnDto {
-    id: string;
-    descripcion: string;
+  id: string;
+  descripcion: string;
 }

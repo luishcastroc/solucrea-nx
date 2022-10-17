@@ -5,8 +5,8 @@ import { CreditosController } from './creditos.controller';
 import { CreditosService } from './creditos.service';
 
 @Module({
-    controllers: [CreditosController],
-    providers: [CreditosService, PrismaService],
-    exports: [CreditosService],
+  controllers: [CreditosController],
+  providers: [CreditosService, PrismaService],
+  exports: [CreditosService],
 })
 export class CreditosModule {}

@@ -1,109 +1,124 @@
-<div class="py-8 px-6 flex flex-col flex-auto w-full">
-    <div class="flex flex-col flex-auto">
-        <!-- Header -->
-        <div
-            class="flex flex-col sm:flex-row md:flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b max-h-40"
-        >
-            <!-- Title -->
-            <div>
-                <div class="text-4xl font-extrabold tracking-tight leading-none">Turnos</div>
-            </div>
+<div class="flex w-full flex-auto flex-col py-8 px-6">
+  <div class="flex flex-auto flex-col">
+    <!-- Header -->
+    <div
+      class="flex max-h-40 flex-auto flex-col justify-between border-b py-8 px-6 sm:flex-row md:flex-col md:px-8">
+      <!-- Title -->
+      <div>
+        <div class="text-4xl font-extrabold leading-none tracking-tight">
+          Turnos
+        </div>
+      </div>
 
-            <!-- Main actions -->
-            <div class="flex items-center gap-4 mt-4 sm:mt-0 md:mt-4">
-                <!-- Add contact button -->
-                <button mat-flat-button [color]="'primary'" (click)="newCaja()">
-                    <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                    <span class="ml-2 mr-1">Abrir Turno</span>
-                </button>
-            </div>
-        </div>
-        <!-- Content -->
-        <div class="flex-auto">
-            <ng-container *ngIf="cajas$ | async as cajas; else loadingTemplate">
-                <div
-                    class="z-20 flex flex-col px-4 py-4 md:px-10 border-b justify-between w-full"
-                    *ngIf="cajas.length > 0; else noCajas"
-                >
-                    <ng-container *ngFor="let caja of cajas">
-                        <div
-                            class="z-20 grid grid-cols-1 md:grid-cols-2 gap-4 px-2 py-4 md:px-10 border-b w-full md:max-w-5/6"
-                        >
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 w-full">
-                                <!-- Fecha de Apertura -->
-                                <div class="flex flex-col">
-                                    <div class="font-bold">Fecha Apertura:</div>
-                                    <div class="mt-2">{{ caja.fechaApertura | date: 'd MMM yyyy':'UTC' }}</div>
-                                </div>
-                                <!-- Saldo Inicial -->
-                                <div class="flex flex-col flex-auto">
-                                    <div class="font-bold">Saldo Inicial:</div>
-                                    <div class="mt-2">
-                                        {{ caja.saldoInicial | decimalToNumber | currency: 'MXN':'symbol' }}
-                                    </div>
-                                </div>
-                                <!-- Saldo Actual -->
-                                <div class="flex flex-col flex-auto">
-                                    <div class="font-bold">Saldo Actual:</div>
-                                    <div class="mt-2">
-                                        {{ caja.saldoActual | decimalToNumber | currency: 'MXN':'symbol' }}
-                                    </div>
-                                </div>
-                                <!-- Sucursal -->
-                                <div class="flex flex-col">
-                                    <div class="font-bold">Sucursal:</div>
-                                    <div class="mt-2">{{ caja.sucursal.nombre }}</div>
-                                </div>
-                                <!-- Observaciones -->
-                                <div class="flex flex-col">
-                                    <div class="font-bold">Observaciones:</div>
-                                    <div class="mt-2">{{ caja.observaciones ? caja.observaciones : 'Ninguna' }}</div>
-                                </div>
-                            </div>
-                            <div class="order-1 sm:order-2 sm:ml-3 xsm:flex-col flex justify-center items-center">
-                                <button
-                                    mat-icon-button
-                                    aria-label="Movimientos"
-                                    #tooltip="matTooltip"
-                                    matTooltip="Movimientos"
-                                    [matTooltipPosition]="'below'"
-                                >
-                                    <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:cash'"></mat-icon>
-                                </button>
-                                <button
-                                    mat-icon-button
-                                    aria-label="Editar Turno"
-                                    #tooltip="matTooltip"
-                                    matTooltip="Editar Turno"
-                                    [matTooltipPosition]="'below'"
-                                    (click)="editCaja(caja.id)"
-                                >
-                                    <mat-icon
-                                        class="text-hint"
-                                        [svgIcon]="'heroicons_outline:clipboard-list'"
-                                    ></mat-icon>
-                                </button>
-                                <button
-                                    mat-icon-button
-                                    aria-label="Cerrar Turno"
-                                    #tooltip="matTooltip"
-                                    matTooltip="Cerrar Turno"
-                                    [matTooltipPosition]="'below'"
-                                    (click)="cerrarCaja(caja.id)"
-                                >
-                                    <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:lock-closed'"></mat-icon>
-                                </button>
-                            </div>
-                        </div>
-                    </ng-container>
-                </div>
-                <ng-template #noCajas><div class="font-extrabold">No Hay Turnos abiertos.</div> </ng-template>
-            </ng-container>
-            <ng-template #loadingTemplate>
-                <div class="z-20 flex px-8 py-4 md:px-10 border-b justify-center">
-                    <mat-spinner> </mat-spinner>
-                </div>
-            </ng-template>
-        </div>
+      <!-- Main actions -->
+      <div class="mt-4 flex items-center gap-4 sm:mt-0 md:mt-4">
+        <!-- Add contact button -->
+        <button mat-flat-button [color]="'primary'" (click)="newCaja()">
+          <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+          <span class="ml-2 mr-1">Abrir Turno</span>
+        </button>
+      </div>
     </div>
+    <!-- Content -->
+    <div class="flex-auto">
+      <ng-container *ngIf="cajas$ | async as cajas; else loadingTemplate">
+        <div
+          class="z-20 flex w-full flex-col justify-between border-b px-4 py-4 md:px-10"
+          *ngIf="cajas.length > 0; else noCajas">
+          <ng-container *ngFor="let caja of cajas">
+            <div
+              class="md:max-w-5/6 z-20 grid w-full grid-cols-1 gap-4 border-b px-2 py-4 md:grid-cols-2 md:px-10">
+              <div class="grid w-full grid-cols-2 gap-6 md:grid-cols-4">
+                <!-- Fecha de Apertura -->
+                <div class="flex flex-col">
+                  <div class="font-bold">Fecha Apertura:</div>
+                  <div class="mt-2">
+                    {{ caja.fechaApertura | date: 'd MMM yyyy':'UTC' }}
+                  </div>
+                </div>
+                <!-- Saldo Inicial -->
+                <div class="flex flex-auto flex-col">
+                  <div class="font-bold">Saldo Inicial:</div>
+                  <div class="mt-2">
+                    {{
+                      caja.saldoInicial
+                        | decimalToNumber
+                        | currency: 'MXN':'symbol'
+                    }}
+                  </div>
+                </div>
+                <!-- Saldo Actual -->
+                <div class="flex flex-auto flex-col">
+                  <div class="font-bold">Saldo Actual:</div>
+                  <div class="mt-2">
+                    {{
+                      caja.saldoActual
+                        | decimalToNumber
+                        | currency: 'MXN':'symbol'
+                    }}
+                  </div>
+                </div>
+                <!-- Sucursal -->
+                <div class="flex flex-col">
+                  <div class="font-bold">Sucursal:</div>
+                  <div class="mt-2">{{ caja.sucursal.nombre }}</div>
+                </div>
+                <!-- Observaciones -->
+                <div class="flex flex-col">
+                  <div class="font-bold">Observaciones:</div>
+                  <div class="mt-2">
+                    {{ caja.observaciones ? caja.observaciones : 'Ninguna' }}
+                  </div>
+                </div>
+              </div>
+              <div
+                class="xsm:flex-col order-1 flex items-center justify-center sm:order-2 sm:ml-3">
+                <button
+                  mat-icon-button
+                  aria-label="Movimientos"
+                  #tooltip="matTooltip"
+                  matTooltip="Movimientos"
+                  [matTooltipPosition]="'below'"
+                  (click)="goToMovimientos(caja.id)">
+                  <mat-icon
+                    class="text-hint"
+                    [svgIcon]="'heroicons_outline:cash'"></mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  aria-label="Editar Turno"
+                  #tooltip="matTooltip"
+                  matTooltip="Editar Turno"
+                  [matTooltipPosition]="'below'"
+                  (click)="editCaja(caja.id)">
+                  <mat-icon
+                    class="text-hint"
+                    [svgIcon]="'heroicons_outline:clipboard-list'"></mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  aria-label="Cerrar Turno"
+                  #tooltip="matTooltip"
+                  matTooltip="Cerrar Turno"
+                  [matTooltipPosition]="'below'"
+                  (click)="cerrarCaja(caja.id)">
+                  <mat-icon
+                    class="text-hint"
+                    [svgIcon]="'heroicons_outline:lock-closed'"></mat-icon>
+                </button>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <ng-template #noCajas
+          ><div class="font-extrabold">No Hay Turnos abiertos.</div>
+        </ng-template>
+      </ng-container>
+      <ng-template #loadingTemplate>
+        <div class="z-20 flex justify-center border-b px-8 py-4 md:px-10">
+          <mat-spinner> </mat-spinner>
+        </div>
+      </ng-template>
+    </div>
+  </div>
 </div>

@@ -1,3 +1,3 @@
 export default {
-    projects: ['<rootDir>/apps/api', '<rootDir>/libs/utils'],
+  projects: ['<rootDir>/apps/api', '<rootDir>/libs/utils'],
 };

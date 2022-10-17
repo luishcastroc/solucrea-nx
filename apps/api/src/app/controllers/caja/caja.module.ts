@@ -4,7 +4,7 @@ import { CajaController } from './caja.controller';
 import { PrismaService } from 'api/prisma';
 
 @Module({
-    controllers: [CajaController],
-    providers: [CajaService, PrismaService],
+  controllers: [CajaController],
+  providers: [CajaService, PrismaService],
 })
 export class CajaModule {}

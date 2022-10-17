@@ -1,4 +1,4 @@
 export interface IEstadoCivilReturnDto {
-    id: string;
-    descripcion: string;
+  id: string;
+  descripcion: string;
 }

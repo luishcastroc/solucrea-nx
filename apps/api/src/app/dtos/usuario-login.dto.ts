@@ -1,4 +1,4 @@
 export interface IUsuarioDto {
-    nombreUsuario: string;
-    password: string;
+  nombreUsuario: string;
+  password: string;
 }

@@ -3,14 +3,14 @@ import { Route, RouterModule } from '@angular/router';
 import { MainComponent } from 'app/modules/main/main.component';
 
 const mainRoutes: Route[] = [
-    {
-        path: '',
-        component: MainComponent,
-    },
+  {
+    path: '',
+    component: MainComponent,
+  },
 ];
 
 @NgModule({
-    declarations: [MainComponent],
-    imports: [RouterModule.forChild(mainRoutes)],
+  declarations: [MainComponent],
+  imports: [RouterModule.forChild(mainRoutes)],
 })
 export class MainModule {}

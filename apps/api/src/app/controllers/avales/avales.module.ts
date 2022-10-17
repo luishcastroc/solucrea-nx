@@ -4,7 +4,7 @@ import { AvalesController } from './avales.controller';
 import { AvalesService } from './avales.service';
 
 @Module({
-    controllers: [AvalesController],
-    providers: [AvalesService, PrismaService],
+  controllers: [AvalesController],
+  providers: [AvalesService, PrismaService],
 })
 export class AvalesModule {}

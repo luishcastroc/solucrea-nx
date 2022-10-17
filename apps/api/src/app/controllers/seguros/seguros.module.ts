@@ -5,7 +5,7 @@ import { SegurosController } from './seguros.controller';
 import { SegurosService } from './seguros.service';
 
 @Module({
-    controllers: [SegurosController],
-    providers: [SegurosService, PrismaService],
+  controllers: [SegurosController],
+  providers: [SegurosService, PrismaService],
 })
 export class SegurosModule {}

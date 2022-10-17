@@ -1,63 +1,77 @@
-<ng-container *ngIf="{ user: user$ | async, actions: actions$ | async }; else loadingTemplate">
-    <!-- Content -->
-    <div class="w-full max-w-3xl">
-        <!-- Form -->
-        <form [formGroup]="accountForm">
-            <!-- Section -->
-            <div class="w-full">
-                <div class="text-xl">Usuario</div>
-                <div class="text-secondary">Verificar que la información sea correcta.</div>
-            </div>
-            <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
-                <!-- Nombre -->
-                <div class="sm:col-span-4">
-                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                        <mat-label>Nombre</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
-                        <input [formControlName]="'nombre'" matInput />
-                    </mat-form-field>
-                </div>
-                <!-- Apellido -->
-                <div class="sm:col-span-4">
-                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                        <mat-label>Apellidos</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
-                        <input [formControlName]="'apellido'" matInput />
-                    </mat-form-field>
-                </div>
-                <!-- Nombre de Usuario -->
-                <div class="sm:col-span-4">
-                    <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
-                        <mat-label>Nombre de Usuario</mat-label>
-                        <div class="text-secondary" matPrefix>solucrea/</div>
-                        <input [formControlName]="'nombreUsuario'" matInput />
-                    </mat-form-field>
-                </div>
-            </div>
+<ng-container
+  *ngIf="
+    { user: user$ | async, actions: actions$ | async };
+    else loadingTemplate
+  ">
+  <!-- Content -->
+  <div class="w-full max-w-3xl">
+    <!-- Form -->
+    <form [formGroup]="accountForm">
+      <!-- Section -->
+      <div class="w-full">
+        <div class="text-xl">Usuario</div>
+        <div class="text-secondary">
+          Verificar que la información sea correcta.
+        </div>
+      </div>
+      <div class="mt-8 grid w-full gap-6 sm:grid-cols-4">
+        <!-- Nombre -->
+        <div class="sm:col-span-4">
+          <mat-form-field class="fuse-mat-no-subscript w-full">
+            <mat-label>Nombre</mat-label>
+            <mat-icon
+              class="icon-size-5"
+              [svgIcon]="'heroicons_solid:user'"
+              matPrefix></mat-icon>
+            <input [formControlName]="'nombre'" matInput />
+          </mat-form-field>
+        </div>
+        <!-- Apellido -->
+        <div class="sm:col-span-4">
+          <mat-form-field class="fuse-mat-no-subscript w-full">
+            <mat-label>Apellidos</mat-label>
+            <mat-icon
+              class="icon-size-5"
+              [svgIcon]="'heroicons_solid:user'"
+              matPrefix></mat-icon>
+            <input [formControlName]="'apellido'" matInput />
+          </mat-form-field>
+        </div>
+        <!-- Nombre de Usuario -->
+        <div class="sm:col-span-4">
+          <mat-form-field
+            class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
+            <mat-label>Nombre de Usuario</mat-label>
+            <div class="text-secondary" matPrefix>solucrea/</div>
+            <input [formControlName]="'nombreUsuario'" matInput />
+          </mat-form-field>
+        </div>
+      </div>
 
-            <!-- Divider -->
-            <div class="mt-11 mb-10 border-t"></div>
+      <!-- Divider -->
+      <div class="mt-11 mb-10 border-t"></div>
 
-            <!-- Acciones -->
-            <div class="flex items-center justify-end">
-                <div class="grid grid-cols-2 gap-2">
-                    <button mat-stroked-button type="button" (click)="cancelEdit()">Cancelar</button>
-                    <button
-                        mat-flat-button
-                        type="submit"
-                        [color]="'primary'"
-                        (click)="saveChanges()"
-                        [disabled]="!accountForm.touched"
-                    >
-                        Guardar
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
+      <!-- Acciones -->
+      <div class="flex items-center justify-end">
+        <div class="grid grid-cols-2 gap-2">
+          <button mat-stroked-button type="button" (click)="cancelEdit()">
+            Cancelar
+          </button>
+          <button
+            mat-flat-button
+            type="submit"
+            [color]="'primary'"
+            (click)="saveChanges()"
+            [disabled]="!accountForm.touched">
+            Guardar
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
 </ng-container>
 <ng-template #loadingTemplate>
-    <div class="z-20 flex px-8 py-4 md:px-10 border-b justify-center">
-        <mat-spinner> </mat-spinner>
-    </div>
+  <div class="z-20 flex justify-center border-b px-8 py-4 md:px-10">
+    <mat-spinner> </mat-spinner>
+  </div>
 </ng-template>

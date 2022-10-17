@@ -1,196 +1,232 @@
-<div class="py-8 px-6 flex flex-col flex-auto w-full">
-    <ng-container *ngIf="editMode$ | async as editMode; else loadingTemplate">
-        <div class="flex justify-between border-b pb-3">
-            <h1 class="text-4xl font-extrabold tracking-tight leading-none">
-                {{ editMode === 'new' ? 'Nuevo' : editMode === 'edit' ? 'Editar' : 'Cierre' }} Turno
-            </h1>
-            <button
-                mat-icon-button
-                aria-label="Regresar"
-                (click)="back()"
-                #tooltip="matTooltip"
-                matTooltip="Regresar"
-                [matTooltipPosition]="'below'"
-            >
-                <mat-icon svgIcon="heroicons_outline:arrow-left"></mat-icon>
-            </button>
-        </div>
-        <ng-container
-            *ngIf="(sucursales$ | async)?.length === 0; then noSucursalTemplate; else formTemplate"
-        ></ng-container>
-        <ng-template #noSucursalTemplate>
-            <div class="mt-4">
-                <div>No existen sucursales, agregar en</div>
-                <span class="cursor-pointer font-extrabold text-left" (click)="goAjustes()">Ajustes</span>
-            </div>
-        </ng-template>
-
-        <ng-template #formTemplate>
-            <!-- Form -->
-            <form
-                [formGroup]="cajaForm"
-                #formDirective="ngForm"
-                class="flex-auto flex flex-col max-w-3xl mt-8"
-                *ngIf="
-                    ((editMode === 'edit' || editMode === 'cierre') && (selectedCaja$ | async)) || editMode === 'new'
-                "
-            >
-                <div class="grid md:grid-cols-3 grid-cols-1 gap-6">
-                    <!-- Fecha de Apertura -->
-                    <div>
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Fecha de Apertura</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_outline:book-open'"
-                            ></mat-icon>
-                            <input
-                                matInput
-                                [matDatepicker]="openDatepicker"
-                                [formControlName]="'fechaApertura'"
-                                [placeholder]="'Fecha de Apertura'"
-                            />
-                            <mat-datepicker-toggle matSuffix [for]="openDatepicker"> </mat-datepicker-toggle>
-                            <mat-datepicker #openDatepicker></mat-datepicker>
-                        </mat-form-field>
-                        <ng-container *ngIf="cajaForm.get('fechaApertura')?.touched">
-                            <mat-error *ngIf="cajaForm.get('fechaApertura')?.errors?.['required']">
-                                La fecha de apertura es requerida.
-                            </mat-error>
-                            <mat-error *ngIf="cajaForm.get('fechaApertura')?.errors?.['futureDateValidator']">
-                                La fecha de apertura no puede ser mayor a hoy.
-                            </mat-error>
-                        </ng-container>
-                    </div>
-                    <!-- Sucursal -->
-                    <div>
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Sucursal</mat-label>
-                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:library'" matPrefix></mat-icon>
-                            <mat-select [formControlName]="'sucursal'">
-                                <mat-option *ngFor="let sucursal of sucursales$ | async" [value]="sucursal.id">{{
-                                    sucursal.nombre
-                                }}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <ng-container *ngIf="cajaForm.get('sucursal')?.touched">
-                            <mat-error *ngIf="cajaForm.get('sucursal')?.errors?.['required']">
-                                La sucursal es requerida.
-                            </mat-error>
-                        </ng-container>
-                    </div>
-                    <!-- Saldo Inicial -->
-                    <div>
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Saldo Inicial</mat-label>
-                            <mat-icon
-                                class="icon-size-5"
-                                [svgIcon]="'heroicons_outline:currency-dollar'"
-                                matPrefix
-                            ></mat-icon>
-                            <input [formControlName]="'saldoInicial'" matInput [inputMask]="currencyInputMask" />
-                        </mat-form-field>
-                        <ng-container *ngIf="cajaForm.get('saldoInicial')?.touched">
-                            <mat-error *ngIf="cajaForm.get('saldoInicial')?.errors?.['required']">
-                                El saldo inicial es requerido.
-                            </mat-error>
-                        </ng-container>
-                    </div>
-                    <ng-container *ngIf="editMode === 'cierre' || editMode === 'edit'">
-                        <!-- Saldo Final -->
-                        <div>
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Saldo Actual</mat-label>
-                                <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="'heroicons_outline:currency-dollar'"
-                                    matPrefix
-                                ></mat-icon>
-                                <input [formControlName]="'saldoActual'" matInput [inputMask]="currencyInputMask" />
-                            </mat-form-field>
-                        </div>
-                    </ng-container>
-                    <ng-container *ngIf="editMode === 'cierre'">
-                        <!-- Fecha de Cierre -->
-                        <div>
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Fecha de Cierre</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_outline:book-open'"
-                                ></mat-icon>
-                                <input
-                                    matInput
-                                    [matDatepicker]="openDatepicker"
-                                    [formControlName]="'fechaCierre'"
-                                    [placeholder]="'Fecha de Cierre'"
-                                />
-                                <mat-datepicker-toggle matSuffix [for]="openDatepicker"> </mat-datepicker-toggle>
-                                <mat-datepicker #openDatepicker></mat-datepicker>
-                            </mat-form-field>
-                            <ng-container *ngIf="cajaForm.get('fechaCierre')?.touched">
-                                <mat-error *ngIf="cajaForm.get('fechaCierre')?.errors?.['required']">
-                                    La fecha de cierre es requerida.
-                                </mat-error>
-                                <mat-error *ngIf="cajaForm.errors?.['checkIfEndDateBeforeStartDate']">
-                                    La fecha de cierre no puede ser menor a la fecha de apertura o en el futuro.
-                                </mat-error>
-                            </ng-container>
-                        </div>
-                        <!-- Saldo Final -->
-                        <div>
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Saldo Final</mat-label>
-                                <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="'heroicons_outline:currency-dollar'"
-                                    matPrefix
-                                ></mat-icon>
-                                <input [formControlName]="'saldoFinal'" matInput [inputMask]="currencyInputMask" />
-                            </mat-form-field>
-                            <ng-container *ngIf="cajaForm.get('saldoFinal')?.touched">
-                                <mat-error *ngIf="cajaForm.get('saldoFinal')?.errors?.['required']">
-                                    El saldo final es requerido.
-                                </mat-error>
-                            </ng-container>
-                        </div>
-                    </ng-container>
-                </div>
-                <div class="grid grid-cols-1">
-                    <!-- Observaciones -->
-                    <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full mt-4">
-                        <mat-label>Observaciones</mat-label>
-                        <mat-icon
-                            class="icon-size-5"
-                            [svgIcon]="'heroicons_outline:clipboard-list'"
-                            matPrefix
-                        ></mat-icon>
-                        <textarea [formControlName]="'observaciones'" matInput></textarea>
-                    </mat-form-field>
-                </div>
-                <div class="mt-8 w-full flex-auto">
-                    <button mat-stroked-button type="button" (click)="cancelCaja(editMode)">Cancelar</button>
-                    <button
-                        mat-flat-button
-                        type="submit"
-                        [color]="'primary'"
-                        class="ml-2"
-                        [class.spinner-loading]="loading"
-                        [disabled]="!cajaForm.touched || cajaForm.invalid || cajaForm.disabled"
-                        (click)="saveCaja(editMode)"
-                    >
-                        Guardar
-                    </button>
-                </div>
-            </form>
-        </ng-template>
-    </ng-container>
-
-    <ng-template #loadingTemplate>
-        <div class="z-20 flex px-8 py-4 md:px-10 border-b justify-center">
-            <mat-spinner> </mat-spinner>
-        </div>
+<div class="flex w-full flex-auto flex-col py-8 px-6">
+  <ng-container *ngIf="editMode$ | async as editMode; else loadingTemplate">
+    <div class="flex justify-between border-b pb-3">
+      <h1 class="text-4xl font-extrabold leading-none tracking-tight">
+        {{
+          editMode === 'new'
+            ? 'Nuevo'
+            : editMode === 'edit'
+            ? 'Editar'
+            : 'Cierre'
+        }}
+        Turno
+      </h1>
+      <button
+        mat-icon-button
+        aria-label="Regresar"
+        (click)="back()"
+        #tooltip="matTooltip"
+        matTooltip="Regresar"
+        [matTooltipPosition]="'below'">
+        <mat-icon svgIcon="heroicons_outline:arrow-left"></mat-icon>
+      </button>
+    </div>
+    <ng-container
+      *ngIf="
+        (sucursales$ | async)?.length === 0;
+        then noSucursalTemplate;
+        else formTemplate
+      "></ng-container>
+    <ng-template #noSucursalTemplate>
+      <div class="mt-4">
+        <div>No existen sucursales, agregar en</div>
+        <span
+          class="cursor-pointer text-left font-extrabold"
+          (click)="goAjustes()"
+          >Ajustes</span
+        >
+      </div>
     </ng-template>
+
+    <ng-template #formTemplate>
+      <!-- Form -->
+      <form
+        [formGroup]="cajaForm"
+        #formDirective="ngForm"
+        class="mt-8 flex max-w-3xl flex-auto flex-col"
+        *ngIf="
+          ((editMode === 'edit' || editMode === 'cierre') &&
+            (selectedCaja$ | async)) ||
+          editMode === 'new'
+        ">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <!-- Fecha de Apertura -->
+          <div>
+            <mat-form-field class="fuse-mat-no-subscript w-full">
+              <mat-label>Fecha de Apertura</mat-label>
+              <mat-icon
+                matPrefix
+                class="icon-size-5 hidden sm:flex"
+                [svgIcon]="'heroicons_outline:book-open'"></mat-icon>
+              <input
+                matInput
+                [matDatepicker]="openDatepicker"
+                [formControlName]="'fechaApertura'"
+                [placeholder]="'Fecha de Apertura'" />
+              <mat-datepicker-toggle matSuffix [for]="openDatepicker">
+              </mat-datepicker-toggle>
+              <mat-datepicker #openDatepicker></mat-datepicker>
+            </mat-form-field>
+            <ng-container *ngIf="cajaForm.get('fechaApertura')?.touched">
+              <mat-error
+                *ngIf="cajaForm.get('fechaApertura')?.errors?.['required']">
+                La fecha de apertura es requerida.
+              </mat-error>
+              <mat-error
+                *ngIf="cajaForm.get('fechaApertura')?.errors?.['futureDateValidator']">
+                La fecha de apertura no puede ser mayor a hoy.
+              </mat-error>
+            </ng-container>
+          </div>
+          <!-- Sucursal -->
+          <div>
+            <mat-form-field class="fuse-mat-no-subscript w-full">
+              <mat-label>Sucursal</mat-label>
+              <mat-icon
+                class="icon-size-5"
+                [svgIcon]="'heroicons_outline:library'"
+                matPrefix></mat-icon>
+              <mat-select [formControlName]="'sucursal'">
+                <mat-option
+                  *ngFor="let sucursal of sucursales$ | async"
+                  [value]="sucursal.id"
+                  >{{ sucursal.nombre }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+            <ng-container *ngIf="cajaForm.get('sucursal')?.touched">
+              <mat-error *ngIf="cajaForm.get('sucursal')?.errors?.['required']">
+                La sucursal es requerida.
+              </mat-error>
+            </ng-container>
+          </div>
+          <!-- Saldo Inicial -->
+          <div>
+            <mat-form-field class="fuse-mat-no-subscript w-full">
+              <mat-label>Saldo Inicial</mat-label>
+              <mat-icon
+                class="icon-size-5"
+                [svgIcon]="'heroicons_outline:currency-dollar'"
+                matPrefix></mat-icon>
+              <input
+                [formControlName]="'saldoInicial'"
+                matInput
+                [inputMask]="currencyInputMask" />
+            </mat-form-field>
+            <ng-container *ngIf="cajaForm.get('saldoInicial')?.touched">
+              <mat-error
+                *ngIf="cajaForm.get('saldoInicial')?.errors?.['required']">
+                El saldo inicial es requerido.
+              </mat-error>
+            </ng-container>
+          </div>
+          <ng-container *ngIf="editMode === 'cierre' || editMode === 'edit'">
+            <!-- Saldo Final -->
+            <div>
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>Saldo Actual</mat-label>
+                <mat-icon
+                  class="icon-size-5"
+                  [svgIcon]="'heroicons_outline:currency-dollar'"
+                  matPrefix></mat-icon>
+                <input
+                  [formControlName]="'saldoActual'"
+                  matInput
+                  [inputMask]="currencyInputMask" />
+              </mat-form-field>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="editMode === 'cierre'">
+            <!-- Fecha de Cierre -->
+            <div>
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>Fecha de Cierre</mat-label>
+                <mat-icon
+                  matPrefix
+                  class="icon-size-5 hidden sm:flex"
+                  [svgIcon]="'heroicons_outline:book-open'"></mat-icon>
+                <input
+                  matInput
+                  [matDatepicker]="openDatepicker"
+                  [formControlName]="'fechaCierre'"
+                  [placeholder]="'Fecha de Cierre'" />
+                <mat-datepicker-toggle matSuffix [for]="openDatepicker">
+                </mat-datepicker-toggle>
+                <mat-datepicker #openDatepicker></mat-datepicker>
+              </mat-form-field>
+              <ng-container *ngIf="cajaForm.get('fechaCierre')?.touched">
+                <mat-error
+                  *ngIf="cajaForm.get('fechaCierre')?.errors?.['required']">
+                  La fecha de cierre es requerida.
+                </mat-error>
+                <mat-error
+                  *ngIf="cajaForm.errors?.['checkIfEndDateBeforeStartDate']">
+                  La fecha de cierre no puede ser menor a la fecha de apertura o
+                  en el futuro.
+                </mat-error>
+              </ng-container>
+            </div>
+            <!-- Saldo Final -->
+            <div>
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>Saldo Final</mat-label>
+                <mat-icon
+                  class="icon-size-5"
+                  [svgIcon]="'heroicons_outline:currency-dollar'"
+                  matPrefix></mat-icon>
+                <input
+                  [formControlName]="'saldoFinal'"
+                  matInput
+                  [inputMask]="currencyInputMask" />
+              </mat-form-field>
+              <ng-container *ngIf="cajaForm.get('saldoFinal')?.touched">
+                <mat-error
+                  *ngIf="cajaForm.get('saldoFinal')?.errors?.['required']">
+                  El saldo final es requerido.
+                </mat-error>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+        <div class="grid grid-cols-1">
+          <!-- Observaciones -->
+          <mat-form-field
+            class="fuse-mat-textarea fuse-mat-no-subscript mt-4 w-full">
+            <mat-label>Observaciones</mat-label>
+            <mat-icon
+              class="icon-size-5"
+              [svgIcon]="'heroicons_outline:clipboard-list'"
+              matPrefix></mat-icon>
+            <textarea [formControlName]="'observaciones'" matInput></textarea>
+          </mat-form-field>
+        </div>
+        <div class="mt-8 w-full flex-auto">
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="cancelCaja(editMode)">
+            Cancelar
+          </button>
+          <button
+            mat-flat-button
+            type="submit"
+            [color]="'primary'"
+            class="ml-2"
+            [class.spinner-loading]="loading"
+            [disabled]="
+              !cajaForm.touched || cajaForm.invalid || cajaForm.disabled
+            "
+            (click)="saveCaja(editMode)">
+            Guardar
+          </button>
+        </div>
+      </form>
+    </ng-template>
+  </ng-container>
+
+  <ng-template #loadingTemplate>
+    <div class="z-20 flex justify-center border-b px-8 py-4 md:px-10">
+      <mat-spinner> </mat-spinner>
+    </div>
+  </ng-template>
 </div>

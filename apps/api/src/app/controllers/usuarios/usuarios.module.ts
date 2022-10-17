@@ -6,9 +6,9 @@ import { UsuariosController } from './usuarios.controller';
 import { UsuariosService } from './usuarios.service';
 
 @Module({
-    imports: [forwardRef(() => AuthModule)],
-    controllers: [UsuariosController],
-    providers: [UsuariosService, PrismaService],
-    exports: [UsuariosService],
+  imports: [forwardRef(() => AuthModule)],
+  controllers: [UsuariosController],
+  providers: [UsuariosService, PrismaService],
+  exports: [UsuariosService],
 })
 export class UsuariosModule {}

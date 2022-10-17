@@ -5,7 +5,7 @@ import { ActividadesEconomicasController } from './actividades-economicas.contro
 import { ActividadesEconomicasService } from './actividades-economicas.service';
 
 @Module({
-    controllers: [ActividadesEconomicasController],
-    providers: [ActividadesEconomicasService, PrismaService],
+  controllers: [ActividadesEconomicasController],
+  providers: [ActividadesEconomicasService, PrismaService],
 })
 export class ActividadesEconomicasModule {}

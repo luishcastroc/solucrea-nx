@@ -14,54 +14,54 @@ import { TeamListComponent } from './team/list/team-list.component';
 import { AjustesTeamComponent } from './team/team.component';
 
 export const ajustesRoutes: Route[] = [
-    {
+  {
+    path: '',
+    component: AjustesComponent,
+    pathMatch: 'prefix',
+    children: [
+      {
         path: '',
-        component: AjustesComponent,
-        pathMatch: 'prefix',
+        pathMatch: 'full',
+        redirectTo: 'perfil',
+      },
+      {
+        path: 'perfil',
+        component: AjustesAccountComponent,
+      },
+      { path: 'seguridad', component: AjustesSecurityComponent },
+      {
+        path: 'usuarios',
+        component: AjustesTeamComponent,
         children: [
-            {
-                path: '',
-                pathMatch: 'full',
-                redirectTo: 'perfil',
-            },
-            {
-                path: 'perfil',
-                component: AjustesAccountComponent,
-            },
-            { path: 'seguridad', component: AjustesSecurityComponent },
-            {
-                path: 'usuarios',
-                component: AjustesTeamComponent,
-                children: [
-                    { path: '', component: TeamListComponent },
-                    {
-                        path: ':id',
-                        component: TeamDetailsComponent,
-                    },
-                ],
-            },
-            {
-                path: 'sucursales',
-                component: SucursalesComponent,
-                children: [
-                    { path: '', component: SucusalesListComponent },
-                    {
-                        path: ':id',
-                        component: SucursalesDetailsComponent,
-                    },
-                ],
-            },
-            {
-                path: 'creditos',
-                component: AjustesCreditosComponent,
-                children: [
-                    { path: '', component: AjustesCreditosListComponent },
-                    {
-                        path: ':id',
-                        component: AjustesCreditosDetailsComponent,
-                    },
-                ],
-            },
+          { path: '', component: TeamListComponent },
+          {
+            path: ':id',
+            component: TeamDetailsComponent,
+          },
         ],
-    },
+      },
+      {
+        path: 'sucursales',
+        component: SucursalesComponent,
+        children: [
+          { path: '', component: SucusalesListComponent },
+          {
+            path: ':id',
+            component: SucursalesDetailsComponent,
+          },
+        ],
+      },
+      {
+        path: 'creditos',
+        component: AjustesCreditosComponent,
+        children: [
+          { path: '', component: AjustesCreditosListComponent },
+          {
+            path: ':id',
+            component: AjustesCreditosDetailsComponent,
+          },
+        ],
+      },
+    ],
+  },
 ];

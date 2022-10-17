@@ -19,24 +19,30 @@ import { CajaDetailComponent } from './caja-detail/caja-detail.component';
 import { CajaListComponent } from './caja-list/caja-list.component';
 import { CajaComponent } from './caja.component';
 import { cajaRoutes } from './caja.routing';
+import { MovimientosComponent } from './movimientos/movimientos.component';
 
 @NgModule({
-    declarations: [CajaComponent, CajaListComponent, CajaDetailComponent],
-    imports: [
-        RouterModule.forChild(cajaRoutes),
-        NgxsModule.forFeature([CajasState]),
-        MatFormFieldModule,
-        MatIconModule,
-        MatInputModule,
-        MatButtonModule,
-        MatTooltipModule,
-        MatDatepickerModule,
-        MatLuxonDateModule,
-        MatSelectModule,
-        MatProgressSpinnerModule,
-        MatStepperModule,
-        SharedModule,
-        InputMaskModule,
-    ],
+  declarations: [
+    CajaComponent,
+    CajaListComponent,
+    CajaDetailComponent,
+    MovimientosComponent,
+  ],
+  imports: [
+    RouterModule.forChild(cajaRoutes),
+    NgxsModule.forFeature([CajasState]),
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatDatepickerModule,
+    MatLuxonDateModule,
+    MatSelectModule,
+    MatProgressSpinnerModule,
+    MatStepperModule,
+    SharedModule,
+    InputMaskModule,
+  ],
 })
 export class CajaModule {}

@@ -9,15 +9,25 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
 import { DecimalToNumberPipe } from './pipes/decimalnumber.pipe';
 
 @NgModule({
-    declarations: [VerifyRoleDirective, ConfirmationDialogComponent, DecimalToNumberPipe],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, MatDialogModule, MatButtonModule],
-    exports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        VerifyRoleDirective,
-        ConfirmationDialogComponent,
-        DecimalToNumberPipe,
-    ],
+  declarations: [
+    VerifyRoleDirective,
+    ConfirmationDialogComponent,
+    DecimalToNumberPipe,
+  ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatButtonModule,
+  ],
+  exports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    VerifyRoleDirective,
+    ConfirmationDialogComponent,
+    DecimalToNumberPipe,
+  ],
 })
 export class SharedModule {}
