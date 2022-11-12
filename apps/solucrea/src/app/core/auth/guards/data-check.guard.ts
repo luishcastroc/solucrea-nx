@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   ActivatedRouteSnapshot,
@@ -15,7 +15,8 @@ import { CanDeactivateComponent } from '../../models/can-deactivate.model';
   providedIn: 'root',
 })
 export class DataCheckGuard implements CanDeactivate<CanDeactivateComponent> {
-  constructor(private _dialog: MatDialog) {}
+  private _dialog = inject(MatDialog);
+
   canDeactivate(
     component: CanDeactivateComponent,
     currentRoute: ActivatedRouteSnapshot,

@@ -1,21 +1,16 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { MovimientoDeCaja, Prisma } from '@prisma/client';
 import { CreateCajaDto, ICajaReturnDto } from 'api/dtos';
-import { Observable } from 'rxjs';
-
 import { environment } from 'apps/solucrea/src/environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CajaService {
   private _environment = environment;
-
-  /**
-   * Constructor
-   */
-  constructor(private _httpClient: HttpClient) {}
+  private _httpClient = inject(HttpClient);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Public methods

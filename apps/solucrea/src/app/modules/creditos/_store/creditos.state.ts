@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Producto, Role } from '@prisma/client';
 import { ISegurosData } from '@solucrea-utils';
@@ -76,14 +76,12 @@ import { CreditosStateModel } from './creditos.model';
 })
 @Injectable()
 export class CreditosState {
-  constructor(
-    private _creditosService: CreditosService,
-    private _ajustesCreditosService: AjustesCreditosService,
-    private _ajustesUsuarios: AjustesUsuarioService,
-    private _clientesService: ClientesService,
-    private _parentescosService: ParentescosService,
-    private _cajaService: CajaService
-  ) {}
+  private _creditosService = inject(CreditosService);
+  private _ajustesCreditosService = inject(AjustesCreditosService);
+  private _ajustesUsuarios = inject(AjustesUsuarioService);
+  private _clientesService = inject(ClientesService);
+  private _parentescosService = inject(ParentescosService);
+  private _cajaService = inject(CajaService);
 
   @Selector()
   static editMode({ editMode }: CreditosStateModel): EditMode {

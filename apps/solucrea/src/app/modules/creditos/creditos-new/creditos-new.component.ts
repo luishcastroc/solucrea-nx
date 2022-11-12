@@ -77,6 +77,8 @@ import {
 export class CreditosNewComponent implements OnInit, OnDestroy {
   @Input()
   clienteId!: string | null;
+  @ViewChild('stepper')
+  private myStepper!: MatStepper;
 
   loading$!: Observable<boolean>;
   clientes$!: Observable<IClienteReturnDto[]>;
@@ -128,8 +130,6 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
 
   desembolsando = false;
 
-  @ViewChild('stepper')
-  private myStepper!: MatStepper;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   constructor(
     private _store: Store,

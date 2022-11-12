@@ -1,5 +1,10 @@
 import { Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { ICreditoReturnDto } from 'api/dtos';
@@ -21,11 +26,12 @@ export class CreditosInfoComponent implements OnInit {
   loading$!: Observable<boolean>;
   selectedCredito$!: Observable<ICreditoReturnDto | undefined>;
   creditoId!: string | null;
-  constructor(
-    private _store: Store,
-    private location: Location,
-    private _route: ActivatedRoute
-  ) {
+
+  private _store = inject(Store);
+  private location = inject(Location);
+  private _route = inject(ActivatedRoute);
+
+  constructor() {
     this.loading$ = this._store.select(CreditosState.loading);
     this.selectedCredito$ = this._store.select(CreditosState.selectedCredito);
   }

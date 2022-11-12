@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  inject,
   Input,
   OnDestroy,
   OnInit,
@@ -29,14 +30,13 @@ export class UserMenuComponent implements OnInit, OnDestroy {
   user: Usuario | undefined;
 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _store = inject(Store);
 
   /**
    * Constructor
    */
-  constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _store: Store
-  ) {
+  constructor() {
     this.user$ = this._store.select(AuthState.user);
   }
 

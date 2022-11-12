@@ -1,6 +1,6 @@
 import { Role } from '@prisma/client';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from 'apps/solucrea/src/environments/environment';
@@ -8,11 +8,7 @@ import { environment } from 'apps/solucrea/src/environments/environment';
 @Injectable()
 export class AuthService {
   private _environment = environment;
-
-  /**
-   * Constructor
-   */
-  constructor(private _httpClient: HttpClient) {}
+  private _httpClient = inject(HttpClient);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Public methods

@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -24,11 +25,9 @@ export class ClientesComponent implements OnInit, OnDestroy {
   drawerMode: 'over' | 'side' = 'side';
   drawerOpened: boolean = true;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
-  constructor(
-    private _store: Store,
-    private _fuseMediaWatcherService: FuseMediaWatcherService,
-    private _changeDetectorRef: ChangeDetectorRef
-  ) {}
+  private _store = inject(Store);
+  private _fuseMediaWatcherService = inject(FuseMediaWatcherService);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     // Subscribe to media changes

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewEncapsulation,
@@ -46,23 +47,24 @@ export class TeamListComponent implements OnInit, OnDestroy {
   loading$!: Observable<boolean>;
 
   searchResults$!: Observable<Usuario[]>;
-  usuario = this._store.selectSnapshot(AuthState.user);
+  usuario: Usuario | undefined;
   searchResults!: Usuario[];
   roles: IRole[] = defaultRoles;
   searchInput: UntypedFormControl = new UntypedFormControl();
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
+  private _store = inject(Store);
+  private _dialog = inject(MatDialog);
+  private _actions$ = inject(Actions);
+  private _toast = inject(HotToastService);
+
   /**
    * Constructor
    */
-  constructor(
-    private _store: Store,
-    private _dialog: MatDialog,
-    private _actions$: Actions,
-    private _toast: HotToastService
-  ) {
+  constructor() {
     this.usuarios$ = this._store.select(AjustesUsuariosState.usuarios);
     this.loading$ = this._store.select(AjustesUsuariosState.loading);
+    this.usuario = this._store.selectSnapshot(AuthState.user);
   }
 
   // -----------------------------------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Pago, Prisma, Producto, Status } from '@prisma/client';
+import { Categoria, Pago, Prisma, Producto, Status } from '@prisma/client';
 import {
   generateTablaAmorizacion,
   getFrecuencia,
@@ -959,6 +959,7 @@ export class CreditosService {
         const movimiento: Prisma.MovimientoDeCajaCreateInput = {
           monto: creditoCreado.monto,
           tipo: 'RETIRO',
+          categoria: Categoria.PRESTAMO,
           observaciones: `Préstamo otorgado a ${creditoCreado.cliente.nombre} ${creditoCreado.cliente.apellidoPaterno} ${creditoCreado.cliente.apellidoMaterno}`,
           creadoPor: data.creadoPor,
           caja: { connect: { id: caja?.id } },

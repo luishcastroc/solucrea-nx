@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
@@ -29,15 +30,10 @@ export class AjustesAccountComponent implements OnInit {
   accountForm!: UntypedFormGroup;
   defaultUser!: Usuario;
 
-  /**
-   * Constructor
-   */
-  constructor(
-    private _formBuilder: UntypedFormBuilder,
-    private _store: Store,
-    private _actions$: Actions,
-    private _toast: HotToastService
-  ) {}
+  private _store = inject(Store);
+  private _actions$ = inject(Actions);
+  private _toast = inject(HotToastService);
+  private _formBuilder = inject(UntypedFormBuilder);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Lifecycle hooks

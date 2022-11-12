@@ -1,1 +1,86 @@
-<p>movimientos works!</p>
+<ng-container *ngIf="movimientos$ | async as movimientos">
+  <div class="absolute inset-0 flex min-w-0 flex-col overflow-hidden">
+    <!-- Header -->
+    <div class="flex flex-col justify-between border-b py-8 px-6 md:px-8">
+      <!-- Title -->
+      <div>
+        <div class="text-4xl font-extrabold leading-none tracking-tight">
+          Movimientos
+        </div>
+        <div class="text-secondary ml-0.5 font-medium">
+          <ng-container *ngIf="movimientos.length > 0">
+            {{ movimientos.length | number }}
+          </ng-container>
+          {{
+            movimientos.length
+              | i18nPlural
+                : {
+                    '=0': 'Sin movimientos',
+                    '=1': 'movimiento',
+                    other: 'movimientos'
+                  }
+          }}
+        </div>
+      </div>
+    </div>
+    <!-- Content -->
+    <ng-container>
+      <div
+        class="flex-auto overflow-hidden"
+        fuseScrollbar
+        [fuseScrollbarOptions]="{
+          suppressScrollX: true
+        }">
+        <ng-container *ngFor="let movimiento of movimientos">
+          <div
+            class="z-20 grid grid-cols-1 gap-4 border-b px-2 py-4 md:grid-cols-[1fr_minmax(auto,_200px)] md:px-10">
+            <div
+              class="grid grid-cols-2 gap-6 px-5 md:grid-cols-3 lg:w-5/6 lg:grid-cols-4">
+              <div class="flex flex-col">
+                <div class="font-bold">Fecha del Movimiento:</div>
+                <div class="mt-2">{{ movimiento.fechaCreacion | date }}</div>
+              </div>
+              <div class="flex flex-col">
+                <div class="font-bold">Tipo:</div>
+                <div class="mt-2">{{ movimiento.tipo | titlecase }}</div>
+              </div>
+              <div class="flex flex-col">
+                <div class="font-bold">Categoría:</div>
+                <div class="mt-2">
+                  {{
+                    !movimiento.categoria
+                      ? 'No Guardada'
+                      : (movimiento.categoria | titlecase)
+                  }}
+                </div>
+              </div>
+              <div class="flex flex-col">
+                <div class="font-bold">Monto:</div>
+                <div class="mt-2">
+                  {{
+                    movimiento.monto
+                      | decimalToNumber
+                      | currency: 'MXN':'symbol'
+                  }}
+                </div>
+              </div>
+              <!--
+                <div class="flex flex-col">
+                  <div class="font-bold">RFC:</div>
+                  <div class="mt-2">{{ cliente.rfc }}</div>
+                </div>
+                <div class="flex flex-col">
+                  <div class="font-bold">Estatus:</div>
+                  <div class="mt-2">
+                    {{ cliente.activo ? 'Activo' : 'Inactivo' }}
+                  </div>
+                </div> -->
+            </div>
+            <div
+              class="xsm:flex-col order-1 flex items-center justify-center sm:order-2 sm:ml-3"></div>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</ng-container>

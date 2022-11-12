@@ -9,11 +9,6 @@ import { Subject } from 'rxjs';
 export class EmptyLayoutComponent implements OnDestroy {
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-  /**
-   * Constructor
-   */
-  constructor() {}
-
   // -----------------------------------------------------------------------------------------------------
   // @ Lifecycle hooks
   // -----------------------------------------------------------------------------------------------------

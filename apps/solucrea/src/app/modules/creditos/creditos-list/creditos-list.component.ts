@@ -1,5 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -41,11 +46,12 @@ export class CreditosListComponent implements OnInit {
     { display: 'Suspendidos', value: Status.SUSPENDIDO },
   ];
   status = Status.ABIERTO;
-  constructor(
-    private _store: Store,
-    private _actions$: Actions,
-    private _toast: HotToastService
-  ) {
+
+  private _store = inject(Store);
+  private _actions$ = inject(Actions);
+  private _toast = inject(HotToastService);
+
+  constructor() {
     this.creditos$ = this._store.select(CreditosState.creditos);
     this.loading$ = this._store.select(CreditosState.loading);
     this.clientesCount$ = this._store.select(CreditosState.clientesCount);

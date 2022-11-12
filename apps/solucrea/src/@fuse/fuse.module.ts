@@ -1,4 +1,4 @@
-import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { inject, NgModule, Optional, SkipSelf } from '@angular/core';
 import { MATERIAL_SANITY_CHECKS } from '@angular/material/core';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { FuseMediaWatcherModule } from '@fuse/services/media-watcher/media-watcher.module';
@@ -27,11 +27,12 @@ import { FuseUtilsModule } from '@fuse/services/utils/utils.module';
   ],
 })
 export class FuseModule {
+  parentModule = inject(FuseModule, { optional: true, skipSelf: true });
   /**
    * Constructor
    */
-  constructor(@Optional() @SkipSelf() parentModule?: FuseModule) {
-    if (parentModule) {
+  constructor() {
+    if (this.parentModule) {
       throw new Error(
         'FuseModule has already been loaded. Import this module in the AppModule only!'
       );

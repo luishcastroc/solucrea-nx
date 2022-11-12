@@ -1,15 +1,21 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
+  Component,
+  inject,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import {
+  NgForm,
   UntypedFormBuilder,
   UntypedFormGroup,
-  NgForm,
   Validators,
 } from '@angular/forms';
-import { finalize } from 'rxjs';
 import { fuseAnimations } from '@fuse/animations';
-import { FuseValidators } from '@fuse/validators';
 import { FuseAlertType } from '@fuse/components/alert';
+import { FuseValidators } from '@fuse/validators';
 import { AuthService } from 'app/core/auth/auth.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'auth-reset-password',
@@ -28,13 +34,8 @@ export class AuthResetPasswordComponent implements OnInit {
   resetPasswordForm!: UntypedFormGroup;
   showAlert: boolean = false;
 
-  /**
-   * Constructor
-   */
-  constructor(
-    private _authService: AuthService,
-    private _formBuilder: UntypedFormBuilder
-  ) {}
+  private _authService = inject(AuthService);
+  private _formBuilder = inject(UntypedFormBuilder);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Lifecycle hooks

@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -32,15 +33,10 @@ export class AjustesComponent implements OnInit, OnDestroy {
   selectedPanel: string = 'perfil';
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-  /**
-   * Constructor
-   */
-  constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _fuseMediaWatcherService: FuseMediaWatcherService,
-    private _store: Store,
-    private _router: Router
-  ) {}
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _fuseMediaWatcherService = inject(FuseMediaWatcherService);
+  private _store = inject(Store);
+  private _router = inject(Router);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Lifecycle hooks

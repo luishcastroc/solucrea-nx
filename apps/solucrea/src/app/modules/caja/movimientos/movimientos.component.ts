@@ -1,8 +1,14 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { MovimientoDeCaja } from '@prisma/client';
 import { Observable } from 'rxjs';
+
 import { CajasState, GetAllMovimientos } from '../_store';
 
 @Component({
@@ -12,11 +18,14 @@ import { CajasState, GetAllMovimientos } from '../_store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MovimientosComponent implements OnInit {
-  movimientos$: Observable<MovimientoDeCaja[]> = this._store.select(
-    CajasState.movimientos
-  );
-  id = this._route.snapshot.paramMap.get('id');
-  constructor(private _store: Store, private _route: ActivatedRoute) {}
+  movimientos$!: Observable<[] | MovimientoDeCaja[]>;
+  id: string | null = null;
+  private _store = inject(Store);
+  private _route = inject(ActivatedRoute);
+  constructor() {
+    this.movimientos$ = this._store.select(CajasState.movimientos);
+    this.id = this._route.snapshot.paramMap.get('id');
+  }
 
   ngOnInit(): void {
     if (this.id) {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivate,
@@ -10,7 +10,7 @@ import {
   UrlTree,
 } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
-import { Select, Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { Observable, of, switchMap } from 'rxjs';
 
 import { AuthState } from './../store/auth.state';
@@ -20,10 +20,11 @@ import { AuthState } from './../store/auth.state';
 })
 export class NoAuthGuard implements CanActivate, CanActivateChild, CanLoad {
   isAuthenticated$!: Observable<boolean>;
+  private _store = inject(Store);
   /**
    * Constructor
    */
-  constructor(private _store: Store) {
+  constructor() {
     this.isAuthenticated$ = this._store.select(AuthState.isAuthenticated);
   }
 

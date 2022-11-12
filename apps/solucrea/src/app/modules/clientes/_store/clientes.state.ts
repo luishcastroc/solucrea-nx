@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import {
   IActividadEconomicaReturnDto,
@@ -7,7 +7,7 @@ import {
 } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 import { sortBy } from 'lodash';
-import { forkJoin, tap, Observable, of } from 'rxjs';
+import { forkJoin, Observable, of, tap } from 'rxjs';
 
 import { ClientesService } from '../_services/clientes.service';
 import { IConfig } from '../models/config.model';
@@ -42,10 +42,8 @@ import { ClientesStateModel, IColoniasState } from './clientes.model';
 })
 @Injectable()
 export class ClientesState {
-  constructor(
-    private clientesService: ClientesService,
-    private _store: Store
-  ) {}
+  private clientesService = inject(ClientesService);
+  private _store = inject(Store);
 
   @Selector()
   static editMode({ editMode }: ClientesStateModel): EditMode {

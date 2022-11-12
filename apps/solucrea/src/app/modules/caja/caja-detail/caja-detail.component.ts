@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -64,15 +65,15 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-  constructor(
-    private _store: Store,
-    private _formBuilder: UntypedFormBuilder,
-    private _actions$: Actions,
-    private _toast: HotToastService,
-    private _route: ActivatedRoute,
-    private _shared: SharedService,
-    private _cdr: ChangeDetectorRef
-  ) {
+  private _store = inject(Store);
+  private _formBuilder = inject(UntypedFormBuilder);
+  private _actions$ = inject(Actions);
+  private _toast = inject(HotToastService);
+  private _route = inject(ActivatedRoute);
+  private _shared = inject(SharedService);
+  private _cdr = inject(ChangeDetectorRef);
+
+  constructor() {
     this.sucursales$ = this._store.select(CajasState.sucursales);
   }
 

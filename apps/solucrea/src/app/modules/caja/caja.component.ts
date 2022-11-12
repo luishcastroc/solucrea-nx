@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -9,9 +10,8 @@ import {
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Store } from '@ngxs/store';
-import { Subject, takeUntil } from 'rxjs';
-
 import { ClearCajasState } from 'app/modules/caja/_store';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-caja',
@@ -25,11 +25,9 @@ export class CajaComponent implements OnInit, OnDestroy {
   drawerOpened: boolean = true;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-  constructor(
-    private _store: Store,
-    private _fuseMediaWatcherService: FuseMediaWatcherService,
-    private _changeDetectorRef: ChangeDetectorRef
-  ) {}
+  private _store = inject(Store);
+  private _fuseMediaWatcherService = inject(FuseMediaWatcherService);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     // Subscribe to media changes

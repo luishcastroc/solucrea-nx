@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Usuario, Prisma } from '@prisma/client';
 import { CreateUsuarioDto, UpdateUsuarioDto } from 'api/dtos';
 import { Observable } from 'rxjs';
@@ -11,11 +11,7 @@ import { environment } from 'apps/solucrea/src/environments/environment';
 })
 export class AjustesUsuarioService {
   private _environment = environment;
-
-  /**
-   * Constructor
-   */
-  constructor(private _httpClient: HttpClient) {}
+  private _httpClient = inject(HttpClient);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Public methods

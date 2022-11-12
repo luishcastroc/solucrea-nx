@@ -1,14 +1,10 @@
 import {
-  Component,
-  OnInit,
   ChangeDetectionStrategy,
-  Inject,
+  Component,
+  inject,
+  OnInit,
 } from '@angular/core';
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-confirmation-dialog',
@@ -19,10 +15,8 @@ import {
 export class ConfirmationDialogComponent implements OnInit {
   title!: string;
   message!: string;
-  constructor(
-    public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  public dialogRef = inject(MatDialogRef<ConfirmationDialogComponent>);
+  public data = inject(MAT_DIALOG_DATA);
 
   ngOnInit(): void {}
 }

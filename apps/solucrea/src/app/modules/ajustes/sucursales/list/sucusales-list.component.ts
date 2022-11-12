@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -36,12 +36,12 @@ export class SucusalesListComponent implements OnInit {
   ];
   activa = true;
 
-  constructor(
-    private _store: Store,
-    private _dialog: MatDialog,
-    private _actions$: Actions,
-    private _toast: HotToastService
-  ) {
+  private _store = inject(Store);
+  private _dialog = inject(MatDialog);
+  private _actions$ = inject(Actions);
+  private _toast = inject(HotToastService);
+
+  constructor() {
     this.sucursales$ = this._store.select(AjustesSucursalesState.sucursales);
     this.loading$ = this._store.select(AjustesSucursalesState.loading);
   }

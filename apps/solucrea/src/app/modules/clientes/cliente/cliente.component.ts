@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   HostListener,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -65,6 +66,9 @@ import {
 export class ClienteComponent
   implements OnInit, OnDestroy, CanDeactivateComponent
 {
+  @ViewChild('stepper')
+  private myStepper!: MatStepper;
+
   config$!: Observable<IConfig | undefined>;
   loading$!: Observable<boolean>;
   editMode$!: Observable<EditMode>;
@@ -93,21 +97,19 @@ export class ClienteComponent
   titleInputMask = createMask({ casing: 'title' });
   loading = false;
 
-  @ViewChild('stepper')
-  private myStepper!: MatStepper;
+  private _store = inject(Store);
+  private _formBuilder = inject(UntypedFormBuilder);
+  private _actions$ = inject(Actions);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _toast = inject(HotToastService);
+  private _clienteService = inject(ClientesService);
+  private _route = inject(ActivatedRoute);
+  private _sharedService = inject(SharedService);
+  private _cdr = inject(ChangeDetectorRef);
+
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-  constructor(
-    private _store: Store,
-    private _formBuilder: UntypedFormBuilder,
-    private _actions$: Actions,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _toast: HotToastService,
-    private _clienteService: ClientesService,
-    private _route: ActivatedRoute,
-    private _sharedService: SharedService,
-    private _cdr: ChangeDetectorRef
-  ) {
+  constructor() {
     this.config$ = this._store.select(ClientesState.config);
     this.loading$ = this._store.select(ClientesState.loading);
     this.editMode$ = this._store.select(ClientesState.editMode);

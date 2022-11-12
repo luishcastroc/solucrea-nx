@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { Store } from '@ngxs/store';
 import { ICreditoReturnDto } from 'api/dtos';
 import { Observable } from 'rxjs';
@@ -14,10 +19,10 @@ export class CreditosPagosListComponent implements OnInit {
   loading$!: Observable<boolean>;
   loading: boolean = false;
   selectedCredito$!: Observable<ICreditoReturnDto | undefined>;
+  private _store = inject(Store);
 
-  constructor(private _store: Store) {
+  constructor() {
     this.loading$ = this._store.select(CreditosState.loading);
-
     this.selectedCredito$ = this._store.select(CreditosState.selectedCredito);
   }
 

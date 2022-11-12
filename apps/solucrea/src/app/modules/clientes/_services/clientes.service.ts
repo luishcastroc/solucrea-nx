@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import {
   CreateClienteDto,
@@ -22,11 +22,7 @@ import { Observable } from 'rxjs';
 })
 export class ClientesService {
   private _environment = environment;
-
-  /**
-   * Constructor
-   */
-  constructor(private _httpClient: HttpClient) {}
+  private _httpClient = inject(HttpClient);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Public methods

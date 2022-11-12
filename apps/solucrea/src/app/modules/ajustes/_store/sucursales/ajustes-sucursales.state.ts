@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { IColoniaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
@@ -34,10 +34,8 @@ import { ChangeSearchFilter } from '.';
 })
 @Injectable()
 export class AjustesSucursalesState {
-  constructor(
-    private _ajustesSucursalesService: AjustesSucursalService,
-    private _clientesService: ClientesService
-  ) {}
+  private _ajustesSucursalesService = inject(AjustesSucursalService);
+  private _clientesService = inject(ClientesService);
 
   @Selector()
   static editMode({ editMode }: AjustesSucursalesStateModel): EditMode {

@@ -1,13 +1,18 @@
-import { GetCreditosCount, SelectCredito } from '../_store/creditos.actions';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatRadioChange } from '@angular/material/radio';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
-import { Actions, ofActionCompleted, Select, Store } from '@ngxs/store';
+import { Actions, ofActionCompleted, Store } from '@ngxs/store';
+import { Status } from '@prisma/client';
 import { IClienteReturnDto, ICreditoReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { CajasMode } from 'app/modules/caja/_store';
@@ -20,8 +25,7 @@ import {
 } from 'app/modules/creditos/_store/';
 import { Observable, tap } from 'rxjs';
 
-import { MatRadioChange } from '@angular/material/radio';
-import { Status } from '@prisma/client';
+import { GetCreditosCount } from '../_store/creditos.actions';
 
 @Component({
   selector: 'app-creditos-cliente-list',
@@ -49,13 +53,12 @@ export class CreditosClienteListComponent implements OnInit {
     autoUnmask: true,
   });
 
-  constructor(
-    private _store: Store,
-    private _dialog: MatDialog,
-    private _actions$: Actions,
-    private _toast: HotToastService,
-    private _route: ActivatedRoute
-  ) {
+  private _store = inject(Store);
+  private _actions$ = inject(Actions);
+  private _toast = inject(HotToastService);
+  private _route = inject(ActivatedRoute);
+
+  constructor() {
     this.creditos$ = this._store.select(CreditosState.creditos);
     this.cliente$ = this._store.select(CreditosState.selectedCliente);
     this.creditosCount$ = this._store.select(CreditosState.creditosCount);

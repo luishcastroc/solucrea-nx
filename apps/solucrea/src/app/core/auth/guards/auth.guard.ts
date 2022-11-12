@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivate,
@@ -23,10 +23,12 @@ import { AuthState } from '../store/auth.state';
 export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
   isAuthenticated$!: Observable<boolean>;
   user$!: Observable<Usuario | undefined>;
+  private _store = inject(Store);
+  private _authService = inject(AuthService);
   /**
    * Constructor
    */
-  constructor(private _store: Store, private _authService: AuthService) {
+  constructor() {
     this.isAuthenticated$ = this._store.select(AuthState.isAuthenticated);
     this.user$ = this._store.select(AuthState.user);
   }

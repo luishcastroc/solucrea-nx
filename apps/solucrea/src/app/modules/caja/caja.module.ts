@@ -20,6 +20,7 @@ import { CajaListComponent } from './caja-list/caja-list.component';
 import { CajaComponent } from './caja.component';
 import { cajaRoutes } from './caja.routing';
 import { MovimientosComponent } from './movimientos/movimientos.component';
+import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { MovimientosComponent } from './movimientos/movimientos.component';
     MatStepperModule,
     SharedModule,
     InputMaskModule,
+    FuseScrollbarModule,
   ],
 })
 export class CajaModule {}

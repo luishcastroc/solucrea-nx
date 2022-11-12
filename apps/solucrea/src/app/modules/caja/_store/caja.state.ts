@@ -4,6 +4,7 @@ import { MovimientoDeCaja } from '@prisma/client';
 import { ICajaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 import { AjustesSucursalService } from 'app/modules/ajustes/_services';
+import { sortBy } from 'lodash';
 import { tap } from 'rxjs';
 
 import { CajaService } from '../_services/caja.service';
@@ -100,7 +101,8 @@ export class CajasState {
   ) {
     return this._cajasService.getMovimientos(id).pipe(
       tap(movimientos => {
-        ctx.patchState({ movimientos });
+        const movimientosSorted = sortBy(movimientos, 'fechaCreacion');
+        ctx.patchState({ movimientos: movimientosSorted });
       })
     );
   }

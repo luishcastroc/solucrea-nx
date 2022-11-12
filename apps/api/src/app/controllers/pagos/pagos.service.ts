@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Pago, Prisma, TipoDePago } from '@prisma/client';
+import { Categoria, Pago, Prisma, TipoDePago } from '@prisma/client';
 import { PrismaService } from 'api/prisma';
 
 import { CreditosService } from '../creditos';
@@ -89,6 +89,7 @@ export class PagosService {
         const createMovimiento: Prisma.MovimientoDeCajaCreateInput = {
           monto,
           tipo: 'DEPOSITO',
+          categoria: Categoria.PAGO,
           observaciones: `Pago crédito ${currentCredito.id}`,
           creadoPor: pago.creadoPor,
           caja: { connect: { id: caja.id } },

@@ -4,6 +4,7 @@ import {
   OnInit,
   ViewEncapsulation,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
 import { ActivatedRoute, Data } from '@angular/router';
 import { FuseNavigationService } from '@fuse/components/navigation';
@@ -21,20 +22,20 @@ import { Observable, Subject, takeUntil } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy {
-  user$: Observable<Usuario | undefined>;
   data!: InitialData;
   isScreenSmall!: boolean;
+  readonly user$: Observable<Usuario | undefined>;
+
   private _unsubscribeAll: Subject<any> = new Subject<any>();
+  private _activatedRoute = inject(ActivatedRoute);
+  private _fuseMediaWatcherService = inject(FuseMediaWatcherService);
+  private _fuseNavigationService = inject(FuseNavigationService);
+  private _store = inject(Store);
 
   /**
    * Constructor
    */
-  constructor(
-    private _activatedRoute: ActivatedRoute,
-    private _fuseMediaWatcherService: FuseMediaWatcherService,
-    private _fuseNavigationService: FuseNavigationService,
-    private _store: Store
-  ) {
+  constructor() {
     this.user$ = this._store.select(AuthState.user);
   }
 

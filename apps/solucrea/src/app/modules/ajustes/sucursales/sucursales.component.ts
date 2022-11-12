@@ -1,11 +1,12 @@
-import { ClearSucursales } from './../_store/sucursales/ajustes-sucursales.actions';
 import {
-  Component,
-  OnInit,
   ChangeDetectionStrategy,
+  Component,
+  inject,
   OnDestroy,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
+
+import { ClearSucursales } from './../_store/sucursales/ajustes-sucursales.actions';
 
 @Component({
   selector: 'app-sucursales',
@@ -13,10 +14,8 @@ import { Store } from '@ngxs/store';
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SucursalesComponent implements OnInit, OnDestroy {
-  constructor(private _store: Store) {}
-
-  ngOnInit(): void {}
+export class SucursalesComponent implements OnDestroy {
+  private _store = inject(Store);
 
   ngOnDestroy(): void {
     this._store.dispatch(new ClearSucursales());

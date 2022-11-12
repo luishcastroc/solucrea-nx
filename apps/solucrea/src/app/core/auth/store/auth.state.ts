@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
@@ -26,7 +26,7 @@ import { AuthStateModel } from './auth.model';
 })
 @Injectable()
 export class AuthState {
-  constructor(private authService: AuthService) {}
+  private authService = inject(AuthService);
 
   @Selector()
   static accessToken(state: AuthStateModel): string {

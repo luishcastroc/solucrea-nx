@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { Pago, Prisma, ReferidoPor, Status } from '@prisma/client';
 import { ISegurosData } from '@solucrea-utils';
@@ -18,11 +18,7 @@ import { forkJoin, map, Observable } from 'rxjs';
 })
 export class CreditosService {
   private _environment = environment;
-
-  /**
-   * Constructor
-   */
-  constructor(private _httpClient: HttpClient) {}
+  private _httpClient = inject(HttpClient);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Public methods

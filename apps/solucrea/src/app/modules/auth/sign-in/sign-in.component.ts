@@ -1,28 +1,24 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import {
+  ChangeDetectorRef,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild,
   ViewEncapsulation,
-  ChangeDetectorRef,
 } from '@angular/core';
 import {
+  NgForm,
   UntypedFormBuilder,
   UntypedFormGroup,
-  NgForm,
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { IAlert } from '@fuse/components/alert/alert.model';
 import { FuseAlertService } from '@fuse/components/alert/alert.service';
-import {
-  Actions,
-  ofActionCompleted,
-  ofActionErrored,
-  Store,
-} from '@ngxs/store';
+import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Login } from 'app/core/auth/';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -50,18 +46,12 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
   };
   signInForm!: UntypedFormGroup;
   private destroy$ = new Subject<any>();
-
-  /**
-   * Constructor
-   */
-  constructor(
-    private _activatedRoute: ActivatedRoute,
-    private _store: Store,
-    private _formBuilder: UntypedFormBuilder,
-    private _actions$: Actions,
-    private _fuseAlertService: FuseAlertService,
-    private _cdr: ChangeDetectorRef
-  ) {}
+  private _activatedRoute = inject(ActivatedRoute);
+  private _store = inject(Store);
+  private _formBuilder = inject(UntypedFormBuilder);
+  private _actions$ = inject(Actions);
+  private _fuseAlertService = inject(FuseAlertService);
+  private _cdr = inject(ChangeDetectorRef);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Lifecycle hooks
@@ -85,7 +75,7 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
 
     this._actions$
       .pipe(ofActionCompleted(Login), takeUntil(this.destroy$))
-      .subscribe(result => {
+      .subscribe((result: { result?: any; action?: any }) => {
         const { error, successful } = result.result;
         const { action } = result;
         const httpError = error as HttpErrorResponse;

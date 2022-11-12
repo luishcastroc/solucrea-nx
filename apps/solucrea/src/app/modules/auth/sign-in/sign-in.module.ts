@@ -6,8 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
-import { FuseAlertModule } from '@fuse/components/alert';
-import { FuseCardModule } from '@fuse/components/card';
+import { FuseAlertComponent } from '@fuse/components/alert';
+import { FuseCardComponent } from '@fuse/components/card';
 import { AuthSignInComponent } from 'app/modules/auth/sign-in/sign-in.component';
 import { authSignInRoutes } from 'app/modules/auth/sign-in/sign-in.routing';
 import { SharedModule } from 'app/shared/shared.module';
@@ -22,8 +22,8 @@ import { SharedModule } from 'app/shared/shared.module';
     MatIconModule,
     MatInputModule,
     MatProgressSpinnerModule,
-    FuseCardModule,
-    FuseAlertModule,
+    FuseCardComponent,
+    FuseAlertComponent,
     SharedModule,
   ],
 })

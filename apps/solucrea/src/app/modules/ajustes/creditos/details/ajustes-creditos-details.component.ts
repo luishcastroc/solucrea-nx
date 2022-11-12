@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  inject,
   OnDestroy,
   OnInit,
 } from '@angular/core';
@@ -17,6 +18,7 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { createMask } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
+import { Producto, TipoPenalizacion } from '@prisma/client';
 import { EditMode } from 'app/core/models';
 import {
   AddCredito,
@@ -31,7 +33,6 @@ import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { dias } from '../../_config/dias';
 import { defaultFrecuencias } from '../../_config/frecuencias';
-import { Producto, TipoPenalizacion } from '@prisma/client';
 
 @Component({
   selector: 'app-details',
@@ -70,15 +71,15 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-  constructor(
-    private _store: Store,
-    private _formBuilder: UntypedFormBuilder,
-    private _actions$: Actions,
-    private _sharedService: SharedService,
-    private _toast: HotToastService,
-    private _route: ActivatedRoute,
-    private _cdr: ChangeDetectorRef
-  ) {
+  private _store = inject(Store);
+  private _actions$ = inject(Actions);
+  private _toast = inject(HotToastService);
+  private _formBuilder = inject(UntypedFormBuilder);
+  private _sharedService = inject(SharedService);
+  private _route = inject(ActivatedRoute);
+  private _cdr = inject(ChangeDetectorRef);
+
+  constructor() {
     this.loading$ = this._store.select(AjustesCreditosState.loading);
   }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { AuthState, UpdateUsuario } from 'app/core/auth';
@@ -29,10 +29,8 @@ import { AjustesUsuariosStateModel } from './ajustes-usuarios.model';
 })
 @Injectable()
 export class AjustesUsuariosState {
-  constructor(
-    private _ajustesUsuarioService: AjustesUsuarioService,
-    private _store: Store
-  ) {}
+  private _ajustesUsuarioService = inject(AjustesUsuarioService);
+  private _store = inject(Store);
 
   @Selector()
   static usuarios({ usuarios }: AjustesUsuariosStateModel): Usuario[] | [] {

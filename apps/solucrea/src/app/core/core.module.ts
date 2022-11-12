@@ -1,4 +1,4 @@
-import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { inject, NgModule, Optional, SkipSelf } from '@angular/core';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -17,16 +17,15 @@ import { AuthInterceptor } from 'app/core/auth/auth.interceptor';
   ],
 })
 export class CoreModule {
+  private _domSanitizer = inject(DomSanitizer);
+  private _matIconRegistry = inject(MatIconRegistry);
+  private parentModule = inject(CoreModule, { optional: true, skipSelf: true });
   /**
    * Constructor
    */
-  constructor(
-    private _domSanitizer: DomSanitizer,
-    private _matIconRegistry: MatIconRegistry,
-    @Optional() @SkipSelf() parentModule?: CoreModule
-  ) {
+  constructor() {
     // Do not allow multiple injections
-    if (parentModule) {
+    if (this.parentModule) {
       throw new Error(
         'CoreModule has already been loaded. Import this module in the AppModule only.'
       );

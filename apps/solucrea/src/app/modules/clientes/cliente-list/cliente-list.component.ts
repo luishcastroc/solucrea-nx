@@ -3,6 +3,7 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  inject,
   OnInit,
 } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
@@ -33,16 +34,15 @@ export class ClienteListComponent implements OnInit, AfterViewInit {
 
   values: string[] = ['Activos', 'Inactivos'];
   active: string = this.values[0];
-  clientes!: IClienteReturnDto[];
   searchValueChanges$!: Observable<string>;
   actions$!: Observable<any>;
   searchInput = new UntypedFormControl();
 
-  constructor(
-    private _store: Store,
-    private _actions$: Actions,
-    private _toast: HotToastService
-  ) {
+  private _store = inject(Store);
+  private _actions$ = inject(Actions);
+  private _toast = inject(HotToastService);
+
+  constructor() {
     this.searchResults$ = this._store.select(ClientesState.clientes);
     this.clientesCount$ = this._store.select(ClientesState.clientesCount);
   }

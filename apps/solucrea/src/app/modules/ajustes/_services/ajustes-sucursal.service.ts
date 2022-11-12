@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { CreateSucursalDto, ISucursalReturnDto } from 'api/dtos';
 import { Observable } from 'rxjs';
 
@@ -11,11 +11,7 @@ import { Prisma } from '@prisma/client';
 })
 export class AjustesSucursalService {
   private _environment = environment;
-
-  /**
-   * Constructor
-   */
-  constructor(private _httpClient: HttpClient) {}
+  private _httpClient = inject(HttpClient);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Public methods

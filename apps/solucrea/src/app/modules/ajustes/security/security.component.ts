@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewEncapsulation,
@@ -36,15 +37,15 @@ export class AjustesSecurityComponent implements OnInit, OnDestroy {
   usuario!: Usuario;
   private _unsubscribeAll: Subject<any>;
 
+  private _store = inject(Store);
+  private _actions$ = inject(Actions);
+  private _toast = inject(HotToastService);
+  private _formBuilder = inject(UntypedFormBuilder);
+
   /**
    * Constructor
    */
-  constructor(
-    private _formBuilder: UntypedFormBuilder,
-    private _store: Store,
-    private _actions$: Actions,
-    private _toast: HotToastService
-  ) {
+  constructor() {
     this._unsubscribeAll = new Subject();
     this.user$ = this._store.select(AjustesUsuariosState.selectedUsuario);
   }

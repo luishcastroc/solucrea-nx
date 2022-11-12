@@ -6,6 +6,7 @@ import {
   Component,
   EventEmitter,
   HostBinding,
+  inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -22,6 +23,9 @@ import {
 } from '@fuse/components/alert/alert.types';
 import { FuseUtilsService } from '@fuse/services/utils/utils.service';
 import { Subject, filter, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 /* eslint-disable arrow-parens */
 @Component({
@@ -32,6 +36,8 @@ import { Subject, filter, takeUntil } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: fuseAnimations,
   exportAs: 'fuseAlert',
+  standalone: true,
+  imports: [CommonModule, MatButtonModule, MatIconModule],
 })
 export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy {
   /* eslint-disable @typescript-eslint/naming-convention */
@@ -43,7 +49,7 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy {
   @Input() appearance: FuseAlertAppearance = 'soft';
   @Input() dismissed: boolean = false;
   @Input() dismissible: boolean = false;
-  @Input() name: string = this._fuseUtilsService.randomId();
+  @Input() name: string;
   @Input() showIcon: boolean = true;
   @Input() type: FuseAlertType = 'primary';
   @Output()
@@ -51,15 +57,16 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy {
   message!: string;
 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _fuseAlertService = inject(FuseAlertService);
+  private _fuseUtilsService = inject(FuseUtilsService);
 
   /**
    * Constructor
    */
-  constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _fuseAlertService: FuseAlertService,
-    private _fuseUtilsService: FuseUtilsService
-  ) {}
+  constructor() {
+    this.name = this._fuseUtilsService.randomId();
+  }
 
   // -----------------------------------------------------------------------------------------------------
   // @ Accessors

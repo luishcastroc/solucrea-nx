@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { ICajaReturnDto } from 'api/dtos';
@@ -14,8 +19,9 @@ import { Observable } from 'rxjs';
 })
 export class CajaListComponent implements OnInit {
   cajas$!: Observable<ICajaReturnDto[]>;
+  private _store = inject(Store);
 
-  constructor(private _store: Store) {
+  constructor() {
     this.cajas$ = this._store.select(CajasState.cajas);
   }
 

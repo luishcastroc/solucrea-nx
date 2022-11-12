@@ -9,6 +9,7 @@ import {
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseCardFace } from '@fuse/components/card/card.types';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'fuse-card',
@@ -17,6 +18,8 @@ import { FuseCardFace } from '@fuse/components/card/card.types';
   encapsulation: ViewEncapsulation.None,
   animations: fuseAnimations,
   exportAs: 'fuseCard',
+  standalone: true,
+  imports: [NgIf],
 })
 export class FuseCardComponent implements OnChanges {
   /* eslint-disable @typescript-eslint/naming-convention */
@@ -27,11 +30,6 @@ export class FuseCardComponent implements OnChanges {
   @Input() expanded: boolean = false;
   @Input() face: FuseCardFace = 'front';
   @Input() flippable: boolean = false;
-
-  /**
-   * Constructor
-   */
-  constructor() {}
 
   // -----------------------------------------------------------------------------------------------------
   // @ Accessors

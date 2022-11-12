@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  inject,
   OnDestroy,
   OnInit,
 } from '@angular/core';
@@ -26,15 +27,15 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
   clienteId!: string | null;
   orientation: StepperOrientation = 'horizontal';
 
+  private _store = inject(Store);
+  private location = inject(Location);
+  private _route = inject(ActivatedRoute);
+  private _cdr = inject(ChangeDetectorRef);
+  private _fuseMediaWatcherService = inject(FuseMediaWatcherService);
+
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-  constructor(
-    private _store: Store,
-    private location: Location,
-    private _route: ActivatedRoute,
-    private _cdr: ChangeDetectorRef,
-    private _fuseMediaWatcherService: FuseMediaWatcherService
-  ) {
+  constructor() {
     this.editMode$ = this._store.select(CreditosState.editMode);
   }
 

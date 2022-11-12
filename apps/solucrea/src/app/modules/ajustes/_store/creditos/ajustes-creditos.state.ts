@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { EditMode } from 'app/core/models';
 import { AjustesCreditosService } from 'app/modules/ajustes/_services';
@@ -29,7 +29,7 @@ import { Producto } from '@prisma/client';
 })
 @Injectable()
 export class AjustesCreditosState {
-  constructor(private _ajustesCreditosService: AjustesCreditosService) {}
+  private _ajustesCreditosService = inject(AjustesCreditosService);
 
   @Selector()
   static editMode({ editMode }: AjustesCreditosStateModel): EditMode {

@@ -10,6 +10,7 @@ import {
   EventEmitter,
   HostBinding,
   HostListener,
+  inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -73,7 +74,7 @@ export class FuseVerticalNavigationComponent
   @Input() autoCollapse: boolean = true;
   @Input() inner: boolean = false;
   @Input() mode: FuseVerticalNavigationMode = 'side';
-  @Input() name: string = this._fuseUtilsService.randomId();
+  @Input() name: string;
   @Input()
   navigation: FuseNavigationItem[] = [];
   @Input() opened: boolean = true;
@@ -93,8 +94,18 @@ export class FuseVerticalNavigationComponent
   onCollapsableItemExpanded: ReplaySubject<FuseNavigationItem> =
     new ReplaySubject<FuseNavigationItem>(1);
   onRefreshed: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   @ViewChild('navigationContent')
   private _navigationContentEl!: ElementRef;
+
+  private _animationBuilder = inject(AnimationBuilder);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _elementRef = inject(ElementRef);
+  private _renderer2 = inject(Renderer2);
+  private _router = inject(Router);
+  private _scrollStrategyOptions = inject(ScrollStrategyOptions);
+  private _fuseNavigationService = inject(FuseNavigationService);
+  private _fuseUtilsService = inject(FuseUtilsService);
 
   private _animationsEnabled: boolean = false;
   private _asideOverlay!: HTMLElement | null;
@@ -112,22 +123,14 @@ export class FuseVerticalNavigationComponent
   /**
    * Constructor
    */
-  constructor(
-    private _animationBuilder: AnimationBuilder,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _elementRef: ElementRef,
-    private _renderer2: Renderer2,
-    private _router: Router,
-    private _scrollStrategyOptions: ScrollStrategyOptions,
-    private _fuseNavigationService: FuseNavigationService,
-    private _fuseUtilsService: FuseUtilsService
-  ) {
+  constructor() {
     this._handleAsideOverlayClick = () => {
       this.closeAside();
     };
     this._handleOverlayClick = () => {
       this.close();
     };
+    this.name = this._fuseUtilsService.randomId();
   }
 
   // -----------------------------------------------------------------------------------------------------
@@ -193,6 +196,38 @@ export class FuseVerticalNavigationComponent
           fuseScrollbarDirective.update();
         });
       });
+  }
+
+  // -----------------------------------------------------------------------------------------------------
+  // @ Decorated methods
+  // -----------------------------------------------------------------------------------------------------
+
+  /**
+   * On mouseenter
+   *
+   * @private
+   */
+  @HostListener('mouseenter')
+  private _onMouseenter(): void {
+    // Enable the animations
+    this._enableAnimations();
+
+    // Set the hovered
+    this._hovered = true;
+  }
+
+  /**
+   * On mouseleave
+   *
+   * @private
+   */
+  @HostListener('mouseleave')
+  private _onMouseleave(): void {
+    // Enable the animations
+    this._enableAnimations();
+
+    // Set the hovered
+    this._hovered = false;
   }
 
   // -----------------------------------------------------------------------------------------------------
@@ -487,38 +522,6 @@ export class FuseVerticalNavigationComponent
    */
   trackByFn(index: number, item: any): any {
     return item.id || index;
-  }
-
-  // -----------------------------------------------------------------------------------------------------
-  // @ Decorated methods
-  // -----------------------------------------------------------------------------------------------------
-
-  /**
-   * On mouseenter
-   *
-   * @private
-   */
-  @HostListener('mouseenter')
-  private _onMouseenter(): void {
-    // Enable the animations
-    this._enableAnimations();
-
-    // Set the hovered
-    this._hovered = true;
-  }
-
-  /**
-   * On mouseleave
-   *
-   * @private
-   */
-  @HostListener('mouseleave')
-  private _onMouseleave(): void {
-    // Enable the animations
-    this._enableAnimations();
-
-    // Set the hovered
-    this._hovered = false;
   }
 
   // -----------------------------------------------------------------------------------------------------

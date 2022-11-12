@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -54,17 +55,17 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
+  private _formBuilder = inject(UntypedFormBuilder);
+  private _store = inject(Store);
+  private _actions$ = inject(Actions);
+  private _route = inject(ActivatedRoute);
+  private _toast = inject(HotToastService);
+  private _cdr = inject(ChangeDetectorRef);
+
   /**
    * Constructor
    */
-  constructor(
-    private _formBuilder: UntypedFormBuilder,
-    private _store: Store,
-    private _actions$: Actions,
-    private _route: ActivatedRoute,
-    private _toast: HotToastService,
-    private _cdr: ChangeDetectorRef
-  ) {}
+  constructor() {}
 
   get password() {
     return this.usuarioForm.controls['password'];

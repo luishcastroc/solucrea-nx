@@ -5,7 +5,7 @@ import {
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { AuthUtils } from 'app/core/auth/auth.utils';
@@ -15,10 +15,7 @@ import { Logout, AuthState } from 'app/core/auth';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  /**
-   * Constructor
-   */
-  constructor(private _store: Store) {}
+  private _store = inject(Store);
 
   /**
    * Intercept

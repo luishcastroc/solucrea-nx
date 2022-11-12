@@ -194,6 +194,16 @@ enum TiposMovimiento {
     RETIRO
 }
 
+enum Categoria {
+    PRESTAMO
+    COMISION
+    ADMINISTRATIVO
+    MISCELANEO
+    APERTURA
+    CIERRE
+    PAGO
+}
+
 enum Frecuencia {
     DIARIO
     SEMANAL
@@ -293,6 +303,7 @@ model MovimientoDeCaja {
     id                 String          @id @default(uuid())
     monto              Decimal         @db.Decimal(15, 2)
     tipo               TiposMovimiento
+    categoria          Categoria?
     observaciones      String
     creadoPor          String
     fechaCreacion      DateTime        @default(now())

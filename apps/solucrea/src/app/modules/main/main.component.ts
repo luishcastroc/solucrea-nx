@@ -5,9 +5,4 @@ import { Component, ViewEncapsulation } from '@angular/core';
   templateUrl: './main.component.html',
   encapsulation: ViewEncapsulation.None,
 })
-export class MainComponent {
-  /**
-   * Constructor
-   */
-  constructor() {}
-}
+export class MainComponent {}

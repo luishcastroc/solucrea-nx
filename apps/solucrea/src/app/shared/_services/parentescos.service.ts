@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { IParentescoReturnDto } from 'api/dtos';
 import { environment } from 'apps/solucrea/src/environments/environment';
 import { Observable } from 'rxjs';
@@ -9,11 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class ParentescosService {
   private _environment = environment;
-
-  /**
-   * Constructor
-   */
-  constructor(private _httpClient: HttpClient) {}
+  private _httpClient = inject(HttpClient);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Public methods

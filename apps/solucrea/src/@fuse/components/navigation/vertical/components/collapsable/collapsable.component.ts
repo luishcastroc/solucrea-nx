@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   HostBinding,
+  inject,
   Input,
   OnDestroy,
   OnInit,
@@ -41,15 +42,9 @@ export class FuseVerticalNavigationCollapsableItemComponent
   isExpanded: boolean = false;
   private _fuseVerticalNavigationComponent!: FuseVerticalNavigationComponent;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
-
-  /**
-   * Constructor
-   */
-  constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _router: Router,
-    private _fuseNavigationService: FuseNavigationService
-  ) {}
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _router = inject(Router);
+  private _fuseNavigationService = inject(FuseNavigationService);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Accessors

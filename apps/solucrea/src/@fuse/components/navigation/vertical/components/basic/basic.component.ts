@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  inject,
   Input,
   OnDestroy,
   OnInit,
@@ -28,15 +29,8 @@ export class FuseVerticalNavigationBasicItemComponent
 
   private _fuseVerticalNavigationComponent!: FuseVerticalNavigationComponent;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
-
-  /**
-   * Constructor
-   */
-  constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _fuseNavigationService: FuseNavigationService,
-    private _fuseUtilsService: FuseUtilsService
-  ) {}
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _fuseNavigationService = inject(FuseNavigationService);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Lifecycle hooks

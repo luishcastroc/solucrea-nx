@@ -1,22 +1,22 @@
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { Platform } from '@angular/cdk/platform';
 import {
   Directive,
   ElementRef,
+  inject,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { Router } from '@angular/router';
-import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Platform } from '@angular/cdk/platform';
-import { fromEvent, Subject, debounceTime, takeUntil } from 'rxjs';
-import PerfectScrollbar from 'perfect-scrollbar';
-import { merge } from 'lodash-es';
 import {
   ScrollbarGeometry,
   ScrollbarPosition,
 } from '@fuse/directives/scrollbar/scrollbar.types';
+import { merge } from 'lodash-es';
+import PerfectScrollbar from 'perfect-scrollbar';
+import { debounceTime, fromEvent, Subject, takeUntil } from 'rxjs';
 
 /**
  * Wrapper directive for the Perfect Scrollbar: https://github.com/mdbootstrap/perfect-scrollbar
@@ -38,15 +38,8 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy {
   private _options!: PerfectScrollbar.Options;
   private _ps!: PerfectScrollbar | null;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
-
-  /**
-   * Constructor
-   */
-  constructor(
-    private _elementRef: ElementRef,
-    private _platform: Platform,
-    private _router: Router
-  ) {}
+  private _elementRef = inject(ElementRef);
+  private _platform = inject(Platform);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Accessors

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewEncapsulation,
@@ -23,10 +24,11 @@ export class AjustesTeamComponent implements OnInit, OnDestroy {
   usuario$!: Observable<Usuario | undefined>;
   usuario: Usuario | undefined;
   private _unsubscribeAll: Subject<any>;
+  private _store = inject(Store);
   /**
    * Constructor
    */
-  constructor(private _store: Store) {
+  constructor() {
     this._unsubscribeAll = new Subject();
     this.usuario$ = this._store.select(AuthState.user);
   }

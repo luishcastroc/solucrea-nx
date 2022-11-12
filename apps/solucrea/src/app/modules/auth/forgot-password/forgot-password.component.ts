@@ -1,16 +1,23 @@
 /* eslint-disable quotes */
 /* eslint-disable @typescript-eslint/quotes */
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
+  Component,
+  inject,
+  Inject,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import {
+  NgForm,
   UntypedFormBuilder,
   UntypedFormGroup,
-  NgForm,
   Validators,
 } from '@angular/forms';
-import { finalize } from 'rxjs';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'auth-forgot-password',
@@ -28,14 +35,8 @@ export class AuthForgotPasswordComponent implements OnInit {
   };
   forgotPasswordForm!: UntypedFormGroup;
   showAlert: boolean = false;
-
-  /**
-   * Constructor
-   */
-  constructor(
-    private _authService: AuthService,
-    private _formBuilder: UntypedFormBuilder
-  ) {}
+  private _authService = inject(AuthService);
+  private _formBuilder = inject(UntypedFormBuilder);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Lifecycle hooks

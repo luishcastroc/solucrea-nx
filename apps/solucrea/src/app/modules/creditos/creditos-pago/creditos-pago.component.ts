@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  inject,
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
@@ -47,13 +48,13 @@ export class CreditosPagoComponent implements OnInit {
     autoUnmask: true,
   });
 
-  constructor(
-    private _store: Store,
-    private _actions$: Actions,
-    private _toast: HotToastService,
-    private _formBuilder: UntypedFormBuilder,
-    private _cdr: ChangeDetectorRef
-  ) {
+  private _store = inject(Store);
+  private _actions$ = inject(Actions);
+  private _toast = inject(HotToastService);
+  private _formBuilder = inject(UntypedFormBuilder);
+  private _cdr = inject(ChangeDetectorRef);
+
+  constructor() {
     this.loading$ = this._store.select(CreditosState.loading);
     this.cobratarios$ = this._store.select(CreditosState.cobratarios);
     this.actions$ = this._actions$.pipe(

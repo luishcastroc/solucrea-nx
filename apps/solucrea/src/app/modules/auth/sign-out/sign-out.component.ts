@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Logout } from 'app/core/auth';
@@ -18,11 +24,7 @@ export class AuthSignOutComponent implements OnInit, OnDestroy {
     other: '# seconds',
   };
   private _unsubscribeAll: Subject<any> = new Subject<any>();
-
-  /**
-   * Constructor
-   */
-  constructor(private _store: Store) {}
+  private _store = inject(Store);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Lifecycle hooks

@@ -4,8 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class SharedService {
-  constructor() {}
-
   /**
    * return the dirty values if a reactiveForm
    *
