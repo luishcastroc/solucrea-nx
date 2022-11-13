@@ -8,9 +8,9 @@ import {
   ClearUsuarios,
   ClearUsuarioState,
   SelectUsuario,
-} from 'app/modules/ajustes/_store/';
-import { ClearCajasState } from 'app/modules/caja/_store/caja.actions';
-import { ClearClientesState } from 'app/modules/clientes/_store/clientes.actions';
+} from 'app/pages/ajustes/_store';
+import { ClearCajasState } from 'app/pages/caja/_store/caja.actions';
+import { ClearClientesState } from 'app/pages/clientes/_store/clientes.actions';
 import { tap, throwError } from 'rxjs';
 
 import { AuthService } from '../auth.service';

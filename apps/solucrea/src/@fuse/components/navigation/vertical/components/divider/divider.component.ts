@@ -11,12 +11,17 @@ import { Subject, takeUntil } from 'rxjs';
 import { FuseVerticalNavigationComponent } from '@fuse/components/navigation/vertical/vertical.component';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'fuse-vertical-navigation-divider-item',
-  templateUrl: './divider.component.html',
+  template: `<div
+    class="fuse-vertical-navigation-item-wrapper divider"
+    [ngClass]="$any(item.classes?.wrapper)"></div>`,
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [NgClass],
 })
 export class FuseVerticalNavigationDividerItemComponent
   implements OnInit, OnDestroy

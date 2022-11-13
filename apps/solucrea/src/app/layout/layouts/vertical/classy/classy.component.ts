@@ -1,11 +1,11 @@
 import { AsyncPipe, NgIf } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewEncapsulation,
-  ChangeDetectionStrategy,
-  inject,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Data, RouterOutlet } from '@angular/router';
@@ -18,7 +18,7 @@ import { Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { InitialData } from 'app/app.types';
 import { AuthState } from 'app/core/auth/store/auth.state';
-import { UserMenuModule } from 'app/layout/common/user-menu/user-menu.module';
+import { UserMenuComponent } from 'app/layout/common/user-menu/user-menu.component';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -29,7 +29,7 @@ import { Observable, Subject, takeUntil } from 'rxjs';
   standalone: true,
   imports: [
     FuseNavigationModule,
-    UserMenuModule,
+    UserMenuComponent,
     MatIconModule,
     RouterOutlet,
     NgIf,

@@ -9,8 +9,11 @@ import {
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { Navigate } from '@ngxs/router-plugin';
-import { Select, Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { AuthState } from 'app/core/auth/store/auth.state';
 import { Observable, Subject, takeUntil } from 'rxjs';
@@ -21,6 +24,8 @@ import { Observable, Subject, takeUntil } from 'rxjs';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   exportAs: 'userMenu',
+  standalone: true,
+  imports: [MatIconModule, MatMenuModule, MatDividerModule],
 })
 export class UserMenuComponent implements OnInit, OnDestroy {
   // eslint-disable-next-line @typescript-eslint/naming-convention

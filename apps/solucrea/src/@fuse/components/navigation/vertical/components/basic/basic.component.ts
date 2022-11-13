@@ -12,12 +12,31 @@ import { FuseVerticalNavigationComponent } from '@fuse/components/navigation/ver
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
 import { FuseUtilsService } from '@fuse/services/utils/utils.service';
+import {
+  RouterLink,
+  RouterLinkActive,
+  RouterLinkWithHref,
+} from '@angular/router';
+import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { VerifyRoleDirective } from 'app/core/auth';
 
 @Component({
   selector: 'fuse-vertical-navigation-basic-item',
   templateUrl: './basic.component.html',
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    RouterLink,
+    RouterLinkWithHref,
+    RouterLinkActive,
+    NgClass,
+    NgIf,
+    MatIconModule,
+    VerifyRoleDirective,
+    NgTemplateOutlet,
+  ],
 })
 export class FuseVerticalNavigationBasicItemComponent
   implements OnInit, OnDestroy

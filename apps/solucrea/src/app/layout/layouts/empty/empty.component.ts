@@ -5,7 +5,14 @@ import { Subject } from 'rxjs';
 
 @Component({
   selector: 'empty-layout',
-  templateUrl: './empty.component.html',
+  template: `<div class="flex w-full flex-auto flex-col">
+    <!-- Content -->
+    <div class="flex flex-auto flex-col">
+      <!-- *ngIf="true" hack is required here for router-outlet to work correctly.
+             Otherwise, layout changes won't be registered and the view won't be updated! -->
+      <router-outlet *ngIf="true"></router-outlet>
+    </div>
+  </div>`,
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [RouterOutlet, NgIf],

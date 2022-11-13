@@ -1,13 +1,13 @@
 import { importProvidersFrom } from '@angular/core';
-import { MatDialogModule } from '@angular/material/dialog';
 import { Route } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import { Role } from '@prisma/client';
 import { InitialDataResolver } from 'app/app.resolvers';
 import { AuthGuard, NoAuthGuard } from 'app/core/auth/guards';
 import { LayoutComponent } from 'app/layout/layout.component';
-import { CajasState } from './modules/caja/_store';
-import { ClientesState } from './modules/clientes/_store';
+
+import { CajasState } from './pages/caja/_store';
+import { ClientesState } from './pages/clientes/_store';
 
 /* eslint-disable arrow-parens */
 // @formatter:off
@@ -28,7 +28,8 @@ export const appRoutes: Route[] = [
     path: '',
     canActivate: [NoAuthGuard],
     canActivateChild: [NoAuthGuard],
-    component: LayoutComponent,
+    loadComponent: () =>
+      import('./layout/layout.component').then(com => com.LayoutComponent),
     data: {
       layout: 'empty',
     },
@@ -36,21 +37,21 @@ export const appRoutes: Route[] = [
       {
         path: 'forgot-password',
         loadChildren: () =>
-          import(
-            'app/modules/auth/forgot-password/forgot-password.module'
-          ).then(m => m.AuthForgotPasswordModule),
+          import('app/pages/auth/forgot-password/forgot-password.module').then(
+            m => m.AuthForgotPasswordModule
+          ),
       },
       {
         path: 'reset-password',
         loadChildren: () =>
-          import('app/modules/auth/reset-password/reset-password.module').then(
+          import('app/pages/auth/reset-password/reset-password.module').then(
             m => m.AuthResetPasswordModule
           ),
       },
       {
         path: 'sign-in',
         loadChildren: () =>
-          import('app/modules/auth/sign-in/sign-in.routing').then(
+          import('app/pages/auth/sign-in/sign-in.routing').then(
             m => m.authSignInRoutes
           ),
       },
@@ -70,7 +71,7 @@ export const appRoutes: Route[] = [
       {
         path: 'sign-out',
         loadChildren: () =>
-          import('app/modules/auth/sign-out/sign-out.routing').then(
+          import('app/pages/auth/sign-out/sign-out.routing').then(
             m => m.authSignOutRoutes
           ),
       },
@@ -93,12 +94,12 @@ export const appRoutes: Route[] = [
       {
         path: 'main',
         loadChildren: () =>
-          import('app/modules/main/main.routing').then(m => m.mainRoutes),
+          import('app/pages/main/main.routing').then(m => m.mainRoutes),
       },
       {
         path: 'clientes',
         loadChildren: () =>
-          import('app/modules/clientes/clientes.routing').then(
+          import('app/pages/clientes/clientes.routing').then(
             m => m.clientesRoutes
           ),
         providers: [
@@ -108,21 +109,21 @@ export const appRoutes: Route[] = [
       {
         path: 'creditos',
         loadChildren: () =>
-          import('app/modules/creditos/creditos.routing').then(
+          import('app/pages/creditos/creditos.routing').then(
             m => m.creditosRoutes
           ),
       },
       {
         path: 'mutualcrea',
         loadChildren: () =>
-          import('app/modules/mutualcrea/mutualcrea.routing').then(
+          import('app/pages/mutualcrea/mutualcrea.routing').then(
             m => m.mutualcreaRoutes
           ),
       },
       {
         path: 'reportes',
         loadChildren: () =>
-          import('app/modules/reportes/reportes.routing').then(
+          import('app/pages/reportes/reportes.routing').then(
             m => m.reportesRoutes
           ),
       },
@@ -131,13 +132,13 @@ export const appRoutes: Route[] = [
         canLoad: [AuthGuard],
         data: { roles: [Role.ADMIN, Role.CAJERO, Role.DIRECTOR, Role.MANAGER] },
         loadChildren: () =>
-          import('app/modules/caja/caja.routing').then(m => m.cajaRoutes),
+          import('app/pages/caja/caja.routing').then(m => m.cajaRoutes),
         providers: [importProvidersFrom(NgxsModule.forFeature([CajasState]))],
       },
       {
         path: 'ajustes',
         loadChildren: () =>
-          import('app/modules/ajustes/ajustes.routing').then(
+          import('app/pages/ajustes/ajustes.routing').then(
             m => m.ajustesRoutes
           ),
       },
