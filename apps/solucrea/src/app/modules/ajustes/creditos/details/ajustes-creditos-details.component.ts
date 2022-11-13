@@ -8,6 +8,8 @@ import {
   OnInit,
 } from '@angular/core';
 import {
+  FormsModule,
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormControl,
   UntypedFormGroup,
@@ -15,7 +17,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
-import { createMask } from '@ngneat/input-mask';
+import { createMask, InputMaskModule } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Producto, TipoPenalizacion } from '@prisma/client';
@@ -33,12 +35,35 @@ import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { dias } from '../../_config/dias';
 import { defaultFrecuencias } from '../../_config/frecuencias';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { AsyncPipe, NgFor, NgIf, TitleCasePipe } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-details',
   templateUrl: './ajustes-creditos-details.component.html',
   styleUrls: ['./ajustes-creditos-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatButtonModule,
+    InputMaskModule,
+    MatInputModule,
+    NgIf,
+    NgFor,
+    TitleCasePipe,
+    AsyncPipe,
+  ],
 })
 export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
   loading$!: Observable<boolean>;

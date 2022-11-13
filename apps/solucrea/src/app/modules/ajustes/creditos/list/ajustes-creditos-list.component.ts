@@ -1,12 +1,29 @@
+import {
+  AsyncPipe,
+  CurrencyPipe,
+  NgFor,
+  NgIf,
+  TitleCasePipe,
+} from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormControl,
+} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
@@ -21,6 +38,7 @@ import {
   GetAllCreditos,
 } from 'app/modules/ajustes/_store';
 import { ConfirmationDialogComponent } from 'app/shared';
+import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
 import {
   map,
   Observable,
@@ -36,6 +54,22 @@ import {
   templateUrl: './ajustes-creditos-list.component.html',
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatProgressSpinnerModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatRadioModule,
+    FormsModule,
+    NgIf,
+    NgFor,
+    AsyncPipe,
+    TitleCasePipe,
+    CurrencyPipe,
+    DecimalToNumberPipe,
+  ],
 })
 export class AjustesCreditosListComponent implements OnInit, OnDestroy {
   creditos$!: Observable<Producto[]>;
@@ -50,13 +84,12 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
   activo = true;
 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
+  private _store = inject(Store);
+  private _dialog = inject(MatDialog);
+  private _actions$ = inject(Actions);
+  private _toast = inject(HotToastService);
 
-  constructor(
-    private _store: Store,
-    private _dialog: MatDialog,
-    private _actions$: Actions,
-    private _toast: HotToastService
-  ) {
+  constructor() {
     this.actions$ = this.subscribeToActions();
     this.creditos$ = this._store.select(AjustesCreditosState.creditos);
     this.loading$ = this._store.select(AjustesCreditosState.loading);

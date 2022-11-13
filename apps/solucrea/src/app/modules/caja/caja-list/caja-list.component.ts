@@ -1,14 +1,26 @@
 import {
+  AsyncPipe,
+  CurrencyPipe,
+  DatePipe,
+  NgFor,
+  NgIf,
+} from '@angular/common';
+import {
   ChangeDetectionStrategy,
   Component,
   inject,
   OnInit,
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { ICajaReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { CajasMode, CajasState, GetAll } from 'app/modules/caja/_store';
+import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -16,6 +28,19 @@ import { Observable } from 'rxjs';
   templateUrl: './caja-list.component.html',
   styleUrls: ['./caja-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatIconModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
+    DecimalToNumberPipe,
+    CurrencyPipe,
+    DatePipe,
+    AsyncPipe,
+    NgFor,
+    NgIf,
+  ],
 })
 export class CajaListComponent implements OnInit {
   cajas$!: Observable<ICajaReturnDto[]>;

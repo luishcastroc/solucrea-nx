@@ -1,3 +1,4 @@
+import { AsyncPipe, NgIf } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -6,7 +7,17 @@ import {
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { fuseAnimations } from '@fuse/animations/public-api';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
@@ -22,6 +33,18 @@ import { Observable, tap } from 'rxjs';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: fuseAnimations,
+  standalone: true,
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatIconModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    NgIf,
+    AsyncPipe,
+  ],
 })
 export class AjustesAccountComponent implements OnInit {
   user$!: Observable<Usuario | undefined>;

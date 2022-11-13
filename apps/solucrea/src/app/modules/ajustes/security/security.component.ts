@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators,
@@ -24,12 +25,27 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 import { EditUsuario } from '../_store/usuarios/ajustes-usuarios.actions';
 import { AjustesUsuariosState } from '../_store/usuarios/ajustes-usuarios.state';
 import { createPasswordStrengthValidator } from '../validators/custom-ajustes.validators';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'settings-security',
   templateUrl: './security.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatInputModule,
+    MatIconModule,
+    NgFor,
+    NgIf,
+  ],
 })
 export class AjustesSecurityComponent implements OnInit, OnDestroy {
   user$!: Observable<Usuario | undefined>;

@@ -1,13 +1,28 @@
-import { Location } from '@angular/common';
+import {
+  AsyncPipe,
+  CurrencyPipe,
+  DatePipe,
+  Location,
+  NgFor,
+  NgIf,
+  SlicePipe,
+} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   inject,
   OnInit,
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
+import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 import { Store } from '@ngxs/store';
 import { ICreditoReturnDto } from 'api/dtos';
+import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
 import { Observable } from 'rxjs';
 
 import {
@@ -21,6 +36,22 @@ import {
   selector: 'app-creditos-info',
   templateUrl: './creditos-info.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatTooltipModule,
+    MatIconModule,
+    FuseScrollbarModule,
+    MatStepperModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    SlicePipe,
+    AsyncPipe,
+    CurrencyPipe,
+    DecimalToNumberPipe,
+    DatePipe,
+    NgIf,
+    NgFor,
+  ],
 })
 export class CreditosInfoComponent implements OnInit {
   loading$!: Observable<boolean>;

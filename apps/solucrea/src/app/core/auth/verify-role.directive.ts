@@ -15,6 +15,7 @@ import { AuthState } from './store/auth.state';
 
 @Directive({
   selector: '[verifyRole]',
+  standalone: true,
 })
 export class VerifyRoleDirective implements OnInit, OnDestroy {
   roles!: Role[];

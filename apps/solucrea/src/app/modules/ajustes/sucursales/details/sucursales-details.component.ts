@@ -1,3 +1,4 @@
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -8,14 +9,24 @@ import {
   OnInit,
 } from '@angular/core';
 import {
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormControl,
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import {
+  MatFormFieldControl,
+  MatFormFieldModule,
+} from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
-import { createMask } from '@ngneat/input-mask';
+import { createMask, InputMaskModule } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { TipoDireccion } from '@prisma/client';
@@ -37,6 +48,20 @@ import { Observable, Subject, takeUntil, tap } from 'rxjs';
   templateUrl: './sucursales-details.component.html',
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    InputMaskModule,
+    NgIf,
+    NgFor,
+    AsyncPipe,
+  ],
 })
 export class SucursalesDetailsComponent implements OnInit, OnDestroy {
   loading$!: Observable<boolean>;

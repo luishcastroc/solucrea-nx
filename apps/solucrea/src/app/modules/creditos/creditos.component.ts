@@ -13,11 +13,14 @@ import { Store } from '@ngxs/store';
 import { Subject, takeUntil } from 'rxjs';
 
 import { ClearCreditosState } from 'app/modules/creditos/_store/';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-creditos',
-  templateUrl: './creditos.component.html',
+  template: '<router-outlet></router-outlet>',
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [RouterOutlet],
 })
 export class CreditosComponent implements OnInit, OnDestroy {
   @ViewChild('drawer')

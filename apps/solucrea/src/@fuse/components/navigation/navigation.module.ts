@@ -19,6 +19,7 @@ import { FuseVerticalNavigationGroupItemComponent } from '@fuse/components/navig
 import { FuseVerticalNavigationSpacerItemComponent } from '@fuse/components/navigation/vertical/components/spacer/spacer.component';
 import { FuseVerticalNavigationComponent } from '@fuse/components/navigation/vertical/vertical.component';
 import { FuseScrollbarModule } from '@fuse/directives/scrollbar/public-api';
+import { VerifyRoleDirective } from 'app/core/auth';
 import { SharedModule } from 'app/shared/shared.module';
 
 @NgModule({
@@ -37,6 +38,7 @@ import { SharedModule } from 'app/shared/shared.module';
     FuseVerticalNavigationComponent,
   ],
   imports: [
+    VerifyRoleDirective,
     CommonModule,
     RouterModule,
     MatButtonModule,

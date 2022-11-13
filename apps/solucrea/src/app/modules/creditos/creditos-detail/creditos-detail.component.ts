@@ -1,5 +1,11 @@
 import { StepperOrientation } from '@angular/cdk/stepper';
-import { Location } from '@angular/common';
+import {
+  AsyncPipe,
+  Location,
+  NgSwitch,
+  NgSwitchCase,
+  NgSwitchDefault,
+} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -14,6 +20,10 @@ import { Store } from '@ngxs/store';
 import { EditMode } from 'app/core/models';
 import { ClearCreditosDetails } from 'app/modules/creditos/_store/';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { CreditosInfoComponent } from '../creditos-info/creditos-info.component';
+import { CreditosNewComponent } from '../creditos-new/creditos-new.component';
+import { CreditosPagoComponent } from '../creditos-pago/creditos-pago.component';
+import { CreditosPagosListComponent } from '../creditos-pagos-list/creditos-pagos-list.component';
 
 import { CreditosState } from './../_store/creditos.state';
 
@@ -21,6 +31,17 @@ import { CreditosState } from './../_store/creditos.state';
   selector: 'app-creditos-detail',
   templateUrl: './creditos-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    NgSwitch,
+    NgSwitchCase,
+    NgSwitchDefault,
+    CreditosInfoComponent,
+    CreditosPagoComponent,
+    CreditosPagosListComponent,
+    CreditosNewComponent,
+    AsyncPipe,
+  ],
 })
 export class CreditosDetailComponent implements OnInit, OnDestroy {
   editMode$!: Observable<EditMode>;

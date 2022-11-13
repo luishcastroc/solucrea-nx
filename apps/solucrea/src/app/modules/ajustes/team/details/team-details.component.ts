@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import {
   FormGroupDirective,
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators,
@@ -32,6 +33,20 @@ import { Observable, Subject, tap } from 'rxjs';
 import { defaultRoles } from '../../_config/roles';
 import { IRole } from '../../models/roles.model';
 import { createPasswordStrengthValidator } from '../../validators/custom-ajustes.validators';
+import {
+  AsyncPipe,
+  NgFor,
+  NgIf,
+  NgSwitch,
+  NgSwitchCase,
+  TitleCasePipe,
+} from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'team-details',
@@ -39,6 +54,22 @@ import { createPasswordStrengthValidator } from '../../validators/custom-ajustes
   styleUrls: [],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    NgSwitchCase,
+    MatFormFieldModule,
+    MatIconModule,
+    ReactiveFormsModule,
+    NgSwitch,
+    NgIf,
+    AsyncPipe,
+    MatSelectModule,
+    TitleCasePipe,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    NgFor,
+    MatInputModule,
+  ],
 })
 export class TeamDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('formDirective') formDirective!: FormGroupDirective;
@@ -144,12 +175,11 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
         }
         if (successful) {
           const message = this.successMessage;
+          this._toast.success(message, {
+            duration: 4000,
+            position: 'bottom-center',
+          });
           if (action instanceof AddUsuario) {
-            this._toast.success(message, {
-              duration: 4000,
-              position: 'bottom-center',
-            });
-
             this.usuarioForm.reset();
             this.formDirective.resetForm();
           }

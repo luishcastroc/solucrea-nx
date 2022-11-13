@@ -1,3 +1,4 @@
+import { AsyncPipe, NgIf } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -10,13 +11,24 @@ import {
 } from '@angular/core';
 import {
   FormGroupDirective,
+  FormsModule,
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+import { MatLuxonDateModule } from '@angular/material-luxon-adapter';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
-import { createMask } from '@ngneat/input-mask';
+import { createMask, InputMaskModule } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { CreateCajaDto, ICajaReturnDto, ISucursalReturnDto } from 'api/dtos';
@@ -43,6 +55,23 @@ import {
   templateUrl: './caja-detail.component.html',
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatTooltipModule,
+    MatIconModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatDatepickerModule,
+    MatLuxonDateModule,
+    MatSelectModule,
+    InputMaskModule,
+    MatProgressSpinnerModule,
+    NgIf,
+    AsyncPipe,
+  ],
 })
 export class CajaDetailComponent implements OnInit, OnDestroy {
   @ViewChild('formDirective') formDirective!: FormGroupDirective;

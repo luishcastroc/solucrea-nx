@@ -1,22 +1,18 @@
+import { importProvidersFrom } from '@angular/core';
 import { Route } from '@angular/router';
+import { NgxsModule } from '@ngxs/store';
 
-import { AjustesAccountComponent } from './account/account.component';
-import { AjustesComponent } from './ajustes.component';
-import { AjustesCreditosComponent } from './creditos/ajustes-creditos.component';
-import { AjustesCreditosDetailsComponent } from './creditos/details/ajustes-creditos-details.component';
-import { AjustesCreditosListComponent } from './creditos/list/ajustes-creditos-list.component';
-import { AjustesSecurityComponent } from './security/security.component';
-import { SucursalesDetailsComponent } from './sucursales/details/sucursales-details.component';
-import { SucusalesListComponent } from './sucursales/list/sucusales-list.component';
-import { SucursalesComponent } from './sucursales/sucursales.component';
-import { TeamDetailsComponent } from './team/details/team-details.component';
-import { TeamListComponent } from './team/list/team-list.component';
-import { AjustesTeamComponent } from './team/team.component';
+import {
+  AjustesCreditosState,
+  AjustesSucursalesState,
+  AjustesUsuariosState,
+} from './_store';
 
 export const ajustesRoutes: Route[] = [
   {
     path: '',
-    component: AjustesComponent,
+    loadComponent: () =>
+      import('./ajustes.component').then(com => com.AjustesComponent),
     pathMatch: 'prefix',
     children: [
       {
@@ -26,39 +22,91 @@ export const ajustesRoutes: Route[] = [
       },
       {
         path: 'perfil',
-        component: AjustesAccountComponent,
+        loadComponent: () =>
+          import('./account/account.component').then(
+            com => com.AjustesAccountComponent
+          ),
       },
-      { path: 'seguridad', component: AjustesSecurityComponent },
+      {
+        path: 'seguridad',
+        loadComponent: () =>
+          import('./security/security.component').then(
+            com => com.AjustesSecurityComponent
+          ),
+      },
       {
         path: 'usuarios',
-        component: AjustesTeamComponent,
+        loadComponent: () =>
+          import('./team/team.component').then(com => com.AjustesTeamComponent),
+        providers: [
+          importProvidersFrom(NgxsModule.forFeature([AjustesUsuariosState])),
+        ],
         children: [
-          { path: '', component: TeamListComponent },
+          {
+            path: '',
+            loadComponent: () =>
+              import('./team/list/team-list.component').then(
+                com => com.TeamListComponent
+              ),
+          },
           {
             path: ':id',
-            component: TeamDetailsComponent,
+            loadComponent: () =>
+              import('./team/details/team-details.component').then(
+                com => com.TeamDetailsComponent
+              ),
           },
         ],
       },
       {
         path: 'sucursales',
-        component: SucursalesComponent,
+        loadComponent: () =>
+          import('./sucursales/sucursales.component').then(
+            com => com.SucursalesComponent
+          ),
+        providers: [
+          importProvidersFrom(NgxsModule.forFeature([AjustesSucursalesState])),
+        ],
         children: [
-          { path: '', component: SucusalesListComponent },
+          {
+            path: '',
+            loadComponent: () =>
+              import('./sucursales/list/sucusales-list.component').then(
+                com => com.SucusalesListComponent
+              ),
+          },
           {
             path: ':id',
-            component: SucursalesDetailsComponent,
+            loadComponent: () =>
+              import('./sucursales/details/sucursales-details.component').then(
+                com => com.SucursalesDetailsComponent
+              ),
           },
         ],
       },
       {
         path: 'creditos',
-        component: AjustesCreditosComponent,
+        loadComponent: () =>
+          import('./creditos/ajustes-creditos.component').then(
+            com => com.AjustesCreditosComponent
+          ),
+        providers: [
+          importProvidersFrom(NgxsModule.forFeature([AjustesCreditosState])),
+        ],
         children: [
-          { path: '', component: AjustesCreditosListComponent },
+          {
+            path: '',
+            loadComponent: () =>
+              import('./creditos/list/ajustes-creditos-list.component').then(
+                com => com.AjustesCreditosListComponent
+              ),
+          },
           {
             path: ':id',
-            component: AjustesCreditosDetailsComponent,
+            loadComponent: () =>
+              import(
+                './creditos/details/ajustes-creditos-details.component'
+              ).then(com => com.AjustesCreditosDetailsComponent),
           },
         ],
       },

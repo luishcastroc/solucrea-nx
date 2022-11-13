@@ -1,3 +1,12 @@
+import {
+  AsyncPipe,
+  CurrencyPipe,
+  DatePipe,
+  DecimalPipe,
+  I18nPluralPipe,
+  NgFor,
+  NgIf,
+} from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -5,8 +14,19 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
-import { MatRadioChange } from '@angular/material/radio';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormControl,
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
@@ -22,6 +42,7 @@ import {
   GetTurnosCount,
   ModeCredito,
 } from 'app/modules/creditos/_store/';
+import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
 import { Observable, tap } from 'rxjs';
 
 import { GetCreditosCount } from '../_store/creditos.actions';
@@ -30,6 +51,27 @@ import { GetCreditosCount } from '../_store/creditos.actions';
   selector: 'app-creditos-list',
   templateUrl: './creditos-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatProgressSpinnerModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatRadioModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    FuseScrollbarModule,
+    NgIf,
+    NgFor,
+    DecimalToNumberPipe,
+    CurrencyPipe,
+    I18nPluralPipe,
+    AsyncPipe,
+    DatePipe,
+    DecimalPipe,
+  ],
 })
 export class CreditosListComponent implements OnInit {
   creditos$!: Observable<ICreditoReturnDto[]>;

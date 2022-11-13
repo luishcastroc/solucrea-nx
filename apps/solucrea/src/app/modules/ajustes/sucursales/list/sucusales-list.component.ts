@@ -1,7 +1,18 @@
+import { AsyncPipe, NgFor, NgIf, SlicePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormControl,
+} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
@@ -23,6 +34,21 @@ import { map, Observable, startWith, tap, withLatestFrom } from 'rxjs';
   selector: 'app-sucusales-list',
   templateUrl: './sucusales-list.component.html',
   styleUrls: [],
+  standalone: true,
+  imports: [
+    MatProgressSpinnerModule,
+    NgIf,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatRadioModule,
+    FormsModule,
+    AsyncPipe,
+    NgFor,
+    SlicePipe,
+    MatInputModule,
+  ],
 })
 export class SucusalesListComponent implements OnInit {
   sucursales$!: Observable<ISucursalReturnDto[]>;

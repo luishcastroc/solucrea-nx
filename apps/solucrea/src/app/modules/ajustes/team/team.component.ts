@@ -6,6 +6,7 @@ import {
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { AuthState } from 'app/core/auth/store/auth.state';
@@ -16,9 +17,11 @@ import { ClearUsuarios } from './../_store/usuarios/ajustes-usuarios.actions';
 
 @Component({
   selector: 'settings-team',
-  templateUrl: './team.component.html',
+  template: '<router-outlet></router-outlet>',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [RouterOutlet],
 })
 export class AjustesTeamComponent implements OnInit, OnDestroy {
   usuario$!: Observable<Usuario | undefined>;

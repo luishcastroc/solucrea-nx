@@ -7,7 +7,7 @@ import {
   Renderer2,
   ViewEncapsulation,
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgIf } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { combineLatest, filter, map, Subject, takeUntil } from 'rxjs';
 import { FuseConfigService } from '@fuse/services/config';
@@ -15,12 +15,16 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FUSE_VERSION } from '@fuse/version';
 import { Layout } from 'app/layout/layout.types';
 import { AppConfig } from 'app/core/config/app.config';
+import { EmptyLayoutComponent } from './layouts/empty/empty.component';
+import { ClassyLayoutComponent } from './layouts/vertical/classy/classy.component';
 
 @Component({
   selector: 'layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [EmptyLayoutComponent, ClassyLayoutComponent, NgIf],
 })
 export class LayoutComponent implements OnInit, OnDestroy {
   config!: AppConfig;

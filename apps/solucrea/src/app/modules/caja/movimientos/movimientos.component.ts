@@ -1,12 +1,24 @@
 import {
+  AsyncPipe,
+  CurrencyPipe,
+  DatePipe,
+  DecimalPipe,
+  I18nPluralPipe,
+  NgFor,
+  NgIf,
+  TitleCasePipe,
+} from '@angular/common';
+import {
   ChangeDetectionStrategy,
   Component,
   inject,
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 import { Store } from '@ngxs/store';
 import { MovimientoDeCaja } from '@prisma/client';
+import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
 import { Observable } from 'rxjs';
 
 import { CajasState, GetAllMovimientos } from '../_store';
@@ -16,6 +28,20 @@ import { CajasState, GetAllMovimientos } from '../_store';
   templateUrl: './movimientos.component.html',
   styleUrls: ['./movimientos.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    NgIf,
+    NgFor,
+    DecimalToNumberPipe,
+    CurrencyPipe,
+    TitleCasePipe,
+    FuseScrollbarModule,
+    CurrencyPipe,
+    DecimalPipe,
+    I18nPluralPipe,
+    DatePipe,
+    AsyncPipe,
+  ],
 })
 export class MovimientosComponent implements OnInit {
   movimientos$!: Observable<[] | MovimientoDeCaja[]>;

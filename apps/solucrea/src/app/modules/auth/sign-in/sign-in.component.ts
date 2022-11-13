@@ -1,3 +1,4 @@
+import { NgIf } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectorRef,
@@ -9,15 +10,29 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
+  FormsModule,
   NgForm,
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {
+  ActivatedRoute,
+  RouterLink,
+  RouterLinkWithHref,
+} from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
+import { FuseAlertComponent } from '@fuse/components/alert';
 import { IAlert } from '@fuse/components/alert/alert.model';
 import { FuseAlertService } from '@fuse/components/alert/alert.service';
+import { FuseCardComponent } from '@fuse/components/card';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Login } from 'app/core/auth/';
 import { Subject, takeUntil } from 'rxjs';
@@ -27,6 +42,21 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './sign-in.component.html',
   encapsulation: ViewEncapsulation.None,
   animations: fuseAnimations,
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    FuseCardComponent,
+    FuseAlertComponent,
+    RouterLinkWithHref,
+    NgIf,
+  ],
 })
 export class AuthSignInComponent implements OnInit, OnDestroy {
   @ViewChild('signInNgForm')

@@ -2,7 +2,16 @@ import {
   StepperOrientation,
   StepperSelectionEvent,
 } from '@angular/cdk/stepper';
-import { Location } from '@angular/common';
+import {
+  AsyncPipe,
+  CurrencyPipe,
+  DecimalPipe,
+  Location,
+  NgFor,
+  NgIf,
+  PercentPipe,
+  TitleCasePipe,
+} from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -14,15 +23,27 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  FormsModule,
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormControl,
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import { MatStepper } from '@angular/material/stepper';
+import { MatLuxonDateModule } from '@angular/material-luxon-adapter';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { HotToastService } from '@ngneat/hot-toast';
-import { createMask } from '@ngneat/input-mask';
+import { createMask, InputMaskModule } from '@ngneat/input-mask';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Producto } from '@prisma/client';
 import {
@@ -41,6 +62,7 @@ import {
   ISucursalReturnDto,
   IUsuarioReturnDto,
 } from 'api/dtos';
+import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
 import { DateTime } from 'luxon';
 import {
   debounceTime,
@@ -73,6 +95,31 @@ import {
   selector: 'app-creditos-new',
   templateUrl: './creditos-new.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatSelectModule,
+    MatStepperModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatAutocompleteModule,
+    MatProgressSpinnerModule,
+    MatLuxonDateModule,
+    InputMaskModule,
+    NgIf,
+    AsyncPipe,
+    PercentPipe,
+    CurrencyPipe,
+    TitleCasePipe,
+    DecimalPipe,
+    NgFor,
+    DecimalToNumberPipe,
+  ],
 })
 export class CreditosNewComponent implements OnInit, OnDestroy {
   @Input()

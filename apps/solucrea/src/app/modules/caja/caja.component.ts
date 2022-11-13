@@ -8,6 +8,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
+import { RouterOutlet } from '@angular/router';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Store } from '@ngxs/store';
 import { ClearCajasState } from 'app/modules/caja/_store';
@@ -15,8 +16,10 @@ import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-caja',
-  templateUrl: './caja.component.html',
+  template: '<router-outlet></router-outlet>',
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [RouterOutlet],
 })
 export class CajaComponent implements OnInit, OnDestroy {
   @ViewChild('drawer')

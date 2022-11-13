@@ -4,5 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-mutualcrea',
   templateUrl: './mutualcrea.component.html',
   styleUrls: ['./mutualcrea.component.scss'],
+  standalone: true,
 })
 export class MutualcreaComponent {}

@@ -6,12 +6,17 @@ import {
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormControl,
+} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import {
   Actions,
+  NgxsModule,
   ofActionErrored,
   ofActionSuccessful,
   Store,
@@ -34,6 +39,13 @@ import { map, startWith } from 'rxjs/operators';
 
 import { defaultRoles } from '../../_config/roles';
 import { IRole } from '../../models/roles.model';
+import { AsyncPipe, NgFor, NgIf, TitleCasePipe } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'team-list',
@@ -41,6 +53,21 @@ import { IRole } from '../../models/roles.model';
   styleUrls: [],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    NgIf,
+    MatIconModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    AsyncPipe,
+    NgFor,
+    MatSelectModule,
+    TitleCasePipe,
+    FormsModule,
+    MatInputModule,
+  ],
 })
 export class TeamListComponent implements OnInit, OnDestroy {
   usuarios$!: Observable<Usuario[]>;

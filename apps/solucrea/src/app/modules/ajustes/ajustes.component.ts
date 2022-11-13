@@ -8,8 +8,8 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { MatDrawer } from '@angular/material/sidenav';
-import { Router } from '@angular/router';
+import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
+import { Router, RouterOutlet } from '@angular/router';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
@@ -17,12 +17,24 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { ajustesPanels } from './_config/panels';
 import { IPanel } from './models/panel.model';
+import { MatIconModule } from '@angular/material/icon';
+import { NgClass, NgFor } from '@angular/common';
+import { VerifyRoleDirective } from 'app/core/auth';
 
 @Component({
   selector: 'settings',
   templateUrl: './ajustes.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatIconModule,
+    NgClass,
+    MatSidenavModule,
+    RouterOutlet,
+    NgFor,
+    VerifyRoleDirective,
+  ],
 })
 export class AjustesComponent implements OnInit, OnDestroy {
   @ViewChild('drawer')

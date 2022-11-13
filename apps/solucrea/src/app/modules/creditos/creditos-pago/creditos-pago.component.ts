@@ -1,3 +1,10 @@
+import {
+  AsyncPipe,
+  CurrencyPipe,
+  KeyValuePipe,
+  NgFor,
+  NgIf,
+} from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -8,16 +15,27 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
+  FormsModule,
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 import { HotToastService } from '@ngneat/hot-toast';
-import { createMask } from '@ngneat/input-mask';
+import { createMask, InputMaskModule } from '@ngneat/input-mask';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Prisma, TipoDePago, Usuario } from '@prisma/client';
 import { ICreditoReturnDto, IUsuarioReturnDto } from 'api/dtos';
 import { AuthState } from 'app/core/auth';
+import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
 import { DateTime } from 'luxon';
 import { Observable, tap } from 'rxjs';
 
@@ -28,6 +46,26 @@ import { CreditosState, ModeCredito, SavePago } from '../_store';
   templateUrl: './creditos-pago.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatTooltipModule,
+    MatIconModule,
+    MatCardModule,
+    MatSelectModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    FuseScrollbarModule,
+    InputMaskModule,
+    DecimalToNumberPipe,
+    AsyncPipe,
+    CurrencyPipe,
+    KeyValuePipe,
+    NgIf,
+    NgFor,
+  ],
 })
 export class CreditosPagoComponent implements OnInit {
   loading$!: Observable<boolean>;

@@ -1,8 +1,13 @@
+import { importProvidersFrom } from '@angular/core';
+import { MatDialogModule } from '@angular/material/dialog';
 import { Route } from '@angular/router';
+import { NgxsModule } from '@ngxs/store';
 import { Role } from '@prisma/client';
 import { InitialDataResolver } from 'app/app.resolvers';
 import { AuthGuard, NoAuthGuard } from 'app/core/auth/guards';
 import { LayoutComponent } from 'app/layout/layout.component';
+import { CajasState } from './modules/caja/_store';
+import { ClientesState } from './modules/clientes/_store';
 
 /* eslint-disable arrow-parens */
 // @formatter:off
@@ -45,8 +50,8 @@ export const appRoutes: Route[] = [
       {
         path: 'sign-in',
         loadChildren: () =>
-          import('app/modules/auth/sign-in/sign-in.module').then(
-            m => m.AuthSignInModule
+          import('app/modules/auth/sign-in/sign-in.routing').then(
+            m => m.authSignInRoutes
           ),
       },
     ],
@@ -65,8 +70,8 @@ export const appRoutes: Route[] = [
       {
         path: 'sign-out',
         loadChildren: () =>
-          import('app/modules/auth/sign-out/sign-out.module').then(
-            m => m.AuthSignOutModule
+          import('app/modules/auth/sign-out/sign-out.routing').then(
+            m => m.authSignOutRoutes
           ),
       },
     ],
@@ -88,34 +93,37 @@ export const appRoutes: Route[] = [
       {
         path: 'main',
         loadChildren: () =>
-          import('app/modules/main/main.module').then(m => m.MainModule),
+          import('app/modules/main/main.routing').then(m => m.mainRoutes),
       },
       {
         path: 'clientes',
         loadChildren: () =>
-          import('app/modules/clientes/clientes.module').then(
-            m => m.ClientesModule
+          import('app/modules/clientes/clientes.routing').then(
+            m => m.clientesRoutes
           ),
+        providers: [
+          importProvidersFrom(NgxsModule.forFeature([ClientesState])),
+        ],
       },
       {
         path: 'creditos',
         loadChildren: () =>
-          import('app/modules/creditos/creditos.module').then(
-            m => m.CreditosModule
+          import('app/modules/creditos/creditos.routing').then(
+            m => m.creditosRoutes
           ),
       },
       {
         path: 'mutualcrea',
         loadChildren: () =>
-          import('app/modules/mutualcrea/mutualcrea.module').then(
-            m => m.MutualcreaModule
+          import('app/modules/mutualcrea/mutualcrea.routing').then(
+            m => m.mutualcreaRoutes
           ),
       },
       {
         path: 'reportes',
         loadChildren: () =>
-          import('app/modules/reportes/reportes.module').then(
-            m => m.ReportesModule
+          import('app/modules/reportes/reportes.routing').then(
+            m => m.reportesRoutes
           ),
       },
       {
@@ -123,13 +131,14 @@ export const appRoutes: Route[] = [
         canLoad: [AuthGuard],
         data: { roles: [Role.ADMIN, Role.CAJERO, Role.DIRECTOR, Role.MANAGER] },
         loadChildren: () =>
-          import('app/modules/caja/caja.module').then(m => m.CajaModule),
+          import('app/modules/caja/caja.routing').then(m => m.cajaRoutes),
+        providers: [importProvidersFrom(NgxsModule.forFeature([CajasState]))],
       },
       {
         path: 'ajustes',
         loadChildren: () =>
-          import('app/modules/ajustes/ajustes.module').then(
-            m => m.AjustesModule
+          import('app/modules/ajustes/ajustes.routing').then(
+            m => m.ajustesRoutes
           ),
       },
     ],

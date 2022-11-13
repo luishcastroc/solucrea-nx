@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 
 @Pipe({
   name: 'decimalToNumber',
+  standalone: true,
 })
 export class DecimalToNumberPipe implements PipeTransform {
   transform(

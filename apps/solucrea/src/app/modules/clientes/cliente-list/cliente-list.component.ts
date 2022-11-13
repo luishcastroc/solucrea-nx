@@ -1,3 +1,10 @@
+import {
+  AsyncPipe,
+  DecimalPipe,
+  I18nPluralPipe,
+  NgFor,
+  NgIf,
+} from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   AfterViewInit,
@@ -6,7 +13,18 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormControl,
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
@@ -27,6 +45,23 @@ import { debounceTime, distinctUntilChanged, Observable, tap } from 'rxjs';
   templateUrl: './cliente-list.component.html',
   styleUrls: ['./cliente-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatTooltipModule,
+    MatRadioModule,
+    FuseScrollbarModule,
+    I18nPluralPipe,
+    DecimalPipe,
+    AsyncPipe,
+    NgIf,
+    NgFor,
+  ],
 })
 export class ClienteListComponent implements OnInit, AfterViewInit {
   searchResults$!: Observable<IClienteReturnDto[]>;

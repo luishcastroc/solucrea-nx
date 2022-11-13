@@ -8,16 +8,18 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
+import { RouterOutlet } from '@angular/router';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Store } from '@ngxs/store';
-import { Subject, takeUntil } from 'rxjs';
-
 import { ClearClientesState } from 'app/modules/clientes/_store';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-clientes',
-  templateUrl: './clientes.component.html',
+  template: '<router-outlet></router-outlet>',
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [RouterOutlet],
 })
 export class ClientesComponent implements OnInit, OnDestroy {
   @ViewChild('drawer')

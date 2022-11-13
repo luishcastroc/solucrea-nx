@@ -1,3 +1,4 @@
+import { AsyncPipe, NgIf } from '@angular/common';
 import {
   Component,
   OnDestroy,
@@ -6,13 +7,18 @@ import {
   ChangeDetectionStrategy,
   inject,
 } from '@angular/core';
-import { ActivatedRoute, Data } from '@angular/router';
-import { FuseNavigationService } from '@fuse/components/navigation';
+import { MatIconModule } from '@angular/material/icon';
+import { ActivatedRoute, Data, RouterOutlet } from '@angular/router';
+import {
+  FuseNavigationModule,
+  FuseNavigationService,
+} from '@fuse/components/navigation';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { InitialData } from 'app/app.types';
 import { AuthState } from 'app/core/auth/store/auth.state';
+import { UserMenuModule } from 'app/layout/common/user-menu/user-menu.module';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -20,6 +26,15 @@ import { Observable, Subject, takeUntil } from 'rxjs';
   templateUrl: './classy.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    FuseNavigationModule,
+    UserMenuModule,
+    MatIconModule,
+    RouterOutlet,
+    NgIf,
+    AsyncPipe,
+  ],
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy {
   data!: InitialData;

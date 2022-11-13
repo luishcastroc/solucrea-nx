@@ -10,16 +10,18 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  FormsModule,
+  ReactiveFormsModule,
   UntypedFormArray,
   UntypedFormBuilder,
   UntypedFormControl,
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import { MatStepper } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
-import { createMask } from '@ngneat/input-mask';
+import { createMask, InputMaskModule } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { TipoDireccion } from '@prisma/client';
@@ -56,12 +58,42 @@ import {
   curpValidator,
   rfcValidator,
 } from '../validators/custom-clientes.validators';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatLuxonDateModule } from '@angular/material-luxon-adapter';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-cliente',
   templateUrl: './cliente.component.html',
   styleUrls: ['./cliente.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatSelectModule,
+    MatInputModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatStepperModule,
+    MatLuxonDateModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
+    MatDatepickerModule,
+    InputMaskModule,
+    AsyncPipe,
+    NgClass,
+    NgIf,
+    NgFor,
+  ],
 })
 export class ClienteComponent
   implements OnInit, OnDestroy, CanDeactivateComponent

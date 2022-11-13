@@ -1,27 +1,46 @@
+import { importProvidersFrom } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Route } from '@angular/router';
+import { NgxsModule } from '@ngxs/store';
 import { DataCheckGuard } from 'app/core/auth/guards';
-import { CreditosClienteListComponent } from './creditos-cliente-list/creditos-cliente-list.component';
-import { CreditosDetailComponent } from './creditos-detail/creditos-detail.component';
-import { CreditosListComponent } from './creditos-list/creditos-list.component';
-
-import { CreditosComponent } from './creditos.component';
+import { CreditosState } from './_store';
 
 export const creditosRoutes: Route[] = [
   {
     path: '',
-    component: CreditosComponent,
+    loadComponent: () =>
+      import('./creditos.component').then(com => com.CreditosComponent),
     pathMatch: 'prefix',
+    providers: [importProvidersFrom(NgxsModule.forFeature([CreditosState]))],
     children: [
-      { path: '', component: CreditosListComponent },
+      {
+        path: '',
+        loadComponent: () =>
+          import('./creditos-list/creditos-list.component').then(
+            com => com.CreditosListComponent
+          ),
+      },
       {
         path: ':creditoId',
         canDeactivate: [DataCheckGuard],
-        component: CreditosDetailComponent,
+        loadComponent: () =>
+          import('./creditos-detail/creditos-detail.component').then(
+            com => com.CreditosDetailComponent
+          ),
       },
-      { path: 'cliente/:clienteId', component: CreditosClienteListComponent },
+      {
+        path: 'cliente/:clienteId',
+        loadComponent: () =>
+          import(
+            './creditos-cliente-list/creditos-cliente-list.component'
+          ).then(com => com.CreditosClienteListComponent),
+      },
       {
         path: 'cliente/:clienteId/detail/:creditoId',
-        component: CreditosDetailComponent,
+        loadComponent: () =>
+          import('./creditos-detail/creditos-detail.component').then(
+            com => com.CreditosDetailComponent
+          ),
       },
     ],
   },
