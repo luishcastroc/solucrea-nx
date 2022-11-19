@@ -63,7 +63,7 @@ export class AuthInterceptor implements HttpInterceptor {
           //this._store.dispatch(new Navigate(['main']));
         }
 
-        return throwError(error);
+        return throwError(() => error);
       })
     );
   }

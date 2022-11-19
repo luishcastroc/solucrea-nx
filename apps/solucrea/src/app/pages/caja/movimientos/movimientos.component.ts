@@ -14,8 +14,11 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute } from '@angular/router';
 import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
+import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { MovimientoDeCaja } from '@prisma/client';
 import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
@@ -41,6 +44,8 @@ import { CajasState, GetAllMovimientos } from '../_store';
     I18nPluralPipe,
     DatePipe,
     AsyncPipe,
+    MatButtonModule,
+    MatIconModule,
   ],
 })
 export class MovimientosComponent implements OnInit {
@@ -57,5 +62,9 @@ export class MovimientosComponent implements OnInit {
     if (this.id) {
       this._store.dispatch(new GetAllMovimientos(this.id));
     }
+  }
+
+  newMovimiento() {
+    this._store.dispatch(new Navigate([`/caja/${this.id}/movimiento`]));
   }
 }

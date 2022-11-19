@@ -30,6 +30,13 @@ export const cajaRoutes: Route[] = [
             com => com.MovimientosComponent
           ),
       },
+      {
+        path: ':id/movimiento',
+        loadComponent: () =>
+          import('./movimiento/movimiento.component').then(
+            com => com.MovimientoComponent
+          ),
+      },
     ],
   },
 ];

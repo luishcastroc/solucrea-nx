@@ -1,9 +1,9 @@
-import { inject, NgModule, Optional, SkipSelf } from '@angular/core';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { DomSanitizer } from '@angular/platform-browser';
+import { inject, NgModule } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
-import { AuthService } from 'app/core/auth/auth.service';
+import { DomSanitizer } from '@angular/platform-browser';
 import { AuthInterceptor } from 'app/core/auth/auth.interceptor';
+import { AuthService } from 'app/core/auth/auth.service';
 
 @NgModule({
   imports: [HttpClientModule],
