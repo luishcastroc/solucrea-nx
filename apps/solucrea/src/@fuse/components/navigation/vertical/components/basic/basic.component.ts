@@ -1,3 +1,4 @@
+import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -7,19 +8,13 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
-import { FuseVerticalNavigationComponent } from '@fuse/components/navigation/vertical/vertical.component';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
-import { FuseUtilsService } from '@fuse/services/utils/utils.service';
-import {
-  RouterLink,
-  RouterLinkActive,
-  RouterLinkWithHref,
-} from '@angular/router';
-import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
+import { FuseVerticalNavigationComponent } from '@fuse/components/navigation/vertical/vertical.component';
 import { VerifyRoleDirective } from 'app/core/auth';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'fuse-vertical-navigation-basic-item',
@@ -29,7 +24,6 @@ import { VerifyRoleDirective } from 'app/core/auth';
   standalone: true,
   imports: [
     RouterLink,
-    RouterLinkWithHref,
     RouterLinkActive,
     NgClass,
     NgIf,
