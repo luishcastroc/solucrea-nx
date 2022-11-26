@@ -54,10 +54,7 @@ import { Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
 
 import { ClientesService } from '../_services/clientes.service';
 import { IConfig } from '../models/config.model';
-import {
-  curpValidator,
-  rfcValidator,
-} from '../validators/custom-clientes.validators';
+import { curpValidator, rfcValidator } from '../validators/custom-clientes.validators';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -95,9 +92,7 @@ import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
     NgFor,
   ],
 })
-export class ClienteComponent
-  implements OnInit, OnDestroy, CanDeactivateComponent
-{
+export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateComponent {
   @ViewChild('stepper')
   private myStepper!: MatStepper;
 
@@ -106,9 +101,7 @@ export class ClienteComponent
   editMode$!: Observable<EditMode>;
   colonias$!: Observable<IColoniasState[]>;
   selectedCliente$!: Observable<IClienteReturnDto | undefined>;
-  selectedActividadEconomica$!: Observable<
-    IActividadEconomicaReturnDto | undefined
-  >;
+  selectedActividadEconomica$!: Observable<IActividadEconomicaReturnDto | undefined>;
 
   ubicacion: IColoniasState[] = [];
   ubicacionTrabajo!: IColoniasState;
@@ -147,9 +140,7 @@ export class ClienteComponent
     this.editMode$ = this._store.select(ClientesState.editMode);
     this.colonias$ = this._store.select(ClientesState.colonias);
     this.selectedCliente$ = this._store.select(ClientesState.selectedCliente);
-    this.selectedActividadEconomica$ = this._store.select(
-      ClientesState.selectedActividadEconomica
-    );
+    this.selectedActividadEconomica$ = this._store.select(ClientesState.selectedActividadEconomica);
   }
 
   get direcciones() {
@@ -161,21 +152,15 @@ export class ClienteComponent
   }
 
   get cpTrabajo() {
-    return this.trabajoForm
-      .get('direccion')
-      ?.get('codigoPostal') as UntypedFormControl;
+    return this.trabajoForm.get('direccion')?.get('codigoPostal') as UntypedFormControl;
   }
 
   get ciudadTrabajo() {
-    return this.trabajoForm
-      .get('direccion')
-      ?.get('ciudad') as UntypedFormControl;
+    return this.trabajoForm.get('direccion')?.get('ciudad') as UntypedFormControl;
   }
 
   get estadoTrabajo() {
-    return this.trabajoForm
-      .get('direccion')
-      ?.get('estado') as UntypedFormControl;
+    return this.trabajoForm.get('direccion')?.get('estado') as UntypedFormControl;
   }
 
   @HostListener('window:beforeunload', ['$event'])
@@ -208,43 +193,27 @@ export class ClienteComponent
    *
    */
   subscribeToColonias(): void {
-    this.colonias$
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(ubicacion => {
-        if (ubicacion.length > 0) {
-          ubicacion.forEach((direccion, i) => {
-            if (direccion.tipoDireccion === 'CLIENTE') {
-              if (
-                this.direcciones.controls[i].get('ciudad')?.value !==
-                direccion.ubicacion.ciudad.descripcion
-              ) {
-                this.direcciones.controls[i]
-                  .get('ciudad')
-                  ?.patchValue(direccion.ubicacion.ciudad.descripcion);
-              }
-              if (
-                this.direcciones.controls[i].get('estado')?.value !==
-                direccion.ubicacion.estado.descripcion
-              ) {
-                this.direcciones.controls[i]
-                  .get('estado')
-                  ?.patchValue(direccion.ubicacion.estado.descripcion);
-              }
-              if (!isEqual(this.ubicacion[i], direccion)) {
-                this.ubicacion[i] = direccion;
-              }
-            } else if (direccion.tipoDireccion === 'TRABAJO') {
-              this.ciudadTrabajo.patchValue(
-                direccion.ubicacion.ciudad.descripcion
-              );
-              this.estadoTrabajo.patchValue(
-                direccion.ubicacion.estado.descripcion
-              );
-              this.ubicacionTrabajo = direccion;
+    this.colonias$.pipe(takeUntil(this._unsubscribeAll)).subscribe(ubicacion => {
+      if (ubicacion.length > 0) {
+        ubicacion.forEach((direccion, i) => {
+          if (direccion.tipoDireccion === 'CLIENTE') {
+            if (this.direcciones.controls[i].get('ciudad')?.value !== direccion.ubicacion.ciudad.descripcion) {
+              this.direcciones.controls[i].get('ciudad')?.patchValue(direccion.ubicacion.ciudad.descripcion);
             }
-          });
-        }
-      });
+            if (this.direcciones.controls[i].get('estado')?.value !== direccion.ubicacion.estado.descripcion) {
+              this.direcciones.controls[i].get('estado')?.patchValue(direccion.ubicacion.estado.descripcion);
+            }
+            if (!isEqual(this.ubicacion[i], direccion)) {
+              this.ubicacion[i] = direccion;
+            }
+          } else if (direccion.tipoDireccion === 'TRABAJO') {
+            this.ciudadTrabajo.patchValue(direccion.ubicacion.ciudad.descripcion);
+            this.estadoTrabajo.patchValue(direccion.ubicacion.estado.descripcion);
+            this.ubicacionTrabajo = direccion;
+          }
+        });
+      }
+    });
   }
 
   /**
@@ -255,20 +224,12 @@ export class ClienteComponent
   subscribeToSelectedActividadEconomica(): void {
     this.selectedActividadEconomica$
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(
-        (
-          selectedActividadEconomica: IActividadEconomicaReturnDto | undefined
-        ) => {
-          if (selectedActividadEconomica) {
-            this.trabajoForm
-              .get('montoMinimo')
-              ?.patchValue(Number(selectedActividadEconomica.montoMin));
-            this.trabajoForm
-              .get('montoMaximo')
-              ?.patchValue(Number(selectedActividadEconomica.montoMax));
-          }
+      .subscribe((selectedActividadEconomica: IActividadEconomicaReturnDto | undefined) => {
+        if (selectedActividadEconomica) {
+          this.trabajoForm.get('montoMinimo')?.patchValue(Number(selectedActividadEconomica.montoMin));
+          this.trabajoForm.get('montoMaximo')?.patchValue(Number(selectedActividadEconomica.montoMax));
         }
-      );
+      });
   }
 
   /**
@@ -278,10 +239,7 @@ export class ClienteComponent
    */
   subscribeToActions(): void {
     this._actions$
-      .pipe(
-        takeUntil(this._unsubscribeAll),
-        ofActionCompleted(Add, Edit, GetColonias)
-      )
+      .pipe(takeUntil(this._unsubscribeAll), ofActionCompleted(Add, Edit, GetColonias))
       .subscribe(result => {
         const { error, successful } = result.result;
         const { action } = result;
@@ -355,13 +313,9 @@ export class ClienteComponent
               this.addDireccionesField();
             }
             this.direcciones.controls[i].get('id')?.setValue(direccion.id);
-            this.direcciones.controls[i]
-              .get('codigoPostal')
-              ?.setValue(direccion.colonia.codigoPostal);
+            this.direcciones.controls[i].get('codigoPostal')?.setValue(direccion.colonia.codigoPostal);
             this.getColonias(direccion.colonia.codigoPostal, i, 'CLIENTE');
-            this.direcciones.controls[i]
-              .get('colonia')
-              ?.setValue(direccion.colonia.id);
+            this.direcciones.controls[i].get('colonia')?.setValue(direccion.colonia.id);
           });
 
           // putting values into the Cliente form
@@ -385,11 +339,7 @@ export class ClienteComponent
           });
 
           // calling the service to fill the colonia on Trabajo
-          this.getColonias(
-            trabajo.direccion.colonia.codigoPostal,
-            selectedCliente.direcciones.length,
-            'TRABAJO'
-          );
+          this.getColonias(trabajo.direccion.colonia.codigoPostal, selectedCliente.direcciones.length, 'TRABAJO');
 
           if (this.actividadEconomica.value) {
             this.selectActividadEconomica(this.actividadEconomica.value);
@@ -492,9 +442,7 @@ export class ClienteComponent
    */
   removeDireccionesField(index: number, id: string): void {
     // obtener form array para direcciones
-    const direccionesFormArray = this.clienteForm.get(
-      'direcciones'
-    ) as UntypedFormArray;
+    const direccionesFormArray = this.clienteForm.get('direcciones') as UntypedFormArray;
 
     // Remove the phone number field
     direccionesFormArray.removeAt(index);
@@ -578,26 +526,18 @@ export class ClienteComponent
     if (this.editMode === 'new') {
       this.clienteForm.disable();
       this.trabajoForm.disable();
-      const cliente = this._clienteService.prepareClienteCreateObject(
-        this.clienteForm,
-        this.trabajoForm
-      );
+      const cliente = this._clienteService.prepareClienteCreateObject(this.clienteForm, this.trabajoForm);
       this._store.dispatch(new Add(cliente));
     } else {
       let cliente = this._sharedService.getDirtyValues(this.clienteForm);
-      const trabajo: ITrabajoDto = this._sharedService.getDirtyValues(
-        this.trabajoForm
-      );
+      const trabajo: ITrabajoDto = this._sharedService.getDirtyValues(this.trabajoForm);
       let direcciones: IDireccionUpdateDto = {};
 
       if (trabajo) {
         cliente = { ...cliente, trabajo };
       }
 
-      if (
-        cliente.direcciones &&
-        Object.values(cliente.direcciones).length > 0
-      ) {
+      if (cliente.direcciones && Object.values(cliente.direcciones).length > 0) {
         const create = Object.values(cliente.direcciones as IDireccion[])
           .filter((direccion: IDireccion) => !direccion.id)
           .map((direccion: IDireccion) => {
@@ -608,9 +548,9 @@ export class ClienteComponent
             } as CreateDireccionDto;
             return direccionReturn;
           });
-        const update = Object.values(
-          cliente.direcciones as IDireccion[]
-        ).filter((direccion: IDireccion) => direccion.id);
+        const update = Object.values(cliente.direcciones as IDireccion[]).filter(
+          (direccion: IDireccion) => direccion.id
+        );
 
         // if there's a record that needs to be created add it to the object
         if (create.length > 0) {
@@ -654,12 +594,8 @@ export class ClienteComponent
       element.get('ciudad')?.disable();
       element.get('estado')?.disable();
     });
-    (this.trabajoForm.get('direccion') as UntypedFormGroup)
-      .get('ciudad')
-      ?.disable();
-    (this.trabajoForm.get('direccion') as UntypedFormGroup)
-      .get('estado')
-      ?.disable();
+    (this.trabajoForm.get('direccion') as UntypedFormGroup).get('ciudad')?.disable();
+    (this.trabajoForm.get('direccion') as UntypedFormGroup).get('estado')?.disable();
   }
 
   /**

@@ -66,9 +66,7 @@ export class FuseAutogrowDirective implements OnChanges, OnInit, OnDestroy {
         this._changeDetectorRef.detectChanges();
 
         // Get the scrollHeight and subtract the vertical padding
-        this._height = `${
-          this._elementRef.nativeElement.scrollHeight - this.padding
-        }px`;
+        this._height = `${this._elementRef.nativeElement.scrollHeight - this.padding}px`;
 
         // Detect the changes one more time to apply the final height
         this._changeDetectorRef.detectChanges();

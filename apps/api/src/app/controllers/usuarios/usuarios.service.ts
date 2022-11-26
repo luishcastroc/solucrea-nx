@@ -8,19 +8,14 @@ import * as bcrypt from 'bcrypt';
 export class UsuariosService {
   constructor(private prisma: PrismaService) {}
 
-  async usuario(
-    where: Prisma.UsuarioWhereUniqueInput
-  ): Promise<Partial<Usuario> | null> {
+  async usuario(where: Prisma.UsuarioWhereUniqueInput): Promise<Partial<Usuario> | null> {
     try {
       const usuarioReturn = await this.prisma.usuario.findUnique({
         where,
       });
 
       if (!usuarioReturn) {
-        throw new HttpException(
-          { message: 'El usuario no existe, verificar' },
-          HttpStatus.NOT_FOUND
-        );
+        throw new HttpException({ message: 'El usuario no existe, verificar' }, HttpStatus.NOT_FOUND);
       }
       const { password, ...rest } = usuarioReturn;
       return rest;
@@ -34,10 +29,7 @@ export class UsuariosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
@@ -46,10 +38,7 @@ export class UsuariosService {
     try {
       const users = await this.prisma.usuario.findMany();
       if (users.length === 0) {
-        throw new HttpException(
-          { message: 'No existen usuarios' },
-          HttpStatus.NOT_FOUND
-        );
+        throw new HttpException({ message: 'No existen usuarios' }, HttpStatus.NOT_FOUND);
       }
       const usuarioReturn = users.map(usuario => {
         const { password, ...rest } = usuario;
@@ -66,17 +55,12 @@ export class UsuariosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
 
-  async usuariosWhere(
-    where: Prisma.UsuarioWhereInput
-  ): Promise<Partial<Usuario>[]> {
+  async usuariosWhere(where: Prisma.UsuarioWhereInput): Promise<Partial<Usuario>[]> {
     try {
       const users = await this.prisma.usuario.findMany({ where });
       if (users.length === 0) {
@@ -97,17 +81,12 @@ export class UsuariosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
 
-  async createUsuario(
-    data: Prisma.UsuarioCreateInput
-  ): Promise<Partial<Usuario>> {
+  async createUsuario(data: Prisma.UsuarioCreateInput): Promise<Partial<Usuario>> {
     try {
       const saltOrRounds = 10;
       const hash = await bcrypt.hash(data.password, saltOrRounds);
@@ -128,10 +107,7 @@ export class UsuariosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
@@ -147,25 +123,16 @@ export class UsuariosService {
       const usuario = await this.prisma.usuario.findUnique({ where });
 
       if (!usuario) {
-        throw new HttpException(
-          { message: 'El usuario no existe, verificar' },
-          HttpStatus.NOT_FOUND
-        );
+        throw new HttpException({ message: 'El usuario no existe, verificar' }, HttpStatus.NOT_FOUND);
       }
 
       // if someone with ADMIN role is trying to change the password most likely is from the screen
       // so we let it pass
       if (role !== 'ADMIN') {
-        const isMatch = await bcrypt.compare(
-          data.oldPassword as string | Buffer,
-          usuario.password
-        );
+        const isMatch = await bcrypt.compare(data.oldPassword as string | Buffer, usuario.password);
 
         if (!isMatch) {
-          throw new HttpException(
-            { message: 'El password es incorrecto, verificar' },
-            HttpStatus.BAD_REQUEST
-          );
+          throw new HttpException({ message: 'El password es incorrecto, verificar' }, HttpStatus.BAD_REQUEST);
         }
         delete data.oldPassword;
       }
@@ -192,17 +159,12 @@ export class UsuariosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
 
-  async deleteUsuario(
-    where: Prisma.UsuarioWhereUniqueInput
-  ): Promise<Partial<Usuario>> {
+  async deleteUsuario(where: Prisma.UsuarioWhereUniqueInput): Promise<Partial<Usuario>> {
     try {
       const deleteUsuario = await this.prisma.usuario.delete({
         where,
@@ -221,9 +183,7 @@ export class UsuariosService {
     }
   }
 
-  async searchUsuarioByName(
-    where: Prisma.UsuarioWhereUniqueInput
-  ): Promise<Partial<Usuario>> {
+  async searchUsuarioByName(where: Prisma.UsuarioWhereUniqueInput): Promise<Partial<Usuario>> {
     const usuario = await this.prisma.usuario.findFirst({
       where,
     });

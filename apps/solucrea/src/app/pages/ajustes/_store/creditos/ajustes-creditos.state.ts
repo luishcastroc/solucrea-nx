@@ -37,9 +37,7 @@ export class AjustesCreditosState {
   }
 
   @Selector()
-  static selectedCredito({
-    selectedCredito,
-  }: AjustesCreditosStateModel): Producto | undefined {
+  static selectedCredito({ selectedCredito }: AjustesCreditosStateModel): Producto | undefined {
     return selectedCredito;
   }
 
@@ -58,9 +56,7 @@ export class AjustesCreditosState {
     ctx.patchState({ loading: true });
     return this._ajustesCreditosService.getProductos().pipe(
       tap((creditos: Producto[]) => {
-        const creditosFiltered = creditos.filter(
-          (credito: Producto) => credito.activo === true
-        );
+        const creditosFiltered = creditos.filter((credito: Producto) => credito.activo === true);
         ctx.patchState({
           creditos,
           creditosFiltered,
@@ -71,10 +67,7 @@ export class AjustesCreditosState {
   }
 
   @Action(AddCredito)
-  addNewCredito(
-    ctx: StateContext<AjustesCreditosStateModel>,
-    action: AddCredito
-  ) {
+  addNewCredito(ctx: StateContext<AjustesCreditosStateModel>, action: AddCredito) {
     const { payload } = action;
     return this._ajustesCreditosService.addProducto(payload).pipe(
       tap((credito: Producto) => {
@@ -88,10 +81,7 @@ export class AjustesCreditosState {
   }
 
   @Action(EditCredito)
-  editCredito(
-    ctx: StateContext<AjustesCreditosStateModel>,
-    action: EditCredito
-  ) {
+  editCredito(ctx: StateContext<AjustesCreditosStateModel>, action: EditCredito) {
     const { id, payload } = action;
     return this._ajustesCreditosService.editProducto(id, payload).pipe(
       tap((credito: Producto) => {
@@ -110,10 +100,7 @@ export class AjustesCreditosState {
   }
 
   @Action(SelectCredito)
-  selectSucursal(
-    ctx: StateContext<AjustesCreditosStateModel>,
-    { id }: SelectCredito
-  ) {
+  selectSucursal(ctx: StateContext<AjustesCreditosStateModel>, { id }: SelectCredito) {
     return this._ajustesCreditosService.getProducto(id).pipe(
       tap(selectedCredito => {
         ctx.patchState({ selectedCredito });
@@ -122,15 +109,10 @@ export class AjustesCreditosState {
   }
 
   @Action(ChangeSearchFilterCreditos)
-  changeSearchFilter(
-    ctx: StateContext<AjustesCreditosStateModel>,
-    { payload }: ChangeSearchFilterCreditos
-  ) {
+  changeSearchFilter(ctx: StateContext<AjustesCreditosStateModel>, { payload }: ChangeSearchFilterCreditos) {
     ctx.patchState({ loading: true });
     const { creditos } = ctx.getState();
-    const creditosFiltered = creditos.filter(
-      (credito: Producto) => credito.activo === payload
-    );
+    const creditosFiltered = creditos.filter((credito: Producto) => credito.activo === payload);
     ctx.patchState({
       creditosFiltered,
       loading: false,
@@ -138,10 +120,7 @@ export class AjustesCreditosState {
   }
 
   @Action(AjustesModeCredito)
-  toggleEditModeCredito(
-    ctx: StateContext<AjustesCreditosStateModel>,
-    action: AjustesModeCredito
-  ) {
+  toggleEditModeCredito(ctx: StateContext<AjustesCreditosStateModel>, action: AjustesModeCredito) {
     const { payload } = action;
     ctx.patchState({ editMode: payload });
   }

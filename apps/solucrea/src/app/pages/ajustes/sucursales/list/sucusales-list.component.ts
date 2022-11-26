@@ -1,11 +1,7 @@
 import { AsyncPipe, NgFor, NgIf, SlicePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  UntypedFormControl,
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -92,10 +88,7 @@ export class SucusalesListComponent implements OnInit {
    *
    */
   openNewSucursal(): void {
-    this._store.dispatch([
-      new Navigate([`ajustes/sucursales/${AuthUtils.guid()}`]),
-      new AjustesModeSucursal('new'),
-    ]);
+    this._store.dispatch([new Navigate([`ajustes/sucursales/${AuthUtils.guid()}`]), new AjustesModeSucursal('new')]);
   }
 
   /**
@@ -105,12 +98,7 @@ export class SucusalesListComponent implements OnInit {
    */
   setActions(): void {
     this.actions$ = this._actions$.pipe(
-      ofActionCompleted(
-        GetAllSucursales,
-        EditSucursal,
-        DeleteSucursal,
-        ChangeSearchFilter
-      ),
+      ofActionCompleted(GetAllSucursales, EditSucursal, DeleteSucursal, ChangeSearchFilter),
       tap(result => {
         const { error, successful } = result.result;
         const { action } = result;
@@ -131,10 +119,7 @@ export class SucusalesListComponent implements OnInit {
             message = 'Sucursal activada exitosamente.';
             this._store.dispatch(new ChangeSearchFilter(this.activa));
           }
-          if (
-            !(action instanceof GetAllSucursales) &&
-            !(action instanceof ChangeSearchFilter)
-          ) {
+          if (!(action instanceof GetAllSucursales) && !(action instanceof ChangeSearchFilter)) {
             this._toast.success(message, {
               duration: 4000,
               position: 'bottom-center',
@@ -156,10 +141,7 @@ export class SucusalesListComponent implements OnInit {
    * @param id string
    */
   editSucursal(id: string): void {
-    this._store.dispatch([
-      new Navigate([`ajustes/sucursales/${id}`]),
-      new AjustesModeSucursal('edit'),
-    ]);
+    this._store.dispatch([new Navigate([`ajustes/sucursales/${id}`]), new AjustesModeSucursal('edit')]);
   }
 
   /**
@@ -203,10 +185,7 @@ export class SucusalesListComponent implements OnInit {
    * Function to filter results on sucursales
    *
    */
-  private _filter(
-    value: string,
-    sucursales: ISucursalReturnDto[]
-  ): ISucursalReturnDto[] {
+  private _filter(value: string, sucursales: ISucursalReturnDto[]): ISucursalReturnDto[] {
     if (!value || value === '') {
       return sucursales;
     }
@@ -214,8 +193,6 @@ export class SucusalesListComponent implements OnInit {
     const filterValue = value.toLowerCase();
 
     // returning the filtered array
-    return sucursales.filter(sucursal =>
-      sucursal.nombre.toLowerCase().includes(filterValue)
-    );
+    return sucursales.filter(sucursal => sucursal.nombre.toLowerCase().includes(filterValue));
   }
 }

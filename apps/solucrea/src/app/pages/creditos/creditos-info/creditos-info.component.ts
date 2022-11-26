@@ -1,18 +1,5 @@
-import {
-  AsyncPipe,
-  CurrencyPipe,
-  DatePipe,
-  Location,
-  NgFor,
-  NgIf,
-  SlicePipe,
-} from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-} from '@angular/core';
+import { AsyncPipe, CurrencyPipe, DatePipe, Location, NgFor, NgIf, SlicePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -25,12 +12,7 @@ import { ICreditoReturnDto } from 'api/dtos';
 import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
 import { Observable } from 'rxjs';
 
-import {
-  CreditosState,
-  GetCobratarios,
-  ModeCredito,
-  SelectCredito,
-} from '../_store';
+import { CreditosState, GetCobratarios, ModeCredito, SelectCredito } from '../_store';
 
 @Component({
   selector: 'app-creditos-info',
@@ -70,10 +52,7 @@ export class CreditosInfoComponent implements OnInit {
   ngOnInit(): void {
     this.creditoId = this._route.snapshot.paramMap.get('creditoId');
     if (this.creditoId) {
-      this._store.dispatch([
-        new SelectCredito(this.creditoId),
-        new GetCobratarios(),
-      ]);
+      this._store.dispatch([new SelectCredito(this.creditoId), new GetCobratarios()]);
     }
   }
 

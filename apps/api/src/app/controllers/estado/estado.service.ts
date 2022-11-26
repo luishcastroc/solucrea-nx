@@ -6,9 +6,7 @@ import { PrismaService } from 'api/prisma';
 export class EstadoService {
   constructor(private prisma: PrismaService) {}
 
-  async estado(
-    estadoWhereUniqueInput: Prisma.EstadoWhereUniqueInput
-  ): Promise<Estado | null> {
+  async estado(estadoWhereUniqueInput: Prisma.EstadoWhereUniqueInput): Promise<Estado | null> {
     return this.prisma.estado.findUnique({
       where: estadoWhereUniqueInput,
     });

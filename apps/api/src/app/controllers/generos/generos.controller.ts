@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  UseGuards,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Genero, Role } from '@prisma/client';
 import { GenerosService } from './generos.service';
 import { Public, Roles } from 'api/decorators';
@@ -45,10 +34,7 @@ export class GenerosController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
   @Put('generos/:id')
-  async editGenero(
-    @Param('id') id: string,
-    @Body() data: Genero
-  ): Promise<IGeneroReturnDto> {
+  async editGenero(@Param('id') id: string, @Body() data: Genero): Promise<IGeneroReturnDto> {
     return this.generosService.updateGenero({
       where: { id },
       data,

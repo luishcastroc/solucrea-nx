@@ -9,17 +9,8 @@ import {
   SlicePipe,
 } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-} from '@angular/core';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  UntypedFormControl,
-} from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -133,9 +124,7 @@ export class CreditosClienteListComponent implements OnInit {
    */
   openNewCredito(): void {
     this._store.dispatch([
-      new Navigate([
-        `creditos/cliente/${this.clienteId}/detail/${AuthUtils.guid()}`,
-      ]),
+      new Navigate([`creditos/cliente/${this.clienteId}/detail/${AuthUtils.guid()}`]),
       new ModeCredito('new'),
     ]);
   }
@@ -184,10 +173,7 @@ export class CreditosClienteListComponent implements OnInit {
    * Go to Credito details
    */
   goToDetails(id: string | undefined) {
-    this._store.dispatch([
-      new Navigate([`creditos/cliente/${this.clienteId}/detail/${id}`]),
-      new ModeCredito('edit'),
-    ]);
+    this._store.dispatch([new Navigate([`creditos/cliente/${this.clienteId}/detail/${id}`]), new ModeCredito('edit')]);
   }
 
   /**
@@ -195,9 +181,6 @@ export class CreditosClienteListComponent implements OnInit {
    *
    */
   newCaja(): void {
-    this._store.dispatch([
-      new Navigate([`caja/${AuthUtils.guid()}`]),
-      new CajasMode('new'),
-    ]);
+    this._store.dispatch([new Navigate([`caja/${AuthUtils.guid()}`]), new CajasMode('new')]);
   }
 }

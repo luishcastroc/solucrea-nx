@@ -8,9 +8,7 @@ export class ProductosService {
 
   // Productos
 
-  async producto(
-    where: Prisma.ProductoWhereUniqueInput
-  ): Promise<Producto | null> {
+  async producto(where: Prisma.ProductoWhereUniqueInput): Promise<Producto | null> {
     try {
       const producto = await this.prisma.producto.findUnique({
         where,
@@ -26,10 +24,7 @@ export class ProductosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
@@ -49,10 +44,7 @@ export class ProductosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e?.response.status, message: e?.response.message },
-          e?.response.status
-        );
+        throw new HttpException({ status: e?.response.status, message: e?.response.message }, e?.response.status);
       }
     }
   }
@@ -77,10 +69,7 @@ export class ProductosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response?.status, message: e.response?.message },
-          e.response?.status
-        );
+        throw new HttpException({ status: e.response?.status, message: e.response?.message }, e.response?.status);
       }
     }
   }
@@ -109,17 +98,12 @@ export class ProductosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
 
-  async deleteProducto(
-    where: Prisma.ProductoWhereUniqueInput
-  ): Promise<Producto> {
+  async deleteProducto(where: Prisma.ProductoWhereUniqueInput): Promise<Producto> {
     try {
       const innactiveCredito = await this.prisma.producto.update({
         where,
@@ -137,10 +121,7 @@ export class ProductosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }

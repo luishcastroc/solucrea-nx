@@ -22,9 +22,7 @@ export class AjustesSucursalService {
    *
    */
   getSucursales(): Observable<ISucursalReturnDto[]> {
-    return this._httpClient.get<ISucursalReturnDto[]>(
-      `${this._environment.uri}/sucursales`
-    );
+    return this._httpClient.get<ISucursalReturnDto[]>(`${this._environment.uri}/sucursales`);
   }
 
   /**
@@ -33,9 +31,7 @@ export class AjustesSucursalService {
    * @param id
    */
   getSucursal(id: string): Observable<ISucursalReturnDto> {
-    return this._httpClient.get<ISucursalReturnDto>(
-      `${this._environment.uri}/sucursal/${id}`
-    );
+    return this._httpClient.get<ISucursalReturnDto>(`${this._environment.uri}/sucursal/${id}`);
   }
 
   /**
@@ -44,10 +40,7 @@ export class AjustesSucursalService {
    * @param CreateSucursalDto
    */
   addSucursal(sucursal: CreateSucursalDto): Observable<ISucursalReturnDto> {
-    return this._httpClient.post<ISucursalReturnDto>(
-      `${this._environment.uri}/sucursal`,
-      sucursal
-    );
+    return this._httpClient.post<ISucursalReturnDto>(`${this._environment.uri}/sucursal`, sucursal);
   }
 
   /**
@@ -55,14 +48,8 @@ export class AjustesSucursalService {
    *
    * @param UpdateSucursalDto
    */
-  editSucursal(
-    id: string,
-    sucursal: Prisma.SucursalUpdateInput
-  ): Observable<ISucursalReturnDto> {
-    return this._httpClient.put<ISucursalReturnDto>(
-      `${this._environment.uri}/sucursal/${id}`,
-      sucursal
-    );
+  editSucursal(id: string, sucursal: Prisma.SucursalUpdateInput): Observable<ISucursalReturnDto> {
+    return this._httpClient.put<ISucursalReturnDto>(`${this._environment.uri}/sucursal/${id}`, sucursal);
   }
 
   /**
@@ -71,8 +58,6 @@ export class AjustesSucursalService {
    * @param id
    */
   deleteSucursal(id: string): Observable<ISucursalReturnDto> {
-    return this._httpClient.delete<ISucursalReturnDto>(
-      `${this._environment.uri}/sucursal/${id}`
-    );
+    return this._httpClient.delete<ISucursalReturnDto>(`${this._environment.uri}/sucursal/${id}`);
   }
 }

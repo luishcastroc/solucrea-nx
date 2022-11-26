@@ -33,9 +33,7 @@ export class FuseModule {
    */
   constructor() {
     if (this.parentModule) {
-      throw new Error(
-        'FuseModule has already been loaded. Import this module in the AppModule only!'
-      );
+      throw new Error('FuseModule has already been loaded. Import this module in the AppModule only!');
     }
   }
 }

@@ -43,9 +43,7 @@ export class AjustesSucursalesState {
   }
 
   @Selector()
-  static selectedSucursal({
-    selectedSucursal,
-  }: AjustesSucursalesStateModel): ISucursalReturnDto | undefined {
+  static selectedSucursal({ selectedSucursal }: AjustesSucursalesStateModel): ISucursalReturnDto | undefined {
     return selectedSucursal;
   }
 
@@ -55,24 +53,17 @@ export class AjustesSucursalesState {
   }
 
   @Selector()
-  static sucursales({
-    sucursalesFiltered,
-  }: AjustesSucursalesStateModel): ISucursalReturnDto[] {
+  static sucursales({ sucursalesFiltered }: AjustesSucursalesStateModel): ISucursalReturnDto[] {
     return sucursalesFiltered;
   }
 
   @Selector()
-  static colonias({
-    colonias,
-  }: AjustesSucursalesStateModel): IColoniaReturnDto | undefined {
+  static colonias({ colonias }: AjustesSucursalesStateModel): IColoniaReturnDto | undefined {
     return colonias;
   }
 
   @Action(AjustesModeSucursal)
-  toggleEditModeSucursal(
-    ctx: StateContext<AjustesSucursalesStateModel>,
-    action: AjustesModeSucursal
-  ) {
+  toggleEditModeSucursal(ctx: StateContext<AjustesSucursalesStateModel>, action: AjustesModeSucursal) {
     const { payload } = action;
     ctx.patchState({ editMode: payload });
   }
@@ -82,9 +73,7 @@ export class AjustesSucursalesState {
     ctx.patchState({ loading: true });
     return this._ajustesSucursalesService.getSucursales().pipe(
       tap((sucursales: ISucursalReturnDto[]) => {
-        const sucursalesFiltered = sucursales.filter(
-          (sucursal: ISucursalReturnDto) => sucursal.activa === true
-        );
+        const sucursalesFiltered = sucursales.filter((sucursal: ISucursalReturnDto) => sucursal.activa === true);
         ctx.patchState({
           sucursales,
           sucursalesFiltered,
@@ -95,10 +84,7 @@ export class AjustesSucursalesState {
   }
 
   @Action(AddSucursal)
-  addSucursal(
-    ctx: StateContext<AjustesSucursalesStateModel>,
-    action: AddSucursal
-  ) {
+  addSucursal(ctx: StateContext<AjustesSucursalesStateModel>, action: AddSucursal) {
     const { payload } = action;
     return this._ajustesSucursalesService.addSucursal(payload).pipe(
       tap((sucursal: ISucursalReturnDto) => {
@@ -112,10 +98,7 @@ export class AjustesSucursalesState {
   }
 
   @Action(EditSucursal)
-  editSucursal(
-    ctx: StateContext<AjustesSucursalesStateModel>,
-    action: EditSucursal
-  ) {
+  editSucursal(ctx: StateContext<AjustesSucursalesStateModel>, action: EditSucursal) {
     const { id, payload } = action;
     return this._ajustesSucursalesService.editSucursal(id, payload).pipe(
       tap((sucursal: ISucursalReturnDto) => {
@@ -134,10 +117,7 @@ export class AjustesSucursalesState {
   }
 
   @Action(SelectSucursal)
-  selectSucursal(
-    ctx: StateContext<AjustesSucursalesStateModel>,
-    { id }: SelectSucursal
-  ) {
+  selectSucursal(ctx: StateContext<AjustesSucursalesStateModel>, { id }: SelectSucursal) {
     return this._ajustesSucursalesService.getSucursal(id).pipe(
       tap(selectedSucursal => {
         ctx.patchState({ selectedSucursal });
@@ -146,10 +126,7 @@ export class AjustesSucursalesState {
   }
 
   @Action(DeleteSucursal)
-  deleteSucursal(
-    ctx: StateContext<AjustesSucursalesStateModel>,
-    action: DeleteSucursal
-  ) {
+  deleteSucursal(ctx: StateContext<AjustesSucursalesStateModel>, action: DeleteSucursal) {
     const { id } = action;
     return this._ajustesSucursalesService.deleteSucursal(id).pipe(
       tap((sucursal: ISucursalReturnDto) => {
@@ -167,10 +144,7 @@ export class AjustesSucursalesState {
   }
 
   @Action(GetColonias)
-  getColonias(
-    ctx: StateContext<AjustesSucursalesStateModel>,
-    { cp }: GetColonias
-  ) {
+  getColonias(ctx: StateContext<AjustesSucursalesStateModel>, { cp }: GetColonias) {
     return this._clientesService.getColoniasByCp(cp).pipe(
       tap((colonias: IColoniaReturnDto) => {
         const state = ctx.getState();
@@ -188,15 +162,10 @@ export class AjustesSucursalesState {
   }
 
   @Action(ChangeSearchFilter)
-  changeSearchFilter(
-    ctx: StateContext<AjustesSucursalesStateModel>,
-    { payload }: ChangeSearchFilter
-  ) {
+  changeSearchFilter(ctx: StateContext<AjustesSucursalesStateModel>, { payload }: ChangeSearchFilter) {
     ctx.patchState({ loading: true });
     const { sucursales } = ctx.getState();
-    const sucursalesFiltered = sucursales.filter(
-      (sucursal: ISucursalReturnDto) => sucursal.activa === payload
-    );
+    const sucursalesFiltered = sucursales.filter((sucursal: ISucursalReturnDto) => sucursal.activa === payload);
     ctx.patchState({
       sucursalesFiltered,
       loading: false,

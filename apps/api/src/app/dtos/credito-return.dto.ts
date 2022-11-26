@@ -1,12 +1,4 @@
-import {
-  Colocador,
-  ModalidadDeSeguro,
-  Pago,
-  Prisma,
-  Producto,
-  Seguro,
-  Status,
-} from '@prisma/client';
+import { Colocador, ModalidadDeSeguro, Pago, Prisma, Producto, Seguro, Status } from '@prisma/client';
 import { IAvalReturnDto, ISucursalReturnDto } from 'api/dtos';
 
 import { IClienteReturnDto } from './cliente-return.dto';

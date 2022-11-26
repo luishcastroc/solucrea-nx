@@ -27,14 +27,7 @@ import { VerifyRoleDirective } from 'app/core/auth';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    MatIconModule,
-    NgClass,
-    MatSidenavModule,
-    RouterOutlet,
-    NgFor,
-    VerifyRoleDirective,
-  ],
+  imports: [MatIconModule, NgClass, MatSidenavModule, RouterOutlet, NgFor, VerifyRoleDirective],
 })
 export class AjustesComponent implements OnInit, OnDestroy {
   @ViewChild('drawer')

@@ -19,11 +19,8 @@
     </div>
     <!-- User -->
     <div class="flex w-full flex-col items-center p-4">
-      <div
-        class="mt-6 flex w-full flex-col items-center justify-center"
-        *ngIf="user$ | async as user">
-        <div
-          class="w-full overflow-hidden text-ellipsis whitespace-nowrap text-center font-medium leading-normal">
+      <div class="mt-6 flex w-full flex-col items-center justify-center" *ngIf="user$ | async as user">
+        <div class="w-full overflow-hidden text-ellipsis whitespace-nowrap text-center font-medium leading-normal">
           {{ user.nombre }} {{ user.apellido }}
         </div>
         <div
@@ -35,8 +32,7 @@
   </ng-container>
   <!-- Navigation footer hook -->
   <ng-container fuseVerticalNavigationContentFooter>
-    <div
-      class="flex-0 opacity-12 mt-2 mb-4 flex h-16 items-center justify-center pr-6 pl-2"></div>
+    <div class="flex-0 opacity-12 mt-2 mb-4 flex h-16 items-center justify-center pr-6 pl-2"></div>
   </ng-container>
 </fuse-vertical-navigation>
 

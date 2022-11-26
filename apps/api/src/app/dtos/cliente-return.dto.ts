@@ -1,11 +1,4 @@
-import {
-  ActividadEconomica,
-  Escolaridad,
-  EstadoCivil,
-  Genero,
-  Prisma,
-  TipoDeVivienda,
-} from '@prisma/client';
+import { ActividadEconomica, Escolaridad, EstadoCivil, Genero, Prisma, TipoDeVivienda } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime';
 
 import { IColonias } from './colonia-return.dto';

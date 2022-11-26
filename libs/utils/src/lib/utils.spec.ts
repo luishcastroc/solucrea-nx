@@ -41,19 +41,13 @@ describe('Utils testing', () => {
     const amortizacion: IAmortizacion[] = [
       {
         monto: new Prisma.Decimal(100),
-        fechaDePago: DateTime.fromISO('2022-02-21')
-          .toUTC()
-          .toLocal()
-          .toISODate(),
+        fechaDePago: DateTime.fromISO('2022-02-21').toUTC().toLocal().toISODate(),
         numeroDePago: 1,
         status: StatusPago.adeuda,
       },
       {
         monto: new Prisma.Decimal(100),
-        fechaDePago: DateTime.fromISO('2022-02-21')
-          .toUTC()
-          .toLocal()
-          .toISODate(),
+        fechaDePago: DateTime.fromISO('2022-02-21').toUTC().toLocal().toISODate(),
         numeroDePago: 2,
         status: StatusPago.adeuda,
       },
@@ -77,19 +71,13 @@ describe('Utils testing', () => {
     const amortizacion: IAmortizacion[] = [
       {
         monto: new Prisma.Decimal(100),
-        fechaDePago: DateTime.fromISO('2022-02-21')
-          .toUTC()
-          .toLocal()
-          .toISODate(),
+        fechaDePago: DateTime.fromISO('2022-02-21').toUTC().toLocal().toISODate(),
         numeroDePago: 1,
         status: StatusPago.adeuda,
       },
       {
         monto: new Prisma.Decimal(100),
-        fechaDePago: DateTime.fromISO('2022-02-22')
-          .toUTC()
-          .toLocal()
-          .toISODate(),
+        fechaDePago: DateTime.fromISO('2022-02-22').toUTC().toLocal().toISODate(),
         numeroDePago: 2,
         status: StatusPago.adeuda,
       },
@@ -110,18 +98,13 @@ describe('Utils testing', () => {
     const dateToCheck = DateTime.fromISO('2022-01-20').toLocal().toUTC();
     const dateResult: DateTime = addBusinessDays(dateToCheck, 1);
 
-    expect(
-      dateResult
-        .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-        .toUTC()
-        .toISO()
-    ).toEqual('2022-01-21T00:00:00.000Z');
+    expect(dateResult.set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toUTC().toISO()).toEqual(
+      '2022-01-21T00:00:00.000Z'
+    );
   });
 
   it('should return one payment due', () => {
-    const today = DateTime.now()
-      .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-      .toLocal();
+    const today = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toLocal();
     const fechaDeInicio = today.minus({ days: 1 });
     const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
       1,
@@ -132,16 +115,11 @@ describe('Utils testing', () => {
       new Prisma.Decimal(172.5)
     );
 
-    expect(
-      tablaDeAmortizacion.filter(data => data.status === StatusPago.adeuda)
-        .length === 1
-    ).toBeTruthy();
+    expect(tablaDeAmortizacion.filter(data => data.status === StatusPago.adeuda).length === 1).toBeTruthy();
   });
 
   it('should return no payment due', () => {
-    const fechaDeInicio = DateTime.now()
-      .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-      .toLocal();
+    const fechaDeInicio = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toLocal();
     const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
       45,
       1,
@@ -151,20 +129,13 @@ describe('Utils testing', () => {
       new Prisma.Decimal(172.5)
     );
 
-    expect(
-      tablaDeAmortizacion.filter(data => data.status === StatusPago.adeuda)
-        .length === 0
-    ).toBeTruthy();
+    expect(tablaDeAmortizacion.filter(data => data.status === StatusPago.adeuda).length === 0).toBeTruthy();
   });
 
   it('should return one payment made', () => {
     const monto = new Prisma.Decimal(150.0);
-    const montoMora = new Prisma.Decimal(
-      monto.toNumber() * (15 / 100) + monto.toNumber()
-    );
-    const fechaDeInicio = DateTime.now()
-      .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-      .toLocal();
+    const montoMora = new Prisma.Decimal(monto.toNumber() * (15 / 100) + monto.toNumber());
+    const fechaDeInicio = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toLocal();
     const pagos: Partial<Pago>[] | Pago[] = [
       {
         id: 'sdjhjh-sdsd-sdsd',
@@ -183,9 +154,6 @@ describe('Utils testing', () => {
       montoMora
     );
 
-    expect(
-      tablaDeAmortizacion.filter(data => data.status === StatusPago.adeuda)
-        .length === 0
-    ).toBeTruthy();
+    expect(tablaDeAmortizacion.filter(data => data.status === StatusPago.adeuda).length === 0).toBeTruthy();
   });
 });

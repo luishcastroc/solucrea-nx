@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnDestroy,
-  OnInit,
-  ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
@@ -44,20 +37,15 @@ export class AjustesTeamComponent implements OnInit, OnDestroy {
    * On init
    */
   ngOnInit(): void {
-    this.usuario$
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((usuario: Usuario | undefined) => {
-        if (usuario) {
-          this.usuario = usuario;
-        }
-      });
+    this.usuario$.pipe(takeUntil(this._unsubscribeAll)).subscribe((usuario: Usuario | undefined) => {
+      if (usuario) {
+        this.usuario = usuario;
+      }
+    });
   }
 
   ngOnDestroy(): void {
-    this._store.dispatch([
-      new SelectUsuario(this.usuario),
-      new ClearUsuarios(),
-    ]);
+    this._store.dispatch([new SelectUsuario(this.usuario), new ClearUsuarios()]);
     this._unsubscribeAll.next(null);
     this._unsubscribeAll.complete();
   }

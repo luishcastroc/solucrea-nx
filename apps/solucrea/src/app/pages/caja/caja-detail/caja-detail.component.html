@@ -52,7 +52,7 @@
         <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
           <!-- Fecha de Apertura -->
           <div>
-            <mat-form-field class="fuse-mat-no-subscript w-full">
+            <mat-form-field class="w-full" subscriptSizing="dynamic">
               <mat-label>Fecha de Apertura</mat-label>
               <mat-icon
                 matPrefix
@@ -80,7 +80,7 @@
           </div>
           <!-- Sucursal -->
           <div>
-            <mat-form-field class="fuse-mat-no-subscript w-full">
+            <mat-form-field class="w-full" subscriptSizing="dynamic">
               <mat-label>Sucursal</mat-label>
               <mat-icon
                 class="icon-size-5"
@@ -102,7 +102,7 @@
           </div>
           <!-- Saldo Inicial -->
           <div>
-            <mat-form-field class="fuse-mat-no-subscript w-full">
+            <mat-form-field class="w-full" subscriptSizing="dynamic">
               <mat-label>Saldo Inicial</mat-label>
               <mat-icon
                 class="icon-size-5"
@@ -123,7 +123,7 @@
           <ng-container *ngIf="editMode === 'cierre' || editMode === 'edit'">
             <!-- Saldo Final -->
             <div>
-              <mat-form-field class="fuse-mat-no-subscript w-full">
+              <mat-form-field class="w-full" subscriptSizing="dynamic">
                 <mat-label>Saldo Actual</mat-label>
                 <mat-icon
                   class="icon-size-5"
@@ -139,7 +139,7 @@
           <ng-container *ngIf="editMode === 'cierre'">
             <!-- Fecha de Cierre -->
             <div>
-              <mat-form-field class="fuse-mat-no-subscript w-full">
+              <mat-form-field class="w-full" subscriptSizing="dynamic">
                 <mat-label>Fecha de Cierre</mat-label>
                 <mat-icon
                   matPrefix
@@ -168,7 +168,7 @@
             </div>
             <!-- Saldo Final -->
             <div>
-              <mat-form-field class="fuse-mat-no-subscript w-full">
+              <mat-form-field class="w-full" subscriptSizing="dynamic">
                 <mat-label>Saldo Final</mat-label>
                 <mat-icon
                   class="icon-size-5"
@@ -191,7 +191,8 @@
         <div class="grid grid-cols-1">
           <!-- Observaciones -->
           <mat-form-field
-            class="fuse-mat-textarea fuse-mat-no-subscript mt-4 w-full">
+            class="fuse-mat-textarea mt-4 w-full"
+            subscriptSizing="dynamic">
             <mat-label>Observaciones</mat-label>
             <mat-icon
               class="icon-size-5"

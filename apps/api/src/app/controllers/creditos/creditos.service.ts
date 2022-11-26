@@ -7,12 +7,7 @@ import {
   getSaldoActual,
   getSaldoVencido,
 } from '@solucrea-utils';
-import {
-  IAmortizacion,
-  ICajaReturnDto,
-  ICreditoReturnDto,
-  StatusPago,
-} from 'api/dtos';
+import { IAmortizacion, ICajaReturnDto, ICreditoReturnDto, StatusPago } from 'api/dtos';
 import { PrismaService } from 'api/prisma';
 
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -20,10 +15,7 @@ import { PrismaService } from 'api/prisma';
 export class CreditosService {
   constructor(private prisma: PrismaService) {}
 
-  async creditosCliente(
-    clienteId: string,
-    statusCredito: Status
-  ): Promise<ICreditoReturnDto[] | null> {
+  async creditosCliente(clienteId: string, statusCredito: Status): Promise<ICreditoReturnDto[] | null> {
     try {
       const creditosCliente = await this.prisma.credito.findMany({
         where: { clienteId: { equals: clienteId } },
@@ -175,8 +167,7 @@ export class CreditosService {
           if (amortizacion.some(table => table.status === StatusPago.adeuda)) {
             status = Status.MORA;
           } else if (
-            amortizacion.filter(tabla => tabla.status === StatusPago.pagado)
-              .length === credito?.producto.numeroDePagos
+            amortizacion.filter(tabla => tabla.status === StatusPago.pagado).length === credito?.producto.numeroDePagos
           ) {
             status = Status.CERRADO;
           } else if (
@@ -207,10 +198,7 @@ export class CreditosService {
       );
 
       return creditosReturn.filter(credito => {
-        if (
-          statusCredito === 'ABIERTO' &&
-          (credito.status === 'ABIERTO' || credito.status === 'MORA')
-        ) {
+        if (statusCredito === 'ABIERTO' && (credito.status === 'ABIERTO' || credito.status === 'MORA')) {
           return credito;
         } else if (statusCredito === credito.status) {
           return credito;
@@ -226,10 +214,7 @@ export class CreditosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
@@ -385,8 +370,7 @@ export class CreditosService {
           if (amortizacion.some(table => table.status === StatusPago.adeuda)) {
             status = Status.MORA;
           } else if (
-            amortizacion.filter(tabla => tabla.status === StatusPago.pagado)
-              .length === credito?.producto.numeroDePagos
+            amortizacion.filter(tabla => tabla.status === StatusPago.pagado).length === credito?.producto.numeroDePagos
           ) {
             status = Status.CERRADO;
           } else if (
@@ -417,10 +401,7 @@ export class CreditosService {
       );
 
       return creditosReturn.filter(credito => {
-        if (
-          statusCredito === 'ABIERTO' &&
-          (credito.status === 'ABIERTO' || credito.status === 'MORA')
-        ) {
+        if (statusCredito === 'ABIERTO' && (credito.status === 'ABIERTO' || credito.status === 'MORA')) {
           return credito;
         } else if (statusCredito === credito.status) {
           return credito;
@@ -436,10 +417,7 @@ export class CreditosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
@@ -594,8 +572,7 @@ export class CreditosService {
       if (amortizacion.some(table => table.status === StatusPago.adeuda)) {
         status = Status.MORA;
       } else if (
-        amortizacion.filter(tabla => tabla.status === StatusPago.pagado)
-          .length === credito?.producto.numeroDePagos
+        amortizacion.filter(tabla => tabla.status === StatusPago.pagado).length === credito?.producto.numeroDePagos
       ) {
         status = Status.CERRADO;
       } else if (
@@ -606,10 +583,7 @@ export class CreditosService {
       }
 
       const saldoVencido = getSaldoVencido(amortizacion);
-      const pagoNoIntereses = getPagoNoIntereses(
-        amortizacion,
-        credito?.cuota as Prisma.Decimal
-      );
+      const pagoNoIntereses = getPagoNoIntereses(amortizacion, credito?.cuota as Prisma.Decimal);
 
       const creditoReturn = {
         ...credito,
@@ -638,10 +612,7 @@ export class CreditosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
@@ -668,18 +639,12 @@ export class CreditosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
 
-  async getOpenCreditosCount(
-    clienteId: string,
-    productId: string
-  ): Promise<number> {
+  async getOpenCreditosCount(clienteId: string, productId: string): Promise<number> {
     try {
       const creditosSum = await this.prisma.credito.aggregate({
         where: {
@@ -695,8 +660,7 @@ export class CreditosService {
         throw new HttpException(
           {
             status: HttpStatus.NOT_ACCEPTABLE,
-            message:
-              'Error el cliente ya cuenta con un crédito sin cerrar para ese producto, Verificar',
+            message: 'Error el cliente ya cuenta con un crédito sin cerrar para ese producto, Verificar',
           },
           HttpStatus.NOT_ACCEPTABLE
         );
@@ -712,17 +676,12 @@ export class CreditosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
 
-  async createCredito(
-    data: Prisma.CreditoCreateInput
-  ): Promise<ICreditoReturnDto> {
+  async createCredito(data: Prisma.CreditoCreateInput): Promise<ICreditoReturnDto> {
     let producto: Producto | null;
     try {
       const creditosActivos = await this.prisma.credito.findMany({
@@ -754,12 +713,8 @@ export class CreditosService {
           throw new HttpException(
             {
               status: HttpStatus.PRECONDITION_FAILED,
-              message: `Error el cliente solo puede tener ${
-                producto?.creditosActivos
-              } ${
-                Number(producto?.creditosActivos) === 1
-                  ? 'crédito activo'
-                  : 'créditos activos'
+              message: `Error el cliente solo puede tener ${producto?.creditosActivos} ${
+                Number(producto?.creditosActivos) === 1 ? 'crédito activo' : 'créditos activos'
               }`,
             },
             HttpStatus.PRECONDITION_FAILED
@@ -767,22 +722,18 @@ export class CreditosService {
         }
       }
 
-      const saldoInicialCaja: Partial<ICajaReturnDto> | null =
-        await this.prisma.caja.findFirst({
-          where: {
-            AND: [
-              { sucursalId: { equals: data.sucursal.connect?.id } },
-              { fechaCierre: { equals: null } },
-            ],
+      const saldoInicialCaja: Partial<ICajaReturnDto> | null = await this.prisma.caja.findFirst({
+        where: {
+          AND: [{ sucursalId: { equals: data.sucursal.connect?.id } }, { fechaCierre: { equals: null } }],
+        },
+        select: {
+          id: true,
+          saldoInicial: true,
+          movimientos: {
+            select: { monto: true, tipo: true, observaciones: true },
           },
-          select: {
-            id: true,
-            saldoInicial: true,
-            movimientos: {
-              select: { monto: true, tipo: true, observaciones: true },
-            },
-          },
-        });
+        },
+      });
 
       if (!saldoInicialCaja) {
         throw new HttpException(
@@ -948,10 +899,7 @@ export class CreditosService {
         //once credito is created we retire the money from the sucursal
         const caja = await this.prisma.caja.findFirst({
           where: {
-            AND: [
-              { sucursalId: { equals: data.sucursal?.connect?.id } },
-              { fechaCierre: { equals: null } },
-            ],
+            AND: [{ sucursalId: { equals: data.sucursal?.connect?.id } }, { fechaCierre: { equals: null } }],
           },
           select: { id: true },
         });
@@ -1000,10 +948,7 @@ export class CreditosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }

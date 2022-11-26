@@ -45,9 +45,7 @@ export class MovimientosService {
     }
   }
 
-  async createMovimiento(
-    data: Prisma.MovimientoDeCajaCreateInput
-  ): Promise<MovimientoDeCaja> {
+  async createMovimiento(data: Prisma.MovimientoDeCajaCreateInput): Promise<MovimientoDeCaja> {
     const checkCaja = await this.prisma.caja.findFirst({
       where: {
         fechaCierre: { gte: DateTime.now().toISODate() },
@@ -59,8 +57,7 @@ export class MovimientosService {
       throw new HttpException(
         {
           status: HttpStatus.FOUND,
-          message:
-            'Error: no se pueden hacer movimientos en caja cerrada, Verificar.',
+          message: 'Error: no se pueden hacer movimientos en caja cerrada, Verificar.',
         },
         HttpStatus.FOUND
       );
@@ -79,10 +76,7 @@ export class MovimientosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
@@ -109,17 +103,12 @@ export class MovimientosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
 
-  async deleteMovimiento(
-    where: Prisma.MovimientoDeCajaWhereUniqueInput
-  ): Promise<MovimientoDeCaja> {
+  async deleteMovimiento(where: Prisma.MovimientoDeCajaWhereUniqueInput): Promise<MovimientoDeCaja> {
     try {
       const movimiento = await this.prisma.movimientoDeCaja.delete({
         where,
@@ -135,10 +124,7 @@ export class MovimientosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
@@ -160,10 +146,7 @@ export class MovimientosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }

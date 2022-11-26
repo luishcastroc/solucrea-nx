@@ -9,9 +9,7 @@ export class EscolaridadesService {
 
   // Escolaridad
 
-  async escolaridad(
-    where: Prisma.EscolaridadWhereUniqueInput
-  ): Promise<IEscolaridadReturnDto | null> {
+  async escolaridad(where: Prisma.EscolaridadWhereUniqueInput): Promise<IEscolaridadReturnDto | null> {
     return await this.prisma.escolaridad.findUnique({
       where,
       select: { id: true, descripcion: true },
@@ -24,9 +22,7 @@ export class EscolaridadesService {
     });
   }
 
-  async createEscolaridad(
-    data: Prisma.EscolaridadCreateInput
-  ): Promise<IEscolaridadReturnDto> {
+  async createEscolaridad(data: Prisma.EscolaridadCreateInput): Promise<IEscolaridadReturnDto> {
     return await this.prisma.escolaridad.create({
       data,
       select: { id: true, descripcion: true },
@@ -45,9 +41,7 @@ export class EscolaridadesService {
     });
   }
 
-  async deleteEscolaridad(
-    where: Prisma.EscolaridadWhereUniqueInput
-  ): Promise<IEscolaridadReturnDto> {
+  async deleteEscolaridad(where: Prisma.EscolaridadWhereUniqueInput): Promise<IEscolaridadReturnDto> {
     return this.prisma.escolaridad.delete({
       where,
       select: { id: true, descripcion: true },

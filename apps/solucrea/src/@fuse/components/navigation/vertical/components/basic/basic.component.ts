@@ -1,13 +1,5 @@
 import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject,
-  Input,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
@@ -22,19 +14,9 @@ import { Subject, takeUntil } from 'rxjs';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    RouterLink,
-    RouterLinkActive,
-    NgClass,
-    NgIf,
-    MatIconModule,
-    VerifyRoleDirective,
-    NgTemplateOutlet,
-  ],
+  imports: [RouterLink, RouterLinkActive, NgClass, NgIf, MatIconModule, VerifyRoleDirective, NgTemplateOutlet],
 })
-export class FuseVerticalNavigationBasicItemComponent
-  implements OnInit, OnDestroy
-{
+export class FuseVerticalNavigationBasicItemComponent implements OnInit, OnDestroy {
   @Input()
   item!: FuseNavigationItem;
   @Input()
@@ -54,16 +36,13 @@ export class FuseVerticalNavigationBasicItemComponent
    */
   ngOnInit(): void {
     // Get the parent navigation component
-    this._fuseVerticalNavigationComponent =
-      this._fuseNavigationService.getComponent(this.name);
+    this._fuseVerticalNavigationComponent = this._fuseNavigationService.getComponent(this.name);
 
     // Subscribe to onRefreshed on the navigation component
-    this._fuseVerticalNavigationComponent.onRefreshed
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(() => {
-        // Mark for check
-        this._changeDetectorRef.markForCheck();
-      });
+    this._fuseVerticalNavigationComponent.onRefreshed.pipe(takeUntil(this._unsubscribeAll)).subscribe(() => {
+      // Mark for check
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   /**

@@ -7,9 +7,7 @@ import { PrismaService } from 'api/prisma';
 export class AvalesService {
   constructor(private prisma: PrismaService) {}
 
-  async aval(
-    avalWhereUniqueInput: Prisma.AvalWhereUniqueInput
-  ): Promise<Aval | null> {
+  async aval(avalWhereUniqueInput: Prisma.AvalWhereUniqueInput): Promise<Aval | null> {
     return this.prisma.aval.findUnique({
       where: avalWhereUniqueInput,
     });
@@ -25,10 +23,7 @@ export class AvalesService {
     });
   }
 
-  async updateAval(params: {
-    where: Prisma.AvalWhereUniqueInput;
-    data: Prisma.AvalUpdateInput;
-  }): Promise<Aval> {
+  async updateAval(params: { where: Prisma.AvalWhereUniqueInput; data: Prisma.AvalUpdateInput }): Promise<Aval> {
     const { where, data } = params;
     return this.prisma.aval.update({
       data,

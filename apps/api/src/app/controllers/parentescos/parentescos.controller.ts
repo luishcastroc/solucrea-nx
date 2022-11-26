@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  UseGuards,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Genero, Prisma, Role } from '@prisma/client';
 import { ParentescosService } from './parentescos.service';
 import { Public, Roles } from 'api/decorators';
@@ -30,9 +19,7 @@ export class ParentescosController {
   @UseGuards(RolesGuard)
   @Public()
   @Get('parentesco/:id')
-  async getParentesco(
-    @Param('id') id: string
-  ): Promise<IParentescoReturnDto | null> {
+  async getParentesco(@Param('id') id: string): Promise<IParentescoReturnDto | null> {
     return this.parentescosService.parentesco({ id });
   }
 
@@ -40,19 +27,14 @@ export class ParentescosController {
   @UsePipes(new ValidationPipe())
   @Roles(Role.ADMIN)
   @Post('parentesco')
-  async createParentesco(
-    @Body() data: Prisma.ParentescoCreateInput
-  ): Promise<IParentescoReturnDto> {
+  async createParentesco(@Body() data: Prisma.ParentescoCreateInput): Promise<IParentescoReturnDto> {
     return this.parentescosService.createParentesco(data);
   }
 
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
   @Put('parentesco/:id')
-  async editParentesco(
-    @Param('id') id: string,
-    @Body() data: Genero
-  ): Promise<IParentescoReturnDto> {
+  async editParentesco(@Param('id') id: string, @Body() data: Genero): Promise<IParentescoReturnDto> {
     return this.parentescosService.updateParentesco({
       where: { id },
       data,
@@ -62,9 +44,7 @@ export class ParentescosController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
   @Delete('parentesco/:id')
-  async deleteParentesco(
-    @Param('id') id: string
-  ): Promise<IParentescoReturnDto> {
+  async deleteParentesco(@Param('id') id: string): Promise<IParentescoReturnDto> {
     return this.parentescosService.deleteParentesco({ id });
   }
 }

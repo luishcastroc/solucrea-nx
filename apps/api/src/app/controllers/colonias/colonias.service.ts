@@ -8,9 +8,7 @@ import { IColoniaReturnDto } from 'api/dtos';
 export class ColoniasService {
   constructor(private prisma: PrismaService) {}
 
-  async colonia(
-    coloniaWhereUniqueInput: Prisma.ColoniaWhereUniqueInput
-  ): Promise<Colonia | null> {
+  async colonia(coloniaWhereUniqueInput: Prisma.ColoniaWhereUniqueInput): Promise<Colonia | null> {
     return this.prisma.colonia.findUnique({
       where: coloniaWhereUniqueInput,
     });
@@ -20,9 +18,7 @@ export class ColoniasService {
     return this.prisma.colonia.findMany();
   }
 
-  async coloniasByCp(
-    where: Prisma.ColoniaWhereInput
-  ): Promise<IColoniaReturnDto> {
+  async coloniasByCp(where: Prisma.ColoniaWhereInput): Promise<IColoniaReturnDto> {
     const singleColonia = await this.prisma.colonia.findFirst({
       where,
       select: {
@@ -40,10 +36,7 @@ export class ColoniasService {
     });
 
     if (!singleColonia) {
-      throw new HttpException(
-        'El Codigo Postal no existe, verificar',
-        HttpStatus.NOT_FOUND
-      );
+      throw new HttpException('El Codigo Postal no existe, verificar', HttpStatus.NOT_FOUND);
     }
 
     const ciudad = {

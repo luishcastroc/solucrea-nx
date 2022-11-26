@@ -3,12 +3,8 @@ const _ = require('lodash');
 const path = require('path');
 const colors = require('tailwindcss/colors');
 const plugin = require('tailwindcss/plugin');
-const flattenColorPalette =
-  require('tailwindcss/lib/util/flattenColorPalette').default;
-const generateContrasts = require(path.resolve(
-  __dirname,
-  '../utils/generate-contrasts'
-));
+const flattenColorPalette = require('tailwindcss/lib/util/flattenColorPalette').default;
+const generateContrasts = require(path.resolve(__dirname, '../utils/generate-contrasts'));
 
 // -----------------------------------------------------------------------------------------------------
 // @ Utilities
@@ -22,11 +18,7 @@ const generateContrasts = require(path.resolve(
 const normalizeTheme = theme => {
   return _.fromPairs(
     _.map(
-      _.omitBy(
-        theme,
-        (palette, paletteName) =>
-          paletteName.startsWith('on') || _.isEmpty(palette)
-      ),
+      _.omitBy(theme, (palette, paletteName) => paletteName.startsWith('on') || _.isEmpty(palette)),
       (palette, paletteName) => [
         paletteName,
         {
@@ -80,17 +72,10 @@ function generateThemesObject(themes) {
   return _.map(_.cloneDeep(themes), (value, key) => {
     const theme = normalizeTheme(value);
     const primary =
-      theme && theme.primary && theme.primary.DEFAULT
-        ? theme.primary.DEFAULT
-        : normalizedDefaultTheme.primary.DEFAULT;
+      theme && theme.primary && theme.primary.DEFAULT ? theme.primary.DEFAULT : normalizedDefaultTheme.primary.DEFAULT;
     const accent =
-      theme && theme.accent && theme.accent.DEFAULT
-        ? theme.accent.DEFAULT
-        : normalizedDefaultTheme.accent.DEFAULT;
-    const warn =
-      theme && theme.warn && theme.warn.DEFAULT
-        ? theme.warn.DEFAULT
-        : normalizedDefaultTheme.warn.DEFAULT;
+      theme && theme.accent && theme.accent.DEFAULT ? theme.accent.DEFAULT : normalizedDefaultTheme.accent.DEFAULT;
+    const warn = theme && theme.warn && theme.warn.DEFAULT ? theme.warn.DEFAULT : normalizedDefaultTheme.warn.DEFAULT;
 
     return _.fromPairs([
       [
@@ -116,9 +101,7 @@ const theming = plugin.withOptions(
       // -----------------------------------------------------------------------------------------------------
       const mapVariableColors = _.fromPairs(
         _.map(options.themes, (theme, themeName) => [
-          themeName === 'default'
-            ? 'body, .theme-default'
-            : `.theme-${e(themeName)}`,
+          themeName === 'default' ? 'body, .theme-default' : `.theme-${e(themeName)}`,
           _.fromPairs(
             _.flatten(
               _.map(

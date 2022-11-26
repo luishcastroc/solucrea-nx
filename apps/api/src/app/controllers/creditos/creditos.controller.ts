@@ -1,14 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Request,
-  UseGuards,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Request, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Prisma, Role, Status } from '@prisma/client';
 import { CreditosService } from './creditos.service';
 import { Roles } from 'api/decorators';
@@ -32,18 +22,14 @@ export class CreditosController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
   @Get('creditos/:status')
-  async obtenerCreditos(
-    @Param('status') status: Status
-  ): Promise<ICreditoReturnDto[] | null> {
+  async obtenerCreditos(@Param('status') status: Status): Promise<ICreditoReturnDto[] | null> {
     return this.creditosService.creditos(status);
   }
 
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
   @Get('credito/:id')
-  async obtenerCredito(
-    @Param('id') id: string
-  ): Promise<ICreditoReturnDto | null> {
+  async obtenerCredito(@Param('id') id: string): Promise<ICreditoReturnDto | null> {
     return this.creditosService.getCredito(id);
   }
 
@@ -68,10 +54,7 @@ export class CreditosController {
   @UsePipes(new ValidationPipe())
   @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
   @Post('credito')
-  async createCredito(
-    @Request() req: any,
-    @Body() data: Prisma.CreditoCreateInput
-  ): Promise<ICreditoReturnDto> {
+  async createCredito(@Request() req: any, @Body() data: Prisma.CreditoCreateInput): Promise<ICreditoReturnDto> {
     const creadoPor = req.user.username.toUpperCase();
     data.creadoPor = creadoPor;
     data.status = 'ABIERTO';

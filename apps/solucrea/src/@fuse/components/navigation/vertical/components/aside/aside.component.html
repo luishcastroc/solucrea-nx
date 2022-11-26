@@ -32,9 +32,7 @@
 
     <!-- Badge -->
     <div class="fuse-vertical-navigation-item-badge" *ngIf="item.badge">
-      <div
-        class="fuse-vertical-navigation-item-badge-content"
-        [ngClass]="$any(item.badge.classes)">
+      <div class="fuse-vertical-navigation-item-badge-content" [ngClass]="$any(item.badge.classes)">
         {{ item.badge.title }}
       </div>
     </div>
@@ -57,9 +55,7 @@
           *ngIf="item.type === 'collapsable'"
           [item]="item"
           [name]="name"
-          [autoCollapse]="
-            autoCollapse
-          "></fuse-vertical-navigation-collapsable-item>
+          [autoCollapse]="autoCollapse"></fuse-vertical-navigation-collapsable-item>
 
         <!-- Divider -->
         <fuse-vertical-navigation-divider-item

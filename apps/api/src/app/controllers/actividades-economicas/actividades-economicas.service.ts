@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import {
-  CreateActividadEconomicaDto,
-  IActividadEconomicaReturnDto,
-} from 'api/dtos';
+import { CreateActividadEconomicaDto, IActividadEconomicaReturnDto } from 'api/dtos';
 import { PrismaService } from 'api/prisma';
 
 @Injectable()
@@ -25,9 +22,7 @@ export class ActividadesEconomicasService {
     });
   }
 
-  async createActividadEconomica(
-    data: CreateActividadEconomicaDto
-  ): Promise<IActividadEconomicaReturnDto> {
+  async createActividadEconomica(data: CreateActividadEconomicaDto): Promise<IActividadEconomicaReturnDto> {
     return this.prisma.actividadEconomica.create({
       data,
     });

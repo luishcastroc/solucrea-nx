@@ -43,9 +43,7 @@ export class AjustesUsuariosState {
   }
 
   @Selector()
-  static selectedUsuario({
-    selectedUsuario,
-  }: AjustesUsuariosStateModel): Usuario | undefined {
+  static selectedUsuario({ selectedUsuario }: AjustesUsuariosStateModel): Usuario | undefined {
     return selectedUsuario;
   }
 
@@ -55,10 +53,7 @@ export class AjustesUsuariosState {
   }
 
   @Action(GetAllUsuarios)
-  getAllUsuarios(
-    ctx: StateContext<AjustesUsuariosStateModel>,
-    action: GetAllUsuarios
-  ) {
+  getAllUsuarios(ctx: StateContext<AjustesUsuariosStateModel>, action: GetAllUsuarios) {
     const { id } = action;
     ctx.patchState({ loading: true });
     return this._ajustesUsuarioService.getUsuarios().pipe(
@@ -87,10 +82,7 @@ export class AjustesUsuariosState {
   }
 
   @Action(EditUsuario)
-  editUsuario(
-    ctx: StateContext<AjustesUsuariosStateModel>,
-    action: EditUsuario
-  ) {
+  editUsuario(ctx: StateContext<AjustesUsuariosStateModel>, action: EditUsuario) {
     const { id, payload } = action;
     const authenticatedUser = this._store.selectSnapshot(AuthState.user);
     return this._ajustesUsuarioService.editUsuario(id, payload).pipe(
@@ -113,10 +105,7 @@ export class AjustesUsuariosState {
   }
 
   @Action(DeleteUsuario)
-  deleteUsuario(
-    ctx: StateContext<AjustesUsuariosStateModel>,
-    action: DeleteUsuario
-  ) {
+  deleteUsuario(ctx: StateContext<AjustesUsuariosStateModel>, action: DeleteUsuario) {
     const { id } = action;
     return this._ajustesUsuarioService.deleteUsuario(id).pipe(
       tap((user: Usuario) => {
@@ -137,19 +126,13 @@ export class AjustesUsuariosState {
   }
 
   @Action(SelectUsuario)
-  selectUsuario(
-    ctx: StateContext<AjustesUsuariosStateModel>,
-    action: SelectUsuario
-  ) {
+  selectUsuario(ctx: StateContext<AjustesUsuariosStateModel>, action: SelectUsuario) {
     const { usuario: selectedUsuario } = action;
     ctx.patchState({ selectedUsuario });
   }
 
   @Action(AjustesModeUsuario)
-  toggleEditModeUsuario(
-    ctx: StateContext<AjustesUsuariosStateModel>,
-    action: AjustesModeUsuario
-  ) {
+  toggleEditModeUsuario(ctx: StateContext<AjustesUsuariosStateModel>, action: AjustesModeUsuario) {
     const { payload } = action;
     ctx.patchState({ editMode: payload });
   }

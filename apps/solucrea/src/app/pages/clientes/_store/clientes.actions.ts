@@ -43,11 +43,7 @@ export class Search {
 
 export class GetColonias {
   static readonly type = '[Cliente] Get Colonias';
-  constructor(
-    public cp: string,
-    public index: number,
-    public tipo: TipoDireccion
-  ) {}
+  constructor(public cp: string, public index: number, public tipo: TipoDireccion) {}
 }
 
 export class RemoveColonia {

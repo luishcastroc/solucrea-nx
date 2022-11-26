@@ -7,10 +7,7 @@ import { CreditosService } from '../creditos';
 
 @Injectable()
 export class PagosService {
-  constructor(
-    private prisma: PrismaService,
-    private creditos: CreditosService
-  ) {}
+  constructor(private prisma: PrismaService, private creditos: CreditosService) {}
 
   // Pagos
 
@@ -80,9 +77,7 @@ export class PagosService {
         }
 
         const cuota = (currentCredito.cuota as Prisma.Decimal).toNumber();
-        const cuotaMora = (
-          currentCredito.cuotaMora as Prisma.Decimal
-        ).toNumber();
+        const cuotaMora = (currentCredito.cuotaMora as Prisma.Decimal).toNumber();
         const monto = pago.monto.toNumber();
         let saldo = (currentCredito.saldo as Prisma.Decimal).toNumber();
 
@@ -125,10 +120,7 @@ export class PagosService {
             break;
         }
 
-        saldo =
-          saldo !== auxSaldo
-            ? new Prisma.Decimal(saldo - cuota * auxSaldo).toNumber()
-            : saldo - auxSaldo;
+        saldo = saldo !== auxSaldo ? new Prisma.Decimal(saldo - cuota * auxSaldo).toNumber() : saldo - auxSaldo;
 
         let dataSaldo: Prisma.CreditoUncheckedUpdateInput = { saldo };
         if (saldo <= 0) {
@@ -169,18 +161,12 @@ export class PagosService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
 
-  async updatePago(params: {
-    where: Prisma.PagoWhereUniqueInput;
-    data: Prisma.PagoUpdateInput;
-  }): Promise<Pago> {
+  async updatePago(params: { where: Prisma.PagoWhereUniqueInput; data: Prisma.PagoUpdateInput }): Promise<Pago> {
     const { where, data } = params;
     return await this.prisma.pago.update({
       data,

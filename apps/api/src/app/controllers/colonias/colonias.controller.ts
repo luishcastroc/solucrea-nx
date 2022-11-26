@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  UseGuards,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ColoniasService } from './colonias.service';
 import { Public, Roles } from 'api/decorators';
 import { CreateColoniaDto, IColoniaReturnDto } from 'api/dtos';
@@ -52,10 +41,7 @@ export class ColoniasController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
   @Put('colonias/:id')
-  async editcolonias(
-    @Param('id') id: string,
-    @Body() data: Colonia
-  ): Promise<Colonia> {
+  async editcolonias(@Param('id') id: string, @Body() data: Colonia): Promise<Colonia> {
     return this.coloniasService.updateColonia({
       where: { id },
       data,

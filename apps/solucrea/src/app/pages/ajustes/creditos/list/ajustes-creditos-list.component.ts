@@ -1,23 +1,7 @@
-import {
-  AsyncPipe,
-  CurrencyPipe,
-  NgFor,
-  NgIf,
-  TitleCasePipe,
-} from '@angular/common';
+import { AsyncPipe, CurrencyPipe, NgFor, NgIf, TitleCasePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  UntypedFormControl,
-} from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -39,15 +23,7 @@ import {
 } from 'app/pages/ajustes/_store';
 import { ConfirmationDialogComponent } from 'app/shared';
 import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
-import {
-  map,
-  Observable,
-  startWith,
-  Subject,
-  takeUntil,
-  tap,
-  withLatestFrom,
-} from 'rxjs';
+import { map, Observable, startWith, Subject, takeUntil, tap, withLatestFrom } from 'rxjs';
 
 @Component({
   selector: 'app-list',
@@ -114,12 +90,7 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
    */
   subscribeToActions(): Actions {
     return this._actions$.pipe(
-      ofActionCompleted(
-        GetAllCreditos,
-        EditCredito,
-        DeleteCredito,
-        ChangeSearchFilterCreditos
-      ),
+      ofActionCompleted(GetAllCreditos, EditCredito, DeleteCredito, ChangeSearchFilterCreditos),
       tap(result => {
         const { error, successful } = result.result;
         const { action } = result;
@@ -140,10 +111,7 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
             message = 'Crédito activado exitosamente.';
             this._store.dispatch(new ChangeSearchFilterCreditos(this.activo));
           }
-          if (
-            !(action instanceof GetAllCreditos) &&
-            !(action instanceof ChangeSearchFilterCreditos)
-          ) {
+          if (!(action instanceof GetAllCreditos) && !(action instanceof ChangeSearchFilterCreditos)) {
             this._toast.success(message, {
               duration: 4000,
               position: 'bottom-center',
@@ -163,10 +131,7 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
    *
    */
   newProducto(): void {
-    this._store.dispatch([
-      new Navigate([`ajustes/creditos/${AuthUtils.guid()}`]),
-      new AjustesModeCredito('new'),
-    ]);
+    this._store.dispatch([new Navigate([`ajustes/creditos/${AuthUtils.guid()}`]), new AjustesModeCredito('new')]);
   }
 
   /**
@@ -183,10 +148,7 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
    * @param id string
    */
   editProducto(id: string): void {
-    this._store.dispatch([
-      new Navigate([`ajustes/creditos/${id}`]),
-      new AjustesModeCredito('edit'),
-    ]);
+    this._store.dispatch([new Navigate([`ajustes/creditos/${id}`]), new AjustesModeCredito('edit')]);
   }
 
   /**
@@ -232,8 +194,6 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
     const filterValue = value.toLowerCase();
 
     // returning the filtered array
-    return productos.filter(producto =>
-      producto.descripcion.toLowerCase().includes(filterValue)
-    );
+    return productos.filter(producto => producto.descripcion.toLowerCase().includes(filterValue));
   }
 }

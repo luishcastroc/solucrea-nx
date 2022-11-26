@@ -13,16 +13,8 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
-import {
-  animate,
-  AnimationBuilder,
-  AnimationPlayer,
-  style,
-} from '@angular/animations';
-import {
-  FuseDrawerMode,
-  FuseDrawerPosition,
-} from '@fuse/components/drawer/drawer.types';
+import { animate, AnimationBuilder, AnimationPlayer, style } from '@angular/animations';
+import { FuseDrawerMode, FuseDrawerPosition } from '@fuse/components/drawer/drawer.types';
 import { FuseDrawerService } from '@fuse/components/drawer/drawer.service';
 import { FuseUtilsService } from '@fuse/services/utils/utils.service';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
@@ -172,9 +164,7 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy {
     // Transparent overlay
     if ('transparentOverlay' in changes) {
       // Coerce the value to a boolean
-      this.transparentOverlay = coerceBooleanProperty(
-        changes['transparentOverlay'].currentValue
-      );
+      this.transparentOverlay = coerceBooleanProperty(changes['transparentOverlay'].currentValue);
     }
   }
 
@@ -329,19 +319,11 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     // Append the backdrop to the parent of the drawer
-    this._renderer2.appendChild(
-      this._elementRef.nativeElement.parentElement,
-      this._overlay
-    );
+    this._renderer2.appendChild(this._elementRef.nativeElement.parentElement, this._overlay);
 
     // Create the enter animation and attach it to the player
     this._player = this._animationBuilder
-      .build([
-        animate(
-          '300ms cubic-bezier(0.25, 0.8, 0.25, 1)',
-          style({ opacity: 1 })
-        ),
-      ])
+      .build([animate('300ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({ opacity: 1 }))])
       .create(this._overlay);
 
     // Once the animation is done...
@@ -371,12 +353,7 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy {
 
     // Create the leave animation and attach it to the player
     this._player = this._animationBuilder
-      .build([
-        animate(
-          '300ms cubic-bezier(0.25, 0.8, 0.25, 1)',
-          style({ opacity: 0 })
-        ),
-      ])
+      .build([animate('300ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({ opacity: 0 }))])
       .create(this._overlay);
 
     // Play the animation

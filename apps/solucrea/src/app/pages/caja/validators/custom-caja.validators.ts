@@ -1,9 +1,4 @@
-import {
-  AbstractControl,
-  UntypedFormGroup,
-  ValidationErrors,
-  ValidatorFn,
-} from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { DateTime } from 'luxon';
 import { of } from 'rxjs';
 
@@ -41,9 +36,7 @@ export const checkIfEndDateBeforeStartDate =
     const fechaApertura = group.get('fechaApertura')?.value
       ? DateTime.fromISO(group.get('fechaApertura')?.value)
       : null;
-    const fechaCierre = group.get('fechaCierre')?.value
-      ? DateTime.fromISO(group.get('fechaCierre')?.value)
-      : null;
+    const fechaCierre = group.get('fechaCierre')?.value ? DateTime.fromISO(group.get('fechaCierre')?.value) : null;
 
     if (!value || !fechaApertura || !fechaCierre) {
       return null;
@@ -52,9 +45,7 @@ export const checkIfEndDateBeforeStartDate =
     const validDate = fechaCierre >= fechaApertura && fechaCierre <= todayDate;
 
     if (!validDate) {
-      group
-        .get('fechaCierre')
-        ?.setErrors({ checkIfEndDateBeforeStartDate: true });
+      group.get('fechaCierre')?.setErrors({ checkIfEndDateBeforeStartDate: true });
     }
 
     return validDate ? null : { checkIfEndDateBeforeStartDate: true };

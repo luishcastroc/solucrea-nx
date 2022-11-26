@@ -1,19 +1,7 @@
 /* eslint-disable quotes */
 /* eslint-disable @typescript-eslint/quotes */
-import {
-  Component,
-  inject,
-  Inject,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
-import {
-  NgForm,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators,
-} from '@angular/forms';
+import { Component, inject, Inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { NgForm, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
@@ -91,16 +79,14 @@ export class AuthForgotPasswordComponent implements OnInit {
           // Set the alert
           this.alert = {
             type: 'success',
-            message:
-              "Password reset sent! You'll receive an email if you are registered on our system.",
+            message: "Password reset sent! You'll receive an email if you are registered on our system.",
           };
         },
         response => {
           // Set the alert
           this.alert = {
             type: 'error',
-            message:
-              'Email does not found! Are you sure you are already a member?',
+            message: 'Email does not found! Are you sure you are already a member?',
           };
         }
       );

@@ -20,8 +20,6 @@ export class ParentescosService {
    *
    */
   getParentescos(): Observable<IParentescoReturnDto[]> {
-    return this._httpClient.get<IParentescoReturnDto[]>(
-      `${this._environment.uri}/parentescos`
-    );
+    return this._httpClient.get<IParentescoReturnDto[]>(`${this._environment.uri}/parentescos`);
   }
 }

@@ -1,13 +1,6 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
   ReactiveFormsModule,
   UntypedFormBuilder,
@@ -16,10 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  MatFormFieldControl,
-  MatFormFieldModule,
-} from '@angular/material/form-field';
+import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -105,39 +95,27 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
   }
 
   get cp() {
-    return this.sucursalForm
-      .get('direccion')
-      ?.get('codigoPostal') as UntypedFormControl;
+    return this.sucursalForm.get('direccion')?.get('codigoPostal') as UntypedFormControl;
   }
 
   get colonia() {
-    return this.sucursalForm
-      .get('direccion')
-      ?.get('colonia') as UntypedFormControl;
+    return this.sucursalForm.get('direccion')?.get('colonia') as UntypedFormControl;
   }
 
   get calle() {
-    return this.sucursalForm
-      .get('direccion')
-      ?.get('calle') as UntypedFormControl;
+    return this.sucursalForm.get('direccion')?.get('calle') as UntypedFormControl;
   }
 
   get numero() {
-    return this.sucursalForm
-      .get('direccion')
-      ?.get('numero') as UntypedFormControl;
+    return this.sucursalForm.get('direccion')?.get('numero') as UntypedFormControl;
   }
 
   get ciudad() {
-    return this.sucursalForm
-      .get('direccion')
-      ?.get('ciudad') as UntypedFormControl;
+    return this.sucursalForm.get('direccion')?.get('ciudad') as UntypedFormControl;
   }
 
   get estado() {
-    return this.sucursalForm
-      .get('direccion')
-      ?.get('estado') as UntypedFormControl;
+    return this.sucursalForm.get('direccion')?.get('estado') as UntypedFormControl;
   }
 
   ngOnInit(): void {
@@ -207,35 +185,31 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
           }
         }
 
-        this.colonias$ = this._store
-          .select(AjustesSucursalesState.colonias)
-          .pipe(
-            tap((colonias: IColoniaReturnDto | undefined) => {
-              if (colonias) {
-                this.ciudad.patchValue(colonias.ciudad.descripcion);
-                this.estado.patchValue(colonias.estado.descripcion);
-              }
-            })
-          );
+        this.colonias$ = this._store.select(AjustesSucursalesState.colonias).pipe(
+          tap((colonias: IColoniaReturnDto | undefined) => {
+            if (colonias) {
+              this.ciudad.patchValue(colonias.ciudad.descripcion);
+              this.estado.patchValue(colonias.estado.descripcion);
+            }
+          })
+        );
 
-        this.selectedSucursal$ = this._store
-          .select(AjustesSucursalesState.selectedSucursal)
-          .pipe(
-            tap((sucursal: ISucursalReturnDto | undefined) => {
-              if (sucursal) {
-                this.sucursalForm.patchValue({
-                  ...sucursal,
-                  direccion: {
-                    ...sucursal.direccion,
-                    colonia: sucursal.direccion.colonia.id,
-                    codigoPostal: sucursal.direccion.colonia.codigoPostal,
-                  },
-                });
+        this.selectedSucursal$ = this._store.select(AjustesSucursalesState.selectedSucursal).pipe(
+          tap((sucursal: ISucursalReturnDto | undefined) => {
+            if (sucursal) {
+              this.sucursalForm.patchValue({
+                ...sucursal,
+                direccion: {
+                  ...sucursal.direccion,
+                  colonia: sucursal.direccion.colonia.id,
+                  codigoPostal: sucursal.direccion.colonia.codigoPostal,
+                },
+              });
 
-                this.getColonias(sucursal.direccion.colonia.codigoPostal);
-              }
-            })
-          );
+              this.getColonias(sucursal.direccion.colonia.codigoPostal);
+            }
+          })
+        );
       })
     );
   }
@@ -282,9 +256,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
       this.sucursalForm.disable();
       this._store.dispatch(new AddSucursal(this.sucursalForm.value));
     } else if (this.editMode === 'edit') {
-      const sucursalEdit = this._sharedService.getDirtyValues(
-        this.sucursalForm
-      );
+      const sucursalEdit = this._sharedService.getDirtyValues(this.sucursalForm);
       this._store.dispatch(new EditSucursal(this.id.value, sucursalEdit));
     }
   }

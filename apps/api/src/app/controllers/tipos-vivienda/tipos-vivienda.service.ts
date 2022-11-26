@@ -9,9 +9,7 @@ export class TiposViviendaService {
 
   // Tipos de Vivienda
 
-  async tipoDeVivienda(
-    where: Prisma.TipoDeViviendaWhereUniqueInput
-  ): Promise<ITipoDeViviendaReturnDto | null> {
+  async tipoDeVivienda(where: Prisma.TipoDeViviendaWhereUniqueInput): Promise<ITipoDeViviendaReturnDto | null> {
     return await this.prisma.tipoDeVivienda.findUnique({
       where,
       select: { id: true, descripcion: true },
@@ -24,9 +22,7 @@ export class TiposViviendaService {
     });
   }
 
-  async createTipoDeVivienda(
-    data: Prisma.TipoDeViviendaCreateInput
-  ): Promise<ITipoDeViviendaReturnDto> {
+  async createTipoDeVivienda(data: Prisma.TipoDeViviendaCreateInput): Promise<ITipoDeViviendaReturnDto> {
     return await this.prisma.tipoDeVivienda.create({
       data,
       select: { id: true, descripcion: true },
@@ -45,9 +41,7 @@ export class TiposViviendaService {
     });
   }
 
-  async deleteTipoDeVivienda(
-    where: Prisma.TipoDeViviendaWhereUniqueInput
-  ): Promise<ITipoDeViviendaReturnDto> {
+  async deleteTipoDeVivienda(where: Prisma.TipoDeViviendaWhereUniqueInput): Promise<ITipoDeViviendaReturnDto> {
     return this.prisma.tipoDeVivienda.delete({
       where,
       select: { id: true, descripcion: true },

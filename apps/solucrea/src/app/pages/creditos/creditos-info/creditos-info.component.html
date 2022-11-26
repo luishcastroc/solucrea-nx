@@ -1,8 +1,6 @@
 <div class="flex w-full flex-auto flex-col">
   <div class="flex justify-between border-b pb-3">
-    <h1 class="text-4xl font-extrabold leading-none tracking-tight">
-      Detalles Crédito
-    </h1>
+    <h1 class="text-4xl font-extrabold leading-none tracking-tight">Detalles Crédito</h1>
     <button
       mat-icon-button
       aria-label="Regresar"
@@ -21,11 +19,7 @@
     [fuseScrollbarOptions]="{
       suppressScrollX: true
     }">
-    <mat-stepper
-      [linear]="true"
-      #stepper
-      labelPosition="bottom"
-      class="flex flex-auto flex-col">
+    <mat-stepper [linear]="true" #stepper labelPosition="bottom" class="flex flex-auto flex-col">
       <mat-step
         ><ng-template matStepLabel>Datos Generales</ng-template>
         <div class="z-20 flex flex-col px-2 py-4 md:px-10">
@@ -44,20 +38,16 @@
               <div class="flex flex-col">
                 <div class="font-bold">Teléfono:</div>
                 <div class="mt-2">
-                  ({{ credito.cliente.telefono1 | slice: 0:3 }})-{{
-                    credito.cliente.telefono1 | slice: 3:6
-                  }}-{{ credito.cliente.telefono1 | slice: 6:8 }}-{{
-                    credito.cliente.telefono1 | slice: 8:10
-                  }}
+                  ({{ credito.cliente.telefono1 | slice : 0 : 3 }})-{{ credito.cliente.telefono1 | slice : 3 : 6 }}-{{
+                    credito.cliente.telefono1 | slice : 6 : 8
+                  }}-{{ credito.cliente.telefono1 | slice : 8 : 10 }}
                 </div>
               </div>
               <!-- Fecha de Nacimiento -->
               <div class="flex flex-col">
                 <div class="font-bold">Fecha de Nacimiento:</div>
                 <div class="mt-2">
-                  {{
-                    credito.cliente.fechaDeNacimiento | date: 'd MMM yyyy':'UTC'
-                  }}
+                  {{ credito.cliente.fechaDeNacimiento | date : 'd MMM yyyy' : 'UTC' }}
                 </div>
               </div>
               <!-- RFC del Cliente -->
@@ -97,25 +87,21 @@
               <div class="flex flex-col">
                 <div class="font-bold">Monto Otorgado:</div>
                 <div class="mt-2">
-                  {{
-                    credito.monto | decimalToNumber | currency: 'MXN':'symbol'
-                  }}
+                  {{ credito.monto | decimalToNumber | currency : 'MXN' : 'symbol' }}
                 </div>
               </div>
               <!-- Monto Otorgado -->
               <div class="flex flex-col">
                 <div class="font-bold">Cuota:</div>
                 <div class="mt-2">
-                  {{
-                    credito.cuota | decimalToNumber | currency: 'MXN':'symbol'
-                  }}
+                  {{ credito.cuota | decimalToNumber | currency : 'MXN' : 'symbol' }}
                 </div>
               </div>
               <!-- Fecha Desembolso -->
               <div class="flex flex-col">
                 <div class="font-bold">Fecha de Desembolso:</div>
                 <div class="mt-2">
-                  {{ credito.fechaDesembolso | date: 'd MMM yyyy':'UTC' }}
+                  {{ credito.fechaDesembolso | date : 'd MMM yyyy' : 'UTC' }}
                 </div>
               </div>
               <!-- Pagos Realizados -->
@@ -132,37 +118,25 @@
               <div class="flex flex-col">
                 <div class="font-bold">Saldo al día de hoy:</div>
                 <div class="mt-2">
-                  {{
-                    credito.saldo | decimalToNumber | currency: 'MXN':'symbol'
-                  }}
+                  {{ credito.saldo | decimalToNumber | currency : 'MXN' : 'symbol' }}
                 </div>
               </div>
               <!-- Saldo Vencido -->
               <div class="flex flex-col">
                 <div class="font-bold">Saldo Vencido:</div>
                 <div class="mt-2">
-                  {{
-                    credito.saldoVencido
-                      | decimalToNumber
-                      | currency: 'MXN':'symbol'
-                  }}
+                  {{ credito.saldoVencido | decimalToNumber | currency : 'MXN' : 'symbol' }}
                 </div>
               </div>
               <!-- Pago No Intereses -->
               <div class="flex flex-col">
                 <div class="font-bold">Pago para no generar interés:</div>
                 <div class="mt-2">
-                  {{
-                    credito.pagoNoIntereses
-                      | decimalToNumber
-                      | currency: 'MXN':'symbol'
-                  }}
+                  {{ credito.pagoNoIntereses | decimalToNumber | currency : 'MXN' : 'symbol' }}
                 </div>
               </div>
             </div>
-            <h2 class="text-3xl font-extrabold leading-none tracking-tight">
-              Aval
-            </h2>
+            <h2 class="text-3xl font-extrabold leading-none tracking-tight">Aval</h2>
             <div class="z-20 grid grid-cols-2 gap-4 md:grid-cols-5">
               <!-- Nombre del Aval -->
               <div class="flex flex-col">
@@ -176,11 +150,9 @@
               <div class="flex flex-col">
                 <div class="font-bold">Teléfono:</div>
                 <div class="mt-2">
-                  ({{ credito.aval.telefono | slice: 0:3 }})-{{
-                    credito.aval.telefono | slice: 3:6
-                  }}-{{ credito.aval.telefono | slice: 6:8 }}-{{
-                    credito.aval.telefono | slice: 8:10
-                  }}
+                  ({{ credito.aval.telefono | slice : 0 : 3 }})-{{ credito.aval.telefono | slice : 3 : 6 }}-{{
+                    credito.aval.telefono | slice : 6 : 8
+                  }}-{{ credito.aval.telefono | slice : 8 : 10 }}
                 </div>
               </div>
               <!-- Parentesco -->
@@ -193,25 +165,11 @@
             </div>
           </div>
           <div class="flex basis-40 items-end gap-3">
-            <button
-              mat-flat-button
-              type="button"
-              [color]="'primary'"
-              matStepperNext>
-              Siguiente
-            </button>
-            <button
-              mat-stroked-button
-              type="button"
-              (click)="goToPago()"
-              *ngIf="credito.status !== 'CERRADO'">
+            <button mat-flat-button type="button" [color]="'primary'" matStepperNext>Siguiente</button>
+            <button mat-stroked-button type="button" (click)="goToPago()" *ngIf="credito.status !== 'CERRADO'">
               Pagar
             </button>
-            <button
-              mat-stroked-button
-              type="button"
-              (click)="goToPagosList()"
-              *ngIf="credito.pagos.length > 0">
+            <button mat-stroked-button type="button" (click)="goToPagosList()" *ngIf="credito.pagos.length > 0">
               Lista de Pagos
             </button>
           </div>
@@ -227,8 +185,7 @@
             }">
             <div class="hidden md:mb-4 md:grid md:grid-cols-4">
               <span class="text-center font-bold">Numero de Pago</span
-              ><span class="text-center font-bold">Fecha de Pago</span
-              ><span class="text-center font-bold">Monto</span
+              ><span class="text-center font-bold">Fecha de Pago</span><span class="text-center font-bold">Monto</span
               ><span class="text-center font-bold">Estatus</span>
             </div>
             <div
@@ -246,39 +203,23 @@
               <div class="grid grid-cols-2 md:grid-cols-1">
                 <div class="font-bold md:hidden">Monto:</div>
                 <div class="text-center">
-                  {{ pago.monto | decimalToNumber | currency: 'MXN':'symbol' }}
+                  {{ pago.monto | decimalToNumber | currency : 'MXN' : 'symbol' }}
                 </div>
               </div>
               <div class="grid grid-cols-2 md:grid-cols-1">
                 <div class="font-bold md:hidden">Estado del Pago:</div>
-                <div
-                  class="text-center font-bold"
-                  [class.text-red-600]="pago.status === 'ADEUDA'">
+                <div class="text-center font-bold" [class.text-red-600]="pago.status === 'ADEUDA'">
                   {{ pago.status }}
                 </div>
               </div>
             </div>
           </div>
           <div class="basis-30 flex flex-auto items-end gap-3">
-            <button
-              mat-flat-button
-              type="button"
-              [color]="'primary'"
-              matStepperPrevious>
-              Anterior
-            </button>
-            <button
-              mat-stroked-button
-              type="button"
-              (click)="goToPago()"
-              *ngIf="credito.status !== 'CERRADO'">
+            <button mat-flat-button type="button" [color]="'primary'" matStepperPrevious>Anterior</button>
+            <button mat-stroked-button type="button" (click)="goToPago()" *ngIf="credito.status !== 'CERRADO'">
               Pagar
             </button>
-            <button
-              mat-stroked-button
-              type="button"
-              (click)="goToPagosList()"
-              *ngIf="credito.pagos.length > 0">
+            <button mat-stroked-button type="button" (click)="goToPagosList()" *ngIf="credito.pagos.length > 0">
               Lista de Pagos
             </button>
           </div>
@@ -289,12 +230,7 @@
         </mat-card> -->
   </div>
 </div>
-<ng-container
-  *ngIf="
-    loading$ | async;
-    then loadingTemplate;
-    else formTemplate
-  "></ng-container>
+<ng-container *ngIf="loading$ | async; then loadingTemplate; else formTemplate"></ng-container>
 <ng-template #formTemplate></ng-template>
 <ng-template #loadingTemplate>
   <div class="flex flex-auto flex-col self-center">

@@ -5,31 +5,21 @@
     creditosCount: creditosCount$ | async,
     cliente: cliente$ | async
   } as data">
-  <ng-container
-    *ngIf="
-      loading$ | async;
-      then loadingTemplate;
-      else dataTemplate
-    "></ng-container>
+  <ng-container *ngIf="loading$ | async; then loadingTemplate; else dataTemplate"></ng-container>
   <ng-template #loadingTemplate>
     <div class="flex flex-auto flex-col self-center">
       <mat-spinner> </mat-spinner>
     </div>
   </ng-template>
   <ng-template #dataTemplate>
-    <ng-container
-      *ngIf="data.turnosCount && data.turnosCount > 0; else noCajasTemplate">
+    <ng-container *ngIf="data.turnosCount && data.turnosCount > 0; else noCajasTemplate">
       <div class="absolute inset-0 flex min-w-0 flex-col overflow-hidden">
         <!-- Header -->
         <div class="flex flex-col border-b py-8 px-6 md:max-h-56 md:px-8">
           <!-- Title -->
           <div>
-            <div class="text-4xl font-extrabold leading-none tracking-tight">
-              Créditos del Cliente
-            </div>
-            <div
-              class="text-secondary ml-0.5 font-medium"
-              *ngIf="data.creditosCount as creditosCount">
+            <div class="text-4xl font-extrabold leading-none tracking-tight">Créditos del Cliente</div>
+            <div class="text-secondary ml-0.5 font-medium" *ngIf="data.creditosCount as creditosCount">
               <ng-container *ngIf="creditosCount > 0">
                 {{ creditosCount | number }}
               </ng-container>
@@ -48,20 +38,10 @@
           <!-- Main actions -->
           <div class="mt-4 flex flex-auto flex-col items-center gap-4">
             <!-- Search -->
-            <div
-              class="w-full"
-              *ngIf="data.creditosCount && data.creditosCount > 0">
-              <mat-form-field
-                class="fuse-mat-dense fuse-mat-no-subscript min-w-50 w-full">
-                <mat-icon
-                  class="icon-size-5"
-                  matPrefix
-                  [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                <input
-                  matInput
-                  [formControl]="searchInput"
-                  [autocomplete]="'off'"
-                  [placeholder]="'Buscar crédito'" />
+            <div class="w-full" *ngIf="data.creditosCount && data.creditosCount > 0">
+              <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript min-w-50 w-full">
+                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                <input matInput [formControl]="searchInput" [autocomplete]="'off'" [placeholder]="'Buscar crédito'" />
               </mat-form-field>
             </div>
             <div class="flex flex-auto flex-col items-center gap-4 md:flex-row">
@@ -71,19 +51,12 @@
                 class="grid grid-cols-3 justify-items-center gap-3"
                 [(ngModel)]="status"
                 *ngIf="data.creditosCount && data.creditosCount > 0">
-                <mat-radio-button
-                  *ngFor="let value of values"
-                  [value]="value.value"
-                  (change)="changeFilter($event)">
+                <mat-radio-button *ngFor="let value of values" [value]="value.value" (change)="changeFilter($event)">
                   {{ value.display }}
                 </mat-radio-button>
               </mat-radio-group>
               <!-- Add cliente button -->
-              <button
-                class="ml-4"
-                mat-flat-button
-                [color]="'primary'"
-                (click)="openNewCredito()">
+              <button class="ml-4" mat-flat-button [color]="'primary'" (click)="openNewCredito()">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">Agregar</span>
               </button>
@@ -98,8 +71,7 @@
             suppressScrollX: true
           }">
           <mat-card class="mb-8">
-            <div
-              class="z-20 grid grid-cols-1 gap-4 px-2 py-4 md:grid-cols-5 md:px-10">
+            <div class="z-20 grid grid-cols-1 gap-4 px-2 py-4 md:grid-cols-5 md:px-10">
               <!-- Nombre del Cliente -->
               <div class="flex flex-col">
                 <div class="font-bold">Nombre Cliente:</div>
@@ -112,11 +84,9 @@
               <div class="flex flex-col">
                 <div class="font-bold">Teléfono:</div>
                 <div class="mt-2">
-                  ({{ data.cliente?.telefono1 | slice: 0:3 }})-{{
-                    data.cliente?.telefono1 | slice: 3:6
-                  }}-{{ data.cliente?.telefono1 | slice: 6:8 }}-{{
-                    data.cliente?.telefono1 | slice: 8:10
-                  }}
+                  ({{ data.cliente?.telefono1 | slice : 0 : 3 }})-{{ data.cliente?.telefono1 | slice : 3 : 6 }}-{{
+                    data.cliente?.telefono1 | slice : 6 : 8
+                  }}-{{ data.cliente?.telefono1 | slice : 8 : 10 }}
                 </div>
               </div>
               <!-- CURP del Cliente -->
@@ -136,10 +106,8 @@
             </div>
           </mat-card>
           <ng-container *ngFor="let credito of data.creditos">
-            <div
-              class="z-20 grid grid-cols-1 gap-4 border-b px-2 py-4 md:grid-cols-[1fr_minmax(auto,_200px)] md:px-10">
-              <div
-                class="grid grid-cols-2 gap-6 px-5 md:grid-cols-3 lg:w-5/6 lg:grid-cols-4">
+            <div class="z-20 grid grid-cols-1 gap-4 border-b px-2 py-4 md:grid-cols-[1fr_minmax(auto,_200px)] md:px-10">
+              <div class="grid grid-cols-2 gap-6 px-5 md:grid-cols-3 lg:w-5/6 lg:grid-cols-4">
                 <div class="flex flex-col">
                   <div class="font-bold">Producto Otorgado:</div>
                   <div class="mt-2">{{ credito.producto.nombre }}</div>
@@ -147,9 +115,7 @@
                 <div class="flex flex-col">
                   <div class="font-bold">Monto Otorgado:</div>
                   <div class="mt-2">
-                    {{
-                      credito.monto | decimalToNumber | currency: 'MXN':'symbol'
-                    }}
+                    {{ credito.monto | decimalToNumber | currency : 'MXN' : 'symbol' }}
                   </div>
                 </div>
                 <div class="flex flex-col">
@@ -165,8 +131,7 @@
                   <div class="mt-2">{{ credito.status }}</div>
                 </div>
               </div>
-              <div
-                class="xsm:flex-col order-1 flex items-center justify-center sm:order-2 sm:ml-3">
+              <div class="xsm:flex-col order-1 flex items-center justify-center sm:order-2 sm:ml-3">
                 <button
                   mat-icon-button
                   aria-label="Detalle"
@@ -174,19 +139,13 @@
                   matTooltip="Detalle"
                   [matTooltipPosition]="'below'"
                   (click)="goToDetails(credito.id)">
-                  <mat-icon
-                    class="text-hint"
-                    [svgIcon]="'heroicons_outline:cash'"></mat-icon>
+                  <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:cash'"></mat-icon>
                 </button>
                 <button
                   mat-icon-button
                   aria-label="Inactivar Credito"
                   #tooltip="matTooltip"
-                  matTooltip="{{
-                    credito.status === 'ABIERTO' || 'MORA'
-                      ? 'Inactivar Credito'
-                      : 'Activar Credito'
-                  }}"
+                  matTooltip="{{ credito.status === 'ABIERTO' || 'MORA' ? 'Inactivar Credito' : 'Activar Credito' }}"
                   [matTooltipPosition]="'below'">
                   <mat-icon
                     class="text-hint"
@@ -206,11 +165,7 @@
       <div class="mt-5 flex w-full flex-row items-center justify-center">
         <div class="font-bold">No existen turnos para otorgar créditos</div>
         <!-- Add cliente button -->
-        <button
-          class="ml-4"
-          mat-flat-button
-          [color]="'primary'"
-          (click)="newCaja()">
+        <button class="ml-4" mat-flat-button [color]="'primary'" (click)="newCaja()">
           <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
           <span class="ml-2 mr-1">Agregar</span>
         </button>

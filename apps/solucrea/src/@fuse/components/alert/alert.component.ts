@@ -17,10 +17,7 @@ import {
 } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertService } from '@fuse/components/alert/alert.service';
-import {
-  FuseAlertAppearance,
-  FuseAlertType,
-} from '@fuse/components/alert/alert.types';
+import { FuseAlertAppearance, FuseAlertType } from '@fuse/components/alert/alert.types';
 import { FuseUtilsService } from '@fuse/services/utils/utils.service';
 import { Subject, filter, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -118,9 +115,7 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy {
     // Dismissible
     if ('dismissible' in changes) {
       // Coerce the value to a boolean
-      this.dismissible = coerceBooleanProperty(
-        changes['dismissible'].currentValue
-      );
+      this.dismissible = coerceBooleanProperty(changes['dismissible'].currentValue);
     }
 
     // Show icon

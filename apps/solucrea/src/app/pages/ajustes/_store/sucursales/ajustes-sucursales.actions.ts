@@ -13,10 +13,7 @@ export class GetAllSucursales {
 
 export class EditSucursal {
   static readonly type = '[Sucursal] Edit';
-  constructor(
-    public id: string,
-    public payload: Prisma.SucursalUncheckedUpdateInput
-  ) {}
+  constructor(public id: string, public payload: Prisma.SucursalUncheckedUpdateInput) {}
 }
 
 export class DeleteSucursal {

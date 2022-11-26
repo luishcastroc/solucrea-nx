@@ -22,25 +22,13 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { EditMode } from 'app/core/models';
-import {
-  AddUsuario,
-  AjustesUsuariosState,
-  ClearUsuarioState,
-  EditUsuario,
-} from 'app/pages/ajustes/_store';
+import { AddUsuario, AjustesUsuariosState, ClearUsuarioState, EditUsuario } from 'app/pages/ajustes/_store';
 import { Observable, Subject, tap } from 'rxjs';
 
 import { defaultRoles } from '../../_config/roles';
 import { IRole } from '../../models/roles.model';
 import { createPasswordStrengthValidator } from '../../validators/custom-ajustes.validators';
-import {
-  AsyncPipe,
-  NgFor,
-  NgIf,
-  NgSwitch,
-  NgSwitchCase,
-  TitleCasePipe,
-} from '@angular/common';
+import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, TitleCasePipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
@@ -136,18 +124,16 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
         this.createUsuarioForm(edit);
         this.editMode = edit;
 
-        this.selectedUsuario$ = this._store
-          .select(AjustesUsuariosState.selectedUsuario)
-          .pipe(
-            tap((usuario: Usuario | undefined) => {
-              if ((usuario && edit === 'edit') || edit === 'password') {
-                this.selectedUsuario = usuario;
-                if (this.selectedUsuario) {
-                  this.usuarioForm.patchValue(this.selectedUsuario);
-                }
+        this.selectedUsuario$ = this._store.select(AjustesUsuariosState.selectedUsuario).pipe(
+          tap((usuario: Usuario | undefined) => {
+            if ((usuario && edit === 'edit') || edit === 'password') {
+              this.selectedUsuario = usuario;
+              if (this.selectedUsuario) {
+                this.usuarioForm.patchValue(this.selectedUsuario);
               }
-            })
-          );
+            }
+          })
+        );
       })
     );
   }
@@ -195,11 +181,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
   createUsuarioForm(editMode: EditMode): void {
     const passwordValidators =
       editMode === 'new'
-        ? [
-            Validators.required,
-            Validators.minLength(8),
-            createPasswordStrengthValidator(),
-          ]
+        ? [Validators.required, Validators.minLength(8), createPasswordStrengthValidator()]
         : [Validators.minLength(8), createPasswordStrengthValidator()];
 
     const requiredValue = editMode === 'new' ? Validators.required : null;
@@ -227,8 +209,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
    * @param mode
    */
   updateUsuario(): void {
-    const { nombre, apellido, nombreUsuario, password, role } =
-      this.usuarioForm.value;
+    const { nombre, apellido, nombreUsuario, password, role } = this.usuarioForm.value;
     let usuario;
     if (!password) {
       usuario = {

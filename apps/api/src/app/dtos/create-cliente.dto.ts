@@ -43,10 +43,7 @@ export class CreateClienteDto {
   @IsNotEmpty({ message: 'Apellido materno es requerido' })
   apellidoMaterno!: string;
   @IsNotEmpty({ message: 'Fecha de nacimiento es requerida' })
-  @IsDateString(
-    { strict: true },
-    { message: 'Fecha inválida favor de verificar' }
-  )
+  @IsDateString({ strict: true }, { message: 'Fecha inválida favor de verificar' })
   fechaDeNacimiento!: string | Date;
   @IsNotEmpty({ message: 'RFC es requerido' })
   rfc!: string;

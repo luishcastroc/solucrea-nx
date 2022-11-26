@@ -17,9 +17,7 @@ export interface ICreateSucursalDto {
 
 const prisma = new PrismaClient();
 
-export const createSucursal = async (
-  sucursal: ICreateSucursalDto
-): Promise<Prisma.SucursalCreateInput | null> => {
+export const createSucursal = async (sucursal: ICreateSucursalDto): Promise<Prisma.SucursalCreateInput | null> => {
   const { nombre, telefono, direccion: direccionIn } = sucursal;
   const colonia = await prisma.colonia.findFirstOrThrow({
     where: {

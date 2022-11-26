@@ -1,23 +1,7 @@
-import {
-  AsyncPipe,
-  DecimalPipe,
-  I18nPluralPipe,
-  NgFor,
-  NgIf,
-} from '@angular/common';
+import { AsyncPipe, DecimalPipe, I18nPluralPipe, NgFor, NgIf } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-} from '@angular/core';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  UntypedFormControl,
-} from '@angular/forms';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,14 +14,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { IClienteReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth/auth.utils';
-import {
-  ClientesMode,
-  ClientesState,
-  Edit,
-  GetAllCount,
-  Inactivate,
-  Search,
-} from 'app/pages/clientes/_store';
+import { ClientesMode, ClientesState, Edit, GetAllCount, Inactivate, Search } from 'app/pages/clientes/_store';
 import { debounceTime, distinctUntilChanged, Observable, tap } from 'rxjs';
 
 @Component({
@@ -141,10 +118,7 @@ export class ClienteListComponent implements OnInit, AfterViewInit {
    * function to generate a new Cliente
    */
   newCliente() {
-    this._store.dispatch([
-      new Navigate([`clientes/${AuthUtils.guid()}`]),
-      new ClientesMode('new'),
-    ]);
+    this._store.dispatch([new Navigate([`clientes/${AuthUtils.guid()}`]), new ClientesMode('new')]);
   }
 
   /**
@@ -154,10 +128,7 @@ export class ClienteListComponent implements OnInit, AfterViewInit {
    * @param id string
    */
   editCliente(id: string): void {
-    this._store.dispatch([
-      new Navigate([`clientes/${id}`]),
-      new ClientesMode('edit'),
-    ]);
+    this._store.dispatch([new Navigate([`clientes/${id}`]), new ClientesMode('edit')]);
   }
 
   /**

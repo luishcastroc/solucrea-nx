@@ -1,29 +1,13 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  UseGuards,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Prisma, Role } from '@prisma/client';
 import { ActividadesEconomicasService } from './actividades-economicas.service';
 import { Public, Roles } from 'api/decorators';
-import {
-  CreateActividadEconomicaDto,
-  IActividadEconomicaReturnDto,
-} from 'api/dtos';
+import { CreateActividadEconomicaDto, IActividadEconomicaReturnDto } from 'api/dtos';
 import { RolesGuard } from 'api/guards';
 
 @Controller()
 export class ActividadesEconomicasController {
-  constructor(
-    private readonly actividadesEconomicasService: ActividadesEconomicasService
-  ) {}
+  constructor(private readonly actividadesEconomicasService: ActividadesEconomicasService) {}
 
   @UseGuards(RolesGuard)
   @Public()
@@ -35,9 +19,7 @@ export class ActividadesEconomicasController {
   @UseGuards(RolesGuard)
   @Public()
   @Get('actividad-economica/:id')
-  async getActividadEconomica(
-    @Param('id') id: string
-  ): Promise<IActividadEconomicaReturnDto | null> {
+  async getActividadEconomica(@Param('id') id: string): Promise<IActividadEconomicaReturnDto | null> {
     return this.actividadesEconomicasService.actividadEconomica({ id });
   }
 
@@ -45,9 +27,7 @@ export class ActividadesEconomicasController {
   @UsePipes(new ValidationPipe())
   @Roles(Role.ADMIN)
   @Post('actividad-economica')
-  async createActividadEconomica(
-    @Body() data: CreateActividadEconomicaDto
-  ): Promise<IActividadEconomicaReturnDto> {
+  async createActividadEconomica(@Body() data: CreateActividadEconomicaDto): Promise<IActividadEconomicaReturnDto> {
     return this.actividadesEconomicasService.createActividadEconomica(data);
   }
 
@@ -67,9 +47,7 @@ export class ActividadesEconomicasController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
   @Delete('actividad-economica/:id')
-  async deleteActividadEconomica(
-    @Param('id') id: string
-  ): Promise<IActividadEconomicaReturnDto> {
+  async deleteActividadEconomica(@Param('id') id: string): Promise<IActividadEconomicaReturnDto> {
     return this.actividadesEconomicasService.deleteActividadEconomica({ id });
   }
 }

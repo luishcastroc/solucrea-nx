@@ -9,18 +9,7 @@ import { DecimalToNumberPipe } from './pipes/decimalnumber.pipe';
 
 @NgModule({
   declarations: [ConfirmationDialogComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatButtonModule,
-  ],
-  exports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ConfirmationDialogComponent,
-  ],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatDialogModule, MatButtonModule],
+  exports: [CommonModule, FormsModule, ReactiveFormsModule, ConfirmationDialogComponent],
 })
 export class SharedModule {}

@@ -31,10 +31,7 @@ export class AjustesUsuarioService {
    *
    */
   getUsuariosWhere(where: Prisma.UsuarioWhereInput) {
-    return this._httpClient.post<Usuario[]>(
-      `${this._environment.uri}/usuarios/where`,
-      where
-    );
+    return this._httpClient.post<Usuario[]>(`${this._environment.uri}/usuarios/where`, where);
   }
 
   /**
@@ -43,9 +40,7 @@ export class AjustesUsuarioService {
    * @param id
    */
   getUsuario(id: string): Observable<Usuario> {
-    return this._httpClient.get<Usuario>(
-      `${this._environment.uri}/usuario/${id}`
-    );
+    return this._httpClient.get<Usuario>(`${this._environment.uri}/usuario/${id}`);
   }
 
   /**
@@ -54,10 +49,7 @@ export class AjustesUsuarioService {
    * @param CreateUsuarioDto
    */
   addUsuario(usuario: CreateUsuarioDto): Observable<Usuario> {
-    return this._httpClient.post<Usuario>(
-      `${this._environment.uri}/usuario`,
-      usuario
-    );
+    return this._httpClient.post<Usuario>(`${this._environment.uri}/usuario`, usuario);
   }
 
   /**
@@ -66,10 +58,7 @@ export class AjustesUsuarioService {
    * @param UpdateUsuarioDto
    */
   editUsuario(id: string, usuario: UpdateUsuarioDto): Observable<Usuario> {
-    return this._httpClient.put<Usuario>(
-      `${this._environment.uri}/usuario/${id}`,
-      usuario
-    );
+    return this._httpClient.put<Usuario>(`${this._environment.uri}/usuario/${id}`, usuario);
   }
 
   /**
@@ -78,8 +67,6 @@ export class AjustesUsuarioService {
    * @param id
    */
   deleteUsuario(id: string): Observable<Usuario> {
-    return this._httpClient.delete<Usuario>(
-      `${this._environment.uri}/usuario/${id}`
-    );
+    return this._httpClient.delete<Usuario>(`${this._environment.uri}/usuario/${id}`);
   }
 }

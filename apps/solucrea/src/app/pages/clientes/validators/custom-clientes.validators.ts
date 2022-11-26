@@ -93,14 +93,10 @@ export const rfcValidator =
       // o es un RFC Genérico (ventas a público general)?
       if (
         Number(digitoVerificador) !== digitoEsperado &&
-        (!aceptarGenerico ||
-          rfcSinDigito + digitoVerificador !== 'XAXX010101000')
+        (!aceptarGenerico || rfcSinDigito + digitoVerificador !== 'XAXX010101000')
       ) {
         return false;
-      } else if (
-        !aceptarGenerico &&
-        rfcSinDigito + digitoVerificador === 'XEXX010101000'
-      ) {
+      } else if (!aceptarGenerico && rfcSinDigito + digitoVerificador === 'XEXX010101000') {
         return false;
       }
       return true;

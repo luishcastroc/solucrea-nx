@@ -40,10 +40,7 @@ export class AuthService {
   signIn(credentials: { username: string; password: string }): Observable<any> {
     // Throw error, if the user is already logged in
 
-    return this._httpClient.post(
-      `${this._environment.uri}/auth/login`,
-      credentials
-    );
+    return this._httpClient.post(`${this._environment.uri}/auth/login`, credentials);
   }
 
   checkAuthorization(userRole: Role, allowedRoles: Role[]): boolean {

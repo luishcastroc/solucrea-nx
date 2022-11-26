@@ -20,10 +20,7 @@ import { LocalAuthGuard, RolesGuard } from 'api/guards';
 
 @Controller()
 export class UsuariosController {
-  constructor(
-    private readonly usuariosService: UsuariosService,
-    private readonly authService: AuthService
-  ) {}
+  constructor(private readonly usuariosService: UsuariosService, private readonly authService: AuthService) {}
 
   @Public()
   @UseGuards(LocalAuthGuard)
@@ -50,9 +47,7 @@ export class UsuariosController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
   @Post('usuario')
-  async createUsuario(
-    @Body() data: CreateUsuarioDto
-  ): Promise<Partial<Usuario>> {
+  async createUsuario(@Body() data: CreateUsuarioDto): Promise<Partial<Usuario>> {
     return await this.usuariosService.createUsuario(data);
   }
 
@@ -84,9 +79,7 @@ export class UsuariosController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.CAJERO, Role.SECRETARIO, Role.USUARIO)
   @Post('usuarios/where')
-  async getUsuariosWhere(
-    @Body() data: Prisma.UsuarioWhereInput
-  ): Promise<Partial<Usuario>[]> {
+  async getUsuariosWhere(@Body() data: Prisma.UsuarioWhereInput): Promise<Partial<Usuario>[]> {
     return this.usuariosService.usuariosWhere(data);
   }
 }

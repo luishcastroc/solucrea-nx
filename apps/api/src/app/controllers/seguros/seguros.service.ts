@@ -9,9 +9,7 @@ export class SegurosService {
 
   // Seguro
 
-  async seguro(
-    where: Prisma.SeguroWhereUniqueInput
-  ): Promise<ISeguroReturnDto | null> {
+  async seguro(where: Prisma.SeguroWhereUniqueInput): Promise<ISeguroReturnDto | null> {
     return await this.prisma.seguro.findUnique({
       where,
       select: { id: true, nombre: true, monto: true },
@@ -24,9 +22,7 @@ export class SegurosService {
     });
   }
 
-  async createSeguro(
-    data: Prisma.SeguroCreateInput
-  ): Promise<ISeguroReturnDto> {
+  async createSeguro(data: Prisma.SeguroCreateInput): Promise<ISeguroReturnDto> {
     return await this.prisma.seguro.create({
       data,
       select: { id: true, nombre: true, monto: true },
@@ -45,9 +41,7 @@ export class SegurosService {
     });
   }
 
-  async deleteSeguro(
-    where: Prisma.SeguroWhereUniqueInput
-  ): Promise<ISeguroReturnDto> {
+  async deleteSeguro(where: Prisma.SeguroWhereUniqueInput): Promise<ISeguroReturnDto> {
     return await this.prisma.seguro.delete({
       where,
       select: { id: true, nombre: true, monto: true },

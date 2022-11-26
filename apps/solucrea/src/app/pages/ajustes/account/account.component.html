@@ -17,7 +17,7 @@
       <div class="mt-8 grid w-full gap-6 sm:grid-cols-4">
         <!-- Nombre -->
         <div class="sm:col-span-4">
-          <mat-form-field class="fuse-mat-no-subscript w-full">
+          <mat-form-field class="w-full" subscriptSizing="dynamic">
             <mat-label>Nombre</mat-label>
             <mat-icon
               class="icon-size-5"
@@ -28,7 +28,7 @@
         </div>
         <!-- Apellido -->
         <div class="sm:col-span-4">
-          <mat-form-field class="fuse-mat-no-subscript w-full">
+          <mat-form-field class="w-full" subscriptSizing="dynamic">
             <mat-label>Apellidos</mat-label>
             <mat-icon
               class="icon-size-5"
@@ -40,7 +40,8 @@
         <!-- Nombre de Usuario -->
         <div class="sm:col-span-4">
           <mat-form-field
-            class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
+            class="fuse-mat-emphasized-affix w-full"
+            subscriptSizing="dynamic">
             <mat-label>Nombre de Usuario</mat-label>
             <div class="text-secondary" matPrefix>solucrea/</div>
             <input [formControlName]="'nombreUsuario'" matInput />

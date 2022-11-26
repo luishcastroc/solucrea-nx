@@ -172,10 +172,7 @@
             "tsConfig": "apps/solucrea/tsconfig.spec.json",
             "karmaConfig": "apps/solucrea/karma.conf.js",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "apps/solucrea/src/assets",
-              "apps/solucrea/src/assets/favicon"
-            ],
+            "assets": ["apps/solucrea/src/assets", "apps/solucrea/src/assets/favicon"],
             "styles": ["apps/solucrea/src/styles.scss"],
             "scripts": []
           }

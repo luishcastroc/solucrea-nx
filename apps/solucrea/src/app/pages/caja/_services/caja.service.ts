@@ -21,9 +21,7 @@ export class CajaService {
    *
    */
   getCajas(): Observable<ICajaReturnDto[]> {
-    return this._httpClient.get<ICajaReturnDto[]>(
-      `${this._environment.uri}/cajas`
-    );
+    return this._httpClient.get<ICajaReturnDto[]>(`${this._environment.uri}/cajas`);
   }
 
   /**
@@ -32,9 +30,7 @@ export class CajaService {
    * @param id
    */
   getCaja(id: string): Observable<ICajaReturnDto> {
-    return this._httpClient.get<ICajaReturnDto>(
-      `${this._environment.uri}/caja/${id}`
-    );
+    return this._httpClient.get<ICajaReturnDto>(`${this._environment.uri}/caja/${id}`);
   }
 
   /**
@@ -43,10 +39,7 @@ export class CajaService {
    * @param CreateCajaDto
    */
   addCaja(caja: CreateCajaDto): Observable<ICajaReturnDto> {
-    return this._httpClient.post<ICajaReturnDto>(
-      `${this._environment.uri}/caja`,
-      caja
-    );
+    return this._httpClient.post<ICajaReturnDto>(`${this._environment.uri}/caja`, caja);
   }
 
   /**
@@ -54,14 +47,8 @@ export class CajaService {
    *
    * @param CajaUncheckedUpdateInput
    */
-  editCaja(
-    id: string,
-    caja: Prisma.CajaUncheckedUpdateInput
-  ): Observable<ICajaReturnDto> {
-    return this._httpClient.put<ICajaReturnDto>(
-      `${this._environment.uri}/caja/${id}`,
-      caja
-    );
+  editCaja(id: string, caja: Prisma.CajaUncheckedUpdateInput): Observable<ICajaReturnDto> {
+    return this._httpClient.put<ICajaReturnDto>(`${this._environment.uri}/caja/${id}`, caja);
   }
 
   /**
@@ -70,9 +57,7 @@ export class CajaService {
    * @param id
    */
   deleteCaja(id: string): Observable<ICajaReturnDto> {
-    return this._httpClient.delete<ICajaReturnDto>(
-      `${this._environment.uri}/caja/${id}`
-    );
+    return this._httpClient.delete<ICajaReturnDto>(`${this._environment.uri}/caja/${id}`);
   }
 
   /**
@@ -90,9 +75,7 @@ export class CajaService {
    * @returns Observable<MovimientoDeCaja[]> Array of Movimientos de Caja
    */
   getMovimientos(id: string): Observable<MovimientoDeCaja[]> {
-    return this._httpClient.get<MovimientoDeCaja[]>(
-      `${this._environment.uri}/movimientos`
-    );
+    return this._httpClient.get<MovimientoDeCaja[]>(`${this._environment.uri}/movimientos`);
   }
 
   /**
@@ -100,12 +83,7 @@ export class CajaService {
    * @param payload MovimientoDeCajaCreateInput
    * @returns Observable<MovimientoDeCaja>
    */
-  addMovimiento(
-    payload: Prisma.MovimientoDeCajaCreateInput
-  ): Observable<MovimientoDeCaja> {
-    return this._httpClient.post<MovimientoDeCaja>(
-      `${this._environment.uri}/movimientos`,
-      payload
-    );
+  addMovimiento(payload: Prisma.MovimientoDeCajaCreateInput): Observable<MovimientoDeCaja> {
+    return this._httpClient.post<MovimientoDeCaja>(`${this._environment.uri}/movimientos`, payload);
   }
 }

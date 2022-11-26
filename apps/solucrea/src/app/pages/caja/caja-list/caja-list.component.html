@@ -33,7 +33,7 @@
                 <div class="flex flex-col">
                   <div class="font-bold">Fecha Apertura:</div>
                   <div class="mt-2">
-                    {{ caja.fechaApertura | date: 'd MMM yyyy':'UTC' }}
+                    {{ caja.fechaApertura | date : 'd MMM yyyy' : 'UTC' }}
                   </div>
                 </div>
                 <!-- Saldo Inicial -->
@@ -43,7 +43,7 @@
                     {{
                       caja.saldoInicial
                         | decimalToNumber
-                        | currency: 'MXN':'symbol'
+                        | currency : 'MXN' : 'symbol'
                     }}
                   </div>
                 </div>
@@ -54,7 +54,7 @@
                     {{
                       caja.saldoActual
                         | decimalToNumber
-                        | currency: 'MXN':'symbol'
+                        | currency : 'MXN' : 'symbol'
                     }}
                   </div>
                 </div>

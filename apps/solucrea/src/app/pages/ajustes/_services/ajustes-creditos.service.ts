@@ -21,9 +21,7 @@ export class AjustesCreditosService {
    *
    */
   getProductos(): Observable<Producto[]> {
-    return this._httpClient.get<Producto[]>(
-      `${this._environment.uri}/productos`
-    );
+    return this._httpClient.get<Producto[]>(`${this._environment.uri}/productos`);
   }
 
   /**
@@ -32,9 +30,7 @@ export class AjustesCreditosService {
    * @param id
    */
   getProducto(id: string): Observable<Producto> {
-    return this._httpClient.get<Producto>(
-      `${this._environment.uri}/producto/${id}`
-    );
+    return this._httpClient.get<Producto>(`${this._environment.uri}/producto/${id}`);
   }
 
   /**
@@ -43,10 +39,7 @@ export class AjustesCreditosService {
    * @param CreateProductoDto
    */
   addProducto(producto: Producto): Observable<Producto> {
-    return this._httpClient.post<Producto>(
-      `${this._environment.uri}/producto`,
-      producto
-    );
+    return this._httpClient.post<Producto>(`${this._environment.uri}/producto`, producto);
   }
 
   /**
@@ -54,14 +47,8 @@ export class AjustesCreditosService {
    *
    * @param UpdateProductoDto
    */
-  editProducto(
-    id: string,
-    producto: Prisma.ProductoUpdateInput
-  ): Observable<Producto> {
-    return this._httpClient.put<Producto>(
-      `${this._environment.uri}/producto/${id}`,
-      producto
-    );
+  editProducto(id: string, producto: Prisma.ProductoUpdateInput): Observable<Producto> {
+    return this._httpClient.put<Producto>(`${this._environment.uri}/producto/${id}`, producto);
   }
 
   /**
@@ -70,8 +57,6 @@ export class AjustesCreditosService {
    * @param id
    */
   deleteProducto(id: string): Observable<Producto> {
-    return this._httpClient.delete<Producto>(
-      `${this._environment.uri}/producto/${id}`
-    );
+    return this._httpClient.delete<Producto>(`${this._environment.uri}/producto/${id}`);
   }
 }

@@ -19,9 +19,7 @@ export class FuseFindByKeyPipe implements PipeTransform {
   transform(value: string | string[], key: string, source: any[]): any {
     // If the given value is an array of strings...
     if (Array.isArray(value)) {
-      return value.map(item =>
-        source.find(sourceItem => sourceItem[key] === item)
-      );
+      return value.map(item => source.find(sourceItem => sourceItem[key] === item));
     }
 
     // If the value is a string...

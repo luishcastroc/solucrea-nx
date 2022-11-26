@@ -17,19 +17,11 @@ export class FuseMediaWatcherService {
   /**
    * Constructor
    */
-  constructor(
-    private _breakpointObserver: BreakpointObserver,
-    private _fuseConfigService: FuseConfigService
-  ) {
+  constructor(private _breakpointObserver: BreakpointObserver, private _fuseConfigService: FuseConfigService) {
     this._fuseConfigService.config$
       .pipe(
         map(config =>
-          fromPairs(
-            Object.entries(config.screens).map(([alias, screen]) => [
-              alias,
-              `(min-width: ${screen})`,
-            ])
-          )
+          fromPairs(Object.entries(config.screens).map(([alias, screen]) => [alias, `(min-width: ${screen})`]))
         ),
         switchMap(screens =>
           this._breakpointObserver.observe(Object.values(screens)).pipe(
@@ -39,15 +31,10 @@ export class FuseMediaWatcherService {
               const matchingQueries: any = {};
 
               // Get the matching breakpoints and use them to fill the subject
-              const matchingBreakpoints =
-                Object.entries(state.breakpoints).filter(
-                  ([query, matches]) => matches
-                ) ?? [];
+              const matchingBreakpoints = Object.entries(state.breakpoints).filter(([query, matches]) => matches) ?? [];
               for (const [query] of matchingBreakpoints) {
                 // Find the alias of the matching query
-                const aliases = Object.entries(screens).find(
-                  ([, q]) => q === query
-                );
+                const aliases = Object.entries(screens).find(([, q]) => q === query);
                 const matchingAlias = aliases ? aliases[0] : undefined;
 
                 // Add the matching query to the observable values

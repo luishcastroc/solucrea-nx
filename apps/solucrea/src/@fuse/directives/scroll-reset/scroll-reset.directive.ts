@@ -1,11 +1,5 @@
 /* eslint-disable arrow-parens */
-import {
-  Directive,
-  ElementRef,
-  inject,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { Directive, ElementRef, inject, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subject, filter, takeUntil } from 'rxjs';
 

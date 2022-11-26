@@ -31,9 +31,7 @@ export class MovimientosController {
   @UseGuards(RolesGuard)
   @Public()
   @Get('movimiento/:id')
-  async getMovimiento(
-    @Param('id') id: string
-  ): Promise<MovimientoDeCaja | null> {
+  async getMovimiento(@Param('id') id: string): Promise<MovimientoDeCaja | null> {
     return this.movimientosService.movimiento({ id });
   }
 
@@ -53,10 +51,7 @@ export class MovimientosController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.CAJERO, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
   @Put('movimiento/:id')
-  async editMovimiento(
-    @Param('id') id: string,
-    @Body() data: MovimientoDeCaja
-  ): Promise<MovimientoDeCaja> {
+  async editMovimiento(@Param('id') id: string, @Body() data: MovimientoDeCaja): Promise<MovimientoDeCaja> {
     return this.movimientosService.updateMovimiento({
       where: { id },
       data,
@@ -71,14 +66,7 @@ export class MovimientosController {
   }
 
   @UseGuards(RolesGuard)
-  @Roles(
-    Role.ADMIN,
-    Role.CAJERO,
-    Role.DIRECTOR,
-    Role.MANAGER,
-    Role.SECRETARIO,
-    Role.USUARIO
-  )
+  @Roles(Role.ADMIN, Role.CAJERO, Role.DIRECTOR, Role.MANAGER, Role.SECRETARIO, Role.USUARIO)
   @Get('movimientos-count/:id')
   async getMovimientosCount(@Param('id') id: string): Promise<number> {
     return this.movimientosService.getMovimientosCount(id);

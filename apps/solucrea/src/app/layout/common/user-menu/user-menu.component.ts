@@ -54,14 +54,12 @@ export class UserMenuComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     // Subscribe to user changes
-    this.user$
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((user: Usuario | undefined) => {
-        this.user = user;
+    this.user$.pipe(takeUntil(this._unsubscribeAll)).subscribe((user: Usuario | undefined) => {
+      this.user = user;
 
-        // Mark for check
-        this._changeDetectorRef.markForCheck();
-      });
+      // Mark for check
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   goToPerfil(): void {

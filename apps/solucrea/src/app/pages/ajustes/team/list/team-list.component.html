@@ -1,9 +1,4 @@
-<ng-container
-  *ngIf="
-    loading$ | async;
-    then loadingTemplate;
-    else dataTemplate
-  "></ng-container>
+<ng-container *ngIf="loading$ | async; then loadingTemplate; else dataTemplate"></ng-container>
 <ng-template #loadingTemplate>
   <div class="flex flex-auto flex-col self-center">
     <mat-spinner> </mat-spinner>
@@ -13,19 +8,10 @@
   <div class="flex w-full flex-col">
     <!-- Add team member -->
     <div class="w-full">
-      <mat-form-field
-        class="fuse-mat-no-subscript w-full"
-        [floatLabel]="'always'">
+      <mat-form-field class="fuse-mat-no-subscript w-full" [floatLabel]="'always'">
         <mat-label>Buscar Usuario</mat-label>
-        <mat-icon
-          class="icon-size-5"
-          [svgIcon]="'heroicons_solid:user'"
-          matPrefix></mat-icon>
-        <input
-          matInput
-          [formControl]="searchInput"
-          [autocomplete]="'off'"
-          [placeholder]="'Nombre'" />
+        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
+        <input matInput [formControl]="searchInput" [autocomplete]="'off'" [placeholder]="'Nombre'" />
         <button
           mat-icon-button
           matSuffix
@@ -34,23 +20,18 @@
           #tooltip="matTooltip"
           matTooltip="Crear usuario"
           [matTooltipPosition]="'below'">
-          <mat-icon
-            class="icon-size-5"
-            [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+          <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
         </button>
       </mat-form-field>
     </div>
 
     <!-- Team members -->
     <div class="mt-8 flex-auto divide-y border-t border-b">
-      <ng-container
-        *ngFor="let usuario of searchResults$ | async; trackBy: trackByFn">
+      <ng-container *ngFor="let usuario of searchResults$ | async; trackBy: trackByFn">
         <div class="flex flex-auto flex-col py-6 sm:flex-row sm:items-center">
           <div class="flex flex-auto items-center">
             <div class="sm:ml-4">
-              <div class="font-medium">
-                {{ usuario.nombre }} {{ usuario.apellido }}
-              </div>
+              <div class="font-medium">{{ usuario.nombre }} {{ usuario.apellido }}</div>
               <div class="text-secondary">
                 {{ usuario.nombreUsuario }}
               </div>
@@ -58,8 +39,7 @@
           </div>
           <div class="grid grid-cols-2">
             <div class="order-2 ml-4 sm:order-1 sm:ml-0">
-              <mat-form-field
-                class="fuse-mat-dense fuse-mat-no-subscript w-full">
+              <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full">
                 <mat-select
                   [panelClass]="'w-72 min-w-72 max-w-72 h-auto'"
                   [value]="usuario.role"
@@ -67,19 +47,14 @@
                   #roleSelect="matSelect">
                   <mat-select-trigger class="text-md">
                     <span>Rol:</span>
-                    <span class="ml-1 font-medium">{{
-                      roleSelect.value | titlecase
-                    }}</span>
+                    <span class="ml-1 font-medium">{{ roleSelect.value | titlecase }}</span>
                   </mat-select-trigger>
                   <ng-container *ngFor="let role of roles">
-                    <mat-option
-                      class="h-auto py-4 leading-none"
-                      [value]="role.value">
+                    <mat-option class="h-auto py-4 leading-none" [value]="role.value">
                       <div class="font-medium">
                         {{ role.label }}
                       </div>
-                      <div
-                        class="text-secondary mt-1.5 whitespace-normal text-sm leading-normal">
+                      <div class="text-secondary mt-1.5 whitespace-normal text-sm leading-normal">
                         {{ role.description }}
                       </div>
                     </mat-option>
@@ -95,9 +70,7 @@
                 #tooltip="matTooltip"
                 matTooltip="Guardar cambios"
                 [matTooltipPosition]="'below'">
-                <mat-icon
-                  class="text-hint"
-                  [svgIcon]="'heroicons_outline:save'"></mat-icon>
+                <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:save'"></mat-icon>
               </button>
               <button
                 mat-icon-button
@@ -106,9 +79,7 @@
                 #tooltip="matTooltip"
                 matTooltip="Editar usuario"
                 [matTooltipPosition]="'below'">
-                <mat-icon
-                  class="text-hint"
-                  [svgIcon]="'heroicons_outline:clipboard-list'"></mat-icon>
+                <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:clipboard-list'"></mat-icon>
               </button>
               <button
                 mat-icon-button
@@ -117,9 +88,7 @@
                 #tooltip="matTooltip"
                 matTooltip="Cambiar contraseña"
                 [matTooltipPosition]="'below'">
-                <mat-icon
-                  class="text-hint"
-                  [svgIcon]="'heroicons_solid:key'"></mat-icon>
+                <mat-icon class="text-hint" [svgIcon]="'heroicons_solid:key'"></mat-icon>
               </button>
               <button
                 mat-icon-button
@@ -128,9 +97,7 @@
                 #tooltip="matTooltip"
                 matTooltip="Borrar usuario"
                 [matTooltipPosition]="'below'">
-                <mat-icon
-                  class="text-hint"
-                  [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
               </button>
             </div>
           </div>

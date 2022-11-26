@@ -14,11 +14,7 @@ import {
 import { Prisma, Role } from '@prisma/client';
 import { ClientesService } from './clientes.service';
 import { Public, Roles } from 'api/decorators';
-import {
-  CreateClienteDto,
-  IClienteReturnDto,
-  UpdateClienteDto,
-} from 'api/dtos';
+import { CreateClienteDto, IClienteReturnDto, UpdateClienteDto } from 'api/dtos';
 import { RolesGuard } from 'api/guards';
 
 @Controller('')
@@ -43,10 +39,7 @@ export class ClientesController {
   @UsePipes(new ValidationPipe())
   @Roles(Role.ADMIN, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
   @Post('cliente')
-  async createCliente(
-    @Request() req: any,
-    @Body() data: CreateClienteDto
-  ): Promise<IClienteReturnDto> {
+  async createCliente(@Request() req: any, @Body() data: CreateClienteDto): Promise<IClienteReturnDto> {
     const creadoPor = req.user.username;
     data.creadoPor = creadoPor;
     return this.clientesService.createCliente(data);
@@ -85,31 +78,15 @@ export class ClientesController {
   }
 
   @UseGuards(RolesGuard)
-  @Roles(
-    Role.ADMIN,
-    Role.CAJERO,
-    Role.DIRECTOR,
-    Role.MANAGER,
-    Role.SECRETARIO,
-    Role.USUARIO
-  )
+  @Roles(Role.ADMIN, Role.CAJERO, Role.DIRECTOR, Role.MANAGER, Role.SECRETARIO, Role.USUARIO)
   @Post('clientes')
-  async getClientesByWhere(
-    @Body() search: { data: string }
-  ): Promise<IClienteReturnDto[]> {
+  async getClientesByWhere(@Body() search: { data: string }): Promise<IClienteReturnDto[]> {
     const { data } = search;
     return this.clientesService.getClientesByWhere(data);
   }
 
   @UseGuards(RolesGuard)
-  @Roles(
-    Role.ADMIN,
-    Role.CAJERO,
-    Role.DIRECTOR,
-    Role.MANAGER,
-    Role.SECRETARIO,
-    Role.USUARIO
-  )
+  @Roles(Role.ADMIN, Role.CAJERO, Role.DIRECTOR, Role.MANAGER, Role.SECRETARIO, Role.USUARIO)
   @Get('clientes-count')
   async getClientesCount(): Promise<number> {
     return this.clientesService.getClientesCount();

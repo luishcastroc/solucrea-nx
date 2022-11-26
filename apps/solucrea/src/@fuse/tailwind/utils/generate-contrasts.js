@@ -15,19 +15,14 @@ const generateContrasts = palette => {
 
   // Iterate through the palette to find the darkest color
   _.forEach(palette, color => {
-    darkColor =
-      chroma.contrast(color, '#FFFFFF') > chroma.contrast(darkColor, '#FFFFFF')
-        ? color
-        : darkColor;
+    darkColor = chroma.contrast(color, '#FFFFFF') > chroma.contrast(darkColor, '#FFFFFF') ? color : darkColor;
   });
 
   // Generate the contrasting colors
   return _.fromPairs(
     _.map(palette, (color, hue) => [
       hue,
-      chroma.contrast(color, darkColor) > chroma.contrast(color, lightColor)
-        ? darkColor
-        : lightColor,
+      chroma.contrast(color, darkColor) > chroma.contrast(color, lightColor) ? darkColor : lightColor,
     ])
   );
 };

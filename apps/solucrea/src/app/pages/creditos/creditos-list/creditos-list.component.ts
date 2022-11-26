@@ -1,24 +1,7 @@
-import {
-  AsyncPipe,
-  CurrencyPipe,
-  DatePipe,
-  DecimalPipe,
-  I18nPluralPipe,
-  NgFor,
-  NgIf,
-} from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DatePipe, DecimalPipe, I18nPluralPipe, NgFor, NgIf } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-} from '@angular/core';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  UntypedFormControl,
-} from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -118,10 +101,7 @@ export class CreditosListComponent implements OnInit {
    *
    */
   openNewCredito(): void {
-    this._store.dispatch([
-      new Navigate([`creditos/${AuthUtils.guid()}`]),
-      new ModeCredito('new'),
-    ]);
+    this._store.dispatch([new Navigate([`creditos/${AuthUtils.guid()}`]), new ModeCredito('new')]);
   }
 
   /**
@@ -168,10 +148,7 @@ export class CreditosListComponent implements OnInit {
    * Go to Credito details
    */
   goToDetails(id: string | undefined) {
-    this._store.dispatch([
-      new Navigate([`creditos/${id}`]),
-      new ModeCredito('edit'),
-    ]);
+    this._store.dispatch([new Navigate([`creditos/${id}`]), new ModeCredito('edit')]);
   }
 
   /**
@@ -179,10 +156,7 @@ export class CreditosListComponent implements OnInit {
    * function to generate a new Cliente
    */
   newCliente() {
-    this._store.dispatch([
-      new Navigate([`clientes/${AuthUtils.guid()}`]),
-      new ClientesMode('new'),
-    ]);
+    this._store.dispatch([new Navigate([`clientes/${AuthUtils.guid()}`]), new ClientesMode('new')]);
   }
 
   /**
@@ -190,9 +164,6 @@ export class CreditosListComponent implements OnInit {
    *
    */
   newCaja(): void {
-    this._store.dispatch([
-      new Navigate([`caja/${AuthUtils.guid()}`]),
-      new CajasMode('new'),
-    ]);
+    this._store.dispatch([new Navigate([`caja/${AuthUtils.guid()}`]), new CajasMode('new')]);
   }
 }

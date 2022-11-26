@@ -1,7 +1,4 @@
-import {
-  StepperOrientation,
-  StepperSelectionEvent,
-} from '@angular/cdk/stepper';
+import { StepperOrientation, StepperSelectionEvent } from '@angular/cdk/stepper';
 import {
   AsyncPipe,
   CurrencyPipe,
@@ -64,15 +61,7 @@ import {
 } from 'api/dtos';
 import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
 import { DateTime } from 'luxon';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  filter,
-  Observable,
-  Subject,
-  takeUntil,
-  tap,
-} from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { CreditosService } from '../_services/creditos.service';
 import {
@@ -140,9 +129,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
   selectedProducto$!: Observable<Producto | undefined>;
   selectedCliente$!: Observable<IClienteReturnDto | undefined>;
   selectedOtro$!: Observable<boolean>;
-  selectedModalidadDeSeguro$!: Observable<
-    IModalidadSeguroReturnDto | undefined
-  >;
+  selectedModalidadDeSeguro$!: Observable<IModalidadSeguroReturnDto | undefined>;
 
   creditoId!: string | null;
   creditosForm!: UntypedFormGroup;
@@ -196,9 +183,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
     this.segurosData$ = this._store.select(CreditosState.segurosData);
     this.colocadores$ = this._store.select(CreditosState.colocadores);
     this.selectedSeguro$ = this._store.select(CreditosState.selectedSeguro);
-    this.selectedClienteReferral$ = this._store.select(
-      CreditosState.selectedClienteReferral
-    );
+    this.selectedClienteReferral$ = this._store.select(CreditosState.selectedClienteReferral);
   }
 
   get id() {
@@ -317,76 +302,61 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
   initCredito(clienteId: string | null): void {
     this.creditosForm = this.createCreditosForm();
 
-    this.selectedCliente$ = this._store
-      .select(CreditosState.selectedCliente)
-      .pipe(
-        tap((cliente: IClienteReturnDto | undefined) => {
-          if (cliente) {
-            this.selectedCliente = cliente;
-            this.cliente.setValue(cliente.id);
-          }
-        })
-      );
-
-    this.selectedClienteReferral$
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(cliente => {
+    this.selectedCliente$ = this._store.select(CreditosState.selectedCliente).pipe(
+      tap((cliente: IClienteReturnDto | undefined) => {
         if (cliente) {
-          this.selectedClienteReferral = cliente;
-          this.colocador.setValue(cliente.id);
-          this.colocador.markAsTouched();
+          this.selectedCliente = cliente;
+          this.cliente.setValue(cliente.id);
         }
-      });
+      })
+    );
 
-    this.selectedProducto$ = this._store
-      .select(CreditosState.selectedProducto)
-      .pipe(
-        tap((producto: Producto | undefined) => {
-          if (producto) {
-            this.selectedProducto = producto;
-            this.producto.setValue(producto.id);
-            this.monto.setValidators([
-              Validators.required,
-              Validators.min(Number(producto.montoMinimo)),
-              Validators.max(Number(producto.montoMaximo)),
-            ]);
-            this._store.dispatch(
-              new GetSucursalesWhereCaja(
-                Number(producto.montoMinimo),
-                Number(producto.montoMaximo)
-              )
-            );
-          }
-        })
-      );
+    this.selectedClienteReferral$.pipe(takeUntil(this._unsubscribeAll)).subscribe(cliente => {
+      if (cliente) {
+        this.selectedClienteReferral = cliente;
+        this.colocador.setValue(cliente.id);
+        this.colocador.markAsTouched();
+      }
+    });
 
-    this.selectedModalidadDeSeguro$ = this._store
-      .select(CreditosState.selectedModalidadDeSeguro)
-      .pipe(
-        tap((modalidad: IModalidadSeguroReturnDto | undefined) => {
-          this.selectedModalidadDeSeguro = modalidad;
-          if (modalidad?.titulo !== 'Sin Seguro') {
-            this.seguro.enable();
-            this.seguro.setValidators(Validators.required);
-          } else {
-            this.seguro.disable();
-            this.seguro.setValidators([]);
-          }
-
-          // Mark for check
-          this._cdr.markForCheck();
-        })
-      );
-
-    this.selectedSeguro$
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((seguro: ISeguroReturnDto | undefined) => {
-        if (seguro) {
-          this.selectedSeguro = seguro;
+    this.selectedProducto$ = this._store.select(CreditosState.selectedProducto).pipe(
+      tap((producto: Producto | undefined) => {
+        if (producto) {
+          this.selectedProducto = producto;
+          this.producto.setValue(producto.id);
+          this.monto.setValidators([
+            Validators.required,
+            Validators.min(Number(producto.montoMinimo)),
+            Validators.max(Number(producto.montoMaximo)),
+          ]);
+          this._store.dispatch(new GetSucursalesWhereCaja(Number(producto.montoMinimo), Number(producto.montoMaximo)));
         }
+      })
+    );
+
+    this.selectedModalidadDeSeguro$ = this._store.select(CreditosState.selectedModalidadDeSeguro).pipe(
+      tap((modalidad: IModalidadSeguroReturnDto | undefined) => {
+        this.selectedModalidadDeSeguro = modalidad;
+        if (modalidad?.titulo !== 'Sin Seguro') {
+          this.seguro.enable();
+          this.seguro.setValidators(Validators.required);
+        } else {
+          this.seguro.disable();
+          this.seguro.setValidators([]);
+        }
+
         // Mark for check
         this._cdr.markForCheck();
-      });
+      })
+    );
+
+    this.selectedSeguro$.pipe(takeUntil(this._unsubscribeAll)).subscribe((seguro: ISeguroReturnDto | undefined) => {
+      if (seguro) {
+        this.selectedSeguro = seguro;
+      }
+      // Mark for check
+      this._cdr.markForCheck();
+    });
 
     this.selectedOtro$ = this._store.select(CreditosState.selectedOtro).pipe(
       tap(result => {
@@ -501,9 +471,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
     const duracion = frecuencia * this.selectedProducto.numeroDePagos;
     this.fechaInicio.setValue(addBusinessDays(this.fechaDesembolso.value, 1));
     if (this.fechaInicio.valid) {
-      this.fechaFinal.setValue(
-        addBusinessDays(this.fechaInicio.value, duracion)
-      );
+      this.fechaFinal.setValue(addBusinessDays(this.fechaInicio.value, duracion));
     }
     this.fechaInicio.markAsTouched();
     this.fechaFinal.markAsTouched();
@@ -596,9 +564,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
    *
    */
   displayFn(cliente: IClienteReturnDto): string {
-    return cliente
-      ? `${cliente.nombre} ${cliente.apellidoPaterno} ${cliente.apellidoMaterno}`
-      : '';
+    return cliente ? `${cliente.nombre} ${cliente.apellidoPaterno} ${cliente.apellidoMaterno}` : '';
   }
 
   /**
@@ -606,9 +572,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
    *
    */
   desembolsar(): void {
-    const creditosData = this._creditosService.prepareCreditoRecord(
-      this.creditosForm
-    );
+    const creditosData = this._creditosService.prepareCreditoRecord(this.creditosForm);
     this.creditosForm.disable();
     this.desembolsando = true;
     this._store.dispatch(new CreateCredito(creditosData));
@@ -629,9 +593,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
         cargos: Number(this.selectedProducto.cargos),
         comisionPorApertura: Number(this.selectedProducto.comision),
         numeroDePagos: Number(this.selectedProducto.numeroDePagos),
-        montoSeguro: Number(
-          this.selectedSeguro ? this.selectedSeguro.monto : 0
-        ),
+        montoSeguro: Number(this.selectedSeguro ? this.selectedSeguro.monto : 0),
         modalidadSeguro: modalidadDeSeguro?.includes('Diferido')
           ? 'diferido'
           : modalidadDeSeguro?.includes('Contado')
@@ -644,11 +606,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
       this.cuotaCapital.setValue(this.resumenOperacion.capital);
       this.cuotaInteres.setValue(this.resumenOperacion.interes);
       this.cuotaMora.setValue(this.resumenOperacion.mora);
-      this.cuotaSeguro.setValue(
-        modalidadDeSeguro?.includes('Diferido')
-          ? this.resumenOperacion.seguro
-          : 0
-      );
+      this.cuotaSeguro.setValue(modalidadDeSeguro?.includes('Diferido') ? this.resumenOperacion.seguro : 0);
     }
   }
 

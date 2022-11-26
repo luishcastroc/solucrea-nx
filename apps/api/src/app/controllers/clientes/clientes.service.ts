@@ -1,30 +1,19 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Cliente, Prisma, TipoDireccion } from '@prisma/client';
-import {
-  CreateClienteDto,
-  CreateDireccionDto,
-  IClienteReturnDto,
-  IDireccion,
-  UpdateClienteDto,
-} from 'api/dtos';
+import { CreateClienteDto, CreateDireccionDto, IClienteReturnDto, IDireccion, UpdateClienteDto } from 'api/dtos';
 import { PrismaService } from 'api/prisma';
 import { selectCliente } from 'api/util';
 import { Http2ServerResponse } from 'http2';
 import { isEmpty } from 'lodash';
 
-import {
-  IDireccionUpdateDto,
-  ITrabajoDto,
-} from '../../dtos/update-cliente.dto';
+import { IDireccionUpdateDto, ITrabajoDto } from '../../dtos/update-cliente.dto';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 @Injectable()
 export class ClientesService {
   constructor(private prisma: PrismaService) {}
 
-  async cliente(
-    where: Prisma.ClienteWhereUniqueInput
-  ): Promise<IClienteReturnDto | null> {
+  async cliente(where: Prisma.ClienteWhereUniqueInput): Promise<IClienteReturnDto | null> {
     const select = selectCliente;
     const clienteReturn = await this.prisma.cliente.findUnique({
       where,
@@ -64,10 +53,7 @@ export class ClientesService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
@@ -91,16 +77,14 @@ export class ClientesService {
     const { direccion } = trabajo;
     let direccionesCreate: Prisma.DireccionCreateManyClienteInput[] = [];
     if (direcciones) {
-      direccionesCreate = direcciones.map(
-        ({ numero, calle, cruzamientos, coloniaId, tipo }: IDireccion) => ({
-          tipo: tipo as TipoDireccion,
-          numero: numero as string,
-          calle: calle as string,
-          cruzamientos,
-          coloniaId: coloniaId as string,
-          creadoPor: data.creadoPor as string,
-        })
-      );
+      direccionesCreate = direcciones.map(({ numero, calle, cruzamientos, coloniaId, tipo }: IDireccion) => ({
+        tipo: tipo as TipoDireccion,
+        numero: numero as string,
+        calle: calle as string,
+        cruzamientos,
+        coloniaId: coloniaId as string,
+        creadoPor: data.creadoPor as string,
+      }));
     }
 
     const clienteData: Prisma.ClienteCreateInput = {
@@ -160,10 +144,7 @@ export class ClientesService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
@@ -181,8 +162,7 @@ export class ClientesService {
       throw new HttpException(
         {
           status: HttpStatus.BAD_REQUEST,
-          message:
-            'Error actualizando cliente, al menos un elemento a actualizar debe ser provisto',
+          message: 'Error actualizando cliente, al menos un elemento a actualizar debe ser provisto',
         },
         HttpStatus.BAD_REQUEST
       );
@@ -255,10 +235,7 @@ export class ClientesService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
@@ -298,17 +275,12 @@ export class ClientesService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
 
-  async searchClientesByCurp(
-    where: Prisma.ClienteWhereUniqueInput
-  ): Promise<Partial<Cliente>> {
+  async searchClientesByCurp(where: Prisma.ClienteWhereUniqueInput): Promise<Partial<Cliente>> {
     const clienteSearch = this.prisma.cliente.findUnique({
       where,
       include: {
@@ -357,10 +329,7 @@ export class ClientesService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
@@ -379,10 +348,7 @@ export class ClientesService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
@@ -448,13 +414,9 @@ export class ClientesService {
     return direcciones;
   }
 
-  private getTrabajo(
-    trabajo: ITrabajoDto
-  ): Prisma.TrabajoUpdateOneRequiredWithoutClienteNestedInput {
-    let trabajoReturn: Prisma.TrabajoUpdateOneRequiredWithoutClienteNestedInput =
-      {};
-    const { nombre, telefono, antiguedad, direccion, actividadEconomica } =
-      trabajo;
+  private getTrabajo(trabajo: ITrabajoDto): Prisma.TrabajoUpdateOneRequiredWithoutClienteNestedInput {
+    let trabajoReturn: Prisma.TrabajoUpdateOneRequiredWithoutClienteNestedInput = {};
+    const { nombre, telefono, antiguedad, direccion, actividadEconomica } = trabajo;
     let update: Prisma.TrabajoUpdateWithoutClienteInput = {};
     let direccionUpdate: Prisma.DireccionUpdateWithoutTrabajoInput = {};
 

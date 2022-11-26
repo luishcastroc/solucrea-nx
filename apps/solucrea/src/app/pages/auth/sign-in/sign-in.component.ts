@@ -1,14 +1,6 @@
 import { NgIf } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-  ChangeDetectorRef,
-  Component,
-  inject,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
   FormsModule,
   NgForm,
@@ -23,11 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {
-  ActivatedRoute,
-  RouterLink,
-  RouterLinkWithHref,
-} from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterLinkWithHref } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent } from '@fuse/components/alert';
 import { IAlert } from '@fuse/components/alert/alert.model';
@@ -165,16 +153,12 @@ export class AuthSignInComponent implements OnInit, OnDestroy {
     // Hide the alert
     this._fuseAlertService.dismiss(this.alert);
 
-    const redirectURL =
-      this._activatedRoute.snapshot.queryParamMap.get('redirectURL') ||
-      '/signed-in-redirect';
+    const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
 
     this.loading = true;
 
     // Sign in
-    this._store.dispatch(
-      new Login({ username, password, redirectURL, rememberMe })
-    );
+    this._store.dispatch(new Login({ username, password, redirectURL, rememberMe }));
   }
 
   /**

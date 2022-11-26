@@ -24,9 +24,7 @@ export class CajaService {
 
   constructor(private prisma: PrismaService) {}
 
-  async caja(
-    cajaWhereUniqueInput: Prisma.CajaWhereUniqueInput
-  ): Promise<ICajaReturnDto | null> {
+  async caja(cajaWhereUniqueInput: Prisma.CajaWhereUniqueInput): Promise<ICajaReturnDto | null> {
     const cajaReturn = await this.prisma.caja.findUnique({
       where: cajaWhereUniqueInput,
       select: this.select,
@@ -98,8 +96,7 @@ export class CajaService {
       throw new HttpException(
         {
           status: HttpStatus.FOUND,
-          message:
-            'Error ya existe turno abierto para esta sucursal, Verificar.',
+          message: 'Error ya existe turno abierto para esta sucursal, Verificar.',
         },
         HttpStatus.FOUND
       );
@@ -121,10 +118,7 @@ export class CajaService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
@@ -142,8 +136,7 @@ export class CajaService {
       throw new HttpException(
         {
           status: HttpStatus.BAD_REQUEST,
-          message:
-            'Error actualizando el turno, al menos un elemento a actualizar debe ser provisto',
+          message: 'Error actualizando el turno, al menos un elemento a actualizar debe ser provisto',
         },
         HttpStatus.BAD_REQUEST
       );
@@ -166,17 +159,12 @@ export class CajaService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
 
-  async deleteCaja(
-    where: Prisma.CajaWhereUniqueInput
-  ): Promise<ICajaReturnDto> {
+  async deleteCaja(where: Prisma.CajaWhereUniqueInput): Promise<ICajaReturnDto> {
     try {
       const cajaDelete = await this.prisma.caja.delete({
         where,
@@ -193,10 +181,7 @@ export class CajaService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
@@ -218,10 +203,7 @@ export class CajaService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }

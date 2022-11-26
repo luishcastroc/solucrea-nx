@@ -28,8 +28,7 @@ export const appRoutes: Route[] = [
     path: '',
     canActivate: [NoAuthGuard],
     canActivateChild: [NoAuthGuard],
-    loadComponent: () =>
-      import('./layout/layout.component').then(com => com.LayoutComponent),
+    loadComponent: () => import('./layout/layout.component').then(com => com.LayoutComponent),
     data: {
       layout: 'empty',
     },
@@ -37,23 +36,16 @@ export const appRoutes: Route[] = [
       {
         path: 'forgot-password',
         loadChildren: () =>
-          import('app/pages/auth/forgot-password/forgot-password.module').then(
-            m => m.AuthForgotPasswordModule
-          ),
+          import('app/pages/auth/forgot-password/forgot-password.module').then(m => m.AuthForgotPasswordModule),
       },
       {
         path: 'reset-password',
         loadChildren: () =>
-          import('app/pages/auth/reset-password/reset-password.module').then(
-            m => m.AuthResetPasswordModule
-          ),
+          import('app/pages/auth/reset-password/reset-password.module').then(m => m.AuthResetPasswordModule),
       },
       {
         path: 'sign-in',
-        loadChildren: () =>
-          import('app/pages/auth/sign-in/sign-in.routing').then(
-            m => m.authSignInRoutes
-          ),
+        loadChildren: () => import('app/pages/auth/sign-in/sign-in.routing').then(m => m.authSignInRoutes),
       },
     ],
   },
@@ -70,10 +62,7 @@ export const appRoutes: Route[] = [
     children: [
       {
         path: 'sign-out',
-        loadChildren: () =>
-          import('app/pages/auth/sign-out/sign-out.routing').then(
-            m => m.authSignOutRoutes
-          ),
+        loadChildren: () => import('app/pages/auth/sign-out/sign-out.routing').then(m => m.authSignOutRoutes),
       },
     ],
   },
@@ -93,54 +82,35 @@ export const appRoutes: Route[] = [
     children: [
       {
         path: 'main',
-        loadChildren: () =>
-          import('app/pages/main/main.routing').then(m => m.mainRoutes),
+        loadChildren: () => import('app/pages/main/main.routing').then(m => m.mainRoutes),
       },
       {
         path: 'clientes',
-        loadChildren: () =>
-          import('app/pages/clientes/clientes.routing').then(
-            m => m.clientesRoutes
-          ),
-        providers: [
-          importProvidersFrom(NgxsModule.forFeature([ClientesState])),
-        ],
+        loadChildren: () => import('app/pages/clientes/clientes.routing').then(m => m.clientesRoutes),
+        providers: [importProvidersFrom(NgxsModule.forFeature([ClientesState]))],
       },
       {
         path: 'creditos',
-        loadChildren: () =>
-          import('app/pages/creditos/creditos.routing').then(
-            m => m.creditosRoutes
-          ),
+        loadChildren: () => import('app/pages/creditos/creditos.routing').then(m => m.creditosRoutes),
       },
       {
         path: 'mutualcrea',
-        loadChildren: () =>
-          import('app/pages/mutualcrea/mutualcrea.routing').then(
-            m => m.mutualcreaRoutes
-          ),
+        loadChildren: () => import('app/pages/mutualcrea/mutualcrea.routing').then(m => m.mutualcreaRoutes),
       },
       {
         path: 'reportes',
-        loadChildren: () =>
-          import('app/pages/reportes/reportes.routing').then(
-            m => m.reportesRoutes
-          ),
+        loadChildren: () => import('app/pages/reportes/reportes.routing').then(m => m.reportesRoutes),
       },
       {
         path: 'caja',
         canLoad: [AuthGuard],
         data: { roles: [Role.ADMIN, Role.CAJERO, Role.DIRECTOR, Role.MANAGER] },
-        loadChildren: () =>
-          import('app/pages/caja/caja.routing').then(m => m.cajaRoutes),
+        loadChildren: () => import('app/pages/caja/caja.routing').then(m => m.cajaRoutes),
         providers: [importProvidersFrom(NgxsModule.forFeature([CajasState]))],
       },
       {
         path: 'ajustes',
-        loadChildren: () =>
-          import('app/pages/ajustes/ajustes.routing').then(
-            m => m.ajustesRoutes
-          ),
+        loadChildren: () => import('app/pages/ajustes/ajustes.routing').then(m => m.ajustesRoutes),
       },
     ],
   },

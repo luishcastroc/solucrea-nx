@@ -1,18 +1,8 @@
 import { AsyncPipe, NgIf } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnDestroy,
-  OnInit,
-  ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Data, RouterOutlet } from '@angular/router';
-import {
-  FuseNavigationModule,
-  FuseNavigationService,
-} from '@fuse/components/navigation';
+import { FuseNavigationModule, FuseNavigationService } from '@fuse/components/navigation';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
@@ -27,14 +17,7 @@ import { Observable, Subject, takeUntil } from 'rxjs';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    FuseNavigationModule,
-    UserMenuComponent,
-    MatIconModule,
-    RouterOutlet,
-    NgIf,
-    AsyncPipe,
-  ],
+  imports: [FuseNavigationModule, UserMenuComponent, MatIconModule, RouterOutlet, NgIf, AsyncPipe],
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy {
   data!: InitialData;

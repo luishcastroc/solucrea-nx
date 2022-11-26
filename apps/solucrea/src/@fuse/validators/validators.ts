@@ -16,10 +16,7 @@ export class FuseValidators {
    * @param controlPath A dot-delimited string values that define the path to the control.
    * @param matchingControlPath A dot-delimited string values that define the path to the matching control.
    */
-  static mustMatch(
-    controlPath: string,
-    matchingControlPath: string
-  ): ValidatorFn {
+  static mustMatch(controlPath: string, matchingControlPath: string): ValidatorFn {
     return (formGroup: AbstractControl): ValidationErrors | null => {
       // Get the control and matching control
       const control = formGroup.get(controlPath);
@@ -40,10 +37,7 @@ export class FuseValidators {
 
       // Don't validate empty values on the matching control
       // Don't validate if values are matching
-      if (
-        this.isEmptyInputValue(matchingControl.value) ||
-        control.value === matchingControl.value
-      ) {
+      if (this.isEmptyInputValue(matchingControl.value) || control.value === matchingControl.value) {
         return null;
       }
 

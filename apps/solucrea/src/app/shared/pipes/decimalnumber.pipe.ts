@@ -6,10 +6,7 @@ import { Prisma } from '@prisma/client';
   standalone: true,
 })
 export class DecimalToNumberPipe implements PipeTransform {
-  transform(
-    value: Prisma.Decimal | number | string | undefined,
-    ...args: unknown[]
-  ): number {
+  transform(value: Prisma.Decimal | number | string | undefined, ...args: unknown[]): number {
     if (value) {
       if (typeof value === 'number') {
         return value;

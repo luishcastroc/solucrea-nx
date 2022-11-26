@@ -3,8 +3,7 @@ export const defaultRoles = [
   {
     label: 'Administrador',
     value: Role.ADMIN,
-    description:
-      'Tiene permisos para hacer todo, puede borrar, agregar o editar información.',
+    description: 'Tiene permisos para hacer todo, puede borrar, agregar o editar información.',
   },
   {
     label: 'Cajero',

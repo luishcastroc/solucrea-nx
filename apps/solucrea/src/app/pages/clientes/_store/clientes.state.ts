@@ -1,10 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
-import {
-  IActividadEconomicaReturnDto,
-  IClienteReturnDto,
-  IColoniaReturnDto,
-} from 'api/dtos';
+import { IActividadEconomicaReturnDto, IClienteReturnDto, IColoniaReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 import { sortBy } from 'lodash';
 import { forkJoin, Observable, of, tap } from 'rxjs';
@@ -51,9 +47,7 @@ export class ClientesState {
   }
 
   @Selector()
-  static selectedCliente({
-    selectedCliente,
-  }: ClientesStateModel): IClienteReturnDto | undefined {
+  static selectedCliente({ selectedCliente }: ClientesStateModel): IClienteReturnDto | undefined {
     return selectedCliente;
   }
 
@@ -78,9 +72,7 @@ export class ClientesState {
   }
 
   @Selector()
-  static clientesCount({
-    clientesCount,
-  }: ClientesStateModel): number | undefined {
+  static clientesCount({ clientesCount }: ClientesStateModel): number | undefined {
     return clientesCount;
   }
 
@@ -96,13 +88,11 @@ export class ClientesState {
     ctx.patchState({ loading: true });
     let clientesReturn: Observable<IClienteReturnDto[]>;
     if (payload !== '') {
-      clientesReturn = this.clientesService
-        .getClientesWhere({ data: payload })
-        .pipe(
-          tap((clientes: IClienteReturnDto[]) => {
-            ctx.patchState({ clientes, loading: false });
-          })
-        );
+      clientesReturn = this.clientesService.getClientesWhere({ data: payload }).pipe(
+        tap((clientes: IClienteReturnDto[]) => {
+          ctx.patchState({ clientes, loading: false });
+        })
+      );
     } else {
       clientesReturn = of([]);
       ctx.patchState({ clientes: [], loading: false });
@@ -145,9 +135,7 @@ export class ClientesState {
       tap((cliente: IClienteReturnDto) => {
         const state = ctx.getState();
         const clientes = [...state.clientes];
-        const idx = clientes.findIndex(
-          clienteBuscar => clienteBuscar.id === id
-        );
+        const idx = clientes.findIndex(clienteBuscar => clienteBuscar.id === id);
         clientes[idx] = cliente;
 
         ctx.patchState({ clientes });
@@ -156,10 +144,7 @@ export class ClientesState {
   }
 
   @Action(GetColonias)
-  getColonias(
-    ctx: StateContext<ClientesStateModel>,
-    { cp, index, tipo }: GetColonias
-  ) {
+  getColonias(ctx: StateContext<ClientesStateModel>, { cp, index, tipo }: GetColonias) {
     return this.clientesService.getColoniasByCp(cp).pipe(
       tap((colonias: IColoniaReturnDto) => {
         const state = ctx.getState();
@@ -172,9 +157,7 @@ export class ClientesState {
           if (index >= 0) {
             coloniasState[index] = { tipoDireccion: tipo, ubicacion: colonias };
           } else {
-            const idx = coloniasState.findIndex(
-              colonia => colonia.tipoDireccion === 'TRABAJO'
-            );
+            const idx = coloniasState.findIndex(colonia => colonia.tipoDireccion === 'TRABAJO');
             if (idx === -1) {
               coloniasState.push({ tipoDireccion: tipo, ubicacion: colonias });
             } else {
@@ -191,10 +174,7 @@ export class ClientesState {
   }
 
   @Action(RemoveColonia)
-  removeColonia(
-    ctx: StateContext<ClientesStateModel>,
-    { index }: RemoveColonia
-  ) {
+  removeColonia(ctx: StateContext<ClientesStateModel>, { index }: RemoveColonia) {
     const state = ctx.getState();
     const colonias = [...state.colonias];
     colonias.splice(index, 1);
@@ -202,19 +182,11 @@ export class ClientesState {
   }
 
   @Action(SelectActividadEconomica)
-  selectActividadEconomica(
-    ctx: StateContext<ClientesStateModel>,
-    { id }: SelectActividadEconomica
-  ) {
+  selectActividadEconomica(ctx: StateContext<ClientesStateModel>, { id }: SelectActividadEconomica) {
     const { config } = ctx.getState();
     if (config) {
-      if (
-        config.actividadesEconomicas &&
-        config.actividadesEconomicas.length > 0
-      ) {
-        const selectedActividadEconomica = config.actividadesEconomicas.filter(
-          actividad => actividad.id === id
-        )[0];
+      if (config.actividadesEconomicas && config.actividadesEconomicas.length > 0) {
+        const selectedActividadEconomica = config.actividadesEconomicas.filter(actividad => actividad.id === id)[0];
 
         ctx.patchState({ selectedActividadEconomica });
       }
@@ -232,33 +204,22 @@ export class ClientesState {
       tiposDeVivienda: this.clientesService.getTiposDeVivienda(),
       actividadesEconomicas: this.clientesService.getActividadesEconomicas(),
     }).pipe(
-      tap(
-        ({
-          generos,
-          estadosCiviles,
-          escolaridades,
-          tiposDeVivienda,
-          actividadesEconomicas,
-        }) => {
-          const config = {
-            generos: sortBy(generos, 'descripcion'),
-            estadosCiviles: sortBy(estadosCiviles, 'descripcion'),
-            escolaridades: sortBy(escolaridades, 'descripcion'),
-            tiposDeVivienda: sortBy(tiposDeVivienda, 'descripcion'),
-            actividadesEconomicas: sortBy(actividadesEconomicas, 'descripcion'),
-          };
-          loading = false;
-          ctx.patchState({ config, loading });
-        }
-      )
+      tap(({ generos, estadosCiviles, escolaridades, tiposDeVivienda, actividadesEconomicas }) => {
+        const config = {
+          generos: sortBy(generos, 'descripcion'),
+          estadosCiviles: sortBy(estadosCiviles, 'descripcion'),
+          escolaridades: sortBy(escolaridades, 'descripcion'),
+          tiposDeVivienda: sortBy(tiposDeVivienda, 'descripcion'),
+          actividadesEconomicas: sortBy(actividadesEconomicas, 'descripcion'),
+        };
+        loading = false;
+        ctx.patchState({ config, loading });
+      })
     );
   }
 
   @Action(ClientesMode)
-  clientesMode(
-    ctx: StateContext<ClientesStateModel>,
-    { payload }: ClientesMode
-  ) {
+  clientesMode(ctx: StateContext<ClientesStateModel>, { payload }: ClientesMode) {
     const editMode = payload;
     ctx.patchState({ editMode });
   }
@@ -278,9 +239,7 @@ export class ClientesState {
       tap((cliente: IClienteReturnDto) => {
         const state = ctx.getState();
         const clientes = [...state.clientes];
-        const idx = clientes.findIndex(
-          clienteBuscar => clienteBuscar.id === id
-        );
+        const idx = clientes.findIndex(clienteBuscar => clienteBuscar.id === id);
         clientes[idx] = cliente;
 
         ctx.patchState({ clientes });

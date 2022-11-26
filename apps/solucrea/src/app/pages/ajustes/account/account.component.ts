@@ -1,18 +1,7 @@
 import { AsyncPipe, NgIf } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-  ViewEncapsulation,
-} from '@angular/core';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-} from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -137,9 +126,7 @@ export class AjustesAccountComponent implements OnInit {
 
     if (!isEqual(prevUser, this.accountForm.value)) {
       this.accountForm.disable();
-      this._store.dispatch(
-        new EditUsuario(this.defaultUser.id, this.accountForm.value)
-      );
+      this._store.dispatch(new EditUsuario(this.defaultUser.id, this.accountForm.value));
     }
   }
 }

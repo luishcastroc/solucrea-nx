@@ -1,11 +1,4 @@
-import {
-  Directive,
-  Input,
-  OnDestroy,
-  OnInit,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
+import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Role, Usuario } from '@prisma/client';
 import { Subject } from 'rxjs';
@@ -42,10 +35,7 @@ export class VerifyRoleDirective implements OnInit, OnDestroy {
     this.user = this._store.selectSnapshot(AuthState.user);
 
     if (this.user) {
-      if (
-        this.roles &&
-        this._authService.checkAuthorization(this.user.role, this.roles)
-      ) {
+      if (this.roles && this._authService.checkAuthorization(this.user.role, this.roles)) {
         this.viewContainer.createEmbeddedView(this.templateRef);
       } else {
         this.viewContainer.clear();

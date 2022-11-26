@@ -1,26 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnDestroy,
-  OnInit,
-  ViewEncapsulation,
-} from '@angular/core';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  UntypedFormControl,
-} from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
-import {
-  Actions,
-  NgxsModule,
-  ofActionErrored,
-  ofActionSuccessful,
-  Store,
-} from '@ngxs/store';
+import { Actions, NgxsModule, ofActionErrored, ofActionSuccessful, Store } from '@ngxs/store';
 import { Role, Usuario } from '@prisma/client';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { AuthState } from 'app/core/auth/store/auth.state';
@@ -115,10 +98,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
     );
 
     this._actions$
-      .pipe(
-        ofActionErrored(DeleteUsuario, EditUsuario),
-        takeUntil(this._unsubscribeAll)
-      )
+      .pipe(ofActionErrored(DeleteUsuario, EditUsuario), takeUntil(this._unsubscribeAll))
       .subscribe(action => {
         let message = 'Error al modificar rol de usuario.';
         if (action instanceof DeleteUsuario) {
@@ -132,10 +112,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
       });
 
     this._actions$
-      .pipe(
-        ofActionSuccessful(DeleteUsuario, EditUsuario),
-        takeUntil(this._unsubscribeAll)
-      )
+      .pipe(ofActionSuccessful(DeleteUsuario, EditUsuario), takeUntil(this._unsubscribeAll))
       .subscribe(action => {
         let message = 'Rol de usuario modificado exitosamente';
         if (action instanceof DeleteUsuario) {
@@ -170,10 +147,7 @@ export class TeamListComponent implements OnInit, OnDestroy {
    *
    */
   openNewUser(): void {
-    this._store.dispatch([
-      new Navigate([`ajustes/usuarios/${AuthUtils.guid()}`]),
-      new AjustesModeUsuario('new'),
-    ]);
+    this._store.dispatch([new Navigate([`ajustes/usuarios/${AuthUtils.guid()}`]), new AjustesModeUsuario('new')]);
   }
 
   /**

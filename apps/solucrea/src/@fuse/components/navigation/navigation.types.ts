@@ -28,11 +28,7 @@ export interface FuseNavigationItem {
   roles?: Role[];
 }
 
-export type FuseVerticalNavigationAppearance =
-  | 'default'
-  | 'compact'
-  | 'dense'
-  | 'thin';
+export type FuseVerticalNavigationAppearance = 'default' | 'compact' | 'dense' | 'thin';
 
 export type FuseVerticalNavigationMode = 'over' | 'side';
 

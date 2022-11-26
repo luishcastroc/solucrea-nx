@@ -12,10 +12,7 @@ import {
   IUsuarioReturnDto,
 } from 'api/dtos';
 import { EditMode } from 'app/core/models';
-import {
-  AjustesCreditosService,
-  AjustesUsuarioService,
-} from 'app/pages/ajustes/_services';
+import { AjustesCreditosService, AjustesUsuarioService } from 'app/pages/ajustes/_services';
 import { CajaService } from 'app/pages/caja/_services/caja.service';
 import { ClientesService } from 'app/pages/clientes';
 import { ParentescosService } from 'app/shared';
@@ -89,9 +86,7 @@ export class CreditosState {
   }
 
   @Selector()
-  static selectedCredito({
-    selectedCredito,
-  }: CreditosStateModel): ICreditoReturnDto | undefined {
+  static selectedCredito({ selectedCredito }: CreditosStateModel): ICreditoReturnDto | undefined {
     return selectedCredito;
   }
 
@@ -116,16 +111,12 @@ export class CreditosState {
   }
 
   @Selector()
-  static selectedCliente({
-    selectedCliente,
-  }: CreditosStateModel): IClienteReturnDto | undefined {
+  static selectedCliente({ selectedCliente }: CreditosStateModel): IClienteReturnDto | undefined {
     return selectedCliente;
   }
 
   @Selector()
-  static selectedClienteReferral({
-    selectedClienteReferral,
-  }: CreditosStateModel): IClienteReturnDto | undefined {
+  static selectedClienteReferral({ selectedClienteReferral }: CreditosStateModel): IClienteReturnDto | undefined {
     return selectedClienteReferral;
   }
 
@@ -135,16 +126,12 @@ export class CreditosState {
   }
 
   @Selector()
-  static parentescos({
-    parentescos,
-  }: CreditosStateModel): IParentescoReturnDto[] {
+  static parentescos({ parentescos }: CreditosStateModel): IParentescoReturnDto[] {
     return parentescos;
   }
 
   @Selector()
-  static selectedProducto({
-    selectedProducto,
-  }: CreditosStateModel): Producto | undefined {
+  static selectedProducto({ selectedProducto }: CreditosStateModel): Producto | undefined {
     return selectedProducto;
   }
 
@@ -161,16 +148,12 @@ export class CreditosState {
   }
 
   @Selector()
-  static selectedSeguro({
-    selectedSeguro,
-  }: CreditosStateModel): ISeguroReturnDto | undefined {
+  static selectedSeguro({ selectedSeguro }: CreditosStateModel): ISeguroReturnDto | undefined {
     return selectedSeguro;
   }
 
   @Selector()
-  static segurosData({
-    segurosData,
-  }: CreditosStateModel): ISegurosData | undefined {
+  static segurosData({ segurosData }: CreditosStateModel): ISegurosData | undefined {
     return segurosData;
   }
 
@@ -195,17 +178,12 @@ export class CreditosState {
   }
 
   @Selector()
-  static cobratarios({
-    cobratarios,
-  }: CreditosStateModel): IUsuarioReturnDto[] | [] {
+  static cobratarios({ cobratarios }: CreditosStateModel): IUsuarioReturnDto[] | [] {
     return cobratarios;
   }
 
   @Action(GetAllCreditosCliente)
-  getAllCreditosCliente(
-    { patchState }: StateContext<CreditosStateModel>,
-    { id, status }: GetAllCreditosCliente
-  ) {
+  getAllCreditosCliente({ patchState }: StateContext<CreditosStateModel>, { id, status }: GetAllCreditosCliente) {
     patchState({ loading: true });
     return this._creditosService.getCreditosCliente(id, status).pipe(
       tap((creditos: ICreditoReturnDto[]) => {
@@ -218,10 +196,7 @@ export class CreditosState {
   }
 
   @Action(GetAllCreditos)
-  getAllCreditos(
-    { patchState }: StateContext<CreditosStateModel>,
-    { status }: GetAllCreditos
-  ) {
+  getAllCreditos({ patchState }: StateContext<CreditosStateModel>, { status }: GetAllCreditos) {
     patchState({ loading: true });
     return this._creditosService.getCreditos(status).pipe(
       tap((creditos: ICreditoReturnDto[]) => {
@@ -243,10 +218,7 @@ export class CreditosState {
     ]).pipe(
       tap(([productos, segurosData, colocadores, parentescos]) => {
         if (segurosData) {
-          segurosData.modalidadesDeSeguro = sortBy(
-            segurosData.modalidadesDeSeguro,
-            'titulo'
-          );
+          segurosData.modalidadesDeSeguro = sortBy(segurosData.modalidadesDeSeguro, 'titulo');
         }
         patchState({
           productos: sortBy(productos, 'descripcion'),
@@ -276,22 +248,17 @@ export class CreditosState {
     { patchState }: StateContext<CreditosStateModel>,
     { minAmount, maxAmount }: GetSucursalesWhereCaja
   ) {
-    return this._creditosService
-      .getSucursalesWithCaja(minAmount, maxAmount)
-      .pipe(
-        tap(sucursales => {
-          if (sucursales) {
-            patchState({ sucursales: sortBy(sucursales, 'descripcion') });
-          }
-        })
-      );
+    return this._creditosService.getSucursalesWithCaja(minAmount, maxAmount).pipe(
+      tap(sucursales => {
+        if (sucursales) {
+          patchState({ sucursales: sortBy(sucursales, 'descripcion') });
+        }
+      })
+    );
   }
 
   @Action(GetClienteData)
-  getClienteData(
-    { patchState }: StateContext<CreditosStateModel>,
-    { id }: GetClienteData
-  ) {
+  getClienteData({ patchState }: StateContext<CreditosStateModel>, { id }: GetClienteData) {
     return this._clientesService.getCliente(id).pipe(
       tap((selectedCliente: IClienteReturnDto) => {
         patchState({
@@ -302,10 +269,7 @@ export class CreditosState {
   }
 
   @Action(SelectCliente)
-  selectClienteForCredito(
-    { patchState }: StateContext<CreditosStateModel>,
-    { cliente }: SelectCliente
-  ) {
+  selectClienteForCredito({ patchState }: StateContext<CreditosStateModel>, { cliente }: SelectCliente) {
     patchState({ selectedCliente: cliente, clientes: undefined });
   }
 
@@ -326,40 +290,30 @@ export class CreditosState {
     if (clienteId === null || productId === null) {
       selectedProducto = undefined;
     } else {
-      return this._creditosService
-        .getOpenCreditosCount(clienteId, productId)
-        .pipe(
-          tap(count => {
-            if (count > 0) {
-              selectedProducto = undefined;
-            } else {
-              selectedProducto = getState().productos.filter(
-                (producto: Producto) => producto.id === productId
-              )[0];
-              patchState({ selectedProducto });
-            }
-          })
-        );
+      return this._creditosService.getOpenCreditosCount(clienteId, productId).pipe(
+        tap(count => {
+          if (count > 0) {
+            selectedProducto = undefined;
+          } else {
+            selectedProducto = getState().productos.filter((producto: Producto) => producto.id === productId)[0];
+            patchState({ selectedProducto });
+          }
+        })
+      );
     }
     patchState({ selectedProducto });
     return;
   }
 
   @Action(GetClienteWhere)
-  getClientesWhere(
-    { getState, patchState }: StateContext<CreditosStateModel>,
-    { data }: GetClienteWhere
-  ) {
+  getClientesWhere({ getState, patchState }: StateContext<CreditosStateModel>, { data }: GetClienteWhere) {
     const search = { data };
     const { selectedCliente } = getState();
     return this._clientesService.getClientesWhere(search).pipe(
       tap((clientesReturn: IClienteReturnDto[]) => {
         if (clientesReturn.length > 0) {
           const clientes = clientesReturn.filter(cliente => {
-            if (
-              (selectedCliente && selectedCliente.id !== cliente.id) ||
-              !selectedCliente
-            ) {
+            if ((selectedCliente && selectedCliente.id !== cliente.id) || !selectedCliente) {
               return cliente;
             } else {
               return {};
@@ -379,10 +333,7 @@ export class CreditosState {
   }
 
   @Action(GetCreditosCount)
-  getCreditosCount(
-    { patchState }: StateContext<CreditosStateModel>,
-    { id }: GetCreditosCount
-  ) {
+  getCreditosCount({ patchState }: StateContext<CreditosStateModel>, { id }: GetCreditosCount) {
     return this._creditosService.getCreditosCount(id).pipe(
       tap((creditosCount: number) => {
         patchState({
@@ -415,19 +366,13 @@ export class CreditosState {
   }
 
   @Action(ModeCredito)
-  toggleEditModeCredito(
-    { patchState }: StateContext<CreditosStateModel>,
-    action: ModeCredito
-  ) {
+  toggleEditModeCredito({ patchState }: StateContext<CreditosStateModel>, action: ModeCredito) {
     const { payload } = action;
     patchState({ editMode: payload });
   }
 
   @Action(SelectCredito)
-  selectCredito(
-    { patchState }: StateContext<CreditosStateModel>,
-    { id }: SelectCredito
-  ) {
+  selectCredito({ patchState }: StateContext<CreditosStateModel>, { id }: SelectCredito) {
     return this._creditosService.getCredito(id).pipe(
       tap(selectedCredito => {
         if (selectedCredito) {
@@ -438,13 +383,8 @@ export class CreditosState {
   }
 
   @Action(SelectParentesco)
-  selectParentesco(
-    { getState, patchState }: StateContext<CreditosStateModel>,
-    { id }: SelectParentesco
-  ) {
-    const parentesco = getState().parentescos.filter(
-      (par: IParentescoReturnDto) => par.id === id
-    )[0];
+  selectParentesco({ getState, patchState }: StateContext<CreditosStateModel>, { id }: SelectParentesco) {
+    const parentesco = getState().parentescos.filter((par: IParentescoReturnDto) => par.id === id)[0];
     if (parentesco.descripcion.includes('Otro')) {
       patchState({ selectedOtro: true });
     } else {
@@ -453,39 +393,27 @@ export class CreditosState {
   }
 
   @Action(SelectModalidadSeguro)
-  selectModalidadSeguro(
-    { getState, patchState }: StateContext<CreditosStateModel>,
-    { id }: SelectModalidadSeguro
-  ) {
-    const selectedModalidadDeSeguro =
-      getState().segurosData?.modalidadesDeSeguro.filter(
-        modalidad => modalidad.id === id
-      )[0];
+  selectModalidadSeguro({ getState, patchState }: StateContext<CreditosStateModel>, { id }: SelectModalidadSeguro) {
+    const selectedModalidadDeSeguro = getState().segurosData?.modalidadesDeSeguro.filter(
+      modalidad => modalidad.id === id
+    )[0];
 
     patchState({ selectedModalidadDeSeguro });
   }
 
   @Action(SelectSeguro)
-  selectSeguro(
-    { getState, patchState }: StateContext<CreditosStateModel>,
-    { id }: SelectSeguro
-  ) {
+  selectSeguro({ getState, patchState }: StateContext<CreditosStateModel>, { id }: SelectSeguro) {
     let selectedSeguro;
     if (id === null) {
       selectedSeguro = undefined;
     } else {
-      selectedSeguro = getState().segurosData?.seguros.filter(
-        (seguro: ISeguroReturnDto) => seguro.id === id
-      )[0];
+      selectedSeguro = getState().segurosData?.seguros.filter((seguro: ISeguroReturnDto) => seguro.id === id)[0];
     }
     patchState({ selectedSeguro });
   }
 
   @Action(CreateCredito)
-  createCredito(
-    { getState, patchState }: StateContext<CreditosStateModel>,
-    { data }: CreateCredito
-  ) {
+  createCredito({ getState, patchState }: StateContext<CreditosStateModel>, { data }: CreateCredito) {
     return this._creditosService.createCredito(data).pipe(
       tap((credito: ICreditoReturnDto) => {
         const state = getState();
@@ -496,10 +424,7 @@ export class CreditosState {
   }
 
   @Action(SavePago)
-  savePago(
-    { getState, patchState }: StateContext<CreditosStateModel>,
-    { data }: SavePago
-  ) {
+  savePago({ getState, patchState }: StateContext<CreditosStateModel>, { data }: SavePago) {
     const creditoId = data.credito?.connect?.id;
     return this._creditosService.savePago(data).pipe(
       mergeMap(() => this._creditosService.getCredito(creditoId as string)),

@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  UseGuards,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Prisma, Producto, Role } from '@prisma/client';
 import { ProductosService } from './productos.service';
 import { Public, Roles } from 'api/decorators';
@@ -45,10 +34,7 @@ export class ProductosController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
   @Put('producto/:id')
-  async editProducto(
-    @Param('id') id: string,
-    @Body() data: Prisma.ProductoUpdateInput
-  ): Promise<Producto> {
+  async editProducto(@Param('id') id: string, @Body() data: Prisma.ProductoUpdateInput): Promise<Producto> {
     return this.productosService.updateProducto({
       where: { id },
       data,

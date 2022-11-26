@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  UseGuards,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Direccion, Prisma, Role } from '@prisma/client';
 import { DireccionesService } from './direcciones.service';
 import { Public, Roles } from 'api/decorators';
@@ -45,10 +34,7 @@ export class DireccionesController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
   @Put('direccion/:id')
-  async editDireccion(
-    @Param('id') id: string,
-    @Body() data: Prisma.DireccionUpdateInput
-  ): Promise<Direccion> {
+  async editDireccion(@Param('id') id: string, @Body() data: Prisma.DireccionUpdateInput): Promise<Direccion> {
     return this.direccionesService.updateDireccion({
       where: { id },
       data,

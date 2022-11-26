@@ -1,9 +1,4 @@
-<ng-container
-  *ngIf="
-    loading$ | async;
-    then loadingTemplate;
-    else dataTemplate
-  "></ng-container>
+<ng-container *ngIf="loading$ | async; then loadingTemplate; else dataTemplate"></ng-container>
 <ng-template #loadingTemplate>
   <div class="flex flex-auto flex-col self-center">
     <mat-spinner> </mat-spinner>
@@ -15,19 +10,10 @@
       <!-- Add team member -->
       <div class="w-full">
         <div class="flex flex-col gap-3">
-          <mat-form-field
-            class="fuse-mat-no-subscript w-full"
-            [floatLabel]="'always'">
+          <mat-form-field class="fuse-mat-no-subscript w-full" [floatLabel]="'always'">
             <mat-label>Buscar Sucursal</mat-label>
-            <mat-icon
-              class="icon-size-5"
-              [svgIcon]="'heroicons_outline:office-building'"
-              matPrefix></mat-icon>
-            <input
-              matInput
-              [autocomplete]="'off'"
-              [placeholder]="'Nombre'"
-              [formControl]="searchInput" />
+            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:office-building'" matPrefix></mat-icon>
+            <input matInput [autocomplete]="'off'" [placeholder]="'Nombre'" [formControl]="searchInput" />
             <button
               mat-icon-button
               matSuffix
@@ -36,9 +22,7 @@
               matTooltip="Crear sucursal"
               [matTooltipPosition]="'below'"
               (click)="openNewSucursal()">
-              <mat-icon
-                class="icon-size-5"
-                [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+              <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
             </button>
           </mat-form-field>
           <!-- Active or Innactive ones -->
@@ -46,10 +30,7 @@
             aria-labelledby="radio-group-label"
             class="flex flex-row items-center justify-center gap-3"
             [(ngModel)]="activa">
-            <mat-radio-button
-              *ngFor="let value of values"
-              [value]="value.value"
-              (change)="changeActiva($event)">
+            <mat-radio-button *ngFor="let value of values" [value]="value.value" (change)="changeActiva($event)">
               {{ value.display }}
             </mat-radio-button>
           </mat-radio-group>
@@ -66,16 +47,13 @@
                 <div class="flex flex-col">
                   <div class="font-bold">Telefono:</div>
                   <div class="mt-2">
-                    ({{ sucursal.telefono | slice: 0:3 }})-{{
-                      sucursal.telefono | slice: 3:6
-                    }}-{{ sucursal.telefono | slice: 6:8 }}-{{
-                      sucursal.telefono | slice: 8:10
-                    }}
+                    ({{ sucursal.telefono | slice : 0 : 3 }})-{{ sucursal.telefono | slice : 3 : 6 }}-{{
+                      sucursal.telefono | slice : 6 : 8
+                    }}-{{ sucursal.telefono | slice : 8 : 10 }}
                   </div>
                 </div>
               </div>
-              <div
-                class="xsm:flex-col order-1 flex items-center justify-center sm:order-2 sm:ml-3">
+              <div class="xsm:flex-col order-1 flex items-center justify-center sm:order-2 sm:ml-3">
                 <button
                   mat-icon-button
                   aria-label="Editar sucursal"
@@ -83,29 +61,19 @@
                   matTooltip="Editar sucursal"
                   [matTooltipPosition]="'below'"
                   (click)="editSucursal(sucursal.id)">
-                  <mat-icon
-                    class="text-hint"
-                    [svgIcon]="'heroicons_outline:clipboard-list'"></mat-icon>
+                  <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:clipboard-list'"></mat-icon>
                 </button>
                 <button
                   mat-icon-button
                   aria-label="Inhabilitar sucursal"
-                  (click)="
-                    sucursal.activa
-                      ? deleteSucursal(sucursal)
-                      : activateSucursal(sucursal)
-                  "
+                  (click)="sucursal.activa ? deleteSucursal(sucursal) : activateSucursal(sucursal)"
                   #tooltip="matTooltip"
-                  matTooltip="{{
-                    sucursal.activa ? 'Inactivar sucursal' : 'Activar sucursal'
-                  }}"
+                  matTooltip="{{ sucursal.activa ? 'Inactivar sucursal' : 'Activar sucursal' }}"
                   [matTooltipPosition]="'below'">
                   <mat-icon
                     class="text-hint"
                     [svgIcon]="
-                      sucursal.activa
-                        ? 'heroicons_outline:trash'
-                        : 'heroicons_outline:badge-check'
+                      sucursal.activa ? 'heroicons_outline:trash' : 'heroicons_outline:badge-check'
                     "></mat-icon>
                 </button>
               </div>

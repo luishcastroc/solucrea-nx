@@ -33,18 +33,14 @@
             <div class="flex flex-col">
               <div class="font-bold">Saldo al día de hoy:</div>
               <div class="mt-2">
-                {{ credito.saldo | decimalToNumber | currency: 'MXN':'symbol' }}
+                {{ credito.saldo | decimalToNumber | currency : 'MXN' : 'symbol' }}
               </div>
             </div>
             <!-- Saldo Vencido -->
             <div class="flex flex-col">
               <div class="font-bold">Saldo Vencido/Pago Mínimo:</div>
               <div class="mt-2">
-                {{
-                  credito.saldoVencido
-                    | decimalToNumber
-                    | currency: 'MXN':'symbol'
-                }}
+                {{ credito.saldoVencido | decimalToNumber | currency : 'MXN' : 'symbol' }}
               </div>
             </div>
             <!-- Pago No Intereses -->
@@ -54,38 +50,27 @@
                 {{
                   (credito.pagoNoIntereses ? credito.pagoNoIntereses : 0)
                     | decimalToNumber
-                    | currency: 'MXN':'symbol'
+                    | currency : 'MXN' : 'symbol'
                 }}
               </div>
             </div>
           </div>
           <form [formGroup]="pagosForm" class="flex w-full flex-col">
-            <div
-              class="grid w-full max-w-[40rem] grid-cols-1 gap-4 self-center md:grid-cols-3">
+            <div class="grid w-full max-w-[40rem] grid-cols-1 gap-4 self-center md:grid-cols-3">
               <!-- Monto -->
               <div>
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                   <mat-label>Cantidad a Pagar</mat-label>
-                  <mat-icon
-                    class="icon-size-5"
-                    [svgIcon]="'heroicons_outline:currency-dollar'"
-                    matPrefix></mat-icon>
-                  <input
-                    [formControlName]="'monto'"
-                    matInput
-                    [inputMask]="currencyInputMask"
-                    type="text" />
+                  <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:currency-dollar'" matPrefix></mat-icon>
+                  <input [formControlName]="'monto'" matInput [inputMask]="currencyInputMask" type="text" />
                 </mat-form-field>
                 <ng-container *ngIf="monto?.touched">
-                  <mat-error *ngIf="monto?.errors?.['required']">
-                    El monto es requerido.
-                  </mat-error>
+                  <mat-error *ngIf="monto?.errors?.['required']"> El monto es requerido. </mat-error>
                   <mat-error *ngIf="monto?.errors?.['min']">
                     El monto del pago debe ser mayor a 0, verificar.
                   </mat-error>
                   <mat-error *ngIf="monto?.errors?.['max']">
-                    El monto del pago no debe ser mayor al saldo total,
-                    verificar.
+                    El monto del pago no debe ser mayor al saldo total, verificar.
                   </mat-error>
                 </ng-container>
               </div>
@@ -93,37 +78,25 @@
               <div>
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                   <mat-label>Tipo de Pago</mat-label>
-                  <mat-icon
-                    class="icon-size-5"
-                    [svgIcon]="'heroicons_outline:currency-dollar'"
-                    matPrefix></mat-icon>
+                  <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:currency-dollar'" matPrefix></mat-icon>
                   <mat-select [formControlName]="'tipoDePago'">
-                    <mat-option
-                      *ngFor="let tipo of tipoDePagoTemp | keyvalue"
-                      [value]="tipo.value"
-                      >{{ tipo.key }}</mat-option
-                    >
+                    <mat-option *ngFor="let tipo of tipoDePagoTemp | keyvalue" [value]="tipo.value">{{
+                      tipo.key
+                    }}</mat-option>
                   </mat-select>
                 </mat-form-field>
                 <ng-container *ngIf="tipoDePago?.touched">
-                  <mat-error *ngIf="tipoDePago?.errors?.['required']">
-                    El tipo de pago es requerido.
-                  </mat-error>
+                  <mat-error *ngIf="tipoDePago?.errors?.['required']"> El tipo de pago es requerido. </mat-error>
                 </ng-container>
               </div>
               <!-- Cobrador -->
               <div>
                 <mat-form-field class="fuse-mat-no-subscript w-full"
                   ><mat-label>Cobrador</mat-label>
-                  <mat-icon
-                    class="icon-size-5"
-                    [svgIcon]="'heroicons_outline:academic-cap'"
-                    matPrefix></mat-icon>
+                  <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:academic-cap'" matPrefix></mat-icon>
                   <mat-select [formControlName]="'cobradorId'">
                     <mat-option>Elija una opción</mat-option>
-                    <mat-option
-                      *ngFor="let cobrador of data.cobratarios"
-                      [value]="cobrador.id"
+                    <mat-option *ngFor="let cobrador of data.cobratarios" [value]="cobrador.id"
                       >{{ cobrador.nombre }} {{ cobrador.apellido }}</mat-option
                     >
                   </mat-select>
@@ -132,23 +105,15 @@
             </div>
             <div class="flex w-full max-w-[35rem] self-center">
               <!-- Observaciones -->
-              <mat-form-field
-                class="fuse-mat-textarea fuse-mat-no-subscript mt-4 w-full">
+              <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript mt-4 w-full">
                 <mat-label>Observaciones</mat-label>
-                <mat-icon
-                  class="icon-size-5"
-                  [svgIcon]="'heroicons_outline:clipboard-list'"
-                  matPrefix></mat-icon>
-                <textarea
-                  [formControlName]="'observaciones'"
-                  matInput></textarea>
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:clipboard-list'" matPrefix></mat-icon>
+                <textarea [formControlName]="'observaciones'" matInput></textarea>
               </mat-form-field>
             </div>
           </form>
           <div class="flex flex-auto justify-center">
-            <button mat-stroked-button type="button" (click)="clearForm()">
-              Cancelar
-            </button>
+            <button mat-stroked-button type="button" (click)="clearForm()">Cancelar</button>
             <button
               class="ml-4"
               mat-flat-button

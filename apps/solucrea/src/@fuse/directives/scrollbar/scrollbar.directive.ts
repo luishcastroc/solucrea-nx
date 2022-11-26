@@ -1,19 +1,7 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Platform } from '@angular/cdk/platform';
-import {
-  Directive,
-  ElementRef,
-  inject,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges,
-} from '@angular/core';
-import {
-  ScrollbarGeometry,
-  ScrollbarPosition,
-} from '@fuse/directives/scrollbar/scrollbar.types';
+import { Directive, ElementRef, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { ScrollbarGeometry, ScrollbarPosition } from '@fuse/directives/scrollbar/scrollbar.types';
 import { merge } from 'lodash-es';
 import PerfectScrollbar from 'perfect-scrollbar';
 import { debounceTime, fromEvent, Subject, takeUntil } from 'rxjs';
@@ -72,9 +60,7 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy {
     // Enabled
     if ('fuseScrollbar' in changes) {
       // Interpret empty string as 'true'
-      this.fuseScrollbar = coerceBooleanProperty(
-        changes['fuseScrollbar'].currentValue
-      );
+      this.fuseScrollbar = coerceBooleanProperty(changes['fuseScrollbar'].currentValue);
 
       // If enabled, init the directive
       if (this.fuseScrollbar) {
@@ -89,11 +75,7 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy {
     // Scrollbar options
     if ('fuseScrollbarOptions' in changes) {
       // Merge the options
-      this._options = merge(
-        {},
-        this._options,
-        changes['fuseScrollbarOptions'].currentValue
-      );
+      this._options = merge({}, this._options, changes['fuseScrollbarOptions'].currentValue);
 
       // Return if not initialized
       if (!this._ps) {
@@ -189,10 +171,7 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy {
     let scrollbarPosition;
 
     if (!absolute && this._ps) {
-      scrollbarPosition = new ScrollbarPosition(
-        this._ps.reach.x || 0,
-        this._ps.reach.y || 0
-      );
+      scrollbarPosition = new ScrollbarPosition(this._ps.reach.x || 0, this._ps.reach.y || 0);
     } else {
       scrollbarPosition = new ScrollbarPosition(
         this._elementRef.nativeElement.scrollLeft,
@@ -261,9 +240,7 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy {
    * @param speed
    */
   scrollToBottom(offset: number = 0, speed?: number): void {
-    const top =
-      this._elementRef.nativeElement.scrollHeight -
-      this._elementRef.nativeElement.clientHeight;
+    const top = this._elementRef.nativeElement.scrollHeight - this._elementRef.nativeElement.clientHeight;
     this.animateScrolling('scrollTop', top - offset, speed);
   }
 
@@ -284,9 +261,7 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy {
    * @param speed
    */
   scrollToRight(offset: number = 0, speed?: number): void {
-    const left =
-      this._elementRef.nativeElement.scrollWidth -
-      this._elementRef.nativeElement.clientWidth;
+    const left = this._elementRef.nativeElement.scrollWidth - this._elementRef.nativeElement.clientWidth;
     this.animateScrolling('scrollLeft', left - offset, speed);
   }
 
@@ -298,12 +273,7 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy {
    * @param ignoreVisible If true, scrollToElement won't happen if element is already inside the current viewport
    * @param speed
    */
-  scrollToElement(
-    qs: string,
-    offset: number = 0,
-    ignoreVisible: boolean = false,
-    speed?: number
-  ): void {
+  scrollToElement(qs: string, offset: number = 0, ignoreVisible: boolean = false, speed?: number): void {
     const element = this._elementRef.nativeElement.querySelector(qs);
 
     if (!element) {
@@ -314,10 +284,7 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy {
     const scrollerPos = this._elementRef.nativeElement.getBoundingClientRect();
 
     if (this._elementRef.nativeElement.classList.contains('ps--active-x')) {
-      if (
-        ignoreVisible &&
-        elementPos.right <= scrollerPos.right - Math.abs(offset)
-      ) {
+      if (ignoreVisible && elementPos.right <= scrollerPos.right - Math.abs(offset)) {
         return;
       }
 
@@ -328,10 +295,7 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy {
     }
 
     if (this._elementRef.nativeElement.classList.contains('ps--active-y')) {
-      if (
-        ignoreVisible &&
-        elementPos.bottom <= scrollerPos.bottom - Math.abs(offset)
-      ) {
+      if (ignoreVisible && elementPos.bottom <= scrollerPos.bottom - Math.abs(offset)) {
         return;
       }
 
@@ -368,9 +332,7 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy {
 
       const step = (newTimestamp: number) => {
         scrollCount += Math.PI / (speed / (newTimestamp - oldTimestamp));
-        newValue = Math.round(
-          value + cosParameter + cosParameter * Math.cos(scrollCount)
-        );
+        newValue = Math.round(value + cosParameter + cosParameter * Math.cos(scrollCount));
 
         // Only continue animation if scroll position has not changed
         if (this._elementRef.nativeElement[target] === oldValue) {
@@ -408,11 +370,7 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy {
     }
 
     // Return if on mobile or not on browser
-    if (
-      this._platform.ANDROID ||
-      this._platform.IOS ||
-      !this._platform.isBrowser
-    ) {
+    if (this._platform.ANDROID || this._platform.IOS || !this._platform.isBrowser) {
       this.fuseScrollbar = false;
       return;
     }

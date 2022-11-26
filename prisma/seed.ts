@@ -43,9 +43,7 @@ async function main() {
           data: createColonias,
         });
         if (colonias) {
-          console.log(
-            `Colonias creadas exitosamente Conteo: ${colonias.count}`
-          );
+          console.log(`Colonias creadas exitosamente Conteo: ${colonias.count}`);
         }
       }
     }
@@ -57,9 +55,7 @@ async function main() {
       data: modalidadesDeSeguro,
     });
     if (modalidadesIns) {
-      console.log(
-        `Modalidades de seguro creadas exitosamente: ${modalidadesIns.count}`
-      );
+      console.log(`Modalidades de seguro creadas exitosamente: ${modalidadesIns.count}`);
     }
     const parentescosIns = await prisma.parentesco.createMany({
       data: parentescos,
@@ -71,9 +67,7 @@ async function main() {
       data: estadosCivilesCreate,
     });
     if (estadosCiviles) {
-      console.log(
-        `Estados Civiles creados exitosamente Conteo: ${estadosCiviles.count}`
-      );
+      console.log(`Estados Civiles creados exitosamente Conteo: ${estadosCiviles.count}`);
     }
     const generos = await prisma.genero.createMany({ data: generosCreate });
     if (generos) {
@@ -83,25 +77,19 @@ async function main() {
       data: escolaridadesCreate,
     });
     if (escolaridades) {
-      console.log(
-        `Escolaridades creadas exitosamente Conteo: ${escolaridades.count}`
-      );
+      console.log(`Escolaridades creadas exitosamente Conteo: ${escolaridades.count}`);
     }
     const tiposDeViviendas = await prisma.tipoDeVivienda.createMany({
       data: tiposDeViviendaCreate,
     });
     if (tiposDeViviendas) {
-      console.log(
-        `Tipos de viviendas creados exitosamente Conteo: ${tiposDeViviendas.count}`
-      );
+      console.log(`Tipos de viviendas creados exitosamente Conteo: ${tiposDeViviendas.count}`);
     }
     const actividadesEconomicas = await prisma.actividadEconomica.createMany({
       data: actividadesEconomicasCreate,
     });
     if (actividadesEconomicas) {
-      console.log(
-        `Actividades económicas creadas exitosamente Conteo: ${actividadesEconomicas.count}`
-      );
+      console.log(`Actividades económicas creadas exitosamente Conteo: ${actividadesEconomicas.count}`);
     }
     if (sucursales) {
       let sucursalesCreated: number = 0;
@@ -115,9 +103,7 @@ async function main() {
         }
       }
       if (sucursalesCreated === sucursales.length) {
-        console.log(
-          `Sucursales creadas exitosamente Conteo: ${sucursales.length}`
-        );
+        console.log(`Sucursales creadas exitosamente Conteo: ${sucursales.length}`);
       }
     }
     if (productos) {
@@ -125,9 +111,7 @@ async function main() {
         data: productos,
       });
       if (productorCreate) {
-        console.log(
-          `Productos creados exitosamente Conteo: ${productorCreate.count}`
-        );
+        console.log(`Productos creados exitosamente Conteo: ${productorCreate.count}`);
       }
     }
   }

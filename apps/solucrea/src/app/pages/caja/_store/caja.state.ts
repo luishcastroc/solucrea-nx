@@ -56,9 +56,7 @@ export class CajasState {
   }
 
   @Selector()
-  static selectedCaja({
-    selectedCaja,
-  }: CajaStateModel): ICajaReturnDto | undefined {
+  static selectedCaja({ selectedCaja }: CajaStateModel): ICajaReturnDto | undefined {
     return selectedCaja;
   }
 
@@ -85,9 +83,7 @@ export class CajasState {
     return this._sucursalesService.getSucursales().pipe(
       tap((sucursales: ISucursalReturnDto[]) => {
         if (sucursales) {
-          const sucursalesActivas = sucursales.filter(
-            (sucursal: ISucursalReturnDto) => sucursal.activa === true
-          );
+          const sucursalesActivas = sucursales.filter((sucursal: ISucursalReturnDto) => sucursal.activa === true);
           ctx.patchState({ sucursales: sucursalesActivas });
         }
       })
@@ -95,10 +91,7 @@ export class CajasState {
   }
 
   @Action(GetAllMovimientos)
-  getAllMovimientos(
-    ctx: StateContext<CajaStateModel>,
-    { id }: GetAllMovimientos
-  ) {
+  getAllMovimientos(ctx: StateContext<CajaStateModel>, { id }: GetAllMovimientos) {
     return this._cajasService.getMovimientos(id).pipe(
       tap(movimientos => {
         const movimientosSorted = sortBy(movimientos, 'fechaCreacion');
@@ -108,10 +101,7 @@ export class CajasState {
   }
 
   @Action(CreateMovimiento)
-  createMovimiento(
-    ctx: StateContext<CajaStateModel>,
-    { payload }: CreateMovimiento
-  ) {
+  createMovimiento(ctx: StateContext<CajaStateModel>, { payload }: CreateMovimiento) {
     return this._cajasService.addMovimiento(payload).pipe(
       tap((movimiento: MovimientoDeCaja) => {
         const movimientos = [...ctx.getState().movimientos];

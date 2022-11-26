@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject,
-  Input,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseHorizontalNavigationComponent } from '@fuse/components/navigation/horizontal/horizontal.component';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
@@ -18,9 +10,7 @@ import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FuseHorizontalNavigationBasicItemComponent
-  implements OnInit, OnDestroy
-{
+export class FuseHorizontalNavigationBasicItemComponent implements OnInit, OnDestroy {
   @Input()
   item!: FuseNavigationItem;
   @Input()
@@ -40,16 +30,13 @@ export class FuseHorizontalNavigationBasicItemComponent
    */
   ngOnInit(): void {
     // Get the parent navigation component
-    this._fuseHorizontalNavigationComponent =
-      this._fuseNavigationService.getComponent(this.name);
+    this._fuseHorizontalNavigationComponent = this._fuseNavigationService.getComponent(this.name);
 
     // Subscribe to onRefreshed on the navigation component
-    this._fuseHorizontalNavigationComponent.onRefreshed
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(() => {
-        // Mark for check
-        this._changeDetectorRef.markForCheck();
-      });
+    this._fuseHorizontalNavigationComponent.onRefreshed.pipe(takeUntil(this._unsubscribeAll)).subscribe(() => {
+      // Mark for check
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   /**

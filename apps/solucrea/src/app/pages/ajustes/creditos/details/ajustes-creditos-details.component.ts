@@ -1,12 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -264,17 +257,15 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
           this._store.dispatch(new SelectCredito(id));
         }
 
-        this.selectedProducto$ = this._store
-          .select(AjustesCreditosState.selectedCredito)
-          .pipe(
-            tap((credito: Producto | undefined) => {
-              if (credito) {
-                this.creditosForm.patchValue({
-                  ...credito,
-                });
-              }
-            })
-          );
+        this.selectedProducto$ = this._store.select(AjustesCreditosState.selectedCredito).pipe(
+          tap((credito: Producto | undefined) => {
+            if (credito) {
+              this.creditosForm.patchValue({
+                ...credito,
+              });
+            }
+          })
+        );
       })
     );
   }
@@ -288,12 +279,9 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
     this.loading = true;
     if (this.editMode === 'new') {
       this.creditosForm.disable();
-      const diaSemana =
-        this.diaSemana.value === '' ? null : this.diaSemana.value;
+      const diaSemana = this.diaSemana.value === '' ? null : this.diaSemana.value;
       const diaMes = this.diaMes.value === '' ? null : this.diaMes.value;
-      this._store.dispatch(
-        new AddCredito({ ...this.creditosForm.value, diaMes, diaSemana })
-      );
+      this._store.dispatch(new AddCredito({ ...this.creditosForm.value, diaMes, diaSemana }));
     } else if (this.editMode === 'edit') {
       const creditoEdit = this._sharedService.getDirtyValues(this.creditosForm);
       this._store.dispatch(new EditCredito(this.id.value, creditoEdit));

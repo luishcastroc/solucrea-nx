@@ -21,9 +21,7 @@ import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FuseHorizontalNavigationBranchItemComponent
-  implements OnInit, OnDestroy
-{
+export class FuseHorizontalNavigationBranchItemComponent implements OnInit, OnDestroy {
   /* eslint-disable @typescript-eslint/naming-convention */
   static ngAcceptInputType_child: BooleanInput;
   /* eslint-enable @typescript-eslint/naming-convention */
@@ -50,16 +48,13 @@ export class FuseHorizontalNavigationBranchItemComponent
    */
   ngOnInit(): void {
     // Get the parent navigation component
-    this._fuseHorizontalNavigationComponent =
-      this._fuseNavigationService.getComponent(this.name);
+    this._fuseHorizontalNavigationComponent = this._fuseNavigationService.getComponent(this.name);
 
     // Subscribe to onRefreshed on the navigation component
-    this._fuseHorizontalNavigationComponent.onRefreshed
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(() => {
-        // Mark for check
-        this._changeDetectorRef.markForCheck();
-      });
+    this._fuseHorizontalNavigationComponent.onRefreshed.pipe(takeUntil(this._unsubscribeAll)).subscribe(() => {
+      // Mark for check
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   /**

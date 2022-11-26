@@ -1,11 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  ActivatedRouteSnapshot,
-  CanDeactivate,
-  RouterStateSnapshot,
-  UrlTree,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { ConfirmationDialogComponent } from 'app/shared';
 import { Observable, of } from 'rxjs';
 
@@ -22,20 +17,12 @@ export class DataCheckGuard implements CanDeactivate<CanDeactivateComponent> {
     currentRoute: ActivatedRouteSnapshot,
     currentState: RouterStateSnapshot,
     nextState?: RouterStateSnapshot
-  ):
-    | Observable<boolean | UrlTree>
-    | Promise<boolean | UrlTree>
-    | boolean
-    | UrlTree {
-    if (
-      typeof component.canDeactivate === 'function' &&
-      !component.canDeactivate()
-    ) {
+  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    if (typeof component.canDeactivate === 'function' && !component.canDeactivate()) {
       const confirmDialog = this._dialog.open(ConfirmationDialogComponent, {
         data: {
           title: 'Confirmar Salir',
-          message:
-            'Estas seguro que deseas salir de la Página, la información capturada será borrada.',
+          message: 'Estas seguro que deseas salir de la Página, la información capturada será borrada.',
         },
       });
 

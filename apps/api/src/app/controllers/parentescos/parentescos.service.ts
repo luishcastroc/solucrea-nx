@@ -9,9 +9,7 @@ export class ParentescosService {
 
   // PArentesco
 
-  async parentesco(
-    where: Prisma.ParentescoWhereUniqueInput
-  ): Promise<IParentescoReturnDto | null> {
+  async parentesco(where: Prisma.ParentescoWhereUniqueInput): Promise<IParentescoReturnDto | null> {
     return await this.prisma.parentesco.findUnique({
       where,
       select: { id: true, descripcion: true },
@@ -24,9 +22,7 @@ export class ParentescosService {
     });
   }
 
-  async createParentesco(
-    data: Prisma.ParentescoCreateInput
-  ): Promise<IParentescoReturnDto> {
+  async createParentesco(data: Prisma.ParentescoCreateInput): Promise<IParentescoReturnDto> {
     return await this.prisma.parentesco.create({
       data,
       select: { id: true, descripcion: true },
@@ -45,9 +41,7 @@ export class ParentescosService {
     });
   }
 
-  async deleteParentesco(
-    where: Prisma.ParentescoWhereUniqueInput
-  ): Promise<IParentescoReturnDto> {
+  async deleteParentesco(where: Prisma.ParentescoWhereUniqueInput): Promise<IParentescoReturnDto> {
     return this.prisma.parentesco.delete({
       where,
       select: { id: true, descripcion: true },

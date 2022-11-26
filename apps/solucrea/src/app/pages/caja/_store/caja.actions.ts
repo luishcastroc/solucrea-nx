@@ -18,10 +18,7 @@ export class GetOne {
 
 export class EditCaja {
   static readonly type = '[Caja] Edit';
-  constructor(
-    public id: string,
-    public payload: Prisma.CajaUncheckedUpdateInput
-  ) {}
+  constructor(public id: string, public payload: Prisma.CajaUncheckedUpdateInput) {}
 }
 
 export class Delete {

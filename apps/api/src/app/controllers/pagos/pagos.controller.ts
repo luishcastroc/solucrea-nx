@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  UseGuards,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Genero, Pago, Prisma, Role } from '@prisma/client';
 import { Public, Roles } from 'api/decorators';
 import { RolesGuard } from 'api/guards';
@@ -45,10 +34,7 @@ export class PagosController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
   @Put('pago/:id')
-  async editParentesco(
-    @Param('id') id: string,
-    @Body() data: Genero
-  ): Promise<Pago> {
+  async editParentesco(@Param('id') id: string, @Body() data: Genero): Promise<Pago> {
     return this.pagosService.updatePago({
       where: { id },
       data,

@@ -70,9 +70,7 @@
   </div>
 
   <!-- Item is disabled -->
-  <div
-    class="fuse-horizontal-navigation-item fuse-horizontal-navigation-item-disabled"
-    *ngIf="item.disabled">
+  <div class="fuse-horizontal-navigation-item fuse-horizontal-navigation-item-disabled" *ngIf="item.disabled">
     <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
   </div>
 </div>
@@ -93,9 +91,7 @@
         {{ item.title }}
       </span>
     </div>
-    <div
-      class="fuse-horizontal-navigation-item-subtitle text-hint"
-      *ngIf="item.subtitle">
+    <div class="fuse-horizontal-navigation-item-subtitle text-hint" *ngIf="item.subtitle">
       <span [ngClass]="$any(item.classes?.subtitle)">
         {{ item.subtitle }}
       </span>
@@ -104,9 +100,7 @@
 
   <!-- Badge -->
   <div class="fuse-horizontal-navigation-item-badge" *ngIf="item.badge">
-    <div
-      class="fuse-horizontal-navigation-item-badge-content"
-      [ngClass]="$any(item.badge.classes)">
+    <div class="fuse-horizontal-navigation-item-badge-content" [ngClass]="$any(item.badge.classes)">
       {{ item.badge.title }}
     </div>
   </div>

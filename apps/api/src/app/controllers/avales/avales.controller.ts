@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  UseGuards,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Aval, Prisma, Role } from '@prisma/client';
 import { AvalesService } from './avales.service';
 import { Public, Roles } from 'api/decorators';
@@ -45,10 +34,7 @@ export class AvalesController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
   @Put('aval/:id')
-  async editAvales(
-    @Param('id') id: string,
-    @Body() data: Prisma.AvalUpdateInput
-  ): Promise<Aval> {
+  async editAvales(@Param('id') id: string, @Body() data: Prisma.AvalUpdateInput): Promise<Aval> {
     return this.avalesService.updateAval({
       where: { id },
       data,

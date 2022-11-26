@@ -7,9 +7,7 @@ import { PrismaService } from 'api/prisma';
 export class DireccionesService {
   constructor(private prisma: PrismaService) {}
 
-  async direccion(
-    where: Prisma.DireccionWhereUniqueInput
-  ): Promise<Direccion | null> {
+  async direccion(where: Prisma.DireccionWhereUniqueInput): Promise<Direccion | null> {
     return await this.prisma.direccion.findUnique({
       where,
     });
@@ -36,9 +34,7 @@ export class DireccionesService {
     });
   }
 
-  async deleteDireccion(
-    where: Prisma.DireccionWhereUniqueInput
-  ): Promise<Direccion> {
+  async deleteDireccion(where: Prisma.DireccionWhereUniqueInput): Promise<Direccion> {
     return this.prisma.direccion.delete({
       where,
     });

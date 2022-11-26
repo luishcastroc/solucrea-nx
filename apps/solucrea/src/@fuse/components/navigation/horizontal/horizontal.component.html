@@ -12,11 +12,7 @@
       <!-- Branch: aside, collapsable, group -->
       <fuse-horizontal-navigation-branch-item
         class="fuse-horizontal-navigation-menu-item"
-        *ngIf="
-          item.type === 'aside' ||
-          item.type === 'collapsable' ||
-          item.type === 'group'
-        "
+        *ngIf="item.type === 'aside' || item.type === 'collapsable' || item.type === 'group'"
         [item]="item"
         [name]="name"></fuse-horizontal-navigation-branch-item>
 

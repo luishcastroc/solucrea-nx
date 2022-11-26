@@ -33,22 +33,12 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { CreateCajaDto, ICajaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
-import {
-  AddCaja,
-  CajasState,
-  ClearCajasState,
-  EditCaja,
-  GetAllSucursales,
-  SelectCaja,
-} from 'app/pages/caja/_store';
+import { AddCaja, CajasState, ClearCajasState, EditCaja, GetAllSucursales, SelectCaja } from 'app/pages/caja/_store';
 import { SharedService } from 'app/shared';
 import { DateTime } from 'luxon';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
-import {
-  checkIfEndDateBeforeStartDate,
-  futureDateValidator,
-} from '../validators/custom-caja.validators';
+import { checkIfEndDateBeforeStartDate, futureDateValidator } from '../validators/custom-caja.validators';
 
 @Component({
   selector: 'app-caja-detail',
@@ -231,10 +221,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
               this.cajaForm.enable();
               this.cajaForm.reset();
               this.formDirective.resetForm();
-            } else if (
-              action instanceof EditCaja &&
-              this.editMode === 'cierre'
-            ) {
+            } else if (action instanceof EditCaja && this.editMode === 'cierre') {
               this.saldoFinal.disable();
               this.fechaCierre.disable();
             } else if (action instanceof EditCaja && this.editMode === 'edit') {

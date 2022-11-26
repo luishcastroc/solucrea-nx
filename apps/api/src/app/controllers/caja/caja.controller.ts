@@ -39,10 +39,7 @@ export class CajaController {
   @UsePipes(new ValidationPipe())
   @Roles(Role.ADMIN, Role.CAJERO, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
   @Post('caja')
-  async createCaja(
-    @Request() req: any,
-    @Body() data: CreateCajaDto
-  ): Promise<ICajaReturnDto> {
+  async createCaja(@Request() req: any, @Body() data: CreateCajaDto): Promise<ICajaReturnDto> {
     const creadoPor = req.user.username;
     data.creadoPor = creadoPor;
     return this.cajaService.createCaja(data);
@@ -51,10 +48,7 @@ export class CajaController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.CAJERO, Role.DIRECTOR, Role.MANAGER, Role.USUARIO)
   @Put('caja/:id')
-  async editCaja(
-    @Param('id') id: string,
-    @Body() data: Caja
-  ): Promise<ICajaReturnDto> {
+  async editCaja(@Param('id') id: string, @Body() data: Caja): Promise<ICajaReturnDto> {
     return this.cajaService.updateCaja({
       where: { id },
       data,
@@ -69,14 +63,7 @@ export class CajaController {
   }
 
   @UseGuards(RolesGuard)
-  @Roles(
-    Role.ADMIN,
-    Role.CAJERO,
-    Role.DIRECTOR,
-    Role.MANAGER,
-    Role.SECRETARIO,
-    Role.USUARIO
-  )
+  @Roles(Role.ADMIN, Role.CAJERO, Role.DIRECTOR, Role.MANAGER, Role.SECRETARIO, Role.USUARIO)
   @Get('cajas-count')
   async getCajasCount(): Promise<number> {
     return this.cajaService.getCajasCount();

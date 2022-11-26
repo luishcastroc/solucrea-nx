@@ -1,12 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import {
-  CreateSucursalDto,
-  ICajaReturnDto,
-  ISucursalReturnDto,
-  UpdateSucursalDto,
-} from 'api/dtos';
+import { CreateSucursalDto, ICajaReturnDto, ISucursalReturnDto, UpdateSucursalDto } from 'api/dtos';
 import { PrismaService } from 'api/prisma';
 import { isEmpty } from 'lodash';
 
@@ -31,9 +26,7 @@ export class SucursalesService {
   };
   constructor(private prisma: PrismaService) {}
 
-  async sucursal(
-    sucursalWhereUniqueInput: Prisma.SucursalWhereUniqueInput
-  ): Promise<ISucursalReturnDto | null> {
+  async sucursal(sucursalWhereUniqueInput: Prisma.SucursalWhereUniqueInput): Promise<ISucursalReturnDto | null> {
     try {
       const sucursalReturn = this.prisma.sucursal.findUnique({
         where: sucursalWhereUniqueInput,
@@ -58,10 +51,7 @@ export class SucursalesService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
@@ -80,9 +70,7 @@ export class SucursalesService {
     }
   }
 
-  async createSucursal(
-    sucursal: CreateSucursalDto
-  ): Promise<ISucursalReturnDto> {
+  async createSucursal(sucursal: CreateSucursalDto): Promise<ISucursalReturnDto> {
     const { nombre, telefono, direccion: direccionDto, creadoPor } = sucursal;
     const direccion: Prisma.DireccionCreateNestedOneWithoutSucursalesInput = {
       create: {
@@ -116,10 +104,7 @@ export class SucursalesService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
@@ -138,8 +123,7 @@ export class SucursalesService {
       throw new HttpException(
         {
           status: HttpStatus.BAD_REQUEST,
-          message:
-            'Error actualizando la sucursal, al menos un elemento a actualizar debe ser provisto',
+          message: 'Error actualizando la sucursal, al menos un elemento a actualizar debe ser provisto',
         },
         HttpStatus.BAD_REQUEST
       );
@@ -155,10 +139,9 @@ export class SucursalesService {
       const update: Prisma.DireccionUncheckedUpdateWithoutSucursalesInput = {
         ...data.direccion,
       };
-      const direccion: Prisma.DireccionUpdateOneRequiredWithoutSucursalesNestedInput =
-        {
-          update,
-        };
+      const direccion: Prisma.DireccionUpdateOneRequiredWithoutSucursalesNestedInput = {
+        update,
+      };
       sucursalUpdate = { ...data, direccion };
     }
 
@@ -178,24 +161,18 @@ export class SucursalesService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: e.response.status, message: e.response.message },
-          e.response.status
-        );
+        throw new HttpException({ status: e.response.status, message: e.response.message }, e.response.status);
       }
     }
   }
 
-  async deleteSucursal(
-    where: Prisma.SucursalWhereUniqueInput
-  ): Promise<ISucursalReturnDto> {
+  async deleteSucursal(where: Prisma.SucursalWhereUniqueInput): Promise<ISucursalReturnDto> {
     try {
       //get sucursal
-      const sucursal: ISucursalReturnDto | null =
-        await this.prisma.sucursal.findUnique({
-          where,
-          select: this.select,
-        });
+      const sucursal: ISucursalReturnDto | null = await this.prisma.sucursal.findUnique({
+        where,
+        select: this.select,
+      });
 
       if (!sucursal) {
         throw new HttpException(
@@ -218,18 +195,12 @@ export class SucursalesService {
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        throw new HttpException(
-          { status: response.status, message: response.message },
-          response.status
-        );
+        throw new HttpException({ status: response.status, message: response.message }, response.status);
       }
     }
   }
 
-  async getSucursalesWithCaja(
-    minAmount: number,
-    maxAmount: number
-  ): Promise<Partial<ISucursalReturnDto>[]> {
+  async getSucursalesWithCaja(minAmount: number, maxAmount: number): Promise<Partial<ISucursalReturnDto>[]> {
     const cajas = await this.prisma.caja.findMany({
       where: { fechaCierre: { equals: null } },
       select: {
@@ -250,10 +221,7 @@ export class SucursalesService {
     for (const caja of cajas) {
       const pagos = await this.prisma.pago.aggregate({
         where: {
-          AND: [
-            { sucursalId: { equals: caja.sucursalId } },
-            { fechaDePago: { gte: caja.fechaApertura } },
-          ],
+          AND: [{ sucursalId: { equals: caja.sucursalId } }, { fechaDePago: { gte: caja.fechaApertura } }],
         },
         _sum: { monto: true },
       });
@@ -267,10 +235,7 @@ export class SucursalesService {
         (pagos._sum.monto ? Number(pagos._sum.monto) : 0) +
         (movimientos._sum.monto ? Number(movimientos._sum.monto) : 0);
 
-      if (
-        (saldoActual >= minAmount && saldoActual <= maxAmount) ||
-        saldoActual > maxAmount
-      ) {
+      if ((saldoActual >= minAmount && saldoActual <= maxAmount) || saldoActual > maxAmount) {
         availableCajas = [
           ...availableCajas,
           {

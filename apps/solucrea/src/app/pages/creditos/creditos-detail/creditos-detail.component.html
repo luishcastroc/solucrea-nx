@@ -1,16 +1,8 @@
 <div class="flex w-full flex-col py-8 px-6">
   <div [ngSwitch]="editMode$ | async">
-    <ng-container *ngSwitchCase="'edit'"
-      ><app-creditos-info class="flex flex-auto"></app-creditos-info
-    ></ng-container>
-    <ng-container *ngSwitchCase="'pago'"
-      ><app-creditos-pago></app-creditos-pago
-    ></ng-container>
-    <ng-container *ngSwitchCase="'pagos-list'"
-      ><app-creditos-pagos-list></app-creditos-pagos-list
-    ></ng-container>
-    <ng-container *ngSwitchDefault
-      ><app-creditos-new [clienteId]="clienteId"></app-creditos-new
-    ></ng-container>
+    <ng-container *ngSwitchCase="'edit'"><app-creditos-info class="flex flex-auto"></app-creditos-info></ng-container>
+    <ng-container *ngSwitchCase="'pago'"><app-creditos-pago></app-creditos-pago></ng-container>
+    <ng-container *ngSwitchCase="'pagos-list'"><app-creditos-pagos-list></app-creditos-pagos-list></ng-container>
+    <ng-container *ngSwitchDefault><app-creditos-new [clienteId]="clienteId"></app-creditos-new></ng-container>
   </div>
 </div>

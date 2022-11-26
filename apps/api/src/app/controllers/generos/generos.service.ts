@@ -9,9 +9,7 @@ export class GenerosService {
 
   // Genero
 
-  async genero(
-    where: Prisma.GeneroWhereUniqueInput
-  ): Promise<IGeneroReturnDto | null> {
+  async genero(where: Prisma.GeneroWhereUniqueInput): Promise<IGeneroReturnDto | null> {
     return await this.prisma.genero.findUnique({
       where,
       select: { id: true, descripcion: true },
@@ -24,9 +22,7 @@ export class GenerosService {
     });
   }
 
-  async createGenero(
-    data: Prisma.GeneroCreateInput
-  ): Promise<IGeneroReturnDto> {
+  async createGenero(data: Prisma.GeneroCreateInput): Promise<IGeneroReturnDto> {
     return await this.prisma.genero.create({
       data,
       select: { id: true, descripcion: true },
@@ -45,9 +41,7 @@ export class GenerosService {
     });
   }
 
-  async deleteGenero(
-    where: Prisma.GeneroWhereUniqueInput
-  ): Promise<IGeneroReturnDto> {
+  async deleteGenero(where: Prisma.GeneroWhereUniqueInput): Promise<IGeneroReturnDto> {
     return this.prisma.genero.delete({
       where,
       select: { id: true, descripcion: true },

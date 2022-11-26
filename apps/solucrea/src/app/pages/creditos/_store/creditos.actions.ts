@@ -64,10 +64,7 @@ export class SelectClienteReferral {
 
 export class SelectProducto {
   static readonly type = '[Creditos] Select Producto';
-  constructor(
-    public clienteId: string | null,
-    public productId: string | null
-  ) {}
+  constructor(public clienteId: string | null, public productId: string | null) {}
 }
 
 export class SelectParentesco {

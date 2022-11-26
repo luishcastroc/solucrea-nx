@@ -4,38 +4,25 @@ import { DataCheckGuard } from 'app/core/auth/guards/data-check.guard';
 export const cajaRoutes: Route[] = [
   {
     path: '',
-    loadComponent: () =>
-      import('./caja.component').then(com => com.CajaComponent),
+    loadComponent: () => import('./caja.component').then(com => com.CajaComponent),
     pathMatch: 'prefix',
     children: [
       {
         path: '',
-        loadComponent: () =>
-          import('./caja-list/caja-list.component').then(
-            com => com.CajaListComponent
-          ),
+        loadComponent: () => import('./caja-list/caja-list.component').then(com => com.CajaListComponent),
       },
       {
         path: ':id',
         canDeactivate: [DataCheckGuard],
-        loadComponent: () =>
-          import('./caja-detail/caja-detail.component').then(
-            com => com.CajaDetailComponent
-          ),
+        loadComponent: () => import('./caja-detail/caja-detail.component').then(com => com.CajaDetailComponent),
       },
       {
         path: ':id/movimientos',
-        loadComponent: () =>
-          import('./movimientos/movimientos.component').then(
-            com => com.MovimientosComponent
-          ),
+        loadComponent: () => import('./movimientos/movimientos.component').then(com => com.MovimientosComponent),
       },
       {
         path: ':id/movimiento',
-        loadComponent: () =>
-          import('./movimiento/movimiento.component').then(
-            com => com.MovimientoComponent
-          ),
+        loadComponent: () => import('./movimiento/movimiento.component').then(com => com.MovimientoComponent),
       },
     ],
   },

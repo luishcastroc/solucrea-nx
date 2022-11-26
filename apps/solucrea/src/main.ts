@@ -3,10 +3,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { registerLocaleData } from '@angular/common';
 import localeEsMx from '@angular/common/locales/es-MX';
 import { enableProdMode, importProvidersFrom, LOCALE_ID } from '@angular/core';
-import {
-  LuxonDateAdapter,
-  MAT_LUXON_DATE_ADAPTER_OPTIONS,
-} from '@angular/material-luxon-adapter';
+import { LuxonDateAdapter, MAT_LUXON_DATE_ADAPTER_OPTIONS } from '@angular/material-luxon-adapter';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
@@ -24,7 +21,6 @@ import { AuthState } from 'app/core/auth';
 import { appConfig } from 'app/core/config/app.config';
 import { CoreModule } from 'app/core/core.module';
 import { environment } from 'apps/solucrea/src/environments/environment';
-import { MarkdownModule } from 'ngx-markdown';
 
 import { FuseModule } from './@fuse';
 
@@ -58,19 +54,11 @@ bootstrapApplication(AppComponent, {
       LayoutModule,
 
       // 3rd party modules
-      MarkdownModule.forRoot({}),
       NgxsModule.forRoot([AuthState], {
         developmentMode: !environment.production,
       }),
       NgxsStoragePluginModule.forRoot({
-        key: [
-          'auth',
-          'ajustesSucursales',
-          'ajustesCreditos',
-          'ajustesUsuarios',
-          'caja',
-          'creditos',
-        ],
+        key: ['auth', 'ajustesSucursales', 'ajustesCreditos', 'ajustesUsuarios', 'caja', 'creditos'],
       }),
       NgxsRouterPluginModule.forRoot(),
       NgxsReduxDevtoolsPluginModule.forRoot(),

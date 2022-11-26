@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject,
-  Input,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseVerticalNavigationComponent } from '@fuse/components/navigation/vertical/vertical.component';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
@@ -15,17 +7,13 @@ import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'fuse-vertical-navigation-divider-item',
-  template: `<div
-    class="fuse-vertical-navigation-item-wrapper divider"
-    [ngClass]="$any(item.classes?.wrapper)"></div>`,
+  template: `<div class="fuse-vertical-navigation-item-wrapper divider" [ngClass]="$any(item.classes?.wrapper)"></div>`,
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [NgClass],
 })
-export class FuseVerticalNavigationDividerItemComponent
-  implements OnInit, OnDestroy
-{
+export class FuseVerticalNavigationDividerItemComponent implements OnInit, OnDestroy {
   @Input()
   item!: FuseNavigationItem;
   @Input()
@@ -45,16 +33,13 @@ export class FuseVerticalNavigationDividerItemComponent
    */
   ngOnInit(): void {
     // Get the parent navigation component
-    this._fuseVerticalNavigationComponent =
-      this._fuseNavigationService.getComponent(this.name);
+    this._fuseVerticalNavigationComponent = this._fuseNavigationService.getComponent(this.name);
 
     // Subscribe to onRefreshed on the navigation component
-    this._fuseVerticalNavigationComponent.onRefreshed
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(() => {
-        // Mark for check
-        this._changeDetectorRef.markForCheck();
-      });
+    this._fuseVerticalNavigationComponent.onRefreshed.pipe(takeUntil(this._unsubscribeAll)).subscribe(() => {
+      // Mark for check
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   /**
