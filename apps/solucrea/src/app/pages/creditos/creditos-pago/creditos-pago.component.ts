@@ -207,6 +207,7 @@ export class CreditosPagoComponent implements OnInit {
     this.monto?.reset();
     this.tipoDePago?.reset();
     this.observaciones?.reset();
+    this.cobradorId?.reset();
   }
 
   back() {

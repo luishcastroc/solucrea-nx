@@ -1,8 +1,4 @@
-<ng-container
-  *ngIf="
-    { user: user$ | async, actions: actions$ | async };
-    else loadingTemplate
-  ">
+<ng-container *ngIf="{ user: user$ | async, actions: actions$ | async }; else loadingTemplate">
   <!-- Content -->
   <div class="w-full max-w-3xl">
     <!-- Form -->
@@ -10,19 +6,14 @@
       <!-- Section -->
       <div class="w-full">
         <div class="text-xl">Usuario</div>
-        <div class="text-secondary">
-          Verificar que la información sea correcta.
-        </div>
+        <div class="text-secondary">Verificar que la información sea correcta.</div>
       </div>
       <div class="mt-8 grid w-full gap-6 sm:grid-cols-4">
         <!-- Nombre -->
         <div class="sm:col-span-4">
           <mat-form-field class="w-full" subscriptSizing="dynamic">
             <mat-label>Nombre</mat-label>
-            <mat-icon
-              class="icon-size-5"
-              [svgIcon]="'heroicons_solid:user'"
-              matPrefix></mat-icon>
+            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
             <input [formControlName]="'nombre'" matInput />
           </mat-form-field>
         </div>
@@ -30,18 +21,13 @@
         <div class="sm:col-span-4">
           <mat-form-field class="w-full" subscriptSizing="dynamic">
             <mat-label>Apellidos</mat-label>
-            <mat-icon
-              class="icon-size-5"
-              [svgIcon]="'heroicons_solid:user'"
-              matPrefix></mat-icon>
+            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
             <input [formControlName]="'apellido'" matInput />
           </mat-form-field>
         </div>
         <!-- Nombre de Usuario -->
         <div class="sm:col-span-4">
-          <mat-form-field
-            class="fuse-mat-emphasized-affix w-full"
-            subscriptSizing="dynamic">
+          <mat-form-field class="fuse-mat-emphasized-affix w-full" subscriptSizing="dynamic">
             <mat-label>Nombre de Usuario</mat-label>
             <div class="text-secondary" matPrefix>solucrea/</div>
             <input [formControlName]="'nombreUsuario'" matInput />
@@ -55,9 +41,7 @@
       <!-- Acciones -->
       <div class="flex items-center justify-end">
         <div class="grid grid-cols-2 gap-2">
-          <button mat-stroked-button type="button" (click)="cancelEdit()">
-            Cancelar
-          </button>
+          <button mat-stroked-button type="button" (click)="cancelEdit()">Cancelar</button>
           <button
             mat-flat-button
             type="submit"

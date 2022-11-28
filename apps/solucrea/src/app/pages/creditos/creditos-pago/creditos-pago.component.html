@@ -59,7 +59,7 @@
             <div class="grid w-full max-w-[40rem] grid-cols-1 gap-4 self-center md:grid-cols-3">
               <!-- Monto -->
               <div>
-                <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-form-field class="w-full" subscriptSizing="dynamic">
                   <mat-label>Cantidad a Pagar</mat-label>
                   <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:currency-dollar'" matPrefix></mat-icon>
                   <input [formControlName]="'monto'" matInput [inputMask]="currencyInputMask" type="text" />
@@ -76,7 +76,7 @@
               </div>
               <!-- Tipo de Pago -->
               <div>
-                <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-form-field class="w-full" subscriptSizing="dynamic">
                   <mat-label>Tipo de Pago</mat-label>
                   <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:currency-dollar'" matPrefix></mat-icon>
                   <mat-select [formControlName]="'tipoDePago'">
@@ -91,7 +91,7 @@
               </div>
               <!-- Cobrador -->
               <div>
-                <mat-form-field class="fuse-mat-no-subscript w-full"
+                <mat-form-field class="w-full" subscriptSizing="dynamic"
                   ><mat-label>Cobrador</mat-label>
                   <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:academic-cap'" matPrefix></mat-icon>
                   <mat-select [formControlName]="'cobradorId'">
@@ -105,7 +105,7 @@
             </div>
             <div class="flex w-full max-w-[35rem] self-center">
               <!-- Observaciones -->
-              <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript mt-4 w-full">
+              <mat-form-field class="fuse-mat-textarea mt-4 w-full" subscriptSizing="dynamic">
                 <mat-label>Observaciones</mat-label>
                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:clipboard-list'" matPrefix></mat-icon>
                 <textarea [formControlName]="'observaciones'" matInput></textarea>

@@ -1,3 +1,17 @@
-<div class="absolute inset-0 flex min-w-0 flex-col overflow-hidden">
-  <p>movimiento works!</p>
+<div class="flex w-full flex-auto flex-col py-8 px-6">
+  <div class="flex justify-between border-b pb-3">
+    <h1 class="text-4xl font-extrabold leading-none tracking-tight">Nuevo Movimiento</h1>
+    <button
+      mat-icon-button
+      aria-label="Regresar"
+      (click)="back()"
+      #tooltip="matTooltip"
+      matTooltip="Regresar"
+      [matTooltipPosition]="'below'">
+      <mat-icon svgIcon="heroicons_outline:arrow-left"></mat-icon>
+    </button>
+  </div>
 </div>
+<!-- <div class="absolute inset-0 flex min-w-0 flex-col overflow-hidden">
+  <p>movimiento works!</p>
+</div> -->

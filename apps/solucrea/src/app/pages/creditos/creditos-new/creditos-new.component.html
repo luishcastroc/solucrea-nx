@@ -25,7 +25,7 @@
         <div class="flex flex-auto flex-col items-center gap-6 md:p-10">
           <!-- Search -->
           <div class="w-full" *ngIf="!clienteId">
-            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript min-w-50 w-full">
+            <mat-form-field class="fuse-mat-dense min-w-5 w-full" subscriptSizing="dynamic">
               <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
               <input matInput [formControl]="searchInput" [matAutocomplete]="auto" [placeholder]="'Buscar cliente'" />
               <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
@@ -155,7 +155,7 @@
                     <ng-container *ngIf="productos.length > 0; else noProductosTemplate">
                       <!-- Producto -->
                       <div class="w-full">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-form-field class="w-full" subscriptSizing="dynamic">
                           <mat-label>Elegír producto a utilizar</mat-label>
                           <mat-icon
                             class="icon-size-5"
@@ -186,7 +186,7 @@
                     <ng-container *ngIf="sucursales$ | async as sucursales">
                       <ng-container *ngIf="sucursales.length > 0; else noSucursalesTemplate">
                         <div class="w-full">
-                          <mat-form-field class="fuse-mat-no-subscript w-full">
+                          <mat-form-field class="w-full" subscriptSizing="dynamic">
                             <mat-label>Sucursal</mat-label>
                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:library'" matPrefix></mat-icon>
                             <mat-select [formControlName]="'sucursal'">
@@ -407,7 +407,7 @@
             <form [formGroup]="aval" class="grid w-full grid-cols-1 gap-3 md:grid-cols-5">
               <!-- Apellido Paterno -->
               <div>
-                <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-form-field class="w-full" subscriptSizing="dynamic">
                   <mat-label>Apellido Paterno</mat-label>
                   <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
                   <input [formControlName]="'apellidoPaterno'" matInput type="text" [inputMask]="titleInputMask" />
@@ -420,7 +420,7 @@
               </div>
               <!-- Apellido Materno -->
               <div>
-                <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-form-field class="w-full" subscriptSizing="dynamic">
                   <mat-label>Apellido Materno</mat-label>
                   <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
                   <input [formControlName]="'apellidoMaterno'" matInput type="text" [inputMask]="titleInputMask" />
@@ -433,7 +433,7 @@
               </div>
               <!-- Nombre -->
               <div>
-                <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-form-field class="w-full" subscriptSizing="dynamic">
                   <mat-label>Nombre</mat-label>
                   <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
                   <input [formControlName]="'nombre'" matInput type="text" [inputMask]="titleInputMask" />
@@ -444,7 +444,7 @@
               </div>
               <!-- Fecha de Nacimiento -->
               <div>
-                <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-form-field class="w-full" subscriptSizing="dynamic">
                   <mat-label>Fecha de Nacimiento</mat-label>
                   <mat-icon matPrefix class="icon-size-5 hidden sm:flex" [svgIcon]="'heroicons_solid:cake'"></mat-icon>
                   <input
@@ -463,7 +463,7 @@
               </div>
               <!-- Parentesco -->
               <div>
-                <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-form-field class="w-full" subscriptSizing="dynamic">
                   <mat-label>Parentesco</mat-label>
                   <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:library'" matPrefix></mat-icon>
                   <mat-select [formControlName]="'parentesco'" (selectionChange)="checkParentesco($event.value)">
@@ -480,7 +480,7 @@
               </div>
               <!-- Otro (Especificar) -->
               <div *ngIf="selectedOtro$ | async">
-                <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-form-field class="w-full" subscriptSizing="dynamic">
                   <mat-label>Especificar</mat-label>
                   <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
                   <input [formControlName]="'otro'" matInput type="text" [inputMask]="titleInputMask" />
@@ -493,7 +493,7 @@
               </div>
               <!-- Ocupación -->
               <div>
-                <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-form-field class="w-full" subscriptSizing="dynamic">
                   <mat-label>Ocupación</mat-label>
                   <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
                   <input [formControlName]="'ocupacion'" matInput type="text" [inputMask]="titleInputMask" />
@@ -506,7 +506,7 @@
               </div>
               <!-- Teléfono 1 -->
               <div>
-                <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-form-field class="w-full" subscriptSizing="dynamic">
                   <mat-label>Teléfono</mat-label>
                   <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:phone'" matPrefix></mat-icon>
                   <input [formControlName]="'telefono'" matInput [inputMask]="phoneInputMask" type="tel" />
@@ -538,7 +538,7 @@
             <ng-container *ngIf="segurosData$ | async as data">
               <!-- Modalidad de Seguro -->
               <div>
-                <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-form-field class="w-full" subscriptSizing="dynamic">
                   <mat-label>Modalidad de Seguro</mat-label>
                   <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:library'" matPrefix></mat-icon>
                   <mat-select
@@ -557,7 +557,7 @@
               </div>
               <!-- Seguro -->
               <div>
-                <mat-form-field class="fuse-mat-no-subscript w-full"
+                <mat-form-field class="w-full" subscriptSizing="dynamic"
                   ><mat-label>Seguro</mat-label>
                   <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:library'" matPrefix></mat-icon>
                   <mat-select [formControlName]="'seguro'" (selectionChange)="selectSeguro($event.value)">
@@ -578,7 +578,7 @@
           <div class="mt-8 flex w-full flex-col gap-6 md:flex-row">
             <!-- Cantidad a Desembolsar -->
             <div class="w-full">
-              <mat-form-field class="fuse-mat-no-subscript w-full">
+              <mat-form-field class="w-full" subscriptSizing="dynamic">
                 <mat-label>Cantidad a Otorgar</mat-label>
                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:currency-dollar'" matPrefix></mat-icon>
                 <input [formControlName]="'monto'" matInput [inputMask]="currencyInputMask" />
@@ -595,7 +595,7 @@
             </div>
             <!-- Fecha de Desembolso -->
             <div class="w-full">
-              <mat-form-field class="fuse-mat-no-subscript w-full">
+              <mat-form-field class="w-full" subscriptSizing="dynamic">
                 <mat-label>Fecha de Desembolso</mat-label>
                 <mat-icon
                   matPrefix
@@ -622,7 +622,7 @@
             </div>
             <!-- Colocador o Referido -->
             <div class="w-full">
-              <mat-form-field class="fuse-mat-no-subscript w-full"
+              <mat-form-field class="w-full" subscriptSizing="dynamic"
                 ><mat-label>Referido por</mat-label>
                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:academic-cap'" matPrefix></mat-icon>
                 <mat-select [formControlName]="'referidoPor'">
@@ -635,7 +635,7 @@
             <!-- Colocador -->
             <div class="w-full">
               <!-- Colocador Usuario -->
-              <mat-form-field class="fuse-mat-no-subscript w-full" *ngIf="referidoPor.value === 'COLOCADOR'"
+              <mat-form-field class="w-full" subscriptSizing="dynamic" *ngIf="referidoPor.value === 'COLOCADOR'"
                 ><mat-label>Colocador</mat-label>
                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:academic-cap'" matPrefix></mat-icon>
                 <mat-select [formControlName]="'colocador'">
@@ -646,7 +646,7 @@
                 </mat-select>
               </mat-form-field>
               <!-- Colocador Cliente -->
-              <mat-form-field class="fuse-mat-no-subscript w-full" *ngIf="referidoPor.value === 'CLIENTE'">
+              <mat-form-field class="w-full" subscriptSizing="dynamic" *ngIf="referidoPor.value === 'CLIENTE'">
                 <mat-label>Colocador</mat-label>
                 <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
                 <input
@@ -865,7 +865,7 @@
             </div>
           </div>
           <!-- Observaciones -->
-          <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript mt-4 w-full">
+          <mat-form-field class="fuse-mat-textarea mt-4 w-full" subscriptSizing="dynamic">
             <mat-label>Observaciones</mat-label>
             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:clipboard-list'" matPrefix></mat-icon>
             <textarea [formControlName]="'observaciones'" matInput></textarea>

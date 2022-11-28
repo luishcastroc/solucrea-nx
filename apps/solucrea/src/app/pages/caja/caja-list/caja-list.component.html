@@ -1,13 +1,10 @@
 <div class="flex w-full flex-auto flex-col py-8 px-6">
   <div class="flex flex-auto flex-col">
     <!-- Header -->
-    <div
-      class="flex max-h-40 flex-auto flex-col justify-between border-b py-8 px-6 sm:flex-row md:flex-col md:px-8">
+    <div class="flex max-h-40 flex-auto flex-col justify-between border-b py-8 px-6 sm:flex-row md:flex-col md:px-8">
       <!-- Title -->
       <div>
-        <div class="text-4xl font-extrabold leading-none tracking-tight">
-          Turnos
-        </div>
+        <div class="text-4xl font-extrabold leading-none tracking-tight">Turnos</div>
       </div>
 
       <!-- Main actions -->
@@ -26,8 +23,7 @@
           class="z-20 flex w-full flex-col justify-between border-b px-4 py-4 md:px-10"
           *ngIf="cajas.length > 0; else noCajas">
           <ng-container *ngFor="let caja of cajas">
-            <div
-              class="md:max-w-5/6 z-20 grid w-full grid-cols-1 gap-4 border-b px-2 py-4 md:grid-cols-2 md:px-10">
+            <div class="md:max-w-5/6 z-20 grid w-full grid-cols-1 gap-4 border-b px-2 py-4 md:grid-cols-2 md:px-10">
               <div class="grid w-full grid-cols-2 gap-6 md:grid-cols-4">
                 <!-- Fecha de Apertura -->
                 <div class="flex flex-col">
@@ -40,22 +36,14 @@
                 <div class="flex flex-auto flex-col">
                   <div class="font-bold">Saldo Inicial:</div>
                   <div class="mt-2">
-                    {{
-                      caja.saldoInicial
-                        | decimalToNumber
-                        | currency : 'MXN' : 'symbol'
-                    }}
+                    {{ caja.saldoInicial | decimalToNumber | currency : 'MXN' : 'symbol' }}
                   </div>
                 </div>
                 <!-- Saldo Actual -->
                 <div class="flex flex-auto flex-col">
                   <div class="font-bold">Saldo Actual:</div>
                   <div class="mt-2">
-                    {{
-                      caja.saldoActual
-                        | decimalToNumber
-                        | currency : 'MXN' : 'symbol'
-                    }}
+                    {{ caja.saldoActual | decimalToNumber | currency : 'MXN' : 'symbol' }}
                   </div>
                 </div>
                 <!-- Sucursal -->
@@ -71,8 +59,7 @@
                   </div>
                 </div>
               </div>
-              <div
-                class="xsm:flex-col order-1 flex items-center justify-center sm:order-2 sm:ml-3">
+              <div class="xsm:flex-col order-1 flex items-center justify-center sm:order-2 sm:ml-3">
                 <button
                   mat-icon-button
                   aria-label="Movimientos"
@@ -80,9 +67,7 @@
                   matTooltip="Movimientos"
                   [matTooltipPosition]="'below'"
                   (click)="goToMovimientos(caja.id)">
-                  <mat-icon
-                    class="text-hint"
-                    [svgIcon]="'heroicons_outline:cash'"></mat-icon>
+                  <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:cash'"></mat-icon>
                 </button>
                 <button
                   mat-icon-button
@@ -91,9 +76,7 @@
                   matTooltip="Editar Turno"
                   [matTooltipPosition]="'below'"
                   (click)="editCaja(caja.id)">
-                  <mat-icon
-                    class="text-hint"
-                    [svgIcon]="'heroicons_outline:clipboard-list'"></mat-icon>
+                  <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:clipboard-list'"></mat-icon>
                 </button>
                 <button
                   mat-icon-button
@@ -102,17 +85,13 @@
                   matTooltip="Cerrar Turno"
                   [matTooltipPosition]="'below'"
                   (click)="cerrarCaja(caja.id)">
-                  <mat-icon
-                    class="text-hint"
-                    [svgIcon]="'heroicons_outline:lock-closed'"></mat-icon>
+                  <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:lock-closed'"></mat-icon>
                 </button>
               </div>
             </div>
           </ng-container>
         </div>
-        <ng-template #noCajas
-          ><div class="font-extrabold">No Hay Turnos abiertos.</div>
-        </ng-template>
+        <ng-template #noCajas><div class="font-extrabold">No Hay Turnos abiertos.</div> </ng-template>
       </ng-container>
       <ng-template #loadingTemplate>
         <div class="z-20 flex justify-center border-b px-8 py-4 md:px-10">

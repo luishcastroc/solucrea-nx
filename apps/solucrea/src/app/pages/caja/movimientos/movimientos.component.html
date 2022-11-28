@@ -5,14 +5,8 @@
       <!-- Title -->
       <div>
         <div class="flex flex-row gap-2">
-          <div class="text-4xl font-extrabold leading-none tracking-tight">
-            Movimientos
-          </div>
-          <button
-            class="ml-4"
-            mat-flat-button
-            [color]="'primary'"
-            (click)="newMovimiento()">
+          <div class="text-4xl font-extrabold leading-none tracking-tight">Movimientos</div>
+          <button class="ml-4" mat-flat-button [color]="'primary'" (click)="newMovimiento()">
             <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
             <span class="ml-2 mr-1">Agregar</span>
           </button>
@@ -36,16 +30,14 @@
     <!-- Content -->
     <ng-container>
       <div
-        class="flex-auto overflow-hidden"
+        class="flex-auto overflow-hidden p-9"
         fuseScrollbar
         [fuseScrollbarOptions]="{
           suppressScrollX: true
         }">
         <ng-container *ngFor="let movimiento of movimientos">
-          <div
-            class="z-20 grid grid-cols-1 gap-4 border-b px-2 py-4 md:grid-cols-[1fr_minmax(auto,_200px)] md:px-10">
-            <div
-              class="grid grid-cols-2 gap-6 px-5 md:grid-cols-3 lg:w-5/6 lg:grid-cols-4">
+          <div class="z-20 grid grid-cols-1 gap-4 border-b px-2 py-4 md:grid-cols-[1fr_minmax(auto,_200px)] md:px-10">
+            <div class="grid grid-cols-2 gap-6 px-5 md:grid-cols-3 lg:w-5/6 lg:grid-cols-4">
               <div class="flex flex-col">
                 <div class="font-bold">Fecha del Movimiento:</div>
                 <div class="mt-2">{{ movimiento.fechaCreacion | date }}</div>
@@ -57,21 +49,13 @@
               <div class="flex flex-col">
                 <div class="font-bold">Categoría:</div>
                 <div class="mt-2">
-                  {{
-                    !movimiento.categoria
-                      ? 'No Guardada'
-                      : (movimiento.categoria | titlecase)
-                  }}
+                  {{ !movimiento.categoria ? 'No Guardada' : (movimiento.categoria | titlecase) }}
                 </div>
               </div>
               <div class="flex flex-col">
                 <div class="font-bold">Monto:</div>
                 <div class="mt-2">
-                  {{
-                    movimiento.monto
-                      | decimalToNumber
-                      | currency : 'MXN' : 'symbol'
-                  }}
+                  {{ movimiento.monto | decimalToNumber | currency : 'MXN' : 'symbol' }}
                 </div>
               </div>
               <!--
@@ -86,8 +70,7 @@
                   </div>
                 </div> -->
             </div>
-            <div
-              class="xsm:flex-col order-1 flex items-center justify-center sm:order-2 sm:ml-3"></div>
+            <div class="xsm:flex-col order-1 flex items-center justify-center sm:order-2 sm:ml-3"></div>
           </div>
         </ng-container>
       </div>
