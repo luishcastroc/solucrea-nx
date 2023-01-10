@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -61,6 +61,7 @@ import { checkIfEndDateBeforeStartDate, futureDateValidator } from '../validator
     MatProgressSpinnerModule,
     NgIf,
     AsyncPipe,
+    NgFor,
   ],
 })
 export class CajaDetailComponent implements OnInit, OnDestroy {

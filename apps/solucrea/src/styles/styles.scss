@@ -1,88 +1,37 @@
-/* ----------------------------------------------------------------------------------------------------- */
-/*  @ Import/write your custom styles here.
-/*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
-/* ----------------------------------------------------------------------------------------------------- */
+@use 'node_modules/@ngneat/hot-toast/src/styles/styles.scss';
 
 mat-spinner {
-    margin-top: 2rem;
-    align-self: center;
+  margin-top: 2rem;
+  align-self: center;
 }
 
 .mat-horizontal-stepper-header-container,
 .mat-horizontal-content-container {
-    width: 100%;
+  width: 100%;
 }
 
 .mat-step {
-    width: 100%;
+  width: 100%;
 }
 
 @keyframes spinner {
-    to {
-        transform: rotate(360deg);
-    }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .spinner-loading:before {
-    content: "";
-    box-sizing: border-box;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin-top: -10px;
-    margin-left: -10px;
-    border-radius: 50%;
-    border: 2px solid #ffffff;
-    border-top-color: #000000;
-    animation: spinner 0.8s linear infinite;
-}
-
-@keyframes hotToastEnterAnimationNegative {
-    0% {
-        opacity: 0.5;
-        transform: translate3d(0, -80px, 0) scale(0.6);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translate3d(0, 0, 0) scale(1);
-    }
-}
-
-@keyframes hotToastEnterAnimationPositive {
-    0% {
-        opacity: 0.5;
-        transform: translate3d(0, 80px, 0) scale(0.6);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translate3d(0, 0, 0) scale(1);
-    }
-}
-
-@keyframes hotToastExitAnimationPositive {
-    0% {
-        opacity: 1;
-        transform: translate3d(0, 0, -1px) scale(1);
-    }
-
-    100% {
-        opacity: 0;
-        transform: translate3d(0, 130px, -1px) scale(0.5);
-    }
-}
-
-@keyframes hotToastExitAnimationNegative {
-    0% {
-        opacity: 1;
-        transform: translate3d(0, 0, -1px) scale(1);
-    }
-
-    100% {
-        opacity: 0;
-        transform: translate3d(0, -130px, -1px) scale(0.5);
-    }
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  border-top-color: #000000;
+  animation: spinner 0.8s linear infinite;
 }

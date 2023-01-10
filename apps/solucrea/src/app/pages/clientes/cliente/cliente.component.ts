@@ -65,6 +65,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { UiInputComponent } from 'app/core';
 
 @Component({
   selector: 'app-cliente',
@@ -90,6 +91,7 @@ import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
     NgClass,
     NgIf,
     NgFor,
+    UiInputComponent,
   ],
 })
 export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateComponent {

@@ -30,50 +30,31 @@
                   <div class="grid w-full grid-cols-1 gap-3 md:grid-cols-5">
                     <!-- Apellido Paterno -->
                     <div>
-                      <mat-form-field class="w-full" subscriptSizing="dynamic">
-                        <mat-label>Apellido Paterno</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
-                        <input
-                          [formControlName]="'apellidoPaterno'"
-                          matInput
-                          type="text"
-                          [inputMask]="titleInputMask" />
-                      </mat-form-field>
-                      <ng-container *ngIf="clienteForm.get('apellidoPaterno')?.touched">
-                        <mat-error *ngIf="clienteForm.get('apellidoPaterno')?.errors?.['required']">
-                          El Apellido paterno es requerido.
-                        </mat-error>
-                      </ng-container>
+                      <app-ui-input
+                        label="Apellido Paterno"
+                        icon="heroicons_solid:user"
+                        [required]="true"
+                        [formControlName]="'apellidoMaterno'"
+                        [mask]="titleInputMask"></app-ui-input>
                     </div>
                     <!-- Apellido Materno -->
                     <div>
-                      <mat-form-field class="w-full" subscriptSizing="dynamic">
-                        <mat-label>Apellido Materno</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
-                        <input
-                          [formControlName]="'apellidoMaterno'"
-                          matInput
-                          type="text"
-                          [inputMask]="titleInputMask" />
-                      </mat-form-field>
-                      <ng-container *ngIf="clienteForm.get('apellidoMaterno')?.touched">
-                        <mat-error *ngIf="clienteForm.get('apellidoMaterno')?.errors?.['required']">
-                          El Apellido materno es requerido.
-                        </mat-error>
-                      </ng-container>
+                      <app-ui-input
+                        label="Apellido Materno"
+                        icon="heroicons_solid:user"
+                        [required]="true"
+                        [formControlName]="'apellidoPaterno'"
+                        type="text"
+                        [mask]="titleInputMask"></app-ui-input>
                     </div>
                     <!-- Nombre -->
                     <div>
-                      <mat-form-field class="w-full" subscriptSizing="dynamic">
-                        <mat-label>Nombre</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
-                        <input [formControlName]="'nombre'" matInput type="text" [inputMask]="titleInputMask" />
-                      </mat-form-field>
-                      <ng-container *ngIf="clienteForm.get('nombre')?.touched">
-                        <mat-error *ngIf="clienteForm.get('nombre')?.errors?.['required']">
-                          El Nombre paterno es requerido.
-                        </mat-error>
-                      </ng-container>
+                      <app-ui-input
+                        label="Nombre"
+                        icon="heroicons_solid:user"
+                        [required]="true"
+                        [formControlName]="'nombre'"
+                        [mask]="titleInputMask"></app-ui-input>
                     </div>
                     <!-- Fecha de Nacimiento -->
                     <div>
@@ -169,55 +150,42 @@
                     </div>
                     <!-- CURP -->
                     <div>
-                      <mat-form-field class="w-full" subscriptSizing="dynamic">
-                        <mat-label>CURP</mat-label>
-                        <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_outline:document-text'"
-                          matPrefix></mat-icon>
-                        <input [formControlName]="'curp'" matInput type="text" [inputMask]="capsInputMAsk" />
-                      </mat-form-field>
-                      <ng-container *ngIf="clienteForm.get('curp')?.touched">
-                        <mat-error *ngIf="clienteForm.get('curp')?.errors?.['required']">
-                          El CURP es requerido.
-                        </mat-error>
-                      </ng-container>
+                      <app-ui-input
+                        label="CURP"
+                        icon="heroicons_outline:document-text"
+                        [required]="true"
+                        [formControlName]="'curp'"
+                        [mask]="capsInputMAsk"></app-ui-input>
                     </div>
                     <!-- RFC -->
                     <div>
-                      <mat-form-field class="w-full" subscriptSizing="dynamic">
-                        <mat-label>RFC</mat-label>
-                        <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_outline:document-text'"
-                          matPrefix></mat-icon>
-                        <input [formControlName]="'rfc'" matInput type="text" [inputMask]="capsInputMAsk" />
-                      </mat-form-field>
-                      <ng-container *ngIf="clienteForm.get('rfc')?.touched">
-                        <mat-error *ngIf="clienteForm.get('rfc')?.errors?.['required']">
-                          El RFC es requerido.
-                        </mat-error>
-                      </ng-container>
+                      <app-ui-input
+                        label="RFC"
+                        icon="heroicons_outline:document-text"
+                        [required]="true"
+                        [formControlName]="'rfc'"
+                        [mask]="capsInputMAsk"></app-ui-input>
                     </div>
                     <!-- Teléfono 1 -->
                     <div>
-                      <mat-form-field class="w-full" subscriptSizing="dynamic">
-                        <mat-label>Teléfono 1</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:phone'" matPrefix></mat-icon>
-                        <input [formControlName]="'telefono1'" matInput [inputMask]="phoneInputMask" type="tel" />
-                      </mat-form-field>
-                      <ng-container *ngIf="clienteForm.get('telefono1')?.touched">
-                        <mat-error *ngIf="clienteForm.get('telefono1')?.errors?.['required']">
-                          El telefono es requerido.
-                        </mat-error>
-                      </ng-container>
+                      <app-ui-input
+                        label="Teléfono 1"
+                        icon="heroicons_solid:phone"
+                        [required]="true"
+                        [formControlName]="'telefono1'"
+                        [type]="'tel'"
+                        [mask]="phoneInputMask"></app-ui-input>
                     </div>
                     <!-- Teléfono 2 -->
-                    <mat-form-field class="w-full" subscriptSizing="dynamic">
-                      <mat-label>Teléfono 2</mat-label>
-                      <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:phone'" matPrefix></mat-icon>
-                      <input [formControlName]="'telefono2'" matInput [inputMask]="phoneInputMask" type="tel" />
-                    </mat-form-field>
+                    <div>
+                      <app-ui-input
+                        label="Teléfono 2"
+                        icon="heroicons_solid:phone"
+                        [required]="false"
+                        [formControlName]="'telefono2'"
+                        [type]="'tel'"
+                        [mask]="phoneInputMask"></app-ui-input>
+                    </div>
                   </div>
                   <h3 class="mt-4 w-full flex-auto text-3xl font-extrabold leading-none tracking-tight">Direcciones</h3>
                   <!-- Direcciones -->
