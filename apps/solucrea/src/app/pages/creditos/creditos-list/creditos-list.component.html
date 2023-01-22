@@ -133,6 +133,7 @@
                   <button
                     mat-icon-button
                     aria-label="Inactivar Credito"
+                    *ngIf="credito.status !== 'CERRADO'"
                     #tooltip="matTooltip"
                     matTooltip="{{ credito.status === 'ABIERTO' || 'MORA' ? 'Inactivar Credito' : 'Activar Credito' }}"
                     [matTooltipPosition]="'below'">

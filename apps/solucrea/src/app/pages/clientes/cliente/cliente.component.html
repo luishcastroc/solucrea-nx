@@ -80,73 +80,47 @@
                     </div>
                     <!-- Genero -->
                     <div>
-                      <mat-form-field class="w-full" subscriptSizing="dynamic">
-                        <mat-label>Genero</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:library'" matPrefix></mat-icon>
-                        <mat-select [formControlName]="'genero'">
-                          <mat-option *ngFor="let genero of config.generos" [value]="genero.id">{{
-                            genero.descripcion
-                          }}</mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                      <ng-container *ngIf="clienteForm.get('genero')?.touched">
-                        <mat-error *ngIf="clienteForm.get('genero')?.errors?.['required']">
-                          el Genero es requerido.
-                        </mat-error>
-                      </ng-container>
+                      <app-ui-select
+                        label="Genero"
+                        icon="heroicons_outline:library"
+                        [formControlName]="'genero'"
+                        [placeholder]="'Genero'"
+                        [options]="config.generos"
+                        [valueProp]="'id'"
+                        [labelProp]="'descripcion'"></app-ui-select>
                     </div>
                     <!-- Estado Civil -->
                     <div>
-                      <mat-form-field class="w-full" subscriptSizing="dynamic">
-                        <mat-label>Estado Civil</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:library'" matPrefix></mat-icon>
-                        <mat-select [formControlName]="'estadoCivil'">
-                          <mat-option *ngFor="let estadoCivil of config.estadosCiviles" [value]="estadoCivil.id">{{
-                            estadoCivil.descripcion
-                          }}</mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                      <ng-container *ngIf="clienteForm.get('estadoCivil')?.touched">
-                        <mat-error *ngIf="clienteForm.get('estadoCivil')?.errors?.['required']">
-                          El estado civil es requerido.
-                        </mat-error>
-                      </ng-container>
+                      <app-ui-select
+                        label="Estado Civil"
+                        icon="heroicons_outline:library"
+                        [formControlName]="'estadoCivil'"
+                        [placeholder]="'Estado Civil'"
+                        [options]="config.estadosCiviles"
+                        [valueProp]="'id'"
+                        [labelProp]="'descripcion'"></app-ui-select>
                     </div>
                     <!-- Tipo de Vivienda -->
                     <div>
-                      <mat-form-field class="w-full" subscriptSizing="dynamic">
-                        <mat-label>Tipo de Vivienda</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:home'" matPrefix></mat-icon>
-                        <mat-select [formControlName]="'tipoDeVivienda'">
-                          <mat-option
-                            *ngFor="let tipoDeVivienda of config.tiposDeVivienda"
-                            [value]="tipoDeVivienda.id"
-                            >{{ tipoDeVivienda.descripcion }}</mat-option
-                          >
-                        </mat-select>
-                      </mat-form-field>
-                      <ng-container *ngIf="clienteForm.get('tipoDeVivienda')?.touched">
-                        <mat-error *ngIf="clienteForm.get('tipoDeVivienda')?.errors?.['required']">
-                          El tipo de vivienda es requerido.
-                        </mat-error>
-                      </ng-container>
+                      <app-ui-select
+                        label="Tipo de Vivienda"
+                        icon="heroicons_outline:home"
+                        [formControlName]="'tipoDeVivienda'"
+                        [placeholder]="'Tipo de Vivienda'"
+                        [options]="config.tiposDeVivienda"
+                        [valueProp]="'id'"
+                        [labelProp]="'descripcion'"></app-ui-select>
                     </div>
                     <!-- Escolaridad -->
                     <div>
-                      <mat-form-field class="w-full" subscriptSizing="dynamic">
-                        <mat-label>Escolaridad</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:academic-cap'" matPrefix></mat-icon>
-                        <mat-select [formControlName]="'escolaridad'">
-                          <mat-option *ngFor="let escolaridad of config.escolaridades" [value]="escolaridad.id">{{
-                            escolaridad.descripcion
-                          }}</mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                      <ng-container *ngIf="clienteForm.get('escolaridad')?.touched">
-                        <mat-error *ngIf="clienteForm.get('escolaridad')?.errors?.['required']">
-                          La escolaridad es requerida.
-                        </mat-error>
-                      </ng-container>
+                      <app-ui-select
+                        label="Escolaridad"
+                        icon="heroicons_outline:academic-cap"
+                        [formControlName]="'escolaridad'"
+                        [placeholder]="'Escolaridad'"
+                        [options]="config.escolaridades"
+                        [valueProp]="'id'"
+                        [labelProp]="'descripcion'"></app-ui-select>
                     </div>
                     <!-- CURP -->
                     <div>
@@ -181,7 +155,6 @@
                       <app-ui-input
                         label="Teléfono 2"
                         icon="heroicons_solid:phone"
-                        [required]="false"
                         [formControlName]="'telefono2'"
                         [type]="'tel'"
                         [mask]="phoneInputMask"></app-ui-input>
@@ -197,124 +170,89 @@
                         let first = first;
                         let last = last;
                         trackBy: trackByFn
-                      ">
+                      "
+                      [formGroupName]="i">
                       <div class="flex flex-row gap-10">
                         <div class="grid w-full grid-cols-2 gap-3 md:grid-cols-4">
                           <!-- Calle -->
                           <div>
-                            <mat-form-field class="w-full" subscriptSizing="dynamic">
-                              <mat-label *ngIf="first">Calle</mat-label>
-                              <mat-icon
-                                matPrefix
-                                class="icon-size-5 hidden sm:flex"
-                                [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
-                              <input
-                                matInput
-                                [formControl]="$any(direccion.get('calle'))"
-                                [placeholder]="'Calle'"
-                                [spellcheck]="false" />
-                            </mat-form-field>
-                            <ng-container *ngIf="direccion.get('calle')?.touched">
-                              <mat-error *ngIf="direccion.get('calle')?.errors?.['required']">
-                                La calle es requerida.
-                              </mat-error>
-                            </ng-container>
+                            <app-ui-input
+                              label="Calle"
+                              [showLabel]="first"
+                              icon="heroicons_solid:location-marker"
+                              [iconClasses]="'hidden sm:flex'"
+                              formControlName="calle"
+                              [placeholder]="'Calle'"
+                              [type]="'text'"></app-ui-input>
                           </div>
                           <!-- Número -->
                           <div>
-                            <mat-form-field class="w-full" subscriptSizing="dynamic">
-                              <mat-label *ngIf="first">Número</mat-label>
-                              <mat-icon
-                                matPrefix
-                                class="icon-size-5 hidden sm:flex"
-                                [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
-                              <input matInput [formControl]="$any(direccion.get('numero'))" [placeholder]="'Número'" />
-                            </mat-form-field>
-                            <ng-container *ngIf="direccion.get('numero')?.touched">
-                              <mat-error *ngIf="direccion.get('numero')?.errors?.['required']">
-                                El numero es requerido.
-                              </mat-error>
-                            </ng-container>
+                            <app-ui-input
+                              label="Número"
+                              [showLabel]="first"
+                              icon="heroicons_solid:location-marker"
+                              [iconClasses]="'hidden sm:flex'"
+                              formControlName="numero"
+                              [placeholder]="'Número'"
+                              [type]="'text'"></app-ui-input>
                           </div>
                           <!-- Cruzamientos -->
                           <div>
-                            <mat-form-field class="w-full" subscriptSizing="dynamic">
-                              <mat-label *ngIf="first">Cruzamientos</mat-label>
-                              <mat-icon
-                                matPrefix
-                                class="icon-size-5 hidden sm:flex"
-                                [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
-                              <input
-                                matInput
-                                [formControl]="$any(direccion.get('cruzamientos'))"
-                                [placeholder]="'Cruzamientos'" />
-                            </mat-form-field>
+                            <app-ui-input
+                              label="Cruzamientos"
+                              [showLabel]="first"
+                              icon="heroicons_solid:location-marker"
+                              [iconClasses]="'hidden sm:flex'"
+                              formControlName="cruzamientos"
+                              [placeholder]="'Cruzamientos'"
+                              [type]="'text'"></app-ui-input>
                           </div>
                           <!-- Código Postal -->
                           <div>
-                            <mat-form-field class="w-full" subscriptSizing="dynamic">
-                              <mat-label *ngIf="first">Código Postal</mat-label>
-                              <mat-icon
-                                matPrefix
-                                class="icon-size-5 hidden sm:flex"
-                                [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
-                              <input
-                                matInput
-                                [formControl]="$any(direccion.get('codigoPostal'))"
-                                [placeholder]="'Código Postal'"
-                                (change)="getColonias(direccion.get('codigoPostal')?.value, i, 'CLIENTE')" />
-                            </mat-form-field>
-                            <ng-container *ngIf="direccion.get('codigoPostal')?.touched">
-                              <mat-error *ngIf="direccion.get('codigoPostal')?.errors?.['required']">
-                                El codigo postal es requerido.
-                              </mat-error>
-                            </ng-container>
+                            <app-ui-input
+                              label="Código Postal"
+                              [showLabel]="first"
+                              icon="heroicons_solid:location-marker"
+                              [iconClasses]="'hidden sm:flex'"
+                              formControlName="codigoPostal"
+                              [placeholder]="'Código Postal'"
+                              [type]="'number'"
+                              (change)="getColonias(direccion.get('codigoPostal')?.value, i, 'CLIENTE')"></app-ui-input>
                           </div>
                           <!-- Estado -->
                           <div>
-                            <mat-form-field class="w-full" subscriptSizing="dynamic">
-                              <mat-label *ngIf="first">Estado</mat-label>
-                              <mat-icon
-                                matPrefix
-                                class="icon-size-5 hidden sm:flex"
-                                [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
-                              <input matInput [formControl]="$any(direccion.get('estado'))" [placeholder]="'Estado'" />
-                            </mat-form-field>
+                            <app-ui-input
+                              label="Estado"
+                              [showLabel]="first"
+                              icon="heroicons_solid:location-marker"
+                              [iconClasses]="'hidden sm:flex'"
+                              formControlName="estado"
+                              [placeholder]="'Estado'"
+                              [type]="'text'"></app-ui-input>
                           </div>
                           <!-- Ciudad -->
                           <div>
-                            <mat-form-field class="w-full" subscriptSizing="dynamic">
-                              <mat-label *ngIf="first">Ciudad</mat-label>
-                              <mat-icon
-                                matPrefix
-                                class="icon-size-5 hidden sm:flex"
-                                [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
-                              <input matInput [formControl]="$any(direccion.get('ciudad'))" [placeholder]="'ciudad'" />
-                            </mat-form-field>
+                            <app-ui-input
+                              label="Ciudad"
+                              [showLabel]="first"
+                              icon="heroicons_solid:location-marker"
+                              [iconClasses]="'hidden sm:flex'"
+                              formControlName="ciudad"
+                              [placeholder]="'Ciudad'"
+                              [type]="'text'"></app-ui-input>
                           </div>
                           <!-- Colonia -->
                           <div>
-                            <mat-form-field class="w-full" subscriptSizing="dynamic">
-                              <mat-label *ngIf="first">Colonia</mat-label>
-                              <mat-icon
-                                class="icon-size-5"
-                                [svgIcon]="'heroicons_solid:location-marker'"
-                                matPrefix></mat-icon>
-                              <mat-select
-                                [formControl]="$any(direccion.get('colonia'))"
-                                [compareWith]="compareColonias">
-                                <mat-option
-                                  *ngFor="let colonia of ubicacion[i]?.ubicacion?.colonias"
-                                  [value]="colonia.id"
-                                  >{{ colonia.descripcion }}</mat-option
-                                >
-                              </mat-select>
-                            </mat-form-field>
-                            <ng-container *ngIf="direccion.get('colonia')?.touched">
-                              <mat-error *ngIf="direccion.get('colonia')?.errors?.['required']">
-                                La colonia es requerida.
-                              </mat-error>
-                            </ng-container>
+                            <app-ui-select
+                              label="Colonia"
+                              [showLabel]="first"
+                              icon="heroicons_solid:location-marker"
+                              [iconClasses]="'hidden sm:flex'"
+                              formControlName="colonia"
+                              [placeholder]="'Colonia'"
+                              [options]="ubicacion[i] && ubicacion[i].ubicacion ? ubicacion[i].ubicacion.colonias : []"
+                              [valueProp]="'id'"
+                              [labelProp]="'descripcion'"></app-ui-select>
                           </div>
                         </div>
                         <!-- Remover Dirección -->
@@ -373,42 +311,32 @@
                     <div class="md:max-w-5/6 grid w-full grid-cols-1 gap-3 md:grid-cols-4">
                       <!-- Nombre -->
                       <div>
-                        <mat-form-field class="w-full" subscriptSizing="dynamic">
-                          <mat-label>Nombre</mat-label>
-                          <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
-                          <input [formControlName]="'nombre'" matInput type="text" />
-                        </mat-form-field>
-                        <ng-container *ngIf="trabajoForm.get('nombre')?.touched">
-                          <mat-error *ngIf="trabajoForm.get('nombre')?.errors?.['required']">
-                            La calle es requerida.
-                          </mat-error>
-                        </ng-container>
+                        <app-ui-input
+                          label="Nombre"
+                          icon="heroicons_solid:user"
+                          [formControlName]="'nombre'"
+                          [placeholder]="'Ciudad'"
+                          [type]="'text'"></app-ui-input>
                       </div>
                       <!-- Teléfono-->
                       <div>
-                        <mat-form-field class="w-full" subscriptSizing="dynamic">
-                          <mat-label>Teléfono</mat-label>
-                          <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:phone'" matPrefix></mat-icon>
-                          <input [formControlName]="'telefono'" matInput [inputMask]="phoneInputMask" type="tel" />
-                        </mat-form-field>
-                        <ng-container *ngIf="trabajoForm.get('telefono')?.touched">
-                          <mat-error *ngIf="trabajoForm.get('telefono')?.errors?.['required']">
-                            El telefono es requerido.
-                          </mat-error>
-                        </ng-container>
+                        <app-ui-input
+                          label="Teléfono"
+                          icon="heroicons_solid:phone"
+                          [required]="true"
+                          [formControlName]="'telefono'"
+                          [type]="'tel'"
+                          [mask]="phoneInputMask"></app-ui-input>
                       </div>
                       <!-- Antiguedad-->
                       <div>
-                        <mat-form-field class="w-full" subscriptSizing="dynamic">
-                          <mat-label>Antiguedad (Años)</mat-label>
-                          <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:clock'" matPrefix></mat-icon>
-                          <input [formControlName]="'antiguedad'" matInput type="text" [inputMask]="yearsInputMask" />
-                        </mat-form-field>
-                        <ng-container *ngIf="trabajoForm.get('antiguedad')?.touched">
-                          <mat-error *ngIf="trabajoForm.get('antiguedad')?.errors?.['required']">
-                            La antiguedad es requerida.
-                          </mat-error>
-                        </ng-container>
+                        <app-ui-input
+                          label="Antiguedad (Años)"
+                          icon="heroicons_solid:clock"
+                          [required]="true"
+                          [formControlName]="'antiguedad'"
+                          [type]="'tel'"
+                          [mask]="yearsInputMask"></app-ui-input>
                       </div>
                       <!-- Actividad Económica -->
                       <div>

@@ -58,11 +58,11 @@ bootstrapApplication(AppComponent, {
         developmentMode: !environment.production,
       }),
       NgxsStoragePluginModule.forRoot({
-        key: ['auth', 'ajustesSucursales', 'ajustesCreditos', 'ajustesUsuarios', 'caja', 'creditos'],
+        key: ['auth', 'ajustesSucursales', 'ajustesCreditos', 'ajustesUsuarios', 'caja', 'creditos', 'clientes'],
       }),
       NgxsRouterPluginModule.forRoot(),
-      NgxsReduxDevtoolsPluginModule.forRoot(),
-      HotToastModule.forRoot()
+      HotToastModule.forRoot(),
+      NgxsReduxDevtoolsPluginModule.forRoot({ name: 'Simplification' })
     ),
     { provide: LOCALE_ID, useValue: 'es-Mx' },
     { provide: MAT_DATE_LOCALE, useValue: 'es-MX' },

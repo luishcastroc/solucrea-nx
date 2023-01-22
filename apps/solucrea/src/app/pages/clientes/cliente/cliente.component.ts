@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -18,7 +19,16 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+import { MatLuxonDateModule } from '@angular/material-luxon-adapter';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { createMask, InputMaskModule } from '@ngneat/input-mask';
@@ -29,13 +39,12 @@ import {
   CreateDireccionDto,
   IActividadEconomicaReturnDto,
   IClienteReturnDto,
-  IColonias,
   IDireccion,
   IDireccionUpdateDto,
   ITrabajoDto,
 } from 'api/dtos/';
-import { EditMode } from 'app/core/models';
-import { CanDeactivateComponent } from 'app/core/models/can-deactivate.model';
+import { UiInputComponent, UiSelectComponent } from 'app/core';
+import { CanDeactivateComponent, EditMode } from 'app/core/models';
 import {
   Add,
   ClearClientesState,
@@ -55,17 +64,6 @@ import { Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { ClientesService } from '../_services/clientes.service';
 import { IConfig } from '../models/config.model';
 import { curpValidator, rfcValidator } from '../validators/custom-clientes.validators';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatLuxonDateModule } from '@angular/material-luxon-adapter';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { UiInputComponent } from 'app/core';
 
 @Component({
   selector: 'app-cliente',
@@ -87,11 +85,9 @@ import { UiInputComponent } from 'app/core';
     MatTooltipModule,
     MatDatepickerModule,
     InputMaskModule,
-    AsyncPipe,
-    NgClass,
-    NgIf,
-    NgFor,
+    CommonModule,
     UiInputComponent,
+    UiSelectComponent,
   ],
 })
 export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateComponent {
@@ -309,17 +305,6 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
         if (selectedCliente) {
           const { direcciones, trabajo } = selectedCliente;
 
-          // Filling the direccion field and calling the codigoPostal service
-          direcciones.forEach((direccion, i) => {
-            if (i > 0) {
-              this.addDireccionesField();
-            }
-            this.direcciones.controls[i].get('id')?.setValue(direccion.id);
-            this.direcciones.controls[i].get('codigoPostal')?.setValue(direccion.colonia.codigoPostal);
-            this.getColonias(direccion.colonia.codigoPostal, i, 'CLIENTE');
-            this.direcciones.controls[i].get('colonia')?.setValue(direccion.colonia.id);
-          });
-
           // putting values into the Cliente form
           this.clienteForm.patchValue({
             ...selectedCliente,
@@ -327,6 +312,17 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
             estadoCivil: selectedCliente.estadoCivil.id,
             escolaridad: selectedCliente.escolaridad.id,
             tipoDeVivienda: selectedCliente.tipoDeVivienda.id,
+          });
+
+          // Filling the direccion field and calling the codigoPostal service
+          direcciones.forEach((direccion, i) => {
+            if (i > 0) {
+              this.addDireccionesField();
+            }
+            this.direcciones.controls[i].get('id')?.patchValue(direccion.id);
+            this.direcciones.controls[i].get('codigoPostal')?.patchValue(direccion.colonia.codigoPostal);
+            this.getColonias(direccion.colonia.codigoPostal, i, 'CLIENTE');
+            this.direcciones.controls[i].get('colonia')?.patchValue(direccion.colonia.id);
           });
 
           // putting values into the Trabajo
@@ -493,17 +489,6 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
    */
   selectActividadEconomica(id: string): void {
     this._store.dispatch(new SelectActividadEconomica(id));
-  }
-
-  /**
-   *
-   * Function to compare objects inside select
-   *
-   * @param colonia1
-   * @param colonia2
-   */
-  compareColonias(id: string, colonia2: IColonias): boolean {
-    return id && colonia2 && id === colonia2.id ? true : false;
   }
 
   /**
