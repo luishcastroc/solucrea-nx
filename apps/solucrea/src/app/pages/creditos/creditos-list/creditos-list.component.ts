@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
+import { FuseScrollbarDirective } from '@fuse/directives/scrollbar';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
@@ -45,7 +45,6 @@ import { GetCreditosCount } from '../_store/creditos.actions';
     MatButtonModule,
     ReactiveFormsModule,
     FormsModule,
-    FuseScrollbarModule,
     NgIf,
     NgFor,
     DecimalToNumberPipe,
@@ -54,6 +53,7 @@ import { GetCreditosCount } from '../_store/creditos.actions';
     AsyncPipe,
     DatePipe,
     DecimalPipe,
+    FuseScrollbarDirective,
   ],
 })
 export class CreditosListComponent implements OnInit {

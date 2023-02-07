@@ -6,7 +6,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
-import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
+import { FuseScrollbarDirective } from '@fuse/directives/scrollbar';
 import { Store } from '@ngxs/store';
 import { ICreditoReturnDto } from 'api/dtos';
 import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
@@ -22,7 +22,6 @@ import { CreditosState, GetCobratarios, ModeCredito, SelectCredito } from '../_s
   imports: [
     MatTooltipModule,
     MatIconModule,
-    FuseScrollbarModule,
     MatStepperModule,
     MatButtonModule,
     MatProgressSpinnerModule,
@@ -33,6 +32,7 @@ import { CreditosState, GetCobratarios, ModeCredito, SelectCredito } from '../_s
     DatePipe,
     NgIf,
     NgFor,
+    FuseScrollbarDirective,
   ],
 })
 export class CreditosInfoComponent implements OnInit {

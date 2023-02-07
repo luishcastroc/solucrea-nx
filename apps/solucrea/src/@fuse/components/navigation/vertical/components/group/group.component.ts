@@ -1,15 +1,39 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  forwardRef,
+  inject,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseVerticalNavigationComponent } from '@fuse/components/navigation/vertical/vertical.component';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
+import { CommonModule } from '@angular/common';
+import { FuseVerticalNavigationBasicItemComponent } from '../basic/basic.component';
+import { FuseVerticalNavigationCollapsableItemComponent } from '../collapsable/collapsable.component';
+import { FuseVerticalNavigationDividerItemComponent } from '../divider/divider.component';
+import { FuseVerticalNavigationSpacerItemComponent } from '../spacer/spacer.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'fuse-vertical-navigation-group-item',
   templateUrl: './group.component.html',
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    FuseVerticalNavigationBasicItemComponent,
+    forwardRef(() => FuseVerticalNavigationCollapsableItemComponent),
+    FuseVerticalNavigationDividerItemComponent,
+    FuseVerticalNavigationSpacerItemComponent,
+    MatIconModule,
+  ],
+  standalone: true,
 })
 export class FuseVerticalNavigationGroupItemComponent implements OnInit, OnDestroy {
   /* eslint-disable @typescript-eslint/naming-convention */

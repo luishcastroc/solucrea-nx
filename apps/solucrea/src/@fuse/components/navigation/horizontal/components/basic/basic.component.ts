@@ -1,14 +1,19 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FuseHorizontalNavigationComponent } from '@fuse/components/navigation/horizontal/horizontal.component';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'fuse-horizontal-navigation-basic-item',
   templateUrl: './basic.component.html',
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [CommonModule, MatIconModule, RouterLink, RouterLinkActive],
 })
 export class FuseHorizontalNavigationBasicItemComponent implements OnInit, OnDestroy {
   @Input()

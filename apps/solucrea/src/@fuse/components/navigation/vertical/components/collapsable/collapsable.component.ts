@@ -15,6 +15,12 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseVerticalNavigationComponent } from '@fuse/components/navigation/vertical/vertical.component';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { FuseVerticalNavigationBasicItemComponent } from '../basic/basic.component';
+import { FuseVerticalNavigationDividerItemComponent } from '../divider/divider.component';
+import { FuseVerticalNavigationGroupItemComponent } from '../group/group.component';
+import { FuseVerticalNavigationSpacerItemComponent } from '../spacer/spacer.component';
 
 @Component({
   selector: 'fuse-vertical-navigation-collapsable-item',
@@ -22,6 +28,15 @@ import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types
   styles: [],
   animations: fuseAnimations,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatIconModule,
+    FuseVerticalNavigationBasicItemComponent,
+    FuseVerticalNavigationDividerItemComponent,
+    FuseVerticalNavigationGroupItemComponent,
+    FuseVerticalNavigationSpacerItemComponent,
+  ],
 })
 export class FuseVerticalNavigationCollapsableItemComponent implements OnInit, OnDestroy {
   /* eslint-disable @typescript-eslint/naming-convention */

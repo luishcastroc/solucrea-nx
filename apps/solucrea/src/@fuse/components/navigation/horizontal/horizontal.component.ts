@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -9,11 +10,15 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
-import { ReplaySubject, Subject } from 'rxjs';
 import { fuseAnimations } from '@fuse/animations';
-import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
+import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
 import { FuseUtilsService } from '@fuse/services/utils/utils.service';
+import { ReplaySubject, Subject } from 'rxjs';
+
+import { FuseHorizontalNavigationBasicItemComponent } from './components/basic/basic.component';
+import { FuseHorizontalNavigationBranchItemComponent } from './components/branch/branch.component';
+import { FuseHorizontalNavigationSpacerItemComponent } from './components/spacer/spacer.component';
 
 @Component({
   selector: 'fuse-horizontal-navigation',
@@ -23,6 +28,14 @@ import { FuseUtilsService } from '@fuse/services/utils/utils.service';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   exportAs: 'fuseHorizontalNavigation',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FuseHorizontalNavigationComponent,
+    FuseHorizontalNavigationBranchItemComponent,
+    FuseHorizontalNavigationBasicItemComponent,
+    FuseHorizontalNavigationSpacerItemComponent,
+  ],
 })
 export class FuseHorizontalNavigationComponent implements OnChanges, OnInit, OnDestroy {
   @Input() name: string = this._fuseUtilsService.randomId();

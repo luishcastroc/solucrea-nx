@@ -3,12 +3,15 @@ import { Subject, takeUntil } from 'rxjs';
 import { FuseHorizontalNavigationComponent } from '@fuse/components/navigation/horizontal/horizontal.component';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'fuse-horizontal-navigation-divider-item',
   templateUrl: './divider.component.html',
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [NgClass],
 })
 export class FuseHorizontalNavigationDividerItemComponent implements OnInit, OnDestroy {
   @Input()

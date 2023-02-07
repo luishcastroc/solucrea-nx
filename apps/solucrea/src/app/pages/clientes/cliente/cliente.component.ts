@@ -497,7 +497,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
    *
    */
   canDeactivate(): boolean {
-    if (this.clienteForm.dirty || this.trabajoForm.dirty) {
+    if ((this.clienteForm.touched && this.clienteForm.dirty) || (this.trabajoForm.touched && this.trabajoForm.dirty)) {
       return false;
     }
     return true;

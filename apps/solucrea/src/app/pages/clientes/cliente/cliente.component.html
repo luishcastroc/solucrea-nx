@@ -35,7 +35,7 @@
                         icon="heroicons_solid:user"
                         [required]="true"
                         [formControlName]="'apellidoMaterno'"
-                        [mask]="titleInputMask"></app-ui-input>
+                        [mask]="titleInputMask" />
                     </div>
                     <!-- Apellido Materno -->
                     <div>
@@ -45,7 +45,7 @@
                         [required]="true"
                         [formControlName]="'apellidoPaterno'"
                         type="text"
-                        [mask]="titleInputMask"></app-ui-input>
+                        [mask]="titleInputMask" />
                     </div>
                     <!-- Nombre -->
                     <div>
@@ -54,7 +54,7 @@
                         icon="heroicons_solid:user"
                         [required]="true"
                         [formControlName]="'nombre'"
-                        [mask]="titleInputMask"></app-ui-input>
+                        [mask]="titleInputMask" />
                     </div>
                     <!-- Fecha de Nacimiento -->
                     <div>
@@ -129,7 +129,7 @@
                         icon="heroicons_outline:document-text"
                         [required]="true"
                         [formControlName]="'curp'"
-                        [mask]="capsInputMAsk"></app-ui-input>
+                        [mask]="capsInputMAsk" />
                     </div>
                     <!-- RFC -->
                     <div>
@@ -138,7 +138,7 @@
                         icon="heroicons_outline:document-text"
                         [required]="true"
                         [formControlName]="'rfc'"
-                        [mask]="capsInputMAsk"></app-ui-input>
+                        [mask]="capsInputMAsk" />
                     </div>
                     <!-- Teléfono 1 -->
                     <div>
@@ -148,7 +148,7 @@
                         [required]="true"
                         [formControlName]="'telefono1'"
                         [type]="'tel'"
-                        [mask]="phoneInputMask"></app-ui-input>
+                        [mask]="phoneInputMask" />
                     </div>
                     <!-- Teléfono 2 -->
                     <div>
@@ -157,7 +157,7 @@
                         icon="heroicons_solid:phone"
                         [formControlName]="'telefono2'"
                         [type]="'tel'"
-                        [mask]="phoneInputMask"></app-ui-input>
+                        [mask]="phoneInputMask" />
                     </div>
                   </div>
                   <h3 class="mt-4 w-full flex-auto text-3xl font-extrabold leading-none tracking-tight">Direcciones</h3>
@@ -183,7 +183,7 @@
                               [iconClasses]="'hidden sm:flex'"
                               formControlName="calle"
                               [placeholder]="'Calle'"
-                              [type]="'text'"></app-ui-input>
+                              [type]="'text'" />
                           </div>
                           <!-- Número -->
                           <div>
@@ -194,7 +194,7 @@
                               [iconClasses]="'hidden sm:flex'"
                               formControlName="numero"
                               [placeholder]="'Número'"
-                              [type]="'text'"></app-ui-input>
+                              [type]="'text'" />
                           </div>
                           <!-- Cruzamientos -->
                           <div>
@@ -205,7 +205,7 @@
                               [iconClasses]="'hidden sm:flex'"
                               formControlName="cruzamientos"
                               [placeholder]="'Cruzamientos'"
-                              [type]="'text'"></app-ui-input>
+                              [type]="'text'" />
                           </div>
                           <!-- Código Postal -->
                           <div>
@@ -217,7 +217,7 @@
                               formControlName="codigoPostal"
                               [placeholder]="'Código Postal'"
                               [type]="'number'"
-                              (change)="getColonias(direccion.get('codigoPostal')?.value, i, 'CLIENTE')"></app-ui-input>
+                              (change)="getColonias(direccion.get('codigoPostal')?.value, i, 'CLIENTE')" />
                           </div>
                           <!-- Estado -->
                           <div>
@@ -228,7 +228,7 @@
                               [iconClasses]="'hidden sm:flex'"
                               formControlName="estado"
                               [placeholder]="'Estado'"
-                              [type]="'text'"></app-ui-input>
+                              [type]="'text'" />
                           </div>
                           <!-- Ciudad -->
                           <div>
@@ -239,7 +239,7 @@
                               [iconClasses]="'hidden sm:flex'"
                               formControlName="ciudad"
                               [placeholder]="'Ciudad'"
-                              [type]="'text'"></app-ui-input>
+                              [type]="'text'" />
                           </div>
                           <!-- Colonia -->
                           <div>
@@ -252,7 +252,7 @@
                               [placeholder]="'Colonia'"
                               [options]="ubicacion[i] && ubicacion[i].ubicacion ? ubicacion[i].ubicacion.colonias : []"
                               [valueProp]="'id'"
-                              [labelProp]="'descripcion'"></app-ui-select>
+                              [labelProp]="'descripcion'" />
                           </div>
                         </div>
                         <!-- Remover Dirección -->
@@ -316,7 +316,7 @@
                           icon="heroicons_solid:user"
                           [formControlName]="'nombre'"
                           [placeholder]="'Ciudad'"
-                          [type]="'text'"></app-ui-input>
+                          [type]="'text'" />
                       </div>
                       <!-- Teléfono-->
                       <div>
@@ -326,7 +326,7 @@
                           [required]="true"
                           [formControlName]="'telefono'"
                           [type]="'tel'"
-                          [mask]="phoneInputMask"></app-ui-input>
+                          [mask]="phoneInputMask" />
                       </div>
                       <!-- Antiguedad-->
                       <div>
@@ -336,7 +336,7 @@
                           [required]="true"
                           [formControlName]="'antiguedad'"
                           [type]="'tel'"
-                          [mask]="yearsInputMask"></app-ui-input>
+                          [mask]="yearsInputMask" />
                       </div>
                       <!-- Actividad Económica -->
                       <div>
@@ -370,75 +370,40 @@
                       formGroupName="direccion">
                       <!-- Calle -->
                       <div>
-                        <mat-form-field class="w-full" subscriptSizing="dynamic">
-                          <mat-label>Calle</mat-label>
-                          <mat-icon
-                            matPrefix
-                            class="icon-size-5 hidden sm:flex"
-                            [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
-                          <input matInput formControlName="calle" [placeholder]="'Calle'" [spellcheck]="false" />
-                        </mat-form-field>
-                        <ng-container *ngIf="trabajoForm.get('direccion')?.get('calle')?.touched">
-                          <mat-error
-                            *ngIf="
-                                                            trabajoForm.get('direccion')?.get('calle')?.errors?.['required']
-                                                        ">
-                            La calle es requerida.
-                          </mat-error>
-                        </ng-container>
+                        <app-ui-input
+                          label="Calle"
+                          icon="heroicons_solid:location-marker"
+                          [iconClasses]="'hidden sm:flex'"
+                          formControlName="calle"
+                          [placeholder]="'Calle'"
+                          [type]="'text'" />
                       </div>
                       <!-- Número -->
                       <div>
-                        <mat-form-field class="w-full" subscriptSizing="dynamic">
-                          <mat-label>Número</mat-label>
-                          <mat-icon
-                            matPrefix
-                            class="icon-size-5 hidden sm:flex"
-                            [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
-                          <input matInput formControlName="numero" [placeholder]="'Número'" />
-                        </mat-form-field>
-                        <ng-container *ngIf="trabajoForm.get('direccion')?.get('numero')?.touched">
-                          <mat-error
-                            *ngIf="
-                                                            trabajoForm.get('direccion')?.get('numero')?.errors?.['required']
-                                                        ">
-                            El numero es requerido.
-                          </mat-error>
-                        </ng-container>
+                        <app-ui-input
+                          label="Número"
+                          icon="heroicons_solid:location-marker"
+                          [iconClasses]="'hidden sm:flex'"
+                          formControlName="numero"
+                          [placeholder]="'Número'"
+                          [type]="'text'" />
                       </div>
                       <!-- Cruzamientos -->
-                      <mat-form-field class="w-full" subscriptSizing="dynamic">
-                        <mat-label>Cruzamientos</mat-label>
-                        <mat-icon
-                          matPrefix
-                          class="icon-size-5 hidden sm:flex"
-                          [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
-                        <input matInput formControlName="cruzamientos" [placeholder]="'Cruzamientos'" />
-                      </mat-form-field>
+                      <app-ui-input
+                        label="Cruzamientos"
+                        icon="heroicons_solid:location-marker"
+                        [iconClasses]="'hidden sm:flex'"
+                        formControlName="cruzamientos"
+                        [placeholder]="'Cruzamientos'"
+                        [type]="'text'" />
                       <!-- Código Postal -->
-                      <div>
-                        <mat-form-field class="w-full" subscriptSizing="dynamic">
-                          <mat-label>Código Postal</mat-label>
-                          <mat-icon
-                            matPrefix
-                            class="icon-size-5 hidden sm:flex"
-                            [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
-                          <input
-                            matInput
-                            formControlName="codigoPostal"
-                            [placeholder]="'Código Postal'"
-                            (change)="getColonias(cpTrabajo.value, -1, 'TRABAJO')" />
-                        </mat-form-field>
-                        <ng-container *ngIf="trabajoForm.get('direccion')?.get('codigoPostal')?.touched">
-                          <mat-error
-                            *ngIf="
-                                                            trabajoForm.get('direccion')?.get('codigoPostal')?.errors
-                                                                ?.['required']
-                                                        ">
-                            El codigo postal es requerido.
-                          </mat-error>
-                        </ng-container>
-                      </div>
+                      <app-ui-input
+                        label="Código Postal"
+                        icon="heroicons_solid:location-marker"
+                        [iconClasses]="'hidden sm:flex'"
+                        formControlName="codigoPostal"
+                        [placeholder]="'Código Postal'"
+                        [type]="'text'" />
                       <!-- Estado -->
                       <mat-form-field class="w-full" subscriptSizing="dynamic">
                         <mat-label>Estado</mat-label>

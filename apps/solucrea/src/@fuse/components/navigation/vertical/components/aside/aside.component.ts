@@ -1,3 +1,5 @@
+import { BooleanInput } from '@angular/cdk/coercion';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -9,18 +11,33 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { NavigationEnd, Router } from '@angular/router';
-import { BooleanInput } from '@angular/cdk/coercion';
-import { Subject, filter, takeUntil } from 'rxjs';
-import { FuseVerticalNavigationComponent } from '@fuse/components/navigation/vertical/vertical.component';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
+import { FuseVerticalNavigationComponent } from '@fuse/components/navigation/vertical/vertical.component';
+import { filter, Subject, takeUntil } from 'rxjs';
+import { FuseVerticalNavigationBasicItemComponent } from '../basic/basic.component';
+import { FuseVerticalNavigationCollapsableItemComponent } from '../collapsable/collapsable.component';
+import { FuseVerticalNavigationDividerItemComponent } from '../divider/divider.component';
+import { FuseVerticalNavigationGroupItemComponent } from '../group/group.component';
+import { FuseVerticalNavigationSpacerItemComponent } from '../spacer/spacer.component';
 
 @Component({
   selector: 'fuse-vertical-navigation-aside-item',
   templateUrl: './aside.component.html',
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatIconModule,
+    FuseVerticalNavigationCollapsableItemComponent,
+    FuseVerticalNavigationBasicItemComponent,
+    FuseVerticalNavigationSpacerItemComponent,
+    FuseVerticalNavigationDividerItemComponent,
+    FuseVerticalNavigationGroupItemComponent,
+  ],
 })
 export class FuseVerticalNavigationAsideItemComponent implements OnChanges, OnInit, OnDestroy {
   /* eslint-disable @typescript-eslint/naming-convention */

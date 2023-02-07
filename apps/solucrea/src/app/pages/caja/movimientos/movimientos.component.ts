@@ -12,7 +12,7 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute } from '@angular/router';
-import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
+import { FuseScrollbarDirective } from '@fuse/directives/scrollbar';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { MovimientoDeCaja } from '@prisma/client';
@@ -33,7 +33,6 @@ import { CajasState, GetAllMovimientos } from '../_store';
     DecimalToNumberPipe,
     CurrencyPipe,
     TitleCasePipe,
-    FuseScrollbarModule,
     CurrencyPipe,
     DecimalPipe,
     I18nPluralPipe,
@@ -41,6 +40,7 @@ import { CajasState, GetAllMovimientos } from '../_store';
     AsyncPipe,
     MatButtonModule,
     MatIconModule,
+    FuseScrollbarDirective,
   ],
 })
 export class MovimientosComponent implements OnInit {

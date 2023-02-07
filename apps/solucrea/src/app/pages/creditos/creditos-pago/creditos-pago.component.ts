@@ -16,7 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
+import { FuseScrollbarDirective } from '@fuse/directives/scrollbar';
 import { HotToastService } from '@ngneat/hot-toast';
 import { createMask, InputMaskModule } from '@ngneat/input-mask';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
@@ -45,7 +45,6 @@ import { CreditosState, ModeCredito, SavePago } from '../_store';
     MatButtonModule,
     ReactiveFormsModule,
     FormsModule,
-    FuseScrollbarModule,
     InputMaskModule,
     DecimalToNumberPipe,
     AsyncPipe,
@@ -53,6 +52,7 @@ import { CreditosState, ModeCredito, SavePago } from '../_store';
     KeyValuePipe,
     NgIf,
     NgFor,
+    FuseScrollbarDirective,
   ],
 })
 export class CreditosPagoComponent implements OnInit {

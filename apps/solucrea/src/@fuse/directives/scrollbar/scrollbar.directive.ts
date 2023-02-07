@@ -12,6 +12,7 @@ import { debounceTime, fromEvent, Subject, takeUntil } from 'rxjs';
 @Directive({
   selector: '[fuseScrollbar]',
   exportAs: 'fuseScrollbar',
+  standalone: true,
 })
 export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy {
   /* eslint-disable @typescript-eslint/naming-convention */

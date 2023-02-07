@@ -1,11 +1,12 @@
 import { AsyncPipe, CurrencyPipe, DatePipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
+import { FuseScrollbarDirective } from '@fuse/directives/scrollbar';
 import { Store } from '@ngxs/store';
 import { ICreditoReturnDto } from 'api/dtos';
 import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
 import { Observable } from 'rxjs';
+
 import { CreditosState, ModeCredito } from '../_store';
 
 @Component({
@@ -14,7 +15,16 @@ import { CreditosState, ModeCredito } from '../_store';
   styleUrls: ['./creditos-pagos-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [FuseScrollbarModule, MatButtonModule, DecimalToNumberPipe, CurrencyPipe, DatePipe, AsyncPipe, NgIf, NgFor],
+  imports: [
+    FuseScrollbarDirective,
+    MatButtonModule,
+    DecimalToNumberPipe,
+    CurrencyPipe,
+    DatePipe,
+    AsyncPipe,
+    NgIf,
+    NgFor,
+  ],
 })
 export class CreditosPagosListComponent implements OnInit {
   loading$!: Observable<boolean>;

@@ -9,16 +9,28 @@ import {
   ViewChild,
 } from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
-import { MatMenu } from '@angular/material/menu';
+import { MatMenu, MatMenuModule } from '@angular/material/menu';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseHorizontalNavigationComponent } from '@fuse/components/navigation/horizontal/horizontal.component';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
+import { CommonModule } from '@angular/common';
+import { FuseHorizontalNavigationBasicItemComponent } from '../basic/basic.component';
+import { FuseHorizontalNavigationDividerItemComponent } from '../divider/divider.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'fuse-horizontal-navigation-branch-item',
   templateUrl: './branch.component.html',
   styles: [],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FuseHorizontalNavigationBasicItemComponent,
+    MatMenuModule,
+    FuseHorizontalNavigationDividerItemComponent,
+    MatIconModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FuseHorizontalNavigationBranchItemComponent implements OnInit, OnDestroy {
