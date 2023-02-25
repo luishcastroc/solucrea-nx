@@ -34,7 +34,8 @@
     "workspace-schematic": "nx workspace-schematic",
     "help": "nx help",
     "pro.migrate": "dotenv -e .env.production prisma migrate dev",
-    "postinstall": "node ./decorate-angular-cli.js && npx prisma generate"
+    "postinstall": "node ./decorate-angular-cli.js && npx prisma generate",
+    "build:api": "prisma generate && prisma migrate deploy && nx build api"
   },
   "dependencies": {
     "@angular/animations": "15.1.3",
@@ -162,4 +163,3 @@
   },
   "packageManager": "yarn@1.22.19"
 }
-
