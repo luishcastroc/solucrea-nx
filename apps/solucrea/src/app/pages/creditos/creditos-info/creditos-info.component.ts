@@ -1,4 +1,4 @@
-import { AsyncPipe, CurrencyPipe, DatePipe, Location, NgFor, NgIf, SlicePipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,13 +25,9 @@ import { CreditosState, GetCobratarios, ModeCredito, SelectCredito } from '../_s
     MatStepperModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    SlicePipe,
-    AsyncPipe,
     CurrencyPipe,
     DecimalToNumberPipe,
-    DatePipe,
-    NgIf,
-    NgFor,
+    CommonModule,
     FuseScrollbarDirective,
   ],
 })
