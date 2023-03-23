@@ -75,7 +75,7 @@ export class CajaService {
    * @returns Observable<MovimientoDeCaja[]> Array of Movimientos de Caja
    */
   getMovimientos(id: string): Observable<MovimientoDeCaja[]> {
-    return this._httpClient.get<MovimientoDeCaja[]>(`${this._environment.uri}/movimientos`);
+    return this._httpClient.get<MovimientoDeCaja[]>(`${this._environment.uri}/movimientos/${id}`);
   }
 
   /**

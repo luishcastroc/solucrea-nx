@@ -23,7 +23,7 @@ export class MovimientosController {
 
   @UseGuards(RolesGuard)
   @Public()
-  @Get('movimientos')
+  @Get('movimientos/:id')
   async getMovimientos(@Param('id') id: string): Promise<MovimientoDeCaja[]> {
     return this.movimientosService.movimientos(id);
   }

@@ -53,3 +53,7 @@ export class CreateMovimiento {
   static readonly type = '[Caja] Create Movimiento';
   constructor(public payload: Prisma.MovimientoDeCajaCreateInput) {}
 }
+
+export class ClearMovimientos {
+  static readonly type = '[Caja] Clear Movimientos';
+}

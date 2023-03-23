@@ -2,7 +2,6 @@ import { CommonModule, Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 
 @Component({

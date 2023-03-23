@@ -1,13 +1,4 @@
-import {
-  AsyncPipe,
-  CurrencyPipe,
-  DatePipe,
-  DecimalPipe,
-  I18nPluralPipe,
-  NgFor,
-  NgIf,
-  TitleCasePipe,
-} from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -27,21 +18,7 @@ import { CajasState, GetAllMovimientos } from '../_store';
   styleUrls: ['./movimientos.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    NgIf,
-    NgFor,
-    DecimalToNumberPipe,
-    CurrencyPipe,
-    TitleCasePipe,
-    CurrencyPipe,
-    DecimalPipe,
-    I18nPluralPipe,
-    DatePipe,
-    AsyncPipe,
-    MatButtonModule,
-    MatIconModule,
-    FuseScrollbarDirective,
-  ],
+  imports: [DecimalToNumberPipe, CommonModule, MatButtonModule, MatIconModule, FuseScrollbarDirective],
 })
 export class MovimientosComponent implements OnInit {
   movimientos$!: Observable<[] | MovimientoDeCaja[]>;

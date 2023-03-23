@@ -18,6 +18,7 @@ import {
   ClearCajasState,
   GetAllMovimientos,
   CreateMovimiento,
+  ClearMovimientos,
 } from './caja.actions';
 import { CajaStateModel } from './caja.model';
 
@@ -171,6 +172,14 @@ export class CajasState {
       editMode: 'new',
       selectedCaja: undefined,
       loading: false,
+      movimientos: [],
+    });
+  }
+
+  @Action(ClearMovimientos)
+  clearMovimientos(ctx: StateContext<CajaStateModel>) {
+    ctx.patchState({
+      movimientos: [],
     });
   }
 }

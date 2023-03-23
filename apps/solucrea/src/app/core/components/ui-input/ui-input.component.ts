@@ -1,4 +1,4 @@
-import { NgForOf, NgIf } from '@angular/common';
+import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -32,8 +32,7 @@ const INPUT_CONTROL_VALUE_ACCESSOR: Provider = {
   selector: 'app-ui-input',
   standalone: true,
   imports: [
-    NgIf,
-    NgForOf,
+    CommonModule,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
