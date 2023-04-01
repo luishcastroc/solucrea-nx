@@ -9,7 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -24,7 +24,7 @@ import { IColoniaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
 import {
   AddSucursal,
-  AjustesSucursalesState,
+  AjustesSucursalesSelectors,
   ClearSucursalState,
   EditSucursal,
   GetColonias,
@@ -79,7 +79,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
   private _cdr = inject(ChangeDetectorRef);
 
   constructor() {
-    this.loading$ = this._store.select(AjustesSucursalesState.loading);
+    this.loading$ = this._store.select(AjustesSucursalesSelectors.slices.loading);
   }
 
   get id() {
@@ -175,7 +175,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
    *
    */
   initializeData(id: string | null): void {
-    this.editMode$ = this._store.select(AjustesSucursalesState.editMode).pipe(
+    this.editMode$ = this._store.select(AjustesSucursalesSelectors.slices.editMode).pipe(
       tap(edit => {
         this.editMode = edit;
 
@@ -185,7 +185,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
           }
         }
 
-        this.colonias$ = this._store.select(AjustesSucursalesState.colonias).pipe(
+        this.colonias$ = this._store.select(AjustesSucursalesSelectors.slices.colonias).pipe(
           tap((colonias: IColoniaReturnDto | undefined) => {
             if (colonias) {
               this.ciudad.patchValue(colonias.ciudad.descripcion);
@@ -194,7 +194,7 @@ export class SucursalesDetailsComponent implements OnInit, OnDestroy {
           })
         );
 
-        this.selectedSucursal$ = this._store.select(AjustesSucursalesState.selectedSucursal).pipe(
+        this.selectedSucursal$ = this._store.select(AjustesSucursalesSelectors.slices.selectedSucursal).pipe(
           tap((sucursal: ISucursalReturnDto | undefined) => {
             if (sucursal) {
               this.sucursalForm.patchValue({

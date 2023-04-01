@@ -1,10 +1,11 @@
-import { AsyncPipe, CurrencyPipe, KeyValuePipe, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   inject,
+  OnDestroy,
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
@@ -22,12 +23,12 @@ import { createMask, InputMaskModule } from '@ngneat/input-mask';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Prisma, TipoDePago, Usuario } from '@prisma/client';
 import { ICreditoReturnDto, IUsuarioReturnDto } from 'api/dtos';
-import { AuthState } from 'app/core/auth';
+import { AuthStateSelectors } from 'app/core/auth';
 import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
 import { DateTime } from 'luxon';
-import { Observable, tap } from 'rxjs';
+import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
-import { CreditosState, ModeCredito, SavePago } from '../_store';
+import { CreditosSelectors, ModeCredito, SavePago } from '../_store';
 
 @Component({
   selector: 'app-creditos-pago',
@@ -47,20 +48,15 @@ import { CreditosState, ModeCredito, SavePago } from '../_store';
     FormsModule,
     InputMaskModule,
     DecimalToNumberPipe,
-    AsyncPipe,
-    CurrencyPipe,
-    KeyValuePipe,
-    NgIf,
-    NgFor,
+    CommonModule,
     FuseScrollbarDirective,
   ],
 })
-export class CreditosPagoComponent implements OnInit {
+export class CreditosPagoComponent implements OnInit, OnDestroy {
   loading$!: Observable<boolean>;
   loading: boolean = false;
   selectedCredito$!: Observable<ICreditoReturnDto | undefined>;
   cobratarios$!: Observable<IUsuarioReturnDto[] | []>;
-  actions$!: Actions;
   tipoDePagoTemp = TipoDePago;
   pagosForm!: UntypedFormGroup;
 
@@ -79,43 +75,13 @@ export class CreditosPagoComponent implements OnInit {
   private _toast = inject(HotToastService);
   private _formBuilder = inject(UntypedFormBuilder);
   private _cdr = inject(ChangeDetectorRef);
+  private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor() {
-    this.loading$ = this._store.select(CreditosState.loading);
-    this.cobratarios$ = this._store.select(CreditosState.cobratarios);
-    this.actions$ = this._actions$.pipe(
-      ofActionCompleted(SavePago),
-      tap(result => {
-        const { error, successful } = result.result;
-        const { action } = result;
-        let message;
-        this.loading = false;
-        // Mark for check
-        this._cdr.markForCheck();
-        if (error) {
-          message = `${(error as HttpErrorResponse)['error'].message}`;
-          this._toast.error(message, {
-            duration: 4000,
-            position: 'bottom-center',
-          });
-        }
-        if (successful) {
-          if (action instanceof SavePago) {
-            message = 'Pago agregado exitosamente.';
-            this._toast.success(message, {
-              duration: 4000,
-              position: 'bottom-center',
-            });
+    this.loading$ = this._store.select(CreditosSelectors.slices.loading);
+    this.cobratarios$ = this._store.select(CreditosSelectors.slices.cobratarios);
 
-            this.monto?.reset();
-            this.tipoDePago?.reset();
-            this.observaciones?.reset();
-            this.cobradorId?.reset();
-          }
-        }
-      })
-    );
-    this.selectedCredito$ = this._store.select(CreditosState.selectedCredito).pipe(
+    this.selectedCredito$ = this._store.select(CreditosSelectors.slices.selectedCredito).pipe(
       tap((credito: ICreditoReturnDto | undefined) => {
         if (credito) {
           const { saldo, cliente, sucursal } = credito;
@@ -184,7 +150,7 @@ export class CreditosPagoComponent implements OnInit {
   }
 
   savePago() {
-    const user = this._store.selectSnapshot(AuthState.user) as Usuario;
+    const user = this._store.selectSnapshot(AuthStateSelectors.slices.user) as Usuario;
     const creadoPor = user.nombreUsuario;
     const actualizadoPor = creadoPor;
     const pago: Prisma.PagoCreateInput = {
@@ -203,6 +169,44 @@ export class CreditosPagoComponent implements OnInit {
     this._store.dispatch(new SavePago(pago));
   }
 
+  subsctibeToActions() {
+    this._actions$
+      .pipe(
+        ofActionCompleted(SavePago),
+        takeUntil(this._unsubscribeAll),
+        tap(result => {
+          const { error, successful } = result.result;
+          const { action } = result;
+          let message;
+          this.loading = false;
+          // Mark for check
+          this._cdr.markForCheck();
+          if (error) {
+            message = `${(error as HttpErrorResponse)['error'].message}`;
+            this._toast.error(message, {
+              duration: 4000,
+              position: 'bottom-center',
+            });
+          }
+          if (successful) {
+            if (action instanceof SavePago) {
+              message = 'Pago agregado exitosamente.';
+              this._toast.success(message, {
+                duration: 4000,
+                position: 'bottom-center',
+              });
+
+              this.monto?.reset();
+              this.tipoDePago?.reset();
+              this.observaciones?.reset();
+              this.cobradorId?.reset();
+            }
+          }
+        })
+      )
+      .subscribe();
+  }
+
   clearForm() {
     this.monto?.reset();
     this.tipoDePago?.reset();
@@ -212,5 +216,10 @@ export class CreditosPagoComponent implements OnInit {
 
   back() {
     this._store.dispatch(new ModeCredito('edit'));
+  }
+
+  ngOnDestroy(): void {
+    this._unsubscribeAll.next(null);
+    this._unsubscribeAll.complete();
   }
 }

@@ -1,3 +1,4 @@
+import { AsyncPipe, NgFor, NgIf, TitleCasePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
@@ -8,6 +9,12 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { createMask, InputMaskModule } from '@ngneat/input-mask';
@@ -17,7 +24,7 @@ import { Producto, TipoPenalizacion } from '@prisma/client';
 import { EditMode } from 'app/core/models';
 import {
   AddCredito,
-  AjustesCreditosState,
+  AjustesCreditosSelectors,
   ClearCreditoState,
   EditCredito,
   SelectCredito,
@@ -28,13 +35,6 @@ import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { dias } from '../../_config/dias';
 import { defaultFrecuencias } from '../../_config/frecuencias';
-import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { AsyncPipe, NgFor, NgIf, TitleCasePipe } from '@angular/common';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSelectModule } from '@angular/material/select';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-details',
@@ -98,7 +98,7 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
   private _cdr = inject(ChangeDetectorRef);
 
   constructor() {
-    this.loading$ = this._store.select(AjustesCreditosState.loading);
+    this.loading$ = this._store.select(AjustesCreditosSelectors.slices.loading);
   }
 
   get id() {
@@ -249,7 +249,7 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
    *
    */
   initializeData(id: string | null): void {
-    this.editMode$ = this._store.select(AjustesCreditosState.editMode).pipe(
+    this.editMode$ = this._store.select(AjustesCreditosSelectors.slices.editMode).pipe(
       tap(edit => {
         this.editMode = edit;
 
@@ -257,7 +257,7 @@ export class AjustesCreditosDetailsComponent implements OnInit, OnDestroy {
           this._store.dispatch(new SelectCredito(id));
         }
 
-        this.selectedProducto$ = this._store.select(AjustesCreditosState.selectedCredito).pipe(
+        this.selectedProducto$ = this._store.select(AjustesCreditosSelectors.slices.selectedCredito).pipe(
           tap((credito: Producto | undefined) => {
             if (credito) {
               this.creditosForm.patchValue({

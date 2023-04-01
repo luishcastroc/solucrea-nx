@@ -1,3 +1,4 @@
+import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, TitleCasePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -16,25 +17,23 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { EditMode } from 'app/core/models';
-import { AddUsuario, AjustesUsuariosState, ClearUsuarioState, EditUsuario } from 'app/pages/ajustes/_store';
-import { Observable, Subject, tap } from 'rxjs';
+import { AddUsuario, AjustesUsuariosSelectors, ClearUsuarioState, EditUsuario } from 'app/pages/ajustes/_store';
+import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { defaultRoles } from '../../_config/roles';
 import { IRole } from '../../models/roles.model';
 import { createPasswordStrengthValidator } from '../../validators/custom-ajustes.validators';
-import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, TitleCasePipe } from '@angular/common';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSelectModule } from '@angular/material/select';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'team-details',
@@ -63,7 +62,6 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('formDirective') formDirective!: FormGroupDirective;
   editMode$!: Observable<EditMode>;
   selectedUsuario$!: Observable<Usuario | undefined>;
-  actions$!: Actions;
   editMode!: EditMode;
   selectedUsuario!: Usuario | undefined;
   usuarioForm!: UntypedFormGroup;
@@ -77,7 +75,6 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
   private _formBuilder = inject(UntypedFormBuilder);
   private _store = inject(Store);
   private _actions$ = inject(Actions);
-  private _route = inject(ActivatedRoute);
   private _toast = inject(HotToastService);
   private _cdr = inject(ChangeDetectorRef);
 
@@ -118,13 +115,13 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
    *
    */
   initializeData(): void {
-    this.editMode$ = this._store.select(AjustesUsuariosState.editMode).pipe(
+    this.editMode$ = this._store.select(AjustesUsuariosSelectors.slices.editMode).pipe(
       tap(edit => {
         this.setMessage(edit);
         this.createUsuarioForm(edit);
         this.editMode = edit;
 
-        this.selectedUsuario$ = this._store.select(AjustesUsuariosState.selectedUsuario).pipe(
+        this.selectedUsuario$ = this._store.select(AjustesUsuariosSelectors.slices.selectedUsuario).pipe(
           tap((usuario: Usuario | undefined) => {
             if ((usuario && edit === 'edit') || edit === 'password') {
               this.selectedUsuario = usuario;
@@ -144,34 +141,37 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
    *
    */
   setActions(): void {
-    this.actions$ = this._actions$.pipe(
-      ofActionCompleted(EditUsuario, AddUsuario),
-      tap(result => {
-        this.usuarioForm.enable();
-        const { error, successful } = result.result;
-        const { action } = result;
-        this.loading = false;
-        this._cdr.markForCheck();
-        if (error) {
-          const message = `${(error as HttpErrorResponse)['error'].message}`;
-          this._toast.error(message, {
-            duration: 4000,
-            position: 'bottom-center',
-          });
-        }
-        if (successful) {
-          const message = this.successMessage;
-          this._toast.success(message, {
-            duration: 4000,
-            position: 'bottom-center',
-          });
-          if (action instanceof AddUsuario) {
-            this.usuarioForm.reset();
-            this.formDirective.resetForm();
+    this._actions$
+      .pipe(
+        ofActionCompleted(EditUsuario, AddUsuario),
+        takeUntil(this._unsubscribeAll),
+        tap(result => {
+          this.usuarioForm.enable();
+          const { error, successful } = result.result;
+          const { action } = result;
+          this.loading = false;
+          this._cdr.markForCheck();
+          if (error) {
+            const message = `${(error as HttpErrorResponse)['error'].message}`;
+            this._toast.error(message, {
+              duration: 4000,
+              position: 'bottom-center',
+            });
           }
-        }
-      })
-    );
+          if (successful) {
+            const message = this.successMessage;
+            this._toast.success(message, {
+              duration: 4000,
+              position: 'bottom-center',
+            });
+            if (action instanceof AddUsuario) {
+              this.usuarioForm.reset();
+              this.formDirective.resetForm();
+            }
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**

@@ -1,8 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Action, State, StateContext, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
-import { AuthState, UpdateUsuario } from 'app/core/auth';
-import { EditMode } from 'app/core/models';
+import { AuthStateSelectors, UpdateUsuario } from 'app/core/auth';
 import { AjustesUsuarioService } from 'app/pages/ajustes/_services';
 import { tap } from 'rxjs';
 
@@ -31,26 +30,6 @@ import { AjustesUsuariosStateModel } from './ajustes-usuarios.model';
 export class AjustesUsuariosState {
   private _ajustesUsuarioService = inject(AjustesUsuarioService);
   private _store = inject(Store);
-
-  @Selector()
-  static usuarios({ usuarios }: AjustesUsuariosStateModel): Usuario[] | [] {
-    return usuarios;
-  }
-
-  @Selector()
-  static editMode({ editMode }: AjustesUsuariosStateModel): EditMode {
-    return editMode;
-  }
-
-  @Selector()
-  static selectedUsuario({ selectedUsuario }: AjustesUsuariosStateModel): Usuario | undefined {
-    return selectedUsuario;
-  }
-
-  @Selector()
-  static loading({ loading }: AjustesUsuariosStateModel): boolean {
-    return loading;
-  }
 
   @Action(GetAllUsuarios)
   getAllUsuarios(ctx: StateContext<AjustesUsuariosStateModel>, action: GetAllUsuarios) {
@@ -84,7 +63,7 @@ export class AjustesUsuariosState {
   @Action(EditUsuario)
   editUsuario(ctx: StateContext<AjustesUsuariosStateModel>, action: EditUsuario) {
     const { id, payload } = action;
-    const authenticatedUser = this._store.selectSnapshot(AuthState.user);
+    const authenticatedUser = this._store.selectSnapshot(AuthStateSelectors.slices.user);
     return this._ajustesUsuarioService.editUsuario(id, payload).pipe(
       tap((user: Usuario) => {
         const state = ctx.getState();

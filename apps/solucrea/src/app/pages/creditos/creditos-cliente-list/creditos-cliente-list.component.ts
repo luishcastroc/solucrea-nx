@@ -37,9 +37,10 @@ import {
   ModeCredito,
 } from 'app/pages/creditos/_store';
 import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
-import { Observable, tap } from 'rxjs';
+import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { GetCreditosCount } from '../_store/creditos.actions';
+import { CreditosSelectors } from '../_store/creditos.selectors';
 
 @Component({
   selector: 'app-creditos-cliente-list',
@@ -94,13 +95,14 @@ export class CreditosClienteListComponent implements OnInit {
   private _actions$ = inject(Actions);
   private _toast = inject(HotToastService);
   private _route = inject(ActivatedRoute);
+  private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor() {
-    this.creditos$ = this._store.select(CreditosState.creditos);
-    this.cliente$ = this._store.select(CreditosState.selectedCliente);
-    this.creditosCount$ = this._store.select(CreditosState.creditosCount);
-    this.loading$ = this._store.select(CreditosState.loading);
-    this.turnosCount$ = this._store.select(CreditosState.turnosCount);
+    this.creditos$ = this._store.select(CreditosSelectors.slices.creditos);
+    this.cliente$ = this._store.select(CreditosSelectors.slices.selectedCliente);
+    this.creditosCount$ = this._store.select(CreditosSelectors.slices.creditosCount);
+    this.loading$ = this._store.select(CreditosSelectors.slices.loading);
+    this.turnosCount$ = this._store.select(CreditosSelectors.slices.turnosCount);
   }
 
   ngOnInit(): void {
@@ -135,29 +137,32 @@ export class CreditosClienteListComponent implements OnInit {
    *
    */
   setActions(): void {
-    this.actions$ = this._actions$.pipe(
-      ofActionCompleted(GetAllCreditosCliente),
-      tap(result => {
-        const { error, successful } = result.result;
-        const { action } = result;
-        let message;
-        if (error) {
-          message = `${(error as HttpErrorResponse)['error'].message}`;
-          this._toast.error(message, {
-            duration: 4000,
-            position: 'bottom-center',
-          });
-        }
-        if (successful) {
-          if (!(action instanceof GetAllCreditosCliente)) {
-            this._toast.success(message, {
+    this._actions$
+      .pipe(
+        ofActionCompleted(GetAllCreditosCliente),
+        takeUntil(this._unsubscribeAll),
+        tap(result => {
+          const { error, successful } = result.result;
+          const { action } = result;
+          let message;
+          if (error) {
+            message = `${(error as HttpErrorResponse)['error'].message}`;
+            this._toast.error(message, {
               duration: 4000,
               position: 'bottom-center',
             });
           }
-        }
-      })
-    );
+          if (successful) {
+            if (!(action instanceof GetAllCreditosCliente)) {
+              this._toast.success(message, {
+                duration: 4000,
+                position: 'bottom-center',
+              });
+            }
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**

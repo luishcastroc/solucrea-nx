@@ -1,12 +1,12 @@
 import { inject, Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, State, StateContext } from '@ngxs/store';
 import { IColoniaReturnDto, ISucursalReturnDto } from 'api/dtos';
-import { EditMode } from 'app/core/models';
+import { AjustesSucursalService } from 'app/pages/ajustes/_services';
 import { ClientesService } from 'app/pages/clientes';
 import { sortBy } from 'lodash';
 import { tap } from 'rxjs';
 
-import { AjustesSucursalService } from 'app/pages/ajustes/_services';
+import { ChangeSearchFilter } from '.';
 import {
   AddSucursal,
   AjustesModeSucursal,
@@ -19,7 +19,6 @@ import {
   SelectSucursal,
 } from './ajustes-sucursales.actions';
 import { AjustesSucursalesStateModel } from './ajustes-sucursales.model';
-import { ChangeSearchFilter } from '.';
 
 @State<AjustesSucursalesStateModel>({
   name: 'ajustesSucursales',
@@ -36,31 +35,6 @@ import { ChangeSearchFilter } from '.';
 export class AjustesSucursalesState {
   private _ajustesSucursalesService = inject(AjustesSucursalService);
   private _clientesService = inject(ClientesService);
-
-  @Selector()
-  static editMode({ editMode }: AjustesSucursalesStateModel): EditMode {
-    return editMode;
-  }
-
-  @Selector()
-  static selectedSucursal({ selectedSucursal }: AjustesSucursalesStateModel): ISucursalReturnDto | undefined {
-    return selectedSucursal;
-  }
-
-  @Selector()
-  static loading({ loading }: AjustesSucursalesStateModel): boolean {
-    return loading;
-  }
-
-  @Selector()
-  static sucursales({ sucursalesFiltered }: AjustesSucursalesStateModel): ISucursalReturnDto[] {
-    return sucursalesFiltered;
-  }
-
-  @Selector()
-  static colonias({ colonias }: AjustesSucursalesStateModel): IColoniaReturnDto | undefined {
-    return colonias;
-  }
 
   @Action(AjustesModeSucursal)
   toggleEditModeSucursal(ctx: StateContext<AjustesSucursalesStateModel>, action: AjustesModeSucursal) {

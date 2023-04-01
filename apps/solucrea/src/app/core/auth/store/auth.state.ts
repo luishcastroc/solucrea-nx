@@ -28,27 +28,12 @@ import { AuthStateModel } from './auth.model';
 export class AuthState {
   private authService = inject(AuthService);
 
-  @Selector()
-  static accessToken(state: AuthStateModel): string {
-    return state.accessToken;
-  }
-
-  @Selector()
-  static isAuthenticated(state: AuthStateModel): boolean {
-    return !!state.accessToken;
-  }
-
-  @Selector()
-  static user(state: AuthStateModel): Usuario | undefined {
-    return state.user;
-  }
-
   @Action(Login)
   login(ctx: StateContext<AuthStateModel>, { payload }: Login) {
     const { username, password, redirectURL, rememberMe } = payload;
     const state = ctx.getState();
     if (state.accessToken) {
-      return throwError('El usuario ya ingresó al sistema.');
+      return throwError(() => new Error('El usuario ya ingresó al sistema.'));
     }
     return this.authService.signIn({ username, password }).pipe(
       tap((result: { accessToken: string; user: Usuario }) => {

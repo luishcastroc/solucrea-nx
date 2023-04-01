@@ -15,7 +15,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
-import { AuthState } from 'app/core/auth/store/auth.state';
+import { AuthStateSelectors } from 'app/core/auth';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -42,7 +42,7 @@ export class UserMenuComponent implements OnInit, OnDestroy {
    * Constructor
    */
   constructor() {
-    this.user$ = this._store.select(AuthState.user);
+    this.user$ = this._store.select(AuthStateSelectors.slices.user);
   }
 
   // -----------------------------------------------------------------------------------------------------

@@ -8,7 +8,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { ICajaReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth/auth.utils';
-import { CajasMode, CajasState, GetAll } from 'app/pages/caja/_store';
+import { CajaSelectors, CajasMode, GetAll } from 'app/pages/caja/_store';
 import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
 import { Observable } from 'rxjs';
 
@@ -36,7 +36,7 @@ export class CajaListComponent implements OnInit {
   private _store = inject(Store);
 
   constructor() {
-    this.cajas$ = this._store.select(CajasState.cajas);
+    this.cajas$ = this._store.select(CajaSelectors.slices.cajas);
   }
 
   ngOnInit(): void {

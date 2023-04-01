@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Action, State, StateContext } from '@ngxs/store';
 import { MovimientoDeCaja } from '@prisma/client';
 import { ICajaReturnDto, ISucursalReturnDto } from 'api/dtos';
-import { EditMode } from 'app/core/models';
 import { AjustesSucursalService } from 'app/pages/ajustes/_services';
 import { sortBy } from 'lodash';
 import { tap } from 'rxjs';
@@ -10,15 +9,15 @@ import { tap } from 'rxjs';
 import { CajaService } from '../_services/caja.service';
 import {
   AddCaja,
+  CajasMode,
+  ClearCajasState,
+  ClearMovimientos,
+  CreateMovimiento,
+  EditCaja,
   GetAll,
+  GetAllMovimientos,
   GetAllSucursales,
   SelectCaja,
-  CajasMode,
-  EditCaja,
-  ClearCajasState,
-  GetAllMovimientos,
-  CreateMovimiento,
-  ClearMovimientos,
 } from './caja.actions';
 import { CajaStateModel } from './caja.model';
 
@@ -35,36 +34,7 @@ import { CajaStateModel } from './caja.model';
 })
 @Injectable()
 export class CajasState {
-  constructor(
-    private _cajasService: CajaService,
-    private _store: Store,
-    private _sucursalesService: AjustesSucursalService
-  ) {}
-
-  @Selector()
-  static editMode({ editMode }: CajaStateModel): EditMode {
-    return editMode;
-  }
-
-  @Selector()
-  static cajas({ cajas }: CajaStateModel): ICajaReturnDto[] {
-    return cajas;
-  }
-
-  @Selector()
-  static sucursales({ sucursales }: CajaStateModel): ISucursalReturnDto[] {
-    return sucursales;
-  }
-
-  @Selector()
-  static selectedCaja({ selectedCaja }: CajaStateModel): ICajaReturnDto | undefined {
-    return selectedCaja;
-  }
-
-  @Selector()
-  static movimientos({ movimientos }: CajaStateModel): MovimientoDeCaja[] | [] {
-    return movimientos;
-  }
+  constructor(private _cajasService: CajaService, private _sucursalesService: AjustesSucursalService) {}
 
   @Action(GetAll)
   getAllCajas(ctx: StateContext<CajaStateModel>) {

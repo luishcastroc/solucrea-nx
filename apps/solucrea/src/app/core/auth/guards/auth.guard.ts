@@ -15,7 +15,7 @@ import { Role, Usuario } from '@prisma/client';
 import { AuthService } from 'app/core/auth/auth.service';
 import { combineLatest, Observable, of, switchMap } from 'rxjs';
 
-import { AuthState } from '../store/auth.state';
+import { AuthStateSelectors } from '../store';
 
 @Injectable({
   providedIn: 'root',
@@ -29,8 +29,8 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
    * Constructor
    */
   constructor() {
-    this.isAuthenticated$ = this._store.select(AuthState.isAuthenticated);
-    this.user$ = this._store.select(AuthState.user);
+    this.isAuthenticated$ = this._store.select(AuthStateSelectors.isAuthenticated);
+    this.user$ = this._store.select(AuthStateSelectors.slices.user);
   }
 
   // -----------------------------------------------------------------------------------------------------

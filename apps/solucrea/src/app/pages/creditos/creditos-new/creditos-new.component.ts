@@ -67,7 +67,7 @@ import { CreditosService } from '../_services/creditos.service';
 import {
   ClearCreditosDetails,
   CreateCredito,
-  CreditosState,
+  CreditosSelectors,
   GetClienteData,
   GetClienteWhere,
   GetCreditosConfiguration,
@@ -175,15 +175,15 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
     private _fuseMediaWatcherService: FuseMediaWatcherService,
     private _creditosService: CreditosService
   ) {
-    this.loading$ = this._store.select(CreditosState.loading);
-    this.clientes$ = this._store.select(CreditosState.clientes);
-    this.productos$ = this._store.select(CreditosState.productos);
-    this.sucursales$ = this._store.select(CreditosState.sucursales);
-    this.parentescos$ = this._store.select(CreditosState.parentescos);
-    this.segurosData$ = this._store.select(CreditosState.segurosData);
-    this.colocadores$ = this._store.select(CreditosState.colocadores);
-    this.selectedSeguro$ = this._store.select(CreditosState.selectedSeguro);
-    this.selectedClienteReferral$ = this._store.select(CreditosState.selectedClienteReferral);
+    this.loading$ = this._store.select(CreditosSelectors.slices.loading);
+    this.clientes$ = this._store.select(CreditosSelectors.slices.clientes);
+    this.productos$ = this._store.select(CreditosSelectors.slices.productos);
+    this.sucursales$ = this._store.select(CreditosSelectors.slices.sucursales);
+    this.parentescos$ = this._store.select(CreditosSelectors.slices.parentescos);
+    this.segurosData$ = this._store.select(CreditosSelectors.slices.segurosData);
+    this.colocadores$ = this._store.select(CreditosSelectors.slices.colocadores);
+    this.selectedSeguro$ = this._store.select(CreditosSelectors.slices.selectedSeguro);
+    this.selectedClienteReferral$ = this._store.select(CreditosSelectors.slices.selectedClienteReferral);
   }
 
   get id() {
@@ -302,7 +302,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
   initCredito(clienteId: string | null): void {
     this.creditosForm = this.createCreditosForm();
 
-    this.selectedCliente$ = this._store.select(CreditosState.selectedCliente).pipe(
+    this.selectedCliente$ = this._store.select(CreditosSelectors.slices.selectedCliente).pipe(
       tap((cliente: IClienteReturnDto | undefined) => {
         if (cliente) {
           this.selectedCliente = cliente;
@@ -319,7 +319,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.selectedProducto$ = this._store.select(CreditosState.selectedProducto).pipe(
+    this.selectedProducto$ = this._store.select(CreditosSelectors.slices.selectedProducto).pipe(
       tap((producto: Producto | undefined) => {
         if (producto) {
           this.selectedProducto = producto;
@@ -334,7 +334,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.selectedModalidadDeSeguro$ = this._store.select(CreditosState.selectedModalidadDeSeguro).pipe(
+    this.selectedModalidadDeSeguro$ = this._store.select(CreditosSelectors.slices.selectedModalidadDeSeguro).pipe(
       tap((modalidad: IModalidadSeguroReturnDto | undefined) => {
         this.selectedModalidadDeSeguro = modalidad;
         if (modalidad?.titulo !== 'Sin Seguro') {
@@ -358,7 +358,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
       this._cdr.markForCheck();
     });
 
-    this.selectedOtro$ = this._store.select(CreditosState.selectedOtro).pipe(
+    this.selectedOtro$ = this._store.select(CreditosSelectors.slices.selectedOtro).pipe(
       tap(result => {
         if (result) {
           this.aval.get('otro')?.setValidators(Validators.required);

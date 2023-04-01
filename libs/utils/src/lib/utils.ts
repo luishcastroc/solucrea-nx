@@ -85,21 +85,31 @@ export const addBusinessDays = (originalDate: DateTime, numDaysToAdd = 1): DateT
  * @returns number
  */
 export const getSaldoActual = (caja: ICajaReturnDto | Partial<ICajaReturnDto>): number => {
+  if (!caja || !caja.saldoInicial || !caja.movimientos) {
+    throw new Error('Argumento inválido: caja debe tener saldoInicial y movimientos');
+  }
+
   const { movimientos } = caja;
-  const depositos = movimientos?.filter(movimiento => movimiento.tipo === 'DEPOSITO');
-  const retiros = movimientos?.filter(movimiento => movimiento.tipo === 'RETIRO');
+  const depositos = movimientos.filter(movimiento => movimiento.tipo === 'DEPOSITO');
+  const retiros = movimientos.filter(movimiento => movimiento.tipo === 'RETIRO');
 
   let sumRetiros = 0;
   let sumDepositos = 0;
   if (retiros && depositos) {
     if (retiros.length > 0) {
       for (const retiro of retiros) {
+        if (typeof retiro.monto !== 'number') {
+          throw new Error('Argumento Inválido: monto debe ser un número');
+        }
         sumRetiros += Number(retiro.monto);
       }
     }
 
     if (depositos.length > 0) {
       for (const deposito of depositos) {
+        if (typeof deposito.monto !== 'number') {
+          throw new Error('Argumento Inválido: monto debe ser un número');
+        }
         sumDepositos += Number(deposito.monto);
       }
     }
@@ -132,12 +142,14 @@ export const generateTablaAmorizacion = (
   const today = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toLocal().toISODate();
   let fechaPagoAux = fechaInicio instanceof Date ? fechaInicio.toISOString() : fechaInicio;
   let status: StatusPago = StatusPago.corriente;
+
   amortizacion.push({
     numeroDePago: 1,
     fechaDePago: DateTime.fromISO(fechaPagoAux).toLocal().toISODate(),
     monto,
     status,
   });
+
   for (let i = 2; i < numeroDePagos + 1; i++) {
     const fechaPlusDays = addBusinessDays(DateTime.fromISO(fechaPagoAux).toLocal(), frecuencia);
     const fechaDePago: Date | string = fechaPlusDays.toLocal().toISODate();
@@ -214,21 +226,28 @@ export const getPagos = (
           montoReturn = new Prisma.Decimal(montoMora.toNumber());
           statusReturn = StatusPago.adeuda;
         }
+        acum = Math.max(Math.round((acum - montoReturn.toNumber() + Number.EPSILON) * 100) / 100, 0);
+
+        // Check if remaining balance is less than or equal to last payment amount
+        if (numeroDePago === amortizacion.length && acum <= monto.toNumber()) {
+          statusReturn = StatusPago.pagado;
+          acum = 0;
+        }
       } else {
         montoReturn = new Prisma.Decimal(montoMora.toNumber());
         statusReturn = StatusPago.adeuda;
       }
-      acum = Math.round((acum - montoReturn.toNumber() + Number.EPSILON) * 100) / 100;
     } else {
       if (acum > 0 && acum >= monto.toNumber()) {
         statusReturn = StatusPago.pagado;
-        acum = Math.round((acum - montoReturn.toNumber() + Number.EPSILON) * 100) / 100;
+        acum = Math.max(Math.round((acum - montoReturn.toNumber() + Number.EPSILON) * 100) / 100, 0);
       } else {
         montoReturn = new Prisma.Decimal(monto.toNumber());
         statusReturn = StatusPago.corriente;
         acum = 0;
       }
     }
+
     return {
       numeroDePago,
       fechaDePago,

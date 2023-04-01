@@ -31,26 +31,6 @@ import { Producto } from '@prisma/client';
 export class AjustesCreditosState {
   private _ajustesCreditosService = inject(AjustesCreditosService);
 
-  @Selector()
-  static editMode({ editMode }: AjustesCreditosStateModel): EditMode {
-    return editMode;
-  }
-
-  @Selector()
-  static selectedCredito({ selectedCredito }: AjustesCreditosStateModel): Producto | undefined {
-    return selectedCredito;
-  }
-
-  @Selector()
-  static loading({ loading }: AjustesCreditosStateModel): boolean {
-    return loading;
-  }
-
-  @Selector()
-  static creditos({ creditosFiltered }: AjustesCreditosStateModel): Producto[] {
-    return creditosFiltered;
-  }
-
   @Action(GetAllCreditos)
   getAllCreditos(ctx: StateContext<AjustesCreditosStateModel>) {
     ctx.patchState({ loading: true });

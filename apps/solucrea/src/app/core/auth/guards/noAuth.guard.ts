@@ -13,7 +13,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Observable, of, switchMap } from 'rxjs';
 
-import { AuthState } from './../store/auth.state';
+import { AuthStateSelectors } from '../store';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +25,7 @@ export class NoAuthGuard implements CanActivate, CanActivateChild, CanLoad {
    * Constructor
    */
   constructor() {
-    this.isAuthenticated$ = this._store.select(AuthState.isAuthenticated);
+    this.isAuthenticated$ = this._store.select(AuthStateSelectors.isAuthenticated);
   }
 
   // -----------------------------------------------------------------------------------------------------

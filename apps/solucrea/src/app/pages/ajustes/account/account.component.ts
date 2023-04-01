@@ -1,6 +1,6 @@
 import { AsyncPipe, NgIf } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,9 +12,9 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { UpdateUsuario } from 'app/core/auth';
-import { AjustesUsuariosState, EditUsuario } from 'app/pages/ajustes/_store';
+import { AjustesUsuariosSelectors, EditUsuario } from 'app/pages/ajustes/_store';
 import { isEqual } from 'lodash';
-import { Observable, tap } from 'rxjs';
+import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: 'settings-account',
@@ -35,10 +35,8 @@ import { Observable, tap } from 'rxjs';
     AsyncPipe,
   ],
 })
-export class AjustesAccountComponent implements OnInit {
+export class AjustesAccountComponent implements OnInit, OnDestroy {
   user$!: Observable<Usuario | undefined>;
-  actions$!: Actions;
-
   accountForm!: UntypedFormGroup;
   defaultUser!: Usuario;
 
@@ -46,6 +44,7 @@ export class AjustesAccountComponent implements OnInit {
   private _actions$ = inject(Actions);
   private _toast = inject(HotToastService);
   private _formBuilder = inject(UntypedFormBuilder);
+  private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   // -----------------------------------------------------------------------------------------------------
   // @ Lifecycle hooks
@@ -58,7 +57,7 @@ export class AjustesAccountComponent implements OnInit {
     // Create the form
     this.createUserForm();
 
-    this.user$ = this._store.select(AjustesUsuariosState.selectedUsuario).pipe(
+    this.user$ = this._store.select(AjustesUsuariosSelectors.slices.selectedUsuario).pipe(
       tap((user: Usuario | undefined) => {
         if (user) {
           this.defaultUser = user;
@@ -88,27 +87,30 @@ export class AjustesAccountComponent implements OnInit {
    *
    */
   setActions(): void {
-    this.actions$ = this._actions$.pipe(
-      ofActionCompleted(UpdateUsuario),
-      tap(result => {
-        const { error, successful } = result.result;
-        if (error) {
-          const message = `${(error as HttpErrorResponse)['error'].message}`;
-          this._toast.error(message, {
-            duration: 4000,
-            position: 'bottom-center',
-          });
-        }
-        if (successful) {
-          const message = 'Usuario modificado exitosamente.';
-          this._toast.success(message, {
-            duration: 4000,
-            position: 'bottom-center',
-          });
-          this.accountForm.enable();
-        }
-      })
-    );
+    this._actions$
+      .pipe(
+        ofActionCompleted(UpdateUsuario),
+        takeUntil(this._unsubscribeAll),
+        tap(result => {
+          const { error, successful } = result.result;
+          if (error) {
+            const message = `${(error as HttpErrorResponse)['error'].message}`;
+            this._toast.error(message, {
+              duration: 4000,
+              position: 'bottom-center',
+            });
+          }
+          if (successful) {
+            const message = 'Usuario modificado exitosamente.';
+            this._toast.success(message, {
+              duration: 4000,
+              position: 'bottom-center',
+            });
+            this.accountForm.enable();
+          }
+        })
+      )
+      .subscribe();
   }
 
   cancelEdit(): void {
@@ -128,5 +130,14 @@ export class AjustesAccountComponent implements OnInit {
       this.accountForm.disable();
       this._store.dispatch(new EditUsuario(this.defaultUser.id, this.accountForm.value));
     }
+  }
+
+  /**
+   * On destroy
+   */
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions
+    this._unsubscribeAll.next(null);
+    this._unsubscribeAll.complete();
   }
 }

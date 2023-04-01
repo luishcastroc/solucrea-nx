@@ -48,7 +48,7 @@ import { CanDeactivateComponent, EditMode } from 'app/core/models';
 import {
   Add,
   ClearClientesState,
-  ClientesState,
+  ClientesSelectors,
   Edit,
   GetColonias,
   GetConfig,
@@ -133,12 +133,12 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor() {
-    this.config$ = this._store.select(ClientesState.config);
-    this.loading$ = this._store.select(ClientesState.loading);
-    this.editMode$ = this._store.select(ClientesState.editMode);
-    this.colonias$ = this._store.select(ClientesState.colonias);
-    this.selectedCliente$ = this._store.select(ClientesState.selectedCliente);
-    this.selectedActividadEconomica$ = this._store.select(ClientesState.selectedActividadEconomica);
+    this.config$ = this._store.select(ClientesSelectors.slices.config);
+    this.loading$ = this._store.select(ClientesSelectors.slices.loading);
+    this.editMode$ = this._store.select(ClientesSelectors.slices.editMode);
+    this.colonias$ = this._store.select(ClientesSelectors.slices.colonias);
+    this.selectedCliente$ = this._store.select(ClientesSelectors.slices.selectedCliente);
+    this.selectedActividadEconomica$ = this._store.select(ClientesSelectors.slices.selectedActividadEconomica);
   }
 
   get direcciones() {

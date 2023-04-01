@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/r
 import { Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { InitialData } from 'app/app.types';
-import { AuthState } from 'app/core/auth/store';
+import { AuthStateSelectors } from 'app/core/auth/store';
 import { defaultNavigation } from 'app/core/config/app.config';
 import { forkJoin, map, Observable, of } from 'rxjs';
 
@@ -17,7 +17,7 @@ export class InitialDataResolver implements Resolve<any> {
    * Constructor
    */
   constructor(private _store: Store) {
-    this.user$ = this._store.select(AuthState.user);
+    this.user$ = this._store.select(AuthStateSelectors.slices.user);
   }
 
   // -----------------------------------------------------------------------------------------------------

@@ -33,7 +33,15 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { CreateCajaDto, ICajaReturnDto, ISucursalReturnDto } from 'api/dtos';
 import { EditMode } from 'app/core/models';
-import { AddCaja, CajasState, ClearCajasState, EditCaja, GetAllSucursales, SelectCaja } from 'app/pages/caja/_store';
+import {
+  AddCaja,
+  CajaSelectors,
+  CajasState,
+  ClearCajasState,
+  EditCaja,
+  GetAllSucursales,
+  SelectCaja,
+} from 'app/pages/caja/_store';
 import { SharedService } from 'app/shared';
 import { DateTime } from 'luxon';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
@@ -94,7 +102,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
   private _cdr = inject(ChangeDetectorRef);
 
   constructor() {
-    this.sucursales$ = this._store.select(CajasState.sucursales);
+    this.sucursales$ = this._store.select(CajaSelectors.slices.sucursales);
   }
 
   get id() {
@@ -140,7 +148,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
    *
    */
   initializeData(id: string | null): void {
-    this.editMode$ = this._store.select(CajasState.editMode).pipe(
+    this.editMode$ = this._store.select(CajaSelectors.slices.editMode).pipe(
       tap(edit => {
         this.editMode = edit;
 
@@ -159,7 +167,7 @@ export class CajaDetailComponent implements OnInit, OnDestroy {
           this.fechaApertura.disable();
         }
 
-        this.selectedCaja$ = this._store.select(CajasState.selectedCaja).pipe(
+        this.selectedCaja$ = this._store.select(CajaSelectors.slices.selectedCaja).pipe(
           tap((caja: ICajaReturnDto | undefined) => {
             if (caja) {
               this.selectedCaja = caja;

@@ -4,7 +4,7 @@ import { Role, Usuario } from '@prisma/client';
 import { Subject } from 'rxjs';
 
 import { AuthService } from './auth.service';
-import { AuthState } from './store/auth.state';
+import { AuthStateSelectors } from './store';
 
 @Directive({
   selector: '[verifyRole]',
@@ -32,7 +32,7 @@ export class VerifyRoleDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.user = this._store.selectSnapshot(AuthState.user);
+    this.user = this._store.selectSnapshot(AuthStateSelectors.slices.user);
 
     if (this.user) {
       if (this.roles && this._authService.checkAuthorization(this.user.role, this.roles)) {

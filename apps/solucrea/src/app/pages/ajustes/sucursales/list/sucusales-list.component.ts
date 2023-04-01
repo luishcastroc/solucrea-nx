@@ -1,6 +1,6 @@
-import { AsyncPipe, NgFor, NgIf, SlicePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,14 +17,14 @@ import { ISucursalReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth';
 import {
   AjustesModeSucursal,
-  AjustesSucursalesState,
+  AjustesSucursalesSelectors,
   ChangeSearchFilter,
   DeleteSucursal,
   EditSucursal,
   GetAllSucursales,
 } from 'app/pages/ajustes/_store';
 import { ConfirmationDialogComponent } from 'app/shared';
-import { map, Observable, startWith, tap, withLatestFrom } from 'rxjs';
+import { map, Observable, startWith, Subject, takeUntil, tap, withLatestFrom } from 'rxjs';
 
 @Component({
   selector: 'app-sucusales-list',
@@ -33,20 +33,17 @@ import { map, Observable, startWith, tap, withLatestFrom } from 'rxjs';
   standalone: true,
   imports: [
     MatProgressSpinnerModule,
-    NgIf,
     MatFormFieldModule,
     ReactiveFormsModule,
     MatTooltipModule,
     MatIconModule,
     MatRadioModule,
     FormsModule,
-    AsyncPipe,
-    NgFor,
-    SlicePipe,
     MatInputModule,
+    CommonModule,
   ],
 })
-export class SucusalesListComponent implements OnInit {
+export class SucusalesListComponent implements OnInit, OnDestroy {
   sucursales$!: Observable<ISucursalReturnDto[]>;
   loading$!: Observable<boolean>;
   actions$!: Actions;
@@ -62,10 +59,11 @@ export class SucusalesListComponent implements OnInit {
   private _dialog = inject(MatDialog);
   private _actions$ = inject(Actions);
   private _toast = inject(HotToastService);
+  private _unsubscribeAll: Subject<any> = new Subject();
 
   constructor() {
-    this.sucursales$ = this._store.select(AjustesSucursalesState.sucursales);
-    this.loading$ = this._store.select(AjustesSucursalesState.loading);
+    this.sucursales$ = this._store.select(AjustesSucursalesSelectors.slices.sucursales);
+    this.loading$ = this._store.select(AjustesSucursalesSelectors.slices.loading);
   }
 
   ngOnInit(): void {
@@ -97,41 +95,44 @@ export class SucusalesListComponent implements OnInit {
    *
    */
   setActions(): void {
-    this.actions$ = this._actions$.pipe(
-      ofActionCompleted(GetAllSucursales, EditSucursal, DeleteSucursal, ChangeSearchFilter),
-      tap(result => {
-        const { error, successful } = result.result;
-        const { action } = result;
-        let message;
-        if (error) {
-          message = `${(error as HttpErrorResponse)['error'].message}`;
-          this._toast.error(message, {
-            duration: 4000,
-            position: 'bottom-center',
-          });
-        }
-        if (successful) {
-          if (action instanceof DeleteSucursal) {
-            message = 'Sucursal desactivada exitosamente.';
-            this._store.dispatch(new ChangeSearchFilter(this.activa));
-          }
-          if (action instanceof EditSucursal) {
-            message = 'Sucursal activada exitosamente.';
-            this._store.dispatch(new ChangeSearchFilter(this.activa));
-          }
-          if (!(action instanceof GetAllSucursales) && !(action instanceof ChangeSearchFilter)) {
-            this._toast.success(message, {
+    this._actions$
+      .pipe(
+        ofActionCompleted(GetAllSucursales, EditSucursal, DeleteSucursal, ChangeSearchFilter),
+        takeUntil(this._unsubscribeAll),
+        tap(result => {
+          const { error, successful } = result.result;
+          const { action } = result;
+          let message;
+          if (error) {
+            message = `${(error as HttpErrorResponse)['error'].message}`;
+            this._toast.error(message, {
               duration: 4000,
               position: 'bottom-center',
             });
           }
-          this.searchInput.updateValueAndValidity({
-            onlySelf: false,
-            emitEvent: true,
-          });
-        }
-      })
-    );
+          if (successful) {
+            if (action instanceof DeleteSucursal) {
+              message = 'Sucursal desactivada exitosamente.';
+              this._store.dispatch(new ChangeSearchFilter(this.activa));
+            }
+            if (action instanceof EditSucursal) {
+              message = 'Sucursal activada exitosamente.';
+              this._store.dispatch(new ChangeSearchFilter(this.activa));
+            }
+            if (!(action instanceof GetAllSucursales) && !(action instanceof ChangeSearchFilter)) {
+              this._toast.success(message, {
+                duration: 4000,
+                position: 'bottom-center',
+              });
+            }
+            this.searchInput.updateValueAndValidity({
+              onlySelf: false,
+              emitEvent: true,
+            });
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -177,6 +178,11 @@ export class SucusalesListComponent implements OnInit {
    */
   changeActiva(e: any): void {
     this._store.dispatch(new ChangeSearchFilter(e.value));
+  }
+
+  ngOnDestroy(): void {
+    this._unsubscribeAll.next(null);
+    this._unsubscribeAll.complete();
   }
 
   /**

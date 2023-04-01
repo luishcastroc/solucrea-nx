@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, ViewEnca
 import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
-import { AuthState } from 'app/core/auth/store/auth.state';
+import { AuthStateSelectors } from 'app/core/auth';
 import { SelectUsuario } from 'app/pages/ajustes/_store';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
@@ -26,7 +26,7 @@ export class AjustesTeamComponent implements OnInit, OnDestroy {
    */
   constructor() {
     this._unsubscribeAll = new Subject();
-    this.usuario$ = this._store.select(AuthState.user);
+    this.usuario$ = this._store.select(AuthStateSelectors.slices.user);
   }
 
   // -----------------------------------------------------------------------------------------------------

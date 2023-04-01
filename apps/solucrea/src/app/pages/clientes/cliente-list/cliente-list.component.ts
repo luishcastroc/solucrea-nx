@@ -14,7 +14,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { IClienteReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth/auth.utils';
-import { ClientesMode, ClientesState, Edit, GetAllCount, Inactivate, Search } from 'app/pages/clientes/_store';
+import { ClientesMode, ClientesSelectors, Edit, GetAllCount, Inactivate, Search } from 'app/pages/clientes/_store';
 import { debounceTime, distinctUntilChanged, Observable, tap } from 'rxjs';
 
 @Component({
@@ -55,8 +55,8 @@ export class ClienteListComponent implements OnInit, AfterViewInit {
   private _toast = inject(HotToastService);
 
   constructor() {
-    this.searchResults$ = this._store.select(ClientesState.clientes);
-    this.clientesCount$ = this._store.select(ClientesState.clientesCount);
+    this.searchResults$ = this._store.select(ClientesSelectors.slices.clientes);
+    this.clientesCount$ = this._store.select(ClientesSelectors.slices.clientesCount);
   }
 
   ngOnInit(): void {

@@ -7,7 +7,7 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { InitialData } from 'app/app.types';
-import { AuthState } from 'app/core/auth/store/auth.state';
+import { AuthStateSelectors } from 'app/core/auth';
 import { UserMenuComponent } from 'app/layout/common/user-menu/user-menu.component';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
@@ -34,7 +34,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
    * Constructor
    */
   constructor() {
-    this.user$ = this._store.select(AuthState.user);
+    this.user$ = this._store.select(AuthStateSelectors.slices.user);
   }
 
   // -----------------------------------------------------------------------------------------------------

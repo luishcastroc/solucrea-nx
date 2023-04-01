@@ -7,7 +7,7 @@ import { ICreditoReturnDto } from 'api/dtos';
 import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
 import { Observable } from 'rxjs';
 
-import { CreditosState, ModeCredito } from '../_store';
+import { CreditosSelectors, ModeCredito } from '../_store';
 
 @Component({
   selector: 'app-creditos-pagos-list',
@@ -33,8 +33,8 @@ export class CreditosPagosListComponent implements OnInit {
   private _store = inject(Store);
 
   constructor() {
-    this.loading$ = this._store.select(CreditosState.loading);
-    this.selectedCredito$ = this._store.select(CreditosState.selectedCredito);
+    this.loading$ = this._store.select(CreditosSelectors.slices.loading);
+    this.selectedCredito$ = this._store.select(CreditosSelectors.slices.selectedCredito);
   }
 
   ngOnInit(): void {}

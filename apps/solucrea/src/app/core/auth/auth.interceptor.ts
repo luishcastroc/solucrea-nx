@@ -2,10 +2,9 @@ import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest
 import { inject, Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
+import { AuthStateSelectors, Logout } from 'app/core/auth';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { catchError, Observable, throwError } from 'rxjs';
-
-import { Logout, AuthState } from 'app/core/auth';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -30,11 +29,14 @@ export class AuthInterceptor implements HttpInterceptor {
     // catch and delete the access token from the local storage while logging
     // the user out from the app.
     if (
-      this._store.selectSnapshot(AuthState.accessToken) &&
-      !AuthUtils.isTokenExpired(this._store.selectSnapshot(AuthState.accessToken))
+      this._store.selectSnapshot(AuthStateSelectors.slices.accessToken) &&
+      !AuthUtils.isTokenExpired(this._store.selectSnapshot(AuthStateSelectors.slices.accessToken))
     ) {
       newReq = req.clone({
-        headers: req.headers.set('Authorization', 'Bearer ' + this._store.selectSnapshot(AuthState.accessToken)),
+        headers: req.headers.set(
+          'Authorization',
+          'Bearer ' + this._store.selectSnapshot(AuthStateSelectors.slices.accessToken)
+        ),
       });
     } else {
       this._store.dispatch([new Navigate(['sign-in']), new Logout()]);

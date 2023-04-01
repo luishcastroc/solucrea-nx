@@ -11,6 +11,7 @@ import { CreditosInfoComponent } from '../creditos-info/creditos-info.component'
 import { CreditosNewComponent } from '../creditos-new/creditos-new.component';
 import { CreditosPagoComponent } from '../creditos-pago/creditos-pago.component';
 import { CreditosPagosListComponent } from '../creditos-pagos-list/creditos-pagos-list.component';
+import { CreditosSelectors } from '../_store/creditos.selectors';
 
 import { CreditosState } from '../_store/creditos.state';
 
@@ -44,7 +45,7 @@ export class CreditosDetailComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor() {
-    this.editMode$ = this._store.select(CreditosState.editMode);
+    this.editMode$ = this._store.select(CreditosSelectors.slices.editMode);
   }
 
   ngOnInit(): void {

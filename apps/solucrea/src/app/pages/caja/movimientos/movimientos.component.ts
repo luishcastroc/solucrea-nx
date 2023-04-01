@@ -10,7 +10,7 @@ import { MovimientoDeCaja } from '@prisma/client';
 import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
 import { Observable } from 'rxjs';
 
-import { CajasState, GetAllMovimientos } from '../_store';
+import { CajaSelectors, GetAllMovimientos } from '../_store';
 
 @Component({
   selector: 'app-movimientos',
@@ -26,7 +26,7 @@ export class MovimientosComponent implements OnInit {
   private _store = inject(Store);
   private _route = inject(ActivatedRoute);
   constructor() {
-    this.movimientos$ = this._store.select(CajasState.movimientos);
+    this.movimientos$ = this._store.select(CajaSelectors.slices.movimientos);
     this.id = this._route.snapshot.paramMap.get('id');
   }
 

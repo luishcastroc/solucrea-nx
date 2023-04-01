@@ -1,16 +1,23 @@
+import { AsyncPipe, NgFor, NgIf, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Navigate } from '@ngxs/router-plugin';
-import { Actions, NgxsModule, ofActionErrored, ofActionSuccessful, Store } from '@ngxs/store';
+import { Actions, ofActionErrored, ofActionSuccessful, Store } from '@ngxs/store';
 import { Role, Usuario } from '@prisma/client';
+import { AuthStateSelectors } from 'app/core/auth';
 import { AuthUtils } from 'app/core/auth/auth.utils';
-import { AuthState } from 'app/core/auth/store/auth.state';
 import { EditMode } from 'app/core/models';
 import {
   AjustesModeUsuario,
-  AjustesUsuariosState,
+  AjustesUsuariosSelectors,
   DeleteUsuario,
   EditUsuario,
   GetAllUsuarios,
@@ -22,13 +29,6 @@ import { map, startWith } from 'rxjs/operators';
 
 import { defaultRoles } from '../../_config/roles';
 import { IRole } from '../../models/roles.model';
-import { AsyncPipe, NgFor, NgIf, TitleCasePipe } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'team-list',
@@ -72,9 +72,9 @@ export class TeamListComponent implements OnInit, OnDestroy {
    * Constructor
    */
   constructor() {
-    this.usuarios$ = this._store.select(AjustesUsuariosState.usuarios);
-    this.loading$ = this._store.select(AjustesUsuariosState.loading);
-    this.usuario = this._store.selectSnapshot(AuthState.user);
+    this.usuarios$ = this._store.select(AjustesUsuariosSelectors.slices.usuarios);
+    this.loading$ = this._store.select(AjustesUsuariosSelectors.slices.loading);
+    this.usuario = this._store.selectSnapshot(AuthStateSelectors.slices.user);
   }
 
   // -----------------------------------------------------------------------------------------------------

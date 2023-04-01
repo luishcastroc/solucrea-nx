@@ -14,7 +14,7 @@ import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { Producto } from '@prisma/client';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import {
-  AjustesCreditosState,
+  AjustesCreditosSelectors,
   AjustesModeCredito,
   ChangeSearchFilterCreditos,
   DeleteCredito,
@@ -52,7 +52,6 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
   loading$!: Observable<boolean>;
   searchResults$!: Observable<Producto[]>;
   searchInput = new UntypedFormControl();
-  actions$: Observable<Actions>;
   values = [
     { display: 'Activos', value: true },
     { display: 'Inactivos', value: false },
@@ -66,13 +65,14 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
   private _toast = inject(HotToastService);
 
   constructor() {
-    this.actions$ = this.subscribeToActions();
-    this.creditos$ = this._store.select(AjustesCreditosState.creditos);
-    this.loading$ = this._store.select(AjustesCreditosState.loading);
+    this.creditos$ = this._store.select(AjustesCreditosSelectors.slices.creditos);
+    this.loading$ = this._store.select(AjustesCreditosSelectors.slices.loading);
   }
 
   ngOnInit(): void {
     this._store.dispatch(new GetAllCreditos());
+
+    this.subscribeToActions();
 
     // generating a new observable from the searchInput based on the criteria
     this.searchResults$ = this.searchInput.valueChanges.pipe(
@@ -88,42 +88,45 @@ export class AjustesCreditosListComponent implements OnInit, OnDestroy {
    *
    *
    */
-  subscribeToActions(): Actions {
-    return this._actions$.pipe(
-      ofActionCompleted(GetAllCreditos, EditCredito, DeleteCredito, ChangeSearchFilterCreditos),
-      tap(result => {
-        const { error, successful } = result.result;
-        const { action } = result;
-        let message;
-        if (error) {
-          message = `${(error as HttpErrorResponse)['error'].message}`;
-          this._toast.error(message, {
-            duration: 4000,
-            position: 'bottom-center',
-          });
-        }
-        if (successful) {
-          if (action instanceof DeleteCredito) {
-            message = 'Crédito desactivado exitosamente.';
-            this._store.dispatch(new ChangeSearchFilterCreditos(this.activo));
-          }
-          if (action instanceof EditCredito) {
-            message = 'Crédito activado exitosamente.';
-            this._store.dispatch(new ChangeSearchFilterCreditos(this.activo));
-          }
-          if (!(action instanceof GetAllCreditos) && !(action instanceof ChangeSearchFilterCreditos)) {
-            this._toast.success(message, {
+  subscribeToActions(): void {
+    this._actions$
+      .pipe(
+        ofActionCompleted(GetAllCreditos, EditCredito, DeleteCredito, ChangeSearchFilterCreditos),
+        takeUntil(this._unsubscribeAll),
+        tap(result => {
+          const { error, successful } = result.result;
+          const { action } = result;
+          let message;
+          if (error) {
+            message = `${(error as HttpErrorResponse)['error'].message}`;
+            this._toast.error(message, {
               duration: 4000,
               position: 'bottom-center',
             });
           }
-          this.searchInput.updateValueAndValidity({
-            onlySelf: false,
-            emitEvent: true,
-          });
-        }
-      })
-    );
+          if (successful) {
+            if (action instanceof DeleteCredito) {
+              message = 'Crédito desactivado exitosamente.';
+              this._store.dispatch(new ChangeSearchFilterCreditos(this.activo));
+            }
+            if (action instanceof EditCredito) {
+              message = 'Crédito activado exitosamente.';
+              this._store.dispatch(new ChangeSearchFilterCreditos(this.activo));
+            }
+            if (!(action instanceof GetAllCreditos) && !(action instanceof ChangeSearchFilterCreditos)) {
+              this._toast.success(message, {
+                duration: 4000,
+                position: 'bottom-center',
+              });
+            }
+            this.searchInput.updateValueAndValidity({
+              onlySelf: false,
+              emitEvent: true,
+            });
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**

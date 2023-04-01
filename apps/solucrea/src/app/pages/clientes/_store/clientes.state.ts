@@ -1,12 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
-import { IActividadEconomicaReturnDto, IClienteReturnDto, IColoniaReturnDto } from 'api/dtos';
-import { EditMode } from 'app/core/models';
+import { Action, State, StateContext } from '@ngxs/store';
+import { IClienteReturnDto, IColoniaReturnDto } from 'api/dtos';
 import { sortBy } from 'lodash';
 import { forkJoin, Observable, of, tap } from 'rxjs';
 
 import { ClientesService } from '../_services/clientes.service';
-import { IConfig } from '../models/config.model';
 import {
   Add,
   ClearClientesState,
@@ -21,7 +19,7 @@ import {
   SelectActividadEconomica,
   SelectCliente,
 } from './clientes.actions';
-import { ClientesStateModel, IColoniasState } from './clientes.model';
+import { ClientesStateModel } from './clientes.model';
 
 @State<ClientesStateModel>({
   name: 'clientes',
@@ -39,49 +37,6 @@ import { ClientesStateModel, IColoniasState } from './clientes.model';
 @Injectable()
 export class ClientesState {
   private clientesService = inject(ClientesService);
-  private _store = inject(Store);
-
-  @Selector()
-  static editMode({ editMode }: ClientesStateModel): EditMode {
-    return editMode;
-  }
-
-  @Selector()
-  static selectedCliente({ selectedCliente }: ClientesStateModel): IClienteReturnDto | undefined {
-    return selectedCliente;
-  }
-
-  @Selector()
-  static clientes({ clientes }: ClientesStateModel): IClienteReturnDto[] {
-    return clientes;
-  }
-
-  @Selector()
-  static config({ config }: ClientesStateModel): IConfig | undefined {
-    return config;
-  }
-
-  @Selector()
-  static loading({ loading }: ClientesStateModel): boolean {
-    return loading;
-  }
-
-  @Selector()
-  static colonias({ colonias }: ClientesStateModel): IColoniasState[] {
-    return colonias;
-  }
-
-  @Selector()
-  static clientesCount({ clientesCount }: ClientesStateModel): number | undefined {
-    return clientesCount;
-  }
-
-  @Selector()
-  static selectedActividadEconomica({
-    selectedActividadEconomica,
-  }: ClientesStateModel): IActividadEconomicaReturnDto | undefined {
-    return selectedActividadEconomica;
-  }
 
   @Action(Search)
   searchCliente(ctx: StateContext<ClientesStateModel>, { payload }: Search) {

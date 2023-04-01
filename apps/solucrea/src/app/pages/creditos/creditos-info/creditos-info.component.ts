@@ -12,7 +12,8 @@ import { ICreditoReturnDto } from 'api/dtos';
 import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
 import { Observable } from 'rxjs';
 
-import { CreditosState, GetCobratarios, ModeCredito, SelectCredito } from '../_store';
+import { GetCobratarios, ModeCredito, SelectCredito } from '../_store';
+import { CreditosSelectors } from '../_store/creditos.selectors';
 
 @Component({
   selector: 'app-creditos-info',
@@ -41,8 +42,8 @@ export class CreditosInfoComponent implements OnInit {
   private _route = inject(ActivatedRoute);
 
   constructor() {
-    this.loading$ = this._store.select(CreditosState.loading);
-    this.selectedCredito$ = this._store.select(CreditosState.selectedCredito);
+    this.loading$ = this._store.select(CreditosSelectors.slices.loading);
+    this.selectedCredito$ = this._store.select(CreditosSelectors.slices.selectedCredito);
   }
 
   ngOnInit(): void {

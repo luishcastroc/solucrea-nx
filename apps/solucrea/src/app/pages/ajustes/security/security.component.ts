@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { NgFor, NgIf } from '@angular/common';
+import { AjustesUsuariosSelectors } from '../_store';
 
 @Component({
   selector: 'settings-security',
@@ -38,7 +39,7 @@ export class AjustesSecurityComponent implements OnInit, OnDestroy {
    */
   constructor() {
     this._unsubscribeAll = new Subject();
-    this.user$ = this._store.select(AjustesUsuariosState.selectedUsuario);
+    this.user$ = this._store.select(AjustesUsuariosSelectors.slices.selectedUsuario);
   }
 
   get currentPassword() {

@@ -1,4 +1,4 @@
-<ng-container *ngIf="{ user: user$ | async, actions: actions$ | async }; else loadingTemplate">
+<ng-container *ngIf="{ user: user$ | async }; else loadingTemplate">
   <!-- Content -->
   <div class="w-full max-w-3xl">
     <!-- Form -->
@@ -36,7 +36,7 @@
       </div>
 
       <!-- Divider -->
-      <div class="mt-11 mb-10 border-t"></div>
+      <div class="mb-10 mt-11 border-t"></div>
 
       <!-- Acciones -->
       <div class="flex items-center justify-end">
