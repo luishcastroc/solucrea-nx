@@ -129,6 +129,7 @@ export class CreditosPagoComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.pagosForm = this.createPagosForm();
+    this.subsctibeToActions();
   }
 
   /**
