@@ -1,14 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  CanActivateChild,
-  CanLoad,
-  Route,
-  RouterStateSnapshot,
-  UrlSegment,
-  UrlTree,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, Route, RouterStateSnapshot, UrlSegment, UrlTree } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Observable, of, switchMap } from 'rxjs';
@@ -18,7 +9,7 @@ import { AuthStateSelectors } from '../store';
 @Injectable({
   providedIn: 'root',
 })
-export class NoAuthGuard implements CanActivate, CanActivateChild, CanLoad {
+export class NoAuthGuard  {
   isAuthenticated$!: Observable<boolean>;
   private _store = inject(Store);
   /**

@@ -1,14 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  CanActivateChild,
-  CanLoad,
-  Route,
-  RouterStateSnapshot,
-  UrlSegment,
-  UrlTree,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, Route, RouterStateSnapshot, UrlSegment, UrlTree } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Role, Usuario } from '@prisma/client';
@@ -20,7 +11,7 @@ import { AuthStateSelectors } from '../store';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
+export class AuthGuard  {
   isAuthenticated$!: Observable<boolean>;
   user$!: Observable<Usuario | undefined>;
   private _store = inject(Store);

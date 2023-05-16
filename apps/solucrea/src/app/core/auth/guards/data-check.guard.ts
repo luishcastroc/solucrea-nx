@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { ConfirmationDialogComponent } from 'app/shared';
 import { Observable, of } from 'rxjs';
 
@@ -9,7 +9,7 @@ import { CanDeactivateComponent } from '../../models/can-deactivate.model';
 @Injectable({
   providedIn: 'root',
 })
-export class DataCheckGuard implements CanDeactivate<CanDeactivateComponent> {
+export class DataCheckGuard  {
   private _dialog = inject(MatDialog);
 
   canDeactivate(

@@ -5,6 +5,8 @@
 // https://github.com/auth0/angular2-jwt
 // -----------------------------------------------------------------------------------------------------
 
+import { DateTime } from "luxon";
+
 export class AuthUtils {
   // -----------------------------------------------------------------------------------------------------
   // @ Public methods
@@ -31,17 +33,20 @@ export class AuthUtils {
       return true;
     }
 
+    const tokenDate = date.valueOf();
+    const localDate = DateTime.local().valueOf() + offsetSeconds * 1000;
+    const compareDate = tokenDate > localDate;
+
     // Check if the token is expired
-    return !(date.valueOf() > new Date().valueOf() + offsetSeconds * 1000);
+    return !(compareDate);
   }
+
 
   /**
    * Generate a globally unique id
    */
   static guid(): string {
-    /* eslint-disable */
-
-    let d = new Date().getTime();
+    let d = DateTime.local().toMillis();
 
     // Use high-precision timer if available
     if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
@@ -53,9 +58,8 @@ export class AuthUtils {
       d = Math.floor(d / 16);
       return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
     });
-
-    /* eslint-enable */
   }
+
 
   // -----------------------------------------------------------------------------------------------------
   // @ Private methods
@@ -177,7 +181,7 @@ export class AuthUtils {
    * @param token
    * @private
    */
-  private static _getTokenExpirationDate(token: string): Date | null {
+  private static _getTokenExpirationDate(token: string): DateTime | null {
     // Get the decoded token
     const decodedToken = this._decodeToken(token);
 
@@ -187,8 +191,7 @@ export class AuthUtils {
     }
 
     // Convert the expiration date
-    const date = new Date(0);
-    date.setUTCSeconds(decodedToken.exp);
+    const date = DateTime.fromSeconds(decodedToken.exp, { zone: 'utc' });
 
     return date;
   }

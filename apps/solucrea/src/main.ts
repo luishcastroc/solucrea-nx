@@ -1,4 +1,3 @@
-/* eslint-disable arrow-parens */
 import { LayoutModule } from '@angular/cdk/layout';
 import { registerLocaleData } from '@angular/common';
 import localeEsMx from '@angular/common/locales/es-MX';
@@ -20,9 +19,11 @@ import { appRoutes } from 'app/app.routing';
 import { AuthState } from 'app/core/auth';
 import { appConfig } from 'app/core/config/app.config';
 import { CoreModule } from 'app/core/core.module';
-import { environment } from 'apps/solucrea/src/environments/environment';
 
 import { FuseModule } from './@fuse';
+import { environment } from './environments/environment';
+
+/* eslint-disable arrow-parens */
 
 registerLocaleData(localeEsMx, 'es-Mx');
 
@@ -31,17 +32,16 @@ if (environment.production) {
 }
 
 const routerConfig: ExtraOptions = {
-  scrollPositionRestoration: 'enabled',
-  preloadingStrategy: PreloadAllModules,
-};
+    scrollPositionRestoration: 'enabled',
+    preloadingStrategy: PreloadAllModules,
+  };
 
-bootstrapApplication(AppComponent, {
-  providers: [
+bootstrapApplication(AppComponent, {providers: [
     importProvidersFrom(
       MatDialogModule,
       BrowserModule,
       BrowserAnimationsModule,
-      RouterModule.forRoot(appRoutes, routerConfig),
+      RouterModule.forRoot(appRoutes,routerConfig),
 
       // Fuse & Fuse Mock API
       FuseModule,
@@ -72,5 +72,4 @@ bootstrapApplication(AppComponent, {
       useClass: LuxonDateAdapter,
       deps: [MAT_DATE_LOCALE, MAT_LUXON_DATE_ADAPTER_OPTIONS],
     },
-  ],
-}).catch(err => console.error(err));
+  ]},).catch(err => console.error(err));

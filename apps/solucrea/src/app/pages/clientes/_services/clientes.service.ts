@@ -128,7 +128,7 @@ export class ClientesService {
     }));
 
     const fechaDeNacimiento: DateTime = fechaLuxon;
-    const fechaToSend = fechaDeNacimiento.toISO();
+    const fechaToSend = fechaDeNacimiento.toISO() as string;
 
     const {
       nombre: trabajoNombre,

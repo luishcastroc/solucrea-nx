@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Usuario } from '@prisma/client';
 import { InitialData } from 'app/app.types';
@@ -10,7 +10,7 @@ import { forkJoin, map, Observable, of } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class InitialDataResolver implements Resolve<any> {
+export class InitialDataResolver  {
   user$!: Observable<Usuario | undefined>;
   private _navigation = defaultNavigation;
   /**

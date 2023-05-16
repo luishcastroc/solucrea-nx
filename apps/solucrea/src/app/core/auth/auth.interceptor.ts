@@ -4,11 +4,13 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { AuthStateSelectors, Logout } from 'app/core/auth';
 import { AuthUtils } from 'app/core/auth/auth.utils';
+import { environment } from 'apps/solucrea/src/environments/environment';
 import { catchError, Observable, throwError } from 'rxjs';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private _store = inject(Store);
+  private _environment = environment;
 
   /**
    * Intercept
@@ -28,18 +30,20 @@ export class AuthInterceptor implements HttpInterceptor {
     // for the protected API routes which our response interceptor will
     // catch and delete the access token from the local storage while logging
     // the user out from the app.
-    if (
-      this._store.selectSnapshot(AuthStateSelectors.slices.accessToken) &&
-      !AuthUtils.isTokenExpired(this._store.selectSnapshot(AuthStateSelectors.slices.accessToken))
-    ) {
-      newReq = req.clone({
-        headers: req.headers.set(
-          'Authorization',
-          'Bearer ' + this._store.selectSnapshot(AuthStateSelectors.slices.accessToken)
-        ),
-      });
-    } else {
-      this._store.dispatch([new Navigate(['sign-in']), new Logout()]);
+
+    if (newReq.url.includes(this._environment.uri) && !newReq.url.includes('auth')) {
+      const token = this._store.selectSnapshot(AuthStateSelectors.slices.accessToken);
+      //const isTokenExpired = AuthUtils.isTokenExpired(token);
+      if (token /*&& !isTokenExpired*/) {
+        newReq = req.clone({
+          headers: req.headers.set(
+            'Authorization',
+            'Bearer ' + this._store.selectSnapshot(AuthStateSelectors.slices.accessToken)
+          ),
+        });
+      } else {
+        this._store.dispatch([new Navigate(['sign-in']), new Logout()]);
+      }
     }
 
     // Response

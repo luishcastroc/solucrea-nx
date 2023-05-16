@@ -48,7 +48,7 @@ export class MovimientosService {
   async createMovimiento(data: Prisma.MovimientoDeCajaCreateInput): Promise<MovimientoDeCaja> {
     const checkCaja = await this.prisma.caja.findFirst({
       where: {
-        fechaCierre: { lte: DateTime.now().toISODate() },
+        fechaCierre: { lte: DateTime.now().toISODate() as string },
         id: { equals: data.caja?.connect?.id },
       },
     });

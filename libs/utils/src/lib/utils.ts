@@ -139,23 +139,23 @@ export const generateTablaAmorizacion = (
   montoMora: Prisma.Decimal
 ): IAmortizacion[] => {
   const amortizacion: IAmortizacion[] = [];
-  const today = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toLocal().toISODate();
+  const today = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toLocal().toISODate() as string;
   let fechaPagoAux = fechaInicio instanceof Date ? fechaInicio.toISOString() : fechaInicio;
   let status: StatusPago = StatusPago.corriente;
 
   amortizacion.push({
     numeroDePago: 1,
-    fechaDePago: DateTime.fromISO(fechaPagoAux).toLocal().toISODate(),
+    fechaDePago: DateTime.fromISO(fechaPagoAux).toLocal().toISODate() as string,
     monto,
     status,
   });
 
   for (let i = 2; i < numeroDePagos + 1; i++) {
     const fechaPlusDays = addBusinessDays(DateTime.fromISO(fechaPagoAux).toLocal(), frecuencia);
-    const fechaDePago: Date | string = fechaPlusDays.toLocal().toISODate();
+    const fechaDePago: Date | string = fechaPlusDays.toLocal().toISODate() as string;
     status = StatusPago.corriente;
     amortizacion.push({ numeroDePago: i, fechaDePago, monto, status });
-    fechaPagoAux = fechaPlusDays.toISODate();
+    fechaPagoAux = fechaPlusDays.toISODate() as string;
   }
 
   return getPagos(amortizacion, pagos, today, montoMora);
