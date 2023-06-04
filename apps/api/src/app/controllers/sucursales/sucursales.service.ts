@@ -232,8 +232,8 @@ export class SucursalesService {
 
       const saldoActual =
         Number(caja.saldoInicial) -
-        (pagos._sum.monto ? Number(pagos._sum.monto) : 0) +
-        (movimientos._sum.monto ? Number(movimientos._sum.monto) : 0);
+        (pagos._sum.monto ? pagos._sum.monto.toNumber() : 0) +
+        (movimientos._sum.monto ? movimientos._sum.monto.toNumber() : 0);
 
       if ((saldoActual >= minAmount && saldoActual <= maxAmount) || saldoActual > maxAmount) {
         availableCajas = [

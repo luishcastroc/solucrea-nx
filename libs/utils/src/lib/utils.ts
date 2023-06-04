@@ -98,24 +98,22 @@ export const getSaldoActual = (caja: ICajaReturnDto | Partial<ICajaReturnDto>): 
   if (retiros && depositos) {
     if (retiros.length > 0) {
       for (const retiro of retiros) {
-        if (typeof retiro.monto !== 'number') {
-          throw new Error('Argumento Inválido: monto debe ser un número');
+        if (retiro.monto) {
+          sumRetiros += retiro.monto?.toNumber();
         }
-        sumRetiros += Number(retiro.monto);
       }
     }
 
     if (depositos.length > 0) {
       for (const deposito of depositos) {
-        if (typeof deposito.monto !== 'number') {
-          throw new Error('Argumento Inválido: monto debe ser un número');
+        if (deposito.monto) {
+          sumDepositos += deposito.monto.toNumber();
         }
-        sumDepositos += Number(deposito.monto);
       }
     }
   }
 
-  return Number(caja.saldoInicial) + sumDepositos - sumRetiros;
+  return caja.saldoInicial.toNumber() + sumDepositos - sumRetiros;
 };
 
 /**

@@ -1,11 +1,10 @@
 import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { MatDrawer } from '@angular/material/sidenav';
+import { ClearCreditosState } from 'app/pages/creditos/_store';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
+import { MatDrawer } from '@angular/material/sidenav';
+import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Subject, takeUntil } from 'rxjs';
-
-import { ClearCreditosState } from 'app/pages/creditos/_store';
-import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-creditos',
@@ -18,7 +17,7 @@ export class CreditosComponent implements OnInit, OnDestroy {
   @ViewChild('drawer')
   drawer!: MatDrawer;
   drawerMode: 'over' | 'side' = 'side';
-  drawerOpened: boolean = true;
+  drawerOpened = true;
   private _store = inject(Store);
   private _fuseMediaWatcherService = inject(FuseMediaWatcherService);
   private _changeDetectorRef = inject(ChangeDetectorRef);
