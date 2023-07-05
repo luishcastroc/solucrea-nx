@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { FormArray, FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -9,25 +10,28 @@ export class SharedService {
    *
    * @param form
    */
-  getDirtyValues(form: any): any {
-    const dirtyValues: { [key: string]: number | string } = {};
-    let prevId: string = '';
+  getDirtyValues(form: FormGroup | FormArray): any {
+    let dirtyValues: { [key: string]: any } = {};
 
     Object.keys(form.controls).forEach(key => {
-      const currentControl = form.controls[key];
-      if (key === 'id') {
-        dirtyValues[key] = currentControl.value;
-      }
+      const currentControl = form.get(key);
 
-      if (currentControl.dirty) {
-        if (currentControl.controls) {
-          dirtyValues[key] = this.getDirtyValues(currentControl);
-        } else {
+      if (currentControl) {
+        if (key === 'id') {
           dirtyValues[key] = currentControl.value;
         }
-      }
-      if (key === 'direcciones') {
-        prevId = key;
+
+        if (currentControl.dirty) {
+          if (currentControl instanceof FormGroup || currentControl instanceof FormArray) {
+            const childDirtyValues = this.getDirtyValues(currentControl);
+            if (childDirtyValues) {
+              // If any child control is dirty, mark the whole group as dirty
+              dirtyValues = { ...form.value };
+            }
+          } else {
+            dirtyValues[key] = currentControl.value;
+          }
+        }
       }
     });
 

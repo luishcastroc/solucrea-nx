@@ -28,7 +28,8 @@ import { ClientesStateModel } from './clientes.model';
     editMode: 'new',
     selectedCliente: undefined,
     selectedActividadEconomica: undefined,
-    colonias: [],
+    clienteColonias: [],
+    trabajoColonias: undefined,
     clientesCount: 0,
     config: undefined,
     loading: false,
@@ -103,27 +104,18 @@ export class ClientesState {
     return this.clientesService.getColoniasByCp(cp).pipe(
       tap((colonias: IColoniaReturnDto) => {
         const state = ctx.getState();
-        if (state.colonias) {
-          colonias = {
-            ...colonias,
-            colonias: sortBy(colonias.colonias, 'descripcion'),
-          };
-          const coloniasState = [...state.colonias];
-          if (index >= 0) {
-            coloniasState[index] = { tipoDireccion: tipo, ubicacion: colonias };
+        let clienteColonias = [...state.clienteColonias];
+        let trabajoColonias = state.trabajoColonias;
+        if (tipo === 'CLIENTE') {
+          if (state.clienteColonias[index]) {
+            clienteColonias[index] = { tipoDireccion: tipo, ubicacion: colonias };
           } else {
-            const idx = coloniasState.findIndex(colonia => colonia.tipoDireccion === 'TRABAJO');
-            if (idx === -1) {
-              coloniasState.push({ tipoDireccion: tipo, ubicacion: colonias });
-            } else {
-              coloniasState[idx] = { tipoDireccion: tipo, ubicacion: colonias };
-            }
+            clienteColonias.push({ tipoDireccion: tipo, ubicacion: colonias });
           }
-
-          ctx.patchState({
-            colonias: coloniasState,
-          });
+        } else if (tipo === 'TRABAJO') {
+          trabajoColonias = { tipoDireccion: tipo, ubicacion: colonias };
         }
+        ctx.patchState({ clienteColonias, trabajoColonias });
       })
     );
   }
@@ -131,9 +123,9 @@ export class ClientesState {
   @Action(RemoveColonia)
   removeColonia(ctx: StateContext<ClientesStateModel>, { index }: RemoveColonia) {
     const state = ctx.getState();
-    const colonias = [...state.colonias];
-    colonias.splice(index, 1);
-    ctx.patchState({ colonias });
+    const clienteColonias = [...state.clienteColonias];
+    clienteColonias.splice(index, 1);
+    ctx.patchState({ clienteColonias });
   }
 
   @Action(SelectActividadEconomica)
@@ -209,7 +201,8 @@ export class ClientesState {
       editMode: 'new',
       selectedCliente: undefined,
       selectedActividadEconomica: undefined,
-      colonias: [],
+      clienteColonias: [],
+      trabajoColonias: undefined,
       clientesCount: 0,
       config: undefined,
       loading: false,

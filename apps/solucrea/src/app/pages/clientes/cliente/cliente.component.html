@@ -403,7 +403,8 @@
                         [iconClasses]="'hidden sm:flex'"
                         formControlName="codigoPostal"
                         [placeholder]="'Código Postal'"
-                        [type]="'text'" />
+                        [type]="'text'"
+                        (change)="getColonias(cpTrabajo.value, 0, 'TRABAJO')" />
                       <!-- Estado -->
                       <mat-form-field class="w-full" subscriptSizing="dynamic">
                         <mat-label>Estado</mat-label>
@@ -460,7 +461,7 @@
                         [disabled]="
                           (editMode === 'new' && !trabajoForm.touched && trabajoForm.invalid) ||
                           (clienteForm.disabled && trabajoForm.disabled) ||
-                          (editMode === 'edit' && !clienteForm.touched && !trabajoForm.touched) ||
+                          (editMode === 'edit' && (!clienteForm.touched || !trabajoForm.touched)) ||
                           clienteForm.invalid ||
                           trabajoForm.invalid
                         ">

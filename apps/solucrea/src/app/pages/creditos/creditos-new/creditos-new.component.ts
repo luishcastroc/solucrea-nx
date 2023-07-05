@@ -399,6 +399,7 @@ export class CreditosNewComponent implements OnInit, OnDestroy {
               });
 
               this.creditosForm.reset();
+              this.creditosForm.enable();
               this.searchInput.reset();
               // we reset the stepper
               this.myStepper.reset();

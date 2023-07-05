@@ -16,7 +16,8 @@ export interface ClientesStateModel {
   editMode: EditMode;
   selectedCliente: IClienteReturnDto | undefined;
   selectedActividadEconomica: IActividadEconomicaReturnDto | undefined;
-  colonias: IColoniasState[] | [];
+  clienteColonias: IColoniasState[];
+  trabajoColonias: IColoniasState | undefined;
   config: IConfig | undefined;
   loading: boolean;
 }

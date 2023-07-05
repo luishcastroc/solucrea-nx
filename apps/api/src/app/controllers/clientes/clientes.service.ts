@@ -226,6 +226,7 @@ export class ClientesService {
 
       return updateStatement;
     } catch (e: any) {
+      console.log('error: ', e);
       if (e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
         throw new HttpException(
           {

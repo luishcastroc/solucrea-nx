@@ -59,7 +59,7 @@ import {
 } from 'app/pages/clientes/_store';
 import { SharedService } from 'app/shared';
 import { isEqual } from 'lodash';
-import { Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { combineLatest, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
 
 import { ClientesService } from '../_services/clientes.service';
 import { IConfig } from '../models/config.model';
@@ -97,7 +97,8 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
   config$!: Observable<IConfig | undefined>;
   loading$!: Observable<boolean>;
   editMode$!: Observable<EditMode>;
-  colonias$!: Observable<IColoniasState[]>;
+  coloniasCliente$!: Observable<IColoniasState[]>;
+  coloniasTrabajo$!: Observable<IColoniasState | undefined>;
   selectedCliente$!: Observable<IClienteReturnDto | undefined>;
   selectedActividadEconomica$!: Observable<IActividadEconomicaReturnDto | undefined>;
 
@@ -136,7 +137,8 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
     this.config$ = this._store.select(ClientesSelectors.slices.config);
     this.loading$ = this._store.select(ClientesSelectors.slices.loading);
     this.editMode$ = this._store.select(ClientesSelectors.slices.editMode);
-    this.colonias$ = this._store.select(ClientesSelectors.slices.colonias);
+    this.coloniasCliente$ = this._store.select(ClientesSelectors.slices.clienteColonias);
+    this.coloniasTrabajo$ = this._store.select(ClientesSelectors.slices.trabajoColonias);
     this.selectedCliente$ = this._store.select(ClientesSelectors.slices.selectedCliente);
     this.selectedActividadEconomica$ = this._store.select(ClientesSelectors.slices.selectedActividadEconomica);
   }
@@ -191,27 +193,30 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
    *
    */
   subscribeToColonias(): void {
-    this.colonias$.pipe(takeUntil(this._unsubscribeAll)).subscribe(ubicacion => {
-      if (ubicacion.length > 0) {
-        ubicacion.forEach((direccion, i) => {
-          if (direccion.tipoDireccion === 'CLIENTE') {
-            if (this.direcciones.controls[i].get('ciudad')?.value !== direccion.ubicacion.ciudad.descripcion) {
-              this.direcciones.controls[i].get('ciudad')?.patchValue(direccion.ubicacion.ciudad.descripcion);
+    combineLatest([this.coloniasCliente$, this.coloniasTrabajo$])
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(([cliente, trabajo]) => {
+        if (cliente.length > 0) {
+          cliente.forEach((direccion, i) => {
+            if (i < this.direcciones.controls.length) {
+              if (this.direcciones.controls[i].get('ciudad')?.value !== direccion.ubicacion.ciudad.descripcion) {
+                this.direcciones.controls[i].get('ciudad')?.patchValue(direccion.ubicacion.ciudad.descripcion);
+              }
+              if (this.direcciones.controls[i].get('estado')?.value !== direccion.ubicacion.estado.descripcion) {
+                this.direcciones.controls[i].get('estado')?.patchValue(direccion.ubicacion.estado.descripcion);
+              }
+              if (!isEqual(this.ubicacion[i], direccion)) {
+                this.ubicacion[i] = direccion;
+              }
             }
-            if (this.direcciones.controls[i].get('estado')?.value !== direccion.ubicacion.estado.descripcion) {
-              this.direcciones.controls[i].get('estado')?.patchValue(direccion.ubicacion.estado.descripcion);
-            }
-            if (!isEqual(this.ubicacion[i], direccion)) {
-              this.ubicacion[i] = direccion;
-            }
-          } else if (direccion.tipoDireccion === 'TRABAJO') {
-            this.ciudadTrabajo.patchValue(direccion.ubicacion.ciudad.descripcion);
-            this.estadoTrabajo.patchValue(direccion.ubicacion.estado.descripcion);
-            this.ubicacionTrabajo = direccion;
-          }
-        });
-      }
-    });
+          });
+        }
+        if (trabajo) {
+          this.ciudadTrabajo.patchValue(trabajo.ubicacion.ciudad.descripcion);
+          this.estadoTrabajo.patchValue(trabajo.ubicacion.estado.descripcion);
+          this.ubicacionTrabajo = trabajo;
+        }
+      });
   }
 
   /**
@@ -276,6 +281,16 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
 
             // we reset the stepper
             this.myStepper.reset();
+          }
+          if (action instanceof Edit) {
+            const message = 'Cliente editado exitosamente.';
+            this._toast.success(message, {
+              duration: 4000,
+              position: 'bottom-center',
+            });
+            // we clear the forms
+            this.clienteForm.enable();
+            this.trabajoForm.enable();
           } else {
             this.disableCiudadAndEstado();
           }
@@ -316,11 +331,14 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
 
           // Filling the direccion field and calling the codigoPostal service
           direcciones.forEach((direccion, i) => {
-            if (i > 0) {
+            if (i > 0 && this.direcciones.length < direcciones.length) {
               this.addDireccionesField();
             }
             this.direcciones.controls[i].get('id')?.patchValue(direccion.id);
             this.direcciones.controls[i].get('codigoPostal')?.patchValue(direccion.colonia.codigoPostal);
+            this.direcciones.controls[i].get('calle')?.patchValue(direccion.calle);
+            this.direcciones.controls[i].get('numero')?.patchValue(direccion.numero);
+            this.direcciones.controls[i].get('cruzamientos')?.patchValue(direccion.cruzamientos);
             this.getColonias(direccion.colonia.codigoPostal, i, 'CLIENTE');
             this.direcciones.controls[i].get('colonia')?.patchValue(direccion.colonia.id);
           });
@@ -445,9 +463,8 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
     // Remove the phone number field
     direccionesFormArray.removeAt(index);
     this.removeColonia(index);
-    if (id) {
-      this.deletedAddresses.push({ id });
-    }
+    this.deletedAddresses.push({ id });
+    this.clienteForm.markAsTouched();
 
     // Mark for check
     this._changeDetectorRef.markForCheck();
