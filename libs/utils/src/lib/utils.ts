@@ -205,11 +205,10 @@ export const getPagos = (
   montoMora: Prisma.Decimal
 ): IAmortizacion[] => {
   let pagos: Pago[] = cloneDeep(originalPagos); // Create a deep copy of pagos
-  let acum = pagos.length > 0 ? pagos.reduce((acc, obj) => acc + obj.monto.toNumber(), 0) : 0;
-  let statusReturn: StatusPago = StatusPago.corriente;
-  const evalAmortizacion = amortizacion.map(({ numeroDePago, fechaDePago, monto }) => {
-    let montoReturn = monto;
-    const todayEval = getDateWithFormat(today);
+  let acum = pagos.reduce((acc, obj) => acc + obj.monto.toNumber(), 0);
+  const todayEval = getDateWithFormat(today);
+
+  return amortizacion.map(({ numeroDePago, fechaDePago, monto }) => {
     const fechaDePagoEval = getDateWithFormat(fechaDePago as string);
     const [pagoExists, remainingPayments, paidDue] = existPagoOrAbono(
       pagos,
@@ -219,36 +218,33 @@ export const getPagos = (
     );
     pagos = remainingPayments;
 
+    let statusReturn: StatusPago;
+    let montoReturn: Prisma.Decimal;
+
     if (todayEval > fechaDePagoEval) {
-      if (acum > 0) {
-        if (pagoExists && acum >= monto.toNumber()) {
-          montoReturn = paidDue ? new Prisma.Decimal(montoMora.toNumber()) : new Prisma.Decimal(monto.toNumber());
-          statusReturn = StatusPago.pagado;
-        } else {
-          montoReturn = new Prisma.Decimal(montoMora.toNumber());
-          statusReturn = StatusPago.adeuda;
-        }
-
-        acum = Math.max(Math.round((acum - montoReturn.toNumber() + Number.EPSILON) * 100) / 100, 0);
-
-        // Check if remaining balance is less than or equal to last payment amount
-        if (numeroDePago === amortizacion.length && acum <= monto.toNumber()) {
-          statusReturn = StatusPago.pagado;
-          acum = 0;
-        }
+      if (pagoExists && acum >= monto.toNumber()) {
+        montoReturn = paidDue ? new Prisma.Decimal(montoMora.toNumber()) : new Prisma.Decimal(monto.toNumber());
+        statusReturn = StatusPago.pagado;
       } else {
         montoReturn = new Prisma.Decimal(montoMora.toNumber());
         statusReturn = StatusPago.adeuda;
       }
     } else {
       if (acum > 0 && acum >= monto.toNumber()) {
+        montoReturn = new Prisma.Decimal(monto.toNumber());
         statusReturn = StatusPago.pagado;
-        acum = Math.max(Math.round((acum - montoReturn.toNumber() + Number.EPSILON) * 100) / 100, 0);
       } else {
         montoReturn = new Prisma.Decimal(monto.toNumber());
         statusReturn = StatusPago.corriente;
-        acum = 0;
       }
+    }
+
+    acum = Math.max(((acum - montoReturn.toNumber()) * 100) / 100, 0);
+
+    // Check if remaining balance is less than or equal to last payment amount
+    if (numeroDePago === amortizacion.length && acum <= monto.toNumber()) {
+      statusReturn = StatusPago.pagado;
+      acum = 0;
     }
 
     return {
@@ -258,8 +254,6 @@ export const getPagos = (
       monto: montoReturn,
     };
   });
-
-  return evalAmortizacion;
 };
 
 /**
