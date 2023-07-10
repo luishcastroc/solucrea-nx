@@ -41,13 +41,13 @@ describe('Utils testing', () => {
     const amortizacion: IAmortizacion[] = [
       {
         monto: new Prisma.Decimal(100),
-        fechaDePago: DateTime.fromISO('2022-02-21').toUTC().toLocal().toISODate(),
+        fechaDePago: DateTime.fromISO('2022-02-21').toUTC().toLocal().toISODate() as string,
         numeroDePago: 1,
         status: StatusPago.adeuda,
       },
       {
         monto: new Prisma.Decimal(100),
-        fechaDePago: DateTime.fromISO('2022-02-21').toUTC().toLocal().toISODate(),
+        fechaDePago: DateTime.fromISO('2022-02-21').toUTC().toLocal().toISODate() as string,
         numeroDePago: 2,
         status: StatusPago.adeuda,
       },
@@ -71,19 +71,19 @@ describe('Utils testing', () => {
     const amortizacion: IAmortizacion[] = [
       {
         monto: new Prisma.Decimal(100),
-        fechaDePago: DateTime.fromISO('2022-02-21').toUTC().toLocal().toISODate(),
+        fechaDePago: DateTime.fromISO('2022-02-21').toUTC().toLocal().toISODate() as string,
         numeroDePago: 1,
         status: StatusPago.adeuda,
       },
       {
         monto: new Prisma.Decimal(100),
-        fechaDePago: DateTime.fromISO('2022-02-22').toUTC().toLocal().toISODate(),
+        fechaDePago: DateTime.fromISO('2022-02-22').toUTC().toLocal().toISODate() as string,
         numeroDePago: 2,
         status: StatusPago.adeuda,
       },
       {
         monto: new Prisma.Decimal(100),
-        fechaDePago: DateTime.now().toUTC().toLocal().toISODate(),
+        fechaDePago: DateTime.now().toUTC().toLocal().toISODate() as string,
         numeroDePago: 3,
         status: StatusPago.corriente,
       },
@@ -109,7 +109,7 @@ describe('Utils testing', () => {
     const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
       1,
       1,
-      fechaDeInicio.toLocal().toISODate(),
+      fechaDeInicio.toLocal().toISODate() as string,
       new Prisma.Decimal(150.0),
       [],
       new Prisma.Decimal(172.5)
@@ -123,7 +123,7 @@ describe('Utils testing', () => {
     const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
       45,
       1,
-      fechaDeInicio.toISODate(),
+      fechaDeInicio.toISODate() as string,
       new Prisma.Decimal(150),
       [],
       new Prisma.Decimal(172.5)
@@ -148,7 +148,7 @@ describe('Utils testing', () => {
     const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
       1,
       1,
-      fechaDeInicio.toISODate(),
+      fechaDeInicio.toISODate() as string,
       monto,
       pagos,
       montoMora

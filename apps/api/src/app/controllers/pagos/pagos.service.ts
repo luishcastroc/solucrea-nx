@@ -58,7 +58,7 @@ export class PagosService {
 
         const caja = await this.prisma.caja.findFirst({
           where: {
-            AND: [{ sucursalId: currentCredito.sucursal.id }, { fechaCierre: null }],
+            fechaCierre: null,
           },
         });
 

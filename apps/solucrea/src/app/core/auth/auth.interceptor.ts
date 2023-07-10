@@ -33,8 +33,8 @@ export class AuthInterceptor implements HttpInterceptor {
 
     if (newReq.url.includes(this._environment.uri) && !newReq.url.includes('auth')) {
       const token = this._store.selectSnapshot(AuthStateSelectors.slices.accessToken);
-      //const isTokenExpired = AuthUtils.isTokenExpired(token);
-      if (token /*&& !isTokenExpired*/) {
+      const isTokenExpired = AuthUtils.isTokenExpired(token);
+      if (token && !isTokenExpired) {
         newReq = req.clone({
           headers: req.headers.set(
             'Authorization',

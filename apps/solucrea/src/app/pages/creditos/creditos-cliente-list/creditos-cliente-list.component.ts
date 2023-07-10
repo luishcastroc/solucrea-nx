@@ -29,13 +29,7 @@ import { Status } from '@prisma/client';
 import { IClienteReturnDto, ICreditoReturnDto } from 'api/dtos';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { CajasMode } from 'app/pages/caja/_store';
-import {
-  CreditosState,
-  GetAllCreditosCliente,
-  GetClienteData,
-  GetTurnosCount,
-  ModeCredito,
-} from 'app/pages/creditos/_store';
+import { GetAllCreditosCliente, GetClienteData, GetTurnosCount, ModeCredito } from 'app/pages/creditos/_store';
 import { DecimalToNumberPipe } from 'app/shared/pipes/decimalnumber.pipe';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
 

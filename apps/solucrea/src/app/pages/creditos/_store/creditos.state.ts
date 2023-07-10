@@ -17,7 +17,7 @@ import { CajaService } from 'app/pages/caja/_services/caja.service';
 import { ClientesService } from 'app/pages/clientes';
 import { ParentescosService } from 'app/shared';
 import { cloneDeep, sortBy } from 'lodash';
-import { forkJoin, mergeMap, tap } from 'rxjs';
+import { catchError, forkJoin, mergeMap, tap, throwError } from 'rxjs';
 
 import { CreditosService } from '../_services/creditos.service';
 import {
@@ -89,6 +89,10 @@ export class CreditosState {
           creditos,
           loading: false,
         });
+      }),
+      catchError(err => {
+        patchState({ loading: false });
+        return throwError(() => err);
       })
     );
   }
@@ -102,6 +106,10 @@ export class CreditosState {
           creditos,
           loading: false,
         });
+      }),
+      catchError(err => {
+        patchState({ loading: false });
+        return throwError(() => err);
       })
     );
   }

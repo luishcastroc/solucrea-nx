@@ -159,7 +159,7 @@ export class CreditosService {
             frecuencia,
             credito?.fechaInicio as string | Date,
             credito?.cuota,
-            credito?.pagos as Partial<Pago>[] | Pago[],
+            credito?.pagos as Pago[],
             credito?.cuotaMora
           );
 
@@ -362,7 +362,7 @@ export class CreditosService {
             frecuencia,
             credito?.fechaInicio as string | Date,
             credito?.cuota,
-            credito?.pagos as Partial<Pago>[] | Pago[],
+            credito?.pagos as Pago[],
             credito?.cuotaMora
           );
 
@@ -564,7 +564,7 @@ export class CreditosService {
         frecuencia,
         credito?.fechaInicio as string | Date,
         credito?.cuota as Prisma.Decimal,
-        credito?.pagos as Partial<Pago>[] | Pago[],
+        credito?.pagos as Pago[],
         credito?.cuotaMora as Prisma.Decimal
       );
 
@@ -602,7 +602,6 @@ export class CreditosService {
 
       return creditoReturn as ICreditoReturnDto;
     } catch (e: any) {
-      console.log('credito: ', e);
       if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
         throw new HttpException(
           {

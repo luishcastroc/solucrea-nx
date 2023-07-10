@@ -1,7 +1,7 @@
 import { Frecuencia, Pago, Prisma, TipoDePago } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime';
 import { IAmortizacion, ICajaReturnDto, StatusPago } from 'api/dtos';
-import { sumBy } from 'lodash';
+import { cloneDeep, sumBy } from 'lodash';
 import { DateTime } from 'luxon';
 
 import { ICreditoData, IDetails } from './models';
@@ -133,7 +133,7 @@ export const generateTablaAmorizacion = (
   frecuencia: number,
   fechaInicio: string | Date,
   monto: Prisma.Decimal,
-  pagos: Partial<Pago>[] | Pago[],
+  pagos: Pago[],
   montoMora: Prisma.Decimal
 ): IAmortizacion[] => {
   const amortizacion: IAmortizacion[] = [];
@@ -200,30 +200,35 @@ export const getPagoNoIntereses = (amortizacion: IAmortizacion[], cuota: Prisma.
  */
 export const getPagos = (
   amortizacion: IAmortizacion[],
-  pagos: Partial<Pago>[] | Pago[],
+  originalPagos: Pago[],
   today: string,
   montoMora: Prisma.Decimal
 ): IAmortizacion[] => {
-  let acum = pagos.length > 0 ? (pagos as Pago[]).reduce((acc, obj) => acc + obj.monto.toNumber(), 0) : 0;
+  let pagos: Pago[] = cloneDeep(originalPagos); // Create a deep copy of pagos
+  let acum = pagos.length > 0 ? pagos.reduce((acc, obj) => acc + obj.monto.toNumber(), 0) : 0;
   let statusReturn: StatusPago = StatusPago.corriente;
-  const evalAmortizacion: IAmortizacion[] = amortizacion.map(({ numeroDePago, fechaDePago, monto }) => {
-    let montoReturn: Prisma.Decimal = monto;
+  const evalAmortizacion = amortizacion.map(({ numeroDePago, fechaDePago, monto }) => {
+    let montoReturn = monto;
     const todayEval = getDateWithFormat(today);
     const fechaDePagoEval = getDateWithFormat(fechaDePago as string);
-    const pagoExists = existPagoOrAbono(pagos, fechaDePagoEval, monto.toNumber());
+    const [pagoExists, remainingPayments, paidDue] = existPagoOrAbono(
+      pagos,
+      fechaDePagoEval,
+      monto.toNumber(),
+      montoMora.toNumber()
+    );
+    pagos = remainingPayments;
 
     if (todayEval > fechaDePagoEval) {
       if (acum > 0) {
         if (pagoExists && acum >= monto.toNumber()) {
-          montoReturn = new Prisma.Decimal(monto.toNumber());
-          statusReturn = StatusPago.pagado;
-        } else if (acum >= monto.toNumber()) {
-          montoReturn = new Prisma.Decimal(montoMora.toNumber());
+          montoReturn = paidDue ? new Prisma.Decimal(montoMora.toNumber()) : new Prisma.Decimal(monto.toNumber());
           statusReturn = StatusPago.pagado;
         } else {
           montoReturn = new Prisma.Decimal(montoMora.toNumber());
           statusReturn = StatusPago.adeuda;
         }
+
         acum = Math.max(Math.round((acum - montoReturn.toNumber() + Number.EPSILON) * 100) / 100, 0);
 
         // Check if remaining balance is less than or equal to last payment amount
@@ -255,6 +260,79 @@ export const getPagos = (
   });
 
   return evalAmortizacion;
+};
+
+/**
+ *
+ * @param date
+ * @returns DateTime
+ */
+export const getDateWithFormat = (date: string): DateTime =>
+  DateTime.fromISO(date).set({
+    hour: 0,
+    minute: 0,
+    second: 0,
+    millisecond: 0,
+  });
+
+/**
+ *
+ * @param pagos
+ * @param fechaPago
+ * @param monto
+ * @param montoMora
+ * @returns boolean
+ */
+export const existPagoOrAbono = (
+  pagos: Pago[],
+  fechaPago: DateTime,
+  monto: number,
+  montoMora: number
+): [boolean, Pago[], boolean] => {
+  let remainingPayments: Pago[] = [...pagos];
+
+  const checkPayment = (
+    pago: Pago,
+    amount: number,
+    compareDateTo: DateTime,
+    compareDateFunction: (d1: DateTime, d2: DateTime) => boolean
+  ) => {
+    return (
+      pago &&
+      pago.monto &&
+      pago.fechaDePago &&
+      pago.monto.toNumber() >= amount &&
+      compareDateFunction(getDateWithFormat(pago.fechaDePago.toISOString()), compareDateTo)
+    );
+  };
+
+  for (const pago of remainingPayments) {
+    if (checkPayment(pago, monto, fechaPago, (d1, d2) => d1 <= d2)) {
+      const updatedPago = cloneDeep(pago);
+      updatedPago.monto = updatedPago.monto.minus(monto);
+
+      remainingPayments =
+        updatedPago.monto.toNumber() === 0
+          ? remainingPayments.filter(payment => payment !== pago)
+          : remainingPayments.map(payment => (payment === pago ? updatedPago : payment));
+
+      return [true, remainingPayments, false];
+    }
+
+    if (checkPayment(pago, montoMora, fechaPago, (d1, d2) => d1 > d2)) {
+      const updatedPago = cloneDeep(pago);
+      updatedPago.monto = updatedPago.monto.minus(montoMora);
+
+      remainingPayments =
+        updatedPago.monto.toNumber() === 0
+          ? remainingPayments.filter(payment => payment !== pago)
+          : remainingPayments.map(payment => (payment === pago ? updatedPago : payment));
+
+      return [true, remainingPayments, true];
+    }
+  }
+
+  return [false, remainingPayments, false];
 };
 
 /**
@@ -296,44 +374,3 @@ export const getFrecuencia = (frecuencia: Frecuencia | undefined): number => {
 
   return dias;
 };
-
-/**
- *
- * @param date
- * @returns DateTime
- */
-export const getDateWithFormat = (date: string): DateTime =>
-  DateTime.fromISO(date).set({
-    hour: 0,
-    minute: 0,
-    second: 0,
-    millisecond: 0,
-  });
-
-/**
- *
- * @param pagos
- * @param fechaPago
- * @param monto
- * @returns boolean
- */
-export const existPagoOrAbono = (pagos: Partial<Pago>[] | Pago[], fechaPago: DateTime, monto: number): boolean =>
-  pagos.some(pago => {
-    if (pago) {
-      if (pago.monto && pago.fechaDePago) {
-        const paymentGreaterThanAmt = pago.monto.toNumber() >= monto;
-        const fechaPagoMade = DateTime.fromISO(pago.fechaDePago.toISOString()).set({
-          hour: 0,
-          minute: 0,
-          second: 0,
-          millisecond: 0,
-        });
-        const dateLowerOrEquAmtDt = fechaPagoMade <= fechaPago;
-
-        if (paymentGreaterThanAmt && dateLowerOrEquAmtDt) {
-          return true;
-        }
-      }
-    }
-    return false;
-  });

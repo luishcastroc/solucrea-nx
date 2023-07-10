@@ -29,33 +29,25 @@ export class CoreModule {
       throw new Error('CoreModule has already been loaded. Import this module in the AppModule only.');
     }
 
+    const icons = [
+      'material-outline',
+      'material-solid',
+      'iconsmind',
+      'feather',
+      'heroicons-outline',
+      'heroicons-solid',
+    ];
+
     // Register icon sets
     this._matIconRegistry.addSvgIconSet(
       this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/material-twotone.svg')
     );
-    this._matIconRegistry.addSvgIconSetInNamespace(
-      'mat_outline',
-      this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/material-outline.svg')
-    );
-    this._matIconRegistry.addSvgIconSetInNamespace(
-      'mat_solid',
-      this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/material-solid.svg')
-    );
-    this._matIconRegistry.addSvgIconSetInNamespace(
-      'iconsmind',
-      this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/iconsmind.svg')
-    );
-    this._matIconRegistry.addSvgIconSetInNamespace(
-      'feather',
-      this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/feather.svg')
-    );
-    this._matIconRegistry.addSvgIconSetInNamespace(
-      'heroicons_outline',
-      this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/heroicons-outline.svg')
-    );
-    this._matIconRegistry.addSvgIconSetInNamespace(
-      'heroicons_solid',
-      this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/heroicons-solid.svg')
-    );
+
+    for (const icon of icons) {
+      this._matIconRegistry.addSvgIconSetInNamespace(
+        icon.replace('-', '_'),
+        this._domSanitizer.bypassSecurityTrustResourceUrl(`assets/icons/${icon}.svg`)
+      );
+    }
   }
 }

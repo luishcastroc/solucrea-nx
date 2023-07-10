@@ -5,7 +5,7 @@
 // https://github.com/auth0/angular2-jwt
 // -----------------------------------------------------------------------------------------------------
 
-import { DateTime } from "luxon";
+import { DateTime } from 'luxon';
 
 export class AuthUtils {
   // -----------------------------------------------------------------------------------------------------
@@ -38,9 +38,8 @@ export class AuthUtils {
     const compareDate = tokenDate > localDate;
 
     // Check if the token is expired
-    return !(compareDate);
+    return !compareDate;
   }
-
 
   /**
    * Generate a globally unique id
@@ -59,7 +58,6 @@ export class AuthUtils {
       return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
     });
   }
-
 
   // -----------------------------------------------------------------------------------------------------
   // @ Private methods
