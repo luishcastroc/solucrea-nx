@@ -32,7 +32,7 @@ describe('Utils testing', () => {
       saldo: 1000,
       seguro: 50,
       total: 75,
-      mora: 64.6875,
+      mora: 64.69,
     };
     expect(calculateDetails(data)).toEqual(results);
   });
@@ -136,13 +136,21 @@ describe('Utils testing', () => {
     const monto = new Prisma.Decimal(150.0);
     const montoMora = new Prisma.Decimal(monto.toNumber() * (15 / 100) + monto.toNumber());
     const fechaDeInicio = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toLocal();
-    const pagos: Partial<Pago>[] | Pago[] = [
+    const pagos: Pago[] = [
       {
         id: 'sdjhjh-sdsd-sdsd',
         creditoId: 'b2d06964-b529-11ec-b909-0242ac120002',
         fechaDePago: fechaDeInicio.toJSDate(),
         monto,
         tipoDePago: 'REGULAR',
+        observaciones: 'Pago regular',
+        actualizadoPor: 'admin',
+        creadoPor: 'admin',
+        fechaCreacion: fechaDeInicio.toJSDate(),
+        fechaActualizacion: fechaDeInicio.toJSDate(),
+        clienteId: 'b2d06964-b529-11ec-b909-0242ac120002',
+        cobradorId: 'b2d06964-b529-11ec-b909-0242ac120002',
+        sucursalId: 'b2d06964-b529-11ec-b909-0242ac120002',
       },
     ];
     const tablaDeAmortizacion: IAmortizacion[] = generateTablaAmorizacion(
@@ -155,5 +163,59 @@ describe('Utils testing', () => {
     );
 
     expect(tablaDeAmortizacion.filter(data => data.status === StatusPago.adeuda).length === 0).toBeTruthy();
+  });
+
+  it('calculateDetails should return proper results for different inputs', () => {
+    const data: ICreditoData = {
+      monto: 5000,
+      interesMoratorio: 10,
+      tasaInteres: 5,
+      cargos: 10,
+      comisionPorApertura: 5,
+      numeroDePagos: 30,
+      montoSeguro: 100,
+      modalidadSeguro: 'contado',
+    };
+
+    const results: IDetails = {
+      apertura: 250,
+      capital: 166.67,
+      cuota: 178.33,
+      interes: 8.33,
+      saldo: 5000,
+      seguro: 100,
+      total: 350,
+      mora: 196.16,
+    };
+    expect(calculateDetails(data)).toEqual(results);
+  });
+
+  it('getSaldoVencido should handle different amortization inputs', () => {
+    const amortizacion: IAmortizacion[] = [
+      {
+        monto: new Prisma.Decimal(200),
+        fechaDePago: DateTime.fromISO('2023-02-21').toUTC().toLocal().toISODate() as string,
+        numeroDePago: 1,
+        status: StatusPago.adeuda,
+      },
+      {
+        monto: new Prisma.Decimal(300),
+        fechaDePago: DateTime.fromISO('2023-02-22').toUTC().toLocal().toISODate() as string,
+        numeroDePago: 2,
+        status: StatusPago.pagado,
+      },
+    ];
+
+    const saldoVencido = getSaldoVencido(amortizacion);
+
+    expect(saldoVencido).toEqual(200);
+  });
+
+  it('getSaldoVencido should return 0 when no amortization', () => {
+    const amortizacion: IAmortizacion[] = [];
+
+    const saldoVencido = getSaldoVencido(amortizacion);
+
+    expect(saldoVencido).toEqual(0);
   });
 });

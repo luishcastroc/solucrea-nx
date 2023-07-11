@@ -24,13 +24,15 @@ export const calculateDetails = (data: ICreditoData): IDetails => {
     interesMoratorio,
   } = data;
 
-  const capital = monto / numeroDePagos;
-  const interes = capital * (tasaInteres / 100);
-  const seguroDiferido = (montoSeguro ? montoSeguro : 0) / numeroDePagos;
-  const cuota = capital + interes + seguroDiferido;
-  const apertura = comisionPorApertura ? monto * (comisionPorApertura / 100) : 0;
-  const total = apertura + (modalidadSeguro === 'contado' ? (montoSeguro ? montoSeguro : 0) : 0);
-  const mora = cuota * (interesMoratorio / 100) + cuota;
+  const capital = parseFloat((monto / numeroDePagos).toFixed(2));
+  const interes = parseFloat((capital * (tasaInteres / 100)).toFixed(2));
+  const seguroDiferido = parseFloat(((montoSeguro ? montoSeguro : 0) / numeroDePagos).toFixed(2));
+  const cuota = parseFloat((capital + interes + seguroDiferido).toFixed(2));
+  const apertura = parseFloat((comisionPorApertura ? monto * (comisionPorApertura / 100) : 0).toFixed(2));
+  const total = parseFloat(
+    (apertura + (modalidadSeguro === 'contado' ? (montoSeguro ? montoSeguro : 0) : 0)).toFixed(2)
+  );
+  const mora = parseFloat((cuota * (interesMoratorio / 100) + cuota).toFixed(2));
   const seguro =
     modalidadSeguro === 'diferido'
       ? seguroDiferido
@@ -40,7 +42,9 @@ export const calculateDetails = (data: ICreditoData): IDetails => {
         : 0
       : 0;
 
-  const saldo = monto - (pagos && pagos.length > 0 ? sumBy(pagos, pago => Number(pago.monto) - interes) : 0);
+  const saldo = parseFloat(
+    (monto - (pagos && pagos.length > 0 ? sumBy(pagos, pago => Number(pago.monto) - interes) : 0)).toFixed(2)
+  );
 
   const details: IDetails = {
     capital,
@@ -204,7 +208,7 @@ export const getPagos = (
   today: string,
   montoMora: Prisma.Decimal
 ): IAmortizacion[] => {
-  let pagos: Pago[] = cloneDeep(originalPagos); // Create a deep copy of pagos
+  let pagos: Pago[] = cloneDeep(originalPagos);
   let acum = pagos.reduce((acc, obj) => acc + obj.monto.toNumber(), 0);
   const todayEval = getDateWithFormat(today);
 
@@ -240,12 +244,6 @@ export const getPagos = (
     }
 
     acum = Math.max(((acum - montoReturn.toNumber()) * 100) / 100, 0);
-
-    // Check if remaining balance is less than or equal to last payment amount
-    if (numeroDePago === amortizacion.length && acum <= monto.toNumber()) {
-      statusReturn = StatusPago.pagado;
-      acum = 0;
-    }
 
     return {
       numeroDePago,
