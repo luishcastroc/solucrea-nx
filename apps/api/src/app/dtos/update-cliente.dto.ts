@@ -1,6 +1,7 @@
+import { Prisma } from '@prisma/client';
 import { CreateDireccionDto, IDireccion } from 'api/dtos/';
-export class IDireccionUpdateDto {
-  deleteDireccion?: string[];
+export interface IDireccionUpdateDto {
+  deleteDireccion?: Prisma.DireccionWhereUniqueInput[];
   create?: CreateDireccionDto[];
   update?: IDireccion[];
 }

@@ -197,13 +197,23 @@ export class CreditosService {
         })
       );
 
-      return creditosReturn.filter(credito => {
-        if (statusCredito === 'ABIERTO' && (credito.status === 'ABIERTO' || credito.status === 'MORA')) {
-          return credito;
-        } else if (statusCredito === credito.status) {
-          return credito;
-        }
-      });
+      return creditosReturn
+        .filter(credito => {
+          if (statusCredito === 'ABIERTO' && (credito.status === 'ABIERTO' || credito.status === 'MORA')) {
+            return credito;
+          } else if (statusCredito === credito.status) {
+            return credito;
+          }
+        })
+        .sort((a, b) => {
+          if (a.fechaDesembolso < b.fechaDesembolso) {
+            return 1;
+          }
+          if (a.fechaDesembolso > b.fechaDesembolso) {
+            return -1;
+          }
+          return 0;
+        });
     } catch (e: any) {
       if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
         throw new HttpException(
@@ -400,13 +410,23 @@ export class CreditosService {
         })
       );
 
-      return creditosReturn.filter(credito => {
-        if (statusCredito === 'ABIERTO' && (credito.status === 'ABIERTO' || credito.status === 'MORA')) {
-          return credito;
-        } else if (statusCredito === credito.status) {
-          return credito;
-        }
-      });
+      return creditosReturn
+        .filter(credito => {
+          if (statusCredito === 'ABIERTO' && (credito.status === 'ABIERTO' || credito.status === 'MORA')) {
+            return credito;
+          } else if (statusCredito === credito.status) {
+            return credito;
+          }
+        })
+        .sort((a, b) => {
+          if (a.fechaDesembolso < b.fechaDesembolso) {
+            return 1;
+          }
+          if (a.fechaDesembolso > b.fechaDesembolso) {
+            return -1;
+          }
+          return 0;
+        });
     } catch (e: any) {
       if (e.response && e.response === HttpStatus.INTERNAL_SERVER_ERROR) {
         throw new HttpException(

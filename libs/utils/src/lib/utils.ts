@@ -1,5 +1,4 @@
 import { Frecuencia, Pago, Prisma, TipoDePago } from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime';
 import { IAmortizacion, ICajaReturnDto, StatusPago } from 'api/dtos';
 import { cloneDeep, sumBy } from 'lodash';
 import { DateTime } from 'luxon';

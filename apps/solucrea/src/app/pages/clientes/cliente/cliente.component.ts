@@ -34,7 +34,7 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { createMask, InputMaskModule } from '@ngneat/input-mask';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
-import { TipoDireccion } from '@prisma/client';
+import { Prisma, TipoDireccion } from '@prisma/client';
 import {
   CreateDireccionDto,
   IActividadEconomicaReturnDto,
@@ -107,7 +107,7 @@ export class ClienteComponent implements OnInit, OnDestroy, CanDeactivateCompone
   clienteForm!: UntypedFormGroup;
   trabajoForm!: UntypedFormGroup;
   editMode!: EditMode;
-  deletedAddresses: Array<any> = [];
+  deletedAddresses: Prisma.DireccionWhereUniqueInput[] = [];
   phoneInputMask = createMask({
     mask: '(999)-999-99-99',
     autoUnmask: true,

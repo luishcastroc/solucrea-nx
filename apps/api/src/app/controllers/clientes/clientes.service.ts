@@ -408,7 +408,7 @@ export class ClientesService {
     if (deleteDireccion && deleteDireccion.length > 0) {
       direcciones = {
         ...direcciones,
-        delete: deleteDireccion as Prisma.DireccionWhereUniqueInput,
+        delete: deleteDireccion,
       };
     }
 
