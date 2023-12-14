@@ -183,6 +183,7 @@ export class CreditosService {
             ...credito,
             amortizacion,
             status,
+            saldo: saldoVencido > (credito?.saldo?.toNumber() ?? 0) ? saldoVencido : credito?.saldo,
             saldoVencido,
           };
 
@@ -396,6 +397,7 @@ export class CreditosService {
             ...credito,
             amortizacion,
             status,
+            saldo: saldoVencido > (credito?.saldo?.toNumber() ?? 0) ? saldoVencido : credito?.saldo,
             saldoVencido,
           };
 
@@ -609,6 +611,7 @@ export class CreditosService {
         ...credito,
         amortizacion,
         status,
+        saldo: saldoVencido > (credito?.saldo?.toNumber() ?? 0) ? saldoVencido : credito?.saldo,
         saldoVencido,
         pagoNoIntereses,
       };

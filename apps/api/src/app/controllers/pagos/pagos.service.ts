@@ -75,6 +75,9 @@ export class PagosService {
         const cuota = (currentCredito.cuota as Prisma.Decimal).toNumber();
         const cuotaMora = (currentCredito.cuotaMora as Prisma.Decimal).toNumber();
         const monto = pago.monto.toNumber();
+        if (typeof currentCredito.saldo === 'number' || typeof currentCredito.saldo === 'string') {
+          currentCredito.saldo = new Prisma.Decimal(currentCredito.saldo);
+        }
         let saldo = (currentCredito.saldo as Prisma.Decimal).toNumber();
 
         const createMovimiento: Prisma.MovimientoDeCajaCreateInput = {

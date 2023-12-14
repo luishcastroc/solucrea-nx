@@ -1,4 +1,4 @@
-import { PrismaClient, Sucursal } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 import {
   actividadesEconomicasCreate,

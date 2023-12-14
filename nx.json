@@ -3,15 +3,6 @@
     "defaultBase": "master"
   },
   "defaultProject": "solucrea",
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "nx-cloud",
-      "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"],
-        "accessToken": "ZDIwMWMxNTMtYjkzNS00OTljLTgwMDEtYzIxMmU3YjQ0MGQ2fHJlYWQtd3JpdGU="
-      }
-    }
-  },
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
@@ -33,10 +24,19 @@
   },
   "targetDefaults": {
     "build": {
-      "inputs": ["production", "^production"]
+      "inputs": ["production", "^production"],
+      "cache": true
     },
     "test": {
-      "inputs": ["default", "^production", "{workspaceRoot}/karma.conf.js"]
+      "inputs": ["default", "^production", "{workspaceRoot}/karma.conf.js"],
+      "cache": true
+    },
+    "lint": {
+      "cache": true
+    },
+    "e2e": {
+      "cache": true
     }
-  }
+  },
+  "nxCloudAccessToken": "ZDIwMWMxNTMtYjkzNS00OTljLTgwMDEtYzIxMmU3YjQ0MGQ2fHJlYWQtd3JpdGU="
 }
